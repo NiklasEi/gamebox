@@ -22,6 +22,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 
 /**
  * Created by niklas on 10/17/16.
@@ -89,7 +90,7 @@ public class PluginManager implements Listener{
 		ConfigurationSection gamesSection = config.getConfigurationSection("games");
 		for(Games game : Games.values()){
 			if(!gamesSection.getBoolean(game.toString() + ".enabled")){
-				Bukkit.getConsoleSender().sendMessage(Main.plainPrefix + "the game " + game.toString() + " is disabled");
+				Bukkit.getConsoleSender().sendMessage(Main.plainPrefix + " the game " + game.toString() + " is disabled");
 				continue;
 			}
 			switch (game.toString()) {
@@ -115,6 +116,7 @@ public class PluginManager implements Listener{
 					slot++;
 					break;
 				default:
+					Bukkit.getLogger().log(Level.WARNING, chatColor("&4Game " + game.toString() + " was found but could not be registered!"));
 					break;
 			}
 		}
@@ -148,6 +150,8 @@ public class PluginManager implements Listener{
 		button.setItemMeta(meta);
 		return button;
 	}
+	
+	
 	private ItemStack loadButton(String path, String name) {
 		Material mat = null;
 		int data = 0;
@@ -161,19 +165,19 @@ public class PluginManager implements Listener{
 			try {
 				mat = Material.matchMaterial(obj[0]);
 			} catch (Exception e) {
-				
+				e.printStackTrace();
 			}
 			
 			try {
 				data = Integer.valueOf(obj[1]);
 			} catch (NumberFormatException e) {
-				
+				e.printStackTrace();
 			}
 		} else {
 			try {
 				mat = Material.matchMaterial(value);
 			} catch (Exception e) {
-				
+				e.printStackTrace();
 			}
 		}
 		if(mat == null){
@@ -225,20 +229,24 @@ public class PluginManager implements Listener{
 		}
 		
 	}
-	
+	/*
 	private boolean isPlayer(UUID uuid) {
 		for(GameManager gManager : registeredGames.values()){
 			if(gManager.isIngame(uuid)) return true;
 		}
 		return false;
-	}
+	}*/
 	
 	@EventHandler
 	public void onInvClose(InventoryCloseEvent e) {
 		for(GameManager manager : registeredGames.values()){
 			if(manager.isIngame(e.getPlayer().getUniqueId())){
 				manager.onInvClose(e);
+				return;
 			}
+		}
+		if(inGUI.contains(e.getPlayer().getUniqueId())){
+			inGUI.remove(e.getPlayer().getUniqueId());
 		}
 	}
 	
