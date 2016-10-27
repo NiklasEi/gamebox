@@ -2,24 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ad26b229-b98e-4f07-a0b5-b38ca56c90c5" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Vault.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/Games.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/Language.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/Main.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/PluginManager.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/commands/MainCommand.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/commands/Permissions.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/guis/AButton.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/guis/AGui.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/guis/IButton.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/guis/IGui.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/guis/standard/BackButton.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/guis/standard/CloseButton.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/guis/standard/ForwardButton.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/guis/standard/ToMainGUI.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/GameBox.iml" afterPath="$PROJECT_DIR$/GameBox.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/nikl/gamebox/PluginManager.java" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/PluginManager.java" />
     </list>
     <ignored path="GameBox.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -43,8 +26,8 @@
       <file leaf-file-name="PluginManager.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/me/nikl/gamebox/PluginManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="414">
-              <caret line="136" column="22" selection-start-line="136" selection-start-column="22" selection-end-line="136" selection-end-column="22" />
+            <state relative-caret-position="130">
+              <caret line="105" column="25" selection-start-line="105" selection-start-column="25" selection-end-line="105" selection-end-column="25" />
               <folding />
             </state>
           </provider>
@@ -671,7 +654,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="1301" height="744" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -684,7 +667,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24980783" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24980783" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32884902" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -920,8 +903,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/me/nikl/gamebox/PluginManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
-          <caret line="136" column="22" selection-start-line="136" selection-start-column="22" selection-end-line="136" selection-end-column="22" />
+        <state relative-caret-position="130">
+          <caret line="105" column="25" selection-start-line="105" selection-start-column="25" selection-end-line="105" selection-end-column="25" />
           <folding />
         </state>
       </provider>
