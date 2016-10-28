@@ -1,9 +1,6 @@
 package me.nikl.gamebox;
 
-import me.nikl.gamebox.games.GameManager;
-import me.nikl.gamebox.games.battleship.BattleshipManager;
-import me.nikl.gamebox.games.gemcrush.GemCrushManager;
-import me.nikl.gamebox.games.minesweeper.MinesweeperManager;
+import me.nikl.gamebox.games.*;
 import me.nikl.gamebox.nms.NMSUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -46,9 +43,9 @@ public class PluginManager implements Listener{
 	private Inventory mainGUI;
 	
 	// registered games
-	private ConcurrentHashMap<Games, GameManager> registeredGames;
+	private ConcurrentHashMap<EnumGames, IGameManager> registeredGames;
 	
-	private Map<Integer, Games> slots;
+	private Map<Integer, EnumGames> slots;
 	
 	private Set<UUID> inGUI;
 	
@@ -88,31 +85,31 @@ public class PluginManager implements Listener{
 		int slot = 0;
 		if(!config.isConfigurationSection("games")) return;
 		ConfigurationSection gamesSection = config.getConfigurationSection("games");
-		for(Games game : Games.values()){
+		for(EnumGames game : EnumGames.values()){
 			if(!gamesSection.getBoolean(game.toString() + ".enabled")){
 				Bukkit.getConsoleSender().sendMessage(Main.plainPrefix + " the game " + game.toString() + " is disabled");
 				continue;
 			}
 			switch (game.toString()) {
 				case "minesweeper":
-					registeredGames.put(Games.MINESWEEPER, new MinesweeperManager(plugin));
+					registeredGames.put(EnumGames.MINESWEEPER, new MinesweeperManager(plugin));
 					mainGUI.setItem(slot, loadButton("games." + game, "&1Minesweeper"));
-					slots.put(slot, Games.MINESWEEPER);
+					slots.put(slot, EnumGames.MINESWEEPER);
 					slot++;
 					break;
 				case "gemcrush":
-					registeredGames.put(Games.GEMCRUSH, new GemCrushManager(plugin));
+					registeredGames.put(EnumGames.GEMCRUSH, new GemCrushManager(plugin));
 					mainGUI.setItem(slot, loadButton("games." + game, "&1GemCrush"));
-					slots.put(slot, Games.GEMCRUSH);
+					slots.put(slot, EnumGames.GEMCRUSH);
 					slot++;
 					break;
 				case "battleship":
-					registeredGames.put(Games.BATTLESHIP, new BattleshipManager(plugin));
+					registeredGames.put(EnumGames.BATTLESHIP, new BattleshipManager(plugin));
 					ArrayList<String> testLore = new ArrayList<>();
 					testLore.add(chatColor("&1Testing the lore"));
 					testLore.add(chatColor("&aTest row 2"));
 					mainGUI.setItem(slot, loadButton("games." + game, "&1Battleship", testLore));
-					slots.put(slot, Games.BATTLESHIP);
+					slots.put(slot, EnumGames.BATTLESHIP);
 					slot++;
 					break;
 				default:
@@ -207,7 +204,7 @@ public class PluginManager implements Listener{
 		if(inGUI.contains(uuid)){
 			e.setCancelled(true);
 			if(slots.containsKey(e.getSlot())){
-				if(Main.debug) player.sendMessage(" Game clicked: " + slots.get(e.getSlot()));
+				if(Main.debug) player.sendMessage(" IGame clicked: " + slots.get(e.getSlot()));
 				inGUI.remove(uuid);
 				registeredGames.get(slots.get(e.getSlot())).openGameGUI(player);
 			} else if(e.getCurrentItem() != null && e.getCurrentItem().getType() == closeButton.getType()){
@@ -216,7 +213,7 @@ public class PluginManager implements Listener{
 			}
 			return;
 		}
-		for(GameManager manager : registeredGames.values()){
+		for(IGameManager manager : registeredGames.values()){
 			if(manager.isIngame(uuid)){
 				e.setCancelled(true);
 				manager.onInvClick(e);
@@ -231,7 +228,7 @@ public class PluginManager implements Listener{
 	}
 	/*
 	private boolean isPlayer(UUID uuid) {
-		for(GameManager gManager : registeredGames.values()){
+		for(IGameManager gManager : registeredGames.values()){
 			if(gManager.isIngame(uuid)) return true;
 		}
 		return false;
@@ -239,7 +236,7 @@ public class PluginManager implements Listener{
 	
 	@EventHandler
 	public void onInvClose(InventoryCloseEvent e) {
-		for(GameManager manager : registeredGames.values()){
+		for(IGameManager manager : registeredGames.values()){
 			if(manager.isIngame(e.getPlayer().getUniqueId())){
 				manager.onInvClose(e);
 				return;
@@ -251,7 +248,7 @@ public class PluginManager implements Listener{
 	}
 	
 	public void shutDown() {
-		for(GameManager manager : registeredGames.values()){
+		for(IGameManager manager : registeredGames.values()){
 			manager.onDisable();
 		}
 	}
