@@ -186,4 +186,8 @@ public class Main extends JavaPlugin{
 	public PluginManager getPluginManager() {
 		return pManager;
 	}
+	
+	public NMSUtil getNms(){
+		return this.nms;
+	}
 }
