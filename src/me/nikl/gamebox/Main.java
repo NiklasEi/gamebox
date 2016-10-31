@@ -4,6 +4,7 @@ import me.nikl.gamebox.commands.MainCommand;
 import me.nikl.gamebox.nms.*;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -109,11 +110,11 @@ public class Main extends JavaPlugin{
 		}
 		pManager = new PluginManager(this);
 		
+		pManager.registerGames();
+		
 		// set cmd executor
-		if(!this.getCommand("gamebox").isRegistered()) {
-			if(debug) Bukkit.getConsoleSender().sendMessage("set executor for cmd gamebox");
-			this.getCommand("gamebox").setExecutor(new MainCommand(this));
-		}
+		this.getCommand("gamebox").setExecutor(new MainCommand(this));
+		
 		return true;
 	}
 	
@@ -127,11 +128,6 @@ public class Main extends JavaPlugin{
 		}
 		econ = rsp.getProvider();
 		return econ != null;
-	}
-	
-	
-	public NMSUtil getNMSUtil(){
-		return this.nms;
 	}
 	
 	private boolean setUpNMS() {
@@ -187,7 +183,15 @@ public class Main extends JavaPlugin{
 		return pManager;
 	}
 	
-	public NMSUtil getNms(){
-		return this.nms;
+	public boolean getEconEnabled() {
+		return econEnabled;
+	}
+	
+	public String chatColor(String message) {
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+	
+	public NMSUtil getNMS() {
+		return nms;
 	}
 }
