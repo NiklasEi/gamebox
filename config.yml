@@ -1,0 +1,48 @@
+# ----------------------------------------------------------------------------#
+#                                                                             #
+#                               GameBox config                                #
+#                                                                             #
+# ----------------------------------------------------------------------------#
+#
+# Plugin made by Nikl
+#   if you have any problems/suggestions please contact me on Spigot
+#   or write in the plugin discussion directly
+#
+# Thank you for playing! I hope you like the plugin
+#
+# ----------------------------------------------------------------------------
+
+
+
+# define the language file you want to use (find the files in the folder 'language')
+#   'default.yml' will be overwriten on restart! So you cannot use it if you want customized messages
+#   but the upside of 'default.yml' is that the messages are always complete
+# If you want custom messages please write your own file or use one of the already writen 'lang_xx.yml' files
+# If an update added new messages that are not in your defined file the plugin will print a warning and a list
+#   of missing paths and will use the corresponding messages from the 'default.yml' file until you added them in your file
+langFile: 'default.yml'
+
+
+economy:
+  # this enables economy for the main plugin and all the games
+  #   you can turn on/off economy for each game in the corresponding game config found in 'games/gameName'
+  # THIS OPTION REQUIRES VAULT AND AN ECONOMY PLUGIN!
+  enabled: false
+
+
+# list of games with the possibility to enable/disable each game
+# the symbol will be the clickable item in the GUI to get to the gameGUI (use minecraft materialnames)
+games:
+  minesweeper:
+    enabled: true
+    # use "Material:data" or "ID:data"
+    symbol: "TNT"
+  battleship:
+    enabled: true
+    # use "Material:data" or "ID:data"
+    symbol: "Iron_block"
+  gemcrush:
+    enabled: true
+    # use "Material:data" or "ID:data"
+    symbol: "diamond"
+
