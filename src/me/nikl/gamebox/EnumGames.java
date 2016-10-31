@@ -6,7 +6,7 @@ package me.nikl.gamebox;
  *
  */
 public enum EnumGames {
-	MINESWEEPER("Minesweeper"), BATTLESHIP("Battleship", 2), GEMCRUSH("Gem Crush");
+	MINESWEEPER("Minesweeper"), BATTLESHIP("Battleship", 2), GEMCRUSH("Gem Crush"), TETRIS("Tetris");
 	
 	// number of players per game
 	int playerNumber;
@@ -26,5 +26,9 @@ public enum EnumGames {
 	@Override
 	public String toString(){
 		return this.name().toLowerCase();
+	}
+	
+	public String getName(){
+		return this.name;
 	}
 }
