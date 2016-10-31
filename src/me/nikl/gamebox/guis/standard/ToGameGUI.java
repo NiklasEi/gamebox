@@ -6,6 +6,7 @@ import me.nikl.gamebox.guis.AButton;
 import me.nikl.gamebox.guis.IGui;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -15,11 +16,11 @@ import org.bukkit.inventory.meta.ItemMeta;
  *
  * button to the game gui
  */
-public class ToPluginGUI extends AButton{
+public class ToGameGUI extends AButton{
 	
 	private IGameManager gManager;
 	
-	public ToPluginGUI(IGameManager gManager, Language lang){
+	public ToGameGUI(IGameManager gManager, Language lang){
 		this.gManager = gManager;
 		
 		this.item = new ItemStack(Material.BIRCH_DOOR_ITEM, 1);
@@ -31,6 +32,8 @@ public class ToPluginGUI extends AButton{
 		
 	@Override
 	public void onClick(InventoryClickEvent event, IGui gui) {
-		//toDo
+		if(gManager.openGameGUI((Player)event.getWhoClicked())){
+			gui.removePlayer(event.getWhoClicked().getUniqueId());
+		}
 	}
 }

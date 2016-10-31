@@ -5,6 +5,7 @@ import me.nikl.gamebox.guis.AButton;
 import me.nikl.gamebox.guis.IGui;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -16,6 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
  */
 public class BackButton extends AButton{
 	
+	
 	public BackButton(Language lang){
 		this.item = new ItemStack(Material.STAINED_GLASS_PANE, 1);
 		item.setDurability((short) 14);
@@ -26,6 +28,6 @@ public class BackButton extends AButton{
 	
 	@Override
 	public void onClick(InventoryClickEvent event, IGui gui) {
-		gui.openChildGUI();
+		gui.openChildGUI((Player)event.getWhoClicked(), gui);
 	}
 }

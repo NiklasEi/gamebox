@@ -1,9 +1,11 @@
 package me.nikl.gamebox.guis.standard;
 
 import me.nikl.gamebox.Language;
+import me.nikl.gamebox.Main;
 import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.guis.AButton;
 import me.nikl.gamebox.guis.IGui;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -32,6 +34,10 @@ public class ToMainGUI extends AButton{
 	
 	@Override
 	public void onClick(InventoryClickEvent event, IGui gui) {
-		pluginManager.openGUI((Player)event.getWhoClicked());
+		if(pluginManager.openGUI((Player)event.getWhoClicked(), gui)){
+			gui.removePlayer(event.getWhoClicked().getUniqueId());
+			if(Main.debug)
+				Bukkit.getConsoleSender().sendMessage(" removing from " + gui.toString());
+		}
 	}
 }

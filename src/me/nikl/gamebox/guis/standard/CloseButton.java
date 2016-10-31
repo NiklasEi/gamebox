@@ -26,7 +26,7 @@ public class CloseButton extends AButton {
 	
 	@Override
 	public void onClick(InventoryClickEvent event, IGui gui) {
-		// toDo be sure that the player is removed from gui!
+		gui.removePlayer(event.getWhoClicked().getUniqueId());
 		((Player) event.getWhoClicked()).closeInventory();
 	}
 }

@@ -5,6 +5,7 @@ import me.nikl.gamebox.guis.AButton;
 import me.nikl.gamebox.guis.IGui;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -28,6 +29,6 @@ public class ForwardButton extends AButton{
 	
 	@Override
 	public void onClick(InventoryClickEvent event, IGui gui) {
-		gui.openChildGUI();
+		gui.openChildGUI((Player)event.getWhoClicked(), gui);
 	}
 }
