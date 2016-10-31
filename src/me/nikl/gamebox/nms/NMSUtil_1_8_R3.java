@@ -17,7 +17,7 @@ public class NMSUtil_1_8_R3 implements NMSUtil {
 	@Override
 	public void updateInventoryTitle(Player player, String newTitle) {
 		EntityPlayer ep = ((CraftPlayer)player).getHandle();
-		PacketPlayOutOpenWindow packet = new PacketPlayOutOpenWindow(ep.activeContainer.windowId, "minecraft:chest", new ChatMessage(newTitle), player.getOpenInventory().getTopInventory().getSize());
+		PacketPlayOutOpenWindow packet = new PacketPlayOutOpenWindow(ep.activeContainer.windowId, "minecraft:chest", new ChatMessage(ChatColor.translateAlternateColorCodes('&',newTitle)), player.getOpenInventory().getTopInventory().getSize());
 		ep.playerConnection.sendPacket(packet);
 		ep.updateInventory(ep.activeContainer);
 	}
