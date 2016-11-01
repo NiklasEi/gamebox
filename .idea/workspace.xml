@@ -7,9 +7,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ad26b229-b98e-4f07-a0b5-b38ca56c90c5" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/artifacts/GameBox.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/dictionaries/niklas.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/config.yml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/games/battleship/config.yml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/games/gemcrush/config.yml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/games/minesweeper/config.yml" />
@@ -18,29 +15,12 @@
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/language/lang_en.yml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/plugin.yml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/games/AGameWithTimer.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/games/minesweeper/MinesweeperGame.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/games/minesweeper/MinesweeperGameGUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/games/minesweeper/MinesweeperGameManager.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/games/minesweeper/MinesweeperGameTimer.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/games/tetris/Position.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/games/tetris/TetrisGame.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/games/tetris/TetrisGameGUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/games/tetris/TetrisGameManager.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/games/tetris/elements/AElement.java" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/guis/AGameGUIButton.java" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/guis/gameguis/AGameGUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/guis/headgui/AMultiGUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/guis/headgui/IMultiGUI.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/guis/headgui/LastPageButton.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/guis/headgui/NextPageButton.java" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/guis/maingui/GameButton.java" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/src/me/nikl/gamebox/games/AGameGUI.java" afterPath="" />
       <change type="DELETED" beforePath="$PROJECT_DIR$/src/me/nikl/gamebox/games/IGameGUI.java" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/me/nikl/gamebox/guis/standard/ToPluginGUI.java" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/guis/standard/ToGameGUI.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/nikl/gamebox/EnumGames.java" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/EnumGames.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/nikl/gamebox/Language.java" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/Language.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/nikl/gamebox/Main.java" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/Main.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/nikl/gamebox/PluginManager.java" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/PluginManager.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/nikl/gamebox/commands/MainCommand.java" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/commands/MainCommand.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/nikl/gamebox/commands/Permissions.java" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/commands/Permissions.java" />
@@ -50,16 +30,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/nikl/gamebox/games/IGameManager.java" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/games/IGameManager.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/nikl/gamebox/guis/AGui.java" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/guis/AGui.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/nikl/gamebox/guis/IGui.java" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/guis/IGui.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/nikl/gamebox/guis/standard/BackButton.java" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/guis/standard/BackButton.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/nikl/gamebox/guis/standard/CloseButton.java" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/guis/standard/CloseButton.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/nikl/gamebox/guis/standard/ForwardButton.java" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/guis/standard/ForwardButton.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/nikl/gamebox/guis/standard/ToMainGUI.java" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/guis/standard/ToMainGUI.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/nikl/gamebox/nms/NMSUtil_1_10_R1.java" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/nms/NMSUtil_1_10_R1.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/nikl/gamebox/nms/NMSUtil_1_8_R1.java" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/nms/NMSUtil_1_8_R1.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/nikl/gamebox/nms/NMSUtil_1_8_R2.java" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/nms/NMSUtil_1_8_R2.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/nikl/gamebox/nms/NMSUtil_1_8_R3.java" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/nms/NMSUtil_1_8_R3.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/nikl/gamebox/nms/NMSUtil_1_9_R1.java" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/nms/NMSUtil_1_9_R1.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/me/nikl/gamebox/nms/NMSUtil_1_9_R2.java" afterPath="$PROJECT_DIR$/src/me/nikl/gamebox/nms/NMSUtil_1_9_R2.java" />
     </list>
     <ignored path="GameBox.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -80,11 +50,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="PluginManager.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="PluginManager.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/me/nikl/gamebox/PluginManager.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="346">
               <caret line="85" column="27" selection-start-line="85" selection-start-column="27" selection-end-line="85" selection-end-column="27" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Language.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/me/nikl/gamebox/Language.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="234">
+              <caret line="35" column="18" selection-start-line="35" selection-start-column="18" selection-end-line="35" selection-end-column="18" />
               <folding />
             </state>
           </provider>
@@ -181,18 +161,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AGameGUI.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/me/nikl/gamebox/guis/gameguis/AGameGUI.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="198">
-              <caret line="32" column="32" selection-start-line="32" selection-start-column="32" selection-end-line="32" selection-end-column="32" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
@@ -215,7 +183,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/me/nikl/gamebox/guis/IGui.java" />
         <option value="$PROJECT_DIR$/src/me/nikl/gamebox/guis/headgui/AMultiGUI.java" />
         <option value="$PROJECT_DIR$/src/me/nikl/gamebox/commands/MainCommand.java" />
         <option value="$PROJECT_DIR$/src/me/nikl/gamebox/guis/standard/BackButton.java" />
@@ -266,6 +233,7 @@
         <option value="$PROJECT_DIR$/src/me/nikl/gamebox/games/gemcrush/GemCrushGameGUI.java" />
         <option value="$PROJECT_DIR$/plugin.yml" />
         <option value="$PROJECT_DIR$/config.yml" />
+        <option value="$PROJECT_DIR$/src/me/nikl/gamebox/Language.java" />
       </list>
     </option>
   </component>
@@ -1142,14 +1110,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/me/nikl/gamebox/Language.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-327">
-          <caret line="29" column="31" selection-start-line="29" selection-start-column="31" selection-end-line="29" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/language/lang_en.yml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="126">
@@ -1400,6 +1360,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="346">
           <caret line="85" column="27" selection-start-line="85" selection-start-column="27" selection-end-line="85" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/me/nikl/gamebox/Language.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="35" column="18" selection-start-line="35" selection-start-column="18" selection-end-line="35" selection-end-column="18" />
           <folding />
         </state>
       </provider>

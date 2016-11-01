@@ -1,0 +1,102 @@
+# ----------------------------------------------------------------------------#
+#                                                                             #
+#                              Battleship config                              #
+#                                                                             #
+# ----------------------------------------------------------------------------#
+
+# name of the language file (in the folder 'language')
+#   the default.yml file is overwriten on every server restart!
+#   This means you will have to use the other files to customize the messages, but since i am adding messages regulary in updates
+#   you can use the default file if you just want to have the up to date english default messages
+langFile: "default.yml"
+
+
+
+# number of ships in the game (only 1 or 2)
+
+# size: 5 blocks
+aircraftCarrier: 1
+# size: 4 blocks
+battleship: 1
+# size: 3 blocks
+cruiser: 2
+# size: 2 blocks
+destroyer: 1
+
+gameRules:
+  # if this is true players can shoot again after a hit and the grids will change after every miss
+  #   if it is false the grid will change after every shot regardless of hit/miss
+  fireAgainAfterHit: true
+
+# some stuff you can do when a game ends.
+onGameEnd:
+  # You can dispatch commands. Use %winner% for the playername of the winner and %looser% for the looser 
+  dispatchCommands:
+    enabled: false
+    commands:
+    - "give %winner% diamond 1"
+    - "tell %winner% congrats!"
+    - "tell %looser% next time you'll beat him!"
+  # You can broadcast. Use %winner% for the playername of the winner and %looser% for the looser 
+  broadcast:
+    enabled: false
+    messages:
+    - "%winner% won against %looser% in a game of Battleship!"
+    - "Do &2/bs %winner% &rto try against %winner% yourself ;)"     
+
+
+# requires vault and an economy plugin
+economy:
+  enabled: false
+  # both players pay
+  cost: 0
+  # winner gets
+  reward: 0
+
+# use "Material:data" or "ID:data"
+# Some materials can not be displayed in an inventory, just test everything after changing
+# You are advised to use different materials. At least on the same grid
+#   otherwise the game could break
+materials:
+  yourGrid:
+    ship:
+      material: "Iron_block"
+      name: "ship"
+    lockedShip:
+      material: "7"
+      name: "Locked ship"
+    miss:
+      material: "160:3"
+      name: "Yeah! A miss!"
+    hit:
+      material: "35:14"
+      name: "Damn! A hit..."
+    water:
+      material: "160:11"
+      name: "Water"
+  othersGrid:
+    cover:
+      material: "WOOL:7"
+      name: "Cover"
+    miss:
+      material: "160:11"
+      name: "That did not hit..."
+    hit:
+      material: "Iron_block"
+      name: "Booom! Gotcha"
+
+    
+# Customise the timers used in the game (all times in seconds)
+timers:
+  # timer used during the ship-set part of the game
+  shipSetTimer:
+    countdown: 30
+  # timer used during the main part of the game
+  fireTimer:
+    countdown: 10
+  # timer used when attacker and defender change
+  changingGrids:
+    countdown: 3
+  # timer used for the invitations
+  invitationTimer:
+    validFor: 15

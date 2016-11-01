@@ -1,0 +1,43 @@
+# ----------------------------------------------------------------------------#
+#                                                                             #
+#                             Minesweeper config                              #
+#                                                                             #
+# ----------------------------------------------------------------------------#
+
+# name of the language file (in the folder 'language')
+langFile: "lang_en.yml"
+
+
+# number of mines in the game (only integer from 1 to 30)
+mines: 8
+
+# requires vault
+economy:
+  enabled: false
+  cost: 0
+  reward: 0
+
+  
+# you can use the section below to run commands if a player won a game
+#   %player% will be replaced by the players name
+wonCommands:
+  enabled: false
+  # commands to dispatch after a player won a game
+  commands:
+  - "tell %player% [Minesweeper] You won a diamond"
+  - "give %player% diamond 1"
+
+
+# use "Material:data" or "ID:data"
+materials:
+  cover: "160:7"
+  flag: "SIGN"
+  mine: "TNT"
+  warning: "WOOL:1"
+
+# you can use colors with &
+displaynames:
+  cover: "&9Cover"
+  warning: "&eWarning"
+  mine: "&4Boooom!"
+  flag: "&2Flag"
