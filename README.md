@@ -1,0 +1,1 @@
+This plugin is intendet to combine all my inventory games and give acces to them in one GUI
