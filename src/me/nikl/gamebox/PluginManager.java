@@ -1,6 +1,10 @@
 package me.nikl.gamebox;
 
 import me.nikl.gamebox.games.*;
+import me.nikl.gamebox.games.gemcrush.GemCrushManager;
+import me.nikl.gamebox.games.minesweeper.MinesweeperGameManager;
+import me.nikl.gamebox.guis.IGui;
+import me.nikl.gamebox.guis.maingui.MainGui;
 import me.nikl.gamebox.nms.NMSUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -12,8 +16,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -40,14 +42,10 @@ public class PluginManager implements Listener{
 	private FileConfiguration config;
 	
 	// main GUI with all registered games and a close button
-	private Inventory mainGUI;
+	private MainGui mainGUI;
 	
 	// registered games
 	private ConcurrentHashMap<EnumGames, IGameManager> registeredGames;
-	
-	private Map<Integer, EnumGames> slots;
-	
-	private Set<UUID> inGUI;
 	
 	private NMSUtil nms;
 	
@@ -57,32 +55,18 @@ public class PluginManager implements Listener{
 	public PluginManager(Main plugin){
 		this.plugin = plugin;
 		this.lang = plugin.lang;
-		this.nms = plugin.getNms();
+		this.nms = plugin.getNMS();
 		this.config = plugin.getConfig();
-		
-		this.inGUI = new HashSet<>();
-		this.slots = new HashMap<>();
-		
-		this.registeredGames = new ConcurrentHashMap<>();
-		
-		this.mainGUI = Bukkit.createInventory(null, InventoryType.CHEST, "Main GUI");
-		
-		this.closeButton = new ItemStack(Material.BARRIER,1);
-		ItemMeta meta = closeButton.getItemMeta();
-		meta.setDisplayName(chatColor(lang.BUTTON_EXIT));
-		closeButton.setItemMeta(meta);
-		
-		mainGUI.setItem(22, closeButton);
-		
-		
-		registerGames();
-		
+				
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 	
-	private void registerGames() {
+	public void registerGames() {
+		if(registeredGames != null){
+			this.shutDown();
+		}
+		this.registeredGames = new ConcurrentHashMap<>();
 		if(Main.debug) Bukkit.getConsoleSender().sendMessage("registering games");
-		int slot = 0;
 		if(!config.isConfigurationSection("games")) return;
 		ConfigurationSection gamesSection = config.getConfigurationSection("games");
 		for(EnumGames game : EnumGames.values()){
@@ -92,18 +76,12 @@ public class PluginManager implements Listener{
 			}
 			switch (game.toString()) {
 				case "minesweeper":
-					registeredGames.put(EnumGames.MINESWEEPER, new MinesweeperManager(plugin));
-					mainGUI.setItem(slot, loadButton("games." + game, "&1Minesweeper"));
-					slots.put(slot, EnumGames.MINESWEEPER);
-					slot++;
+					registeredGames.put(EnumGames.MINESWEEPER, new MinesweeperGameManager(plugin));
 					break;
 				case "gemcrush":
 					registeredGames.put(EnumGames.GEMCRUSH, new GemCrushManager(plugin));
-					mainGUI.setItem(slot, loadButton("games." + game, "&1GemCrush"));
-					slots.put(slot, EnumGames.GEMCRUSH);
-					slot++;
 					break;
-				case "battleship":
+				/*case "battleship":
 					registeredGames.put(EnumGames.BATTLESHIP, new BattleshipManager(plugin));
 					ArrayList<String> testLore = new ArrayList<>();
 					testLore.add(chatColor("&1Testing the lore"));
@@ -111,12 +89,13 @@ public class PluginManager implements Listener{
 					mainGUI.setItem(slot, loadButton("games." + game, "&1Battleship", testLore));
 					slots.put(slot, EnumGames.BATTLESHIP);
 					slot++;
-					break;
+					break;*/
 				default:
 					Bukkit.getLogger().log(Level.WARNING, chatColor("&4Game " + game.toString() + " was found but could not be registered!"));
 					break;
 			}
 		}
+		this.mainGUI = new MainGui(this, config);
 	}
 	
 	/***
@@ -125,19 +104,25 @@ public class PluginManager implements Listener{
 	 *
 	 * @param player this players inventory will be opened
 	 */
-	public void openGUI(Player player){
-		player.openInventory(mainGUI);
-		nms.updateInventoryTitle(player, chatColor(lang.TITLE_MAIN_GUI.replaceAll("%player%", player.getName())));
-		inGUI.add(player.getUniqueId());
-		if(Main.debug)nms.sendTitle(player, "still testing", "bla bla");
+	public boolean openGUI(Player player, IGui from){
+		boolean b = mainGUI.openGui(player, from);
+		if(b) {
+			mainGUI.addToGui(player.getUniqueId());
+			if (Main.debug)
+				Bukkit.getConsoleSender().sendMessage("in gui? " + mainGUI.inGUI(player.getUniqueId()));
+			nms.updateInventoryTitle(player, lang.TITLE_MAIN_GUI.replaceAll("%player%", player.getName()));
+			if (Main.debug)
+				nms.sendTitle(player, "still testing", "bla bla");
+		}
+		return b;
 	}
 	
 	/**
 	 * Load a game button from config and add a lore to it
 	 *
-	 * @param path path to ConfigurationSection with settings for the button
-	 * @param name Display name of the button
-	 * @param lore lore of the button
+	 * @param path: path to ConfigurationSection with settings for the button
+	 * @param name: Display name of the button
+	 * @param lore: lore of the button
 	 * @return loaded ItemStack with lore
 	 */
 	private ItemStack loadButton(String path, String name, ArrayList<String> lore){
@@ -201,16 +186,18 @@ public class PluginManager implements Listener{
 		Player player = (Player) e.getWhoClicked();
 		UUID uuid = player.getUniqueId();
 		
-		if(inGUI.contains(uuid)){
-			e.setCancelled(true);
-			if(slots.containsKey(e.getSlot())){
-				if(Main.debug) player.sendMessage(" IGame clicked: " + slots.get(e.getSlot()));
-				inGUI.remove(uuid);
-				registeredGames.get(slots.get(e.getSlot())).openGameGUI(player);
-			} else if(e.getCurrentItem() != null && e.getCurrentItem().getType() == closeButton.getType()){
-				inGUI.remove(uuid);
-				player.closeInventory();
+		if(Main.debug){
+			Bukkit.getConsoleSender().sendMessage("Player in Main GUI? " + mainGUI.inGUI(uuid));
+			for(IGameManager manager : registeredGames.values()) {
+				Bukkit.getConsoleSender().sendMessage("Player in " + manager.toString() + " GUI? " + manager.isInGUI(uuid));
+				Bukkit.getConsoleSender().sendMessage("Player in " + manager.toString() + " game? " + manager.isIngame(uuid));
 			}
+		}
+		
+		
+		if(mainGUI.inGUI(uuid)){
+			e.setCancelled(true);
+			mainGUI.onClick(e);
 			return;
 		}
 		for(IGameManager manager : registeredGames.values()){
@@ -226,13 +213,6 @@ public class PluginManager implements Listener{
 		}
 		
 	}
-	/*
-	private boolean isPlayer(UUID uuid) {
-		for(IGameManager gManager : registeredGames.values()){
-			if(gManager.isIngame(uuid)) return true;
-		}
-		return false;
-	}*/
 	
 	@EventHandler
 	public void onInvClose(InventoryCloseEvent e) {
@@ -242,8 +222,8 @@ public class PluginManager implements Listener{
 				return;
 			}
 		}
-		if(inGUI.contains(e.getPlayer().getUniqueId())){
-			inGUI.remove(e.getPlayer().getUniqueId());
+		if(mainGUI.inGUI(e.getPlayer().getUniqueId())){
+			mainGUI.removePlayer(e.getPlayer().getUniqueId());
 		}
 	}
 	
@@ -251,9 +231,28 @@ public class PluginManager implements Listener{
 		for(IGameManager manager : registeredGames.values()){
 			manager.onDisable();
 		}
+		registeredGames.clear();
+	}
+	
+	public void removeFromGUI(UUID uuid){
+		mainGUI.removePlayer(uuid);
+	}
+	
+	public ConcurrentHashMap<EnumGames, IGameManager> getRegisteredGames(){
+		return this.registeredGames;
+	}
+	
+	public Main getPlugin() {
+		return this.plugin;
 	}
 	
 	private String chatColor(String message){
 		return ChatColor.translateAlternateColorCodes('&', message);
 	}
+	
+	public IGui getMainGUI() {
+		return mainGUI;
+	}
+	
+	
 }
