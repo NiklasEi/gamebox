@@ -1,6 +1,8 @@
 package me.nikl.gamebox.games;
 
 import me.nikl.gamebox.Main;
+import me.nikl.gamebox.guis.IGui;
+import me.nikl.gamebox.guis.gameguis.AGameGUI;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -27,7 +29,7 @@ public interface IGameManager {
 	
 	void onDisable();
 	
-	void openGameGUI(Player player);
+	boolean openGameGUI(Player player);
 	
 	void removeFromGUI(Player player);
 	
@@ -47,7 +49,7 @@ public interface IGameManager {
 	
 	// if a game is configured wrong or another error happens, this will be called by the game
 	// block clicks in the game gui and note in the lore ToDo!!!
-	void disableGame();
+	void disableGame(IGame game);
 	
 	double getPrice();
 }

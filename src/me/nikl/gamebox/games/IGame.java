@@ -11,9 +11,6 @@ import org.bukkit.entity.Player;
  */
 public interface IGame {
 	
-	// update inventory title here
-	 void updateInventory();
-	
 	// called on disable
 	void onDisable();
 	
@@ -23,4 +20,6 @@ public interface IGame {
 	// return all players
 	Player[] getPlayers();
 	
+	//return number of players
+	int getNumPlayers();
 }
