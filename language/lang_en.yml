@@ -1,0 +1,60 @@
+# use & for colors
+#   placeholders will be listed in front of the messages
+
+
+# command messages of the main plugin
+commandMessages:
+  noPermission: ' &2You have no permission to do that!'
+  onlyAsPlayer: ' &2You can only do that as a player'
+  pluginReloaded: ' &4Plugin was reloaded'
+  wrongUsage:
+  - ' Do &2/gamebox&r to display the main GUI'
+  - ' For more information do &2/gamebox help&r'
+  help:
+  - ' ToDo'
+
+mainButtons:
+  exitButton: "&4Click to exit"
+  toMainGUIButton: "&2To main GUI"
+  toGameGUIButton: "&2To game GUI"
+  forwardButton: "&2Forward"
+  backwardButton: "&2Back"
+
+inventoryTitles:
+  # use %player% for the player name
+  mainGUI: '&1Game&1Box&r    Welcome %player%'
+
+
+
+gemcrush:
+  econ:
+    # use %cost% for the amount payed
+    payed: " &2You paid &4%cost% for a game of GemCrush"
+    notEnoughMoney: " &4GemCrush is too expensive for you :("
+  # use %score% to display the number of points at the end of the game
+  finishedWithoutPayout: " You finished a game of GemCrush with &2%score%&r points."
+  # use %score% for the score and %reward% for the reward
+  #   rewards are set in the config!
+  # this message will be send instead of the above 'finishedWithoutPayout' if the money reward is > 0
+  finishedWithPayout: " You finished with &2%score%&r points and won &2%reward%&r dollar!"
+  game:
+    # Inventory title
+    #   use %moves% for the number of moves left and %score% for the score
+    inventoryTitle: "GemCrush  moves: %moves% score: %score%"
+
+minesweeper:
+  econ:
+    # use %cost% for the amount payed
+    payed: " &2You paid &4%cost%"
+    notEnoughMoney: " &4You do not have not enough money!"
+    # use %reward% for the amount the player won
+    wonMoney: " &2You won &1%reward%&2!"
+  inventoryTitles:
+    # displayed before the Game starts
+    beginning: "Minesweeper        &2Click to start"
+    # use %state% to display the number of flags and the number of mines that are left
+    #   %timer% will be replaced by the timer counting up
+    ingame: "Minesweeper     %state%   &1%timer%"
+    # use %timer% to display the time played
+    won: "Minesweeper     &2You won in &1%timer%"
+    lost: "Minesweeper     &4You lost"
