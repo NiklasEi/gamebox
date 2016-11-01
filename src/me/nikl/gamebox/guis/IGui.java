@@ -14,16 +14,18 @@ public interface IGui {
 	
 	void onClick(InventoryClickEvent event);
 	
-	void openGui(UUID player);
+	boolean openGui(UUID player, IGui from);
 	
-	void closeGui(UUID player);
+	void removePlayer(UUID player);
 	
-	void openGui(Player player);
+	boolean openGui(Player player, IGui from);
 	
-	void closeGui(Player player);
+	void removePlayer(Player player);
 	
-	void openParentGUI();
+	boolean openParentGUI(Player player, IGui from);
 	
-	void openChildGUI();
+	boolean openChildGUI(Player player, IGui from);
+	
+	boolean inGUI(UUID uuid);
 	
 }
