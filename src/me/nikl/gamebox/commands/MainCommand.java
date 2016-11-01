@@ -44,10 +44,8 @@ public class MainCommand implements CommandExecutor{
 				return true;
 			}
 			Player player = (Player) sender;
-			pManager.openGUI(player);
+			pManager.openGUI(player, null);
 			return true;
-			
-			
 		// CMD with options
 		} else if(args.length == 1){
 			
