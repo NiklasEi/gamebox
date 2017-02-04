@@ -1,0 +1,2 @@
+left bottom: profile (stats and friends?)
+right bottom: help (Maybe also on ever game page? Should register from the Game)

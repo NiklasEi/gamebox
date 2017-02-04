@@ -16,6 +16,8 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * Handle the events
  * Store all players that are in the game atm with their game object
+ *
+ * This is the connection between GameBox and each Game
  */
 public interface IGameManager {
 	

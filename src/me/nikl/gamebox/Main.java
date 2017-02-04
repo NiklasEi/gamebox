@@ -111,8 +111,6 @@ public class Main extends JavaPlugin{
 		}
 		pManager = new PluginManager(this);
 		
-		pManager.registerGames();
-		
 		// set cmd executor
 		this.getCommand("gamebox").setExecutor(new MainCommand(this));
 		
