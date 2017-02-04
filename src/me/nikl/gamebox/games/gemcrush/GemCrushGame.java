@@ -26,7 +26,6 @@ public class GemCrushGame extends AGameWithTimer {
 	
 	private GameState state;
 	private UUID playerUUID;
-	private Player[] players;
 	private Player player;
 	private int numPlayers;
 	private GemCrushManager manager;
@@ -70,7 +69,7 @@ public class GemCrushGame extends AGameWithTimer {
 	public GemCrushGame(GemCrushManager manager, UUID playerUUID){
 		super(playerUUID, manager);
 		this.numPlayers = 1;
-		players = new Player[numPlayers];
+		this.players = new Player[numPlayers];
 		this.playerUUID = playerUUID;
 		this.manager = manager;
 		this.plugin = manager.getPlugin();
@@ -418,6 +417,8 @@ public class GemCrushGame extends AGameWithTimer {
 		}
 		return -1;
 	}
+	
+	@Override
 	public void onDisable() {
 		this.cancel();
 		if(breakTimer != null)

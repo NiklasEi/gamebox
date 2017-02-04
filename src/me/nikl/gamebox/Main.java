@@ -107,6 +107,7 @@ public class Main extends JavaPlugin{
 		// if it's not null disable first then get a new manager
 		if(pManager != null){
 			pManager.shutDown();
+			pManager = null;
 		}
 		pManager = new PluginManager(this);
 		
@@ -164,6 +165,11 @@ public class Main extends JavaPlugin{
 				break;
 			case "v1_8_R1":
 				nms = new NMSUtil_1_8_R1();
+				
+				break;
+			case "v1_11_R1":
+				nms = new NMSUtil_1_11_R1();
+				
 				break;
 		}
 		return nms != null;

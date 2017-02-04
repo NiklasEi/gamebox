@@ -3,6 +3,7 @@ package me.nikl.gamebox;
 import me.nikl.gamebox.games.*;
 import me.nikl.gamebox.games.gemcrush.GemCrushManager;
 import me.nikl.gamebox.games.minesweeper.MinesweeperGameManager;
+import me.nikl.gamebox.games.tetris.TetrisGameManager;
 import me.nikl.gamebox.guis.IGui;
 import me.nikl.gamebox.guis.maingui.MainGui;
 import me.nikl.gamebox.nms.NMSUtil;
@@ -64,6 +65,7 @@ public class PluginManager implements Listener{
 	public void registerGames() {
 		if(registeredGames != null){
 			this.shutDown();
+			Bukkit.getConsoleSender().sendMessage("registeredGames not null on restart!");
 		}
 		this.registeredGames = new ConcurrentHashMap<>();
 		if(Main.debug) Bukkit.getConsoleSender().sendMessage("registering games");
@@ -74,11 +76,11 @@ public class PluginManager implements Listener{
 				Bukkit.getConsoleSender().sendMessage(Main.plainPrefix + " the game " + game.toString() + " is disabled");
 				continue;
 			}
-			switch (game.toString()) {
-				case "minesweeper":
+			switch (game){
+				case MINESWEEPER:
 					registeredGames.put(EnumGames.MINESWEEPER, new MinesweeperGameManager(plugin));
 					break;
-				case "gemcrush":
+				case GEMCRUSH:
 					registeredGames.put(EnumGames.GEMCRUSH, new GemCrushManager(plugin));
 					break;
 				/*case "battleship":
@@ -90,8 +92,11 @@ public class PluginManager implements Listener{
 					slots.put(slot, EnumGames.BATTLESHIP);
 					slot++;
 					break;*/
+				case TETRIS:
+					registeredGames.put(EnumGames.TETRIS, new TetrisGameManager(plugin));
+					break;
 				default:
-					Bukkit.getLogger().log(Level.WARNING, chatColor("&4Game " + game.toString() + " was found but could not be registered!"));
+					Bukkit.getLogger().log(Level.WARNING, ("Game " + game.toString() + " was found but could not be registered!"));
 					break;
 			}
 		}
@@ -186,12 +191,23 @@ public class PluginManager implements Listener{
 		Player player = (Player) e.getWhoClicked();
 		UUID uuid = player.getUniqueId();
 		
-		if(Main.debug){
-			Bukkit.getConsoleSender().sendMessage("Player in Main GUI? " + mainGUI.inGUI(uuid));
-			for(IGameManager manager : registeredGames.values()) {
-				Bukkit.getConsoleSender().sendMessage("Player in " + manager.toString() + " GUI? " + manager.isInGUI(uuid));
-				Bukkit.getConsoleSender().sendMessage("Player in " + manager.toString() + " game? " + manager.isIngame(uuid));
+		if(Main.debug ){
+			boolean send = false;
+			if(mainGUI.inGUI(uuid)){
+				Bukkit.getConsoleSender().sendMessage("Player in Main GUI!");
+				send = true;
 			}
+			for(IGameManager manager : registeredGames.values()) {
+				if(manager.isInGUI(uuid)){
+					send = true;
+					Bukkit.getConsoleSender().sendMessage("Player in " + manager.toString());
+				}
+				if(manager.isIngame(uuid)){
+					send = true;
+					Bukkit.getConsoleSender().sendMessage("Player in " + manager.toString());
+				}
+			}
+			if(send)Bukkit.getConsoleSender().sendMessage("# - # - # - # - # - # - # - # - # - # - # - # - # - # - #");
 		}
 		
 		
@@ -217,7 +233,7 @@ public class PluginManager implements Listener{
 	@EventHandler
 	public void onInvClose(InventoryCloseEvent e) {
 		for(IGameManager manager : registeredGames.values()){
-			if(manager.isIngame(e.getPlayer().getUniqueId())){
+			if(manager.isIngame(e.getPlayer().getUniqueId()) || manager.isInGUI(e.getPlayer().getUniqueId())){
 				manager.onInvClose(e);
 				return;
 			}
@@ -231,6 +247,8 @@ public class PluginManager implements Listener{
 		for(IGameManager manager : registeredGames.values()){
 			manager.onDisable();
 		}
+		this.mainGUI.closeAll();
+		this.mainGUI = null;
 		registeredGames.clear();
 	}
 	

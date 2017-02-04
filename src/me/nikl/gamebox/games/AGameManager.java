@@ -4,13 +4,16 @@ import me.nikl.gamebox.EnumGames;
 import me.nikl.gamebox.Language;
 import me.nikl.gamebox.Main;
 import me.nikl.gamebox.commands.Permissions;
+import me.nikl.gamebox.games.minesweeper.MinesweeperGame;
 import me.nikl.gamebox.guis.IGui;
 import me.nikl.gamebox.guis.gameguis.AGameGUI;
 import me.nikl.gamebox.nms.NMSUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 
 import java.io.*;
 import java.util.UUID;
@@ -32,13 +35,16 @@ public abstract class AGameManager implements IGameManager {
 	protected FileConfiguration gameConfig;
 	protected Language lang;
 	
-	protected double price;
+	
+	protected boolean econEnabled;
+	protected double cost;
 	
 	public AGameManager(Main plugin, EnumGames game) {
 		this.plugin = plugin;
 		this.nms = plugin.getNMS();
 		this.lang = plugin.lang;
-		this.price = 0.;
+		this.cost = 0.;
+		
 		
 		
 		this.games = new ConcurrentHashMap<>();
@@ -47,6 +53,8 @@ public abstract class AGameManager implements IGameManager {
 		this.game = game;
 		
 		loadGameConfig(game.toString());
+		this.econEnabled = gameConfig.getBoolean("economy.enabled", false);
+		this.cost = gameConfig.getDouble("economy.cost", 0.);
 	}
 	
 	private void loadGameConfig(String gameName) {
@@ -71,6 +79,40 @@ public abstract class AGameManager implements IGameManager {
 	}
 	
 	
+	
+	@Override
+	public boolean startGame(Player player) {
+		if(Main.debug)
+			Bukkit.getConsoleSender().sendMessage("pluginEcon: " + plugin.getEconEnabled() + "   bypassPerm: " + player.hasPermission(Permissions.getGamePerm(game, "bypass").perm) + "    price: " + cost);
+		if(plugin.getEconEnabled() && !player.hasPermission(Permissions.getGamePerm(game, "bypass").perm) && cost > 0){
+			if(Main.econ.getBalance(player) >= cost){
+				Main.econ.withdrawPlayer(player, cost);
+				player.sendMessage(plugin.chatColor(Main.prefix + lang.G_PAYED.replaceAll("%cost%", cost+"").replaceAll("%game%", game.getName())));
+				return true;
+			} else {
+				player.sendMessage(plugin.chatColor(Main.prefix + lang.G_NOT_ENOUGH_MONEY.replaceAll("%game%", game.getName())));
+				return false;
+			}
+		} else {
+			return true;
+		}
+	}
+	
+	
+	@Override
+	public void onInvClose(InventoryCloseEvent e) {
+		if(!isIngame(e.getPlayer().getUniqueId()) && !isInGUI(e.getPlayer().getUniqueId())){
+			return;
+		}
+		UUID uuid = e.getPlayer().getUniqueId();
+		if(Main.debug)e.getPlayer().sendMessage("Inventory was closed");//XXX
+		if(games.containsKey(uuid)) {
+			games.get(uuid).onDisable();
+			games.remove(uuid);
+		}
+		GUIs.remove(uuid);
+	}
+	
 	@Override
 	public boolean isIngame(UUID uuid) {
 		return games.keySet().contains(uuid);
@@ -89,7 +131,7 @@ public abstract class AGameManager implements IGameManager {
 		if(player.hasPermission(Permissions.getGamePerm(game, "play").perm)){
 			gameGUI.openGui(player, plugin.getPluginManager().getMainGUI());
 			GUIs.put(player.getUniqueId(), gameGUI);
-			nms.updateInventoryTitle(player, "&1" + game.getName());
+			nms.updateInventoryTitle(player, "&1" + game.getName() + "    &aHave fun!");
 			return true;
 		}
 		return false;
@@ -131,7 +173,7 @@ public abstract class AGameManager implements IGameManager {
 	
 	@Override
 	public double getPrice(){
-		return this.price;
+		return this.cost;
 	}
 	
 	
@@ -149,5 +191,50 @@ public abstract class AGameManager implements IGameManager {
 	@Override
 	public ConcurrentHashMap<UUID, IGame> getRunningGames() {
 		return games;
+	}
+	
+	@Override
+	public void won(Player player){
+		player.sendMessage(plugin.chatColor(Main.prefix + lang.G_WON.replaceAll("%game%", game.getName())));
+	}
+	
+	@Override
+	public void won(Player player, int score){
+		player.sendMessage(plugin.chatColor(Main.prefix + lang.G_WON_WITH_SCORE.replaceAll("%game%", game.getName()).replaceAll("%score%", score +"")));
+	}
+	
+	@Override
+	public void won(Player player, String time){
+		player.sendMessage(plugin.chatColor(Main.prefix + lang.G_WON_IN_TIME.replaceAll("%game%", game.getName()).replaceAll("%time%", time)));
+	}
+	
+	@Override
+	public void won(Player player, double reward){
+		if(player.hasPermission(Permissions.getGamePerm(game, "bypass").perm) || !plugin.getEconEnabled() || !(reward > 0)){
+			won(player);
+			return;
+		}
+		Main.econ.depositPlayer(player, reward);
+		player.sendMessage(plugin.chatColor(Main.prefix + lang.G_WON_MONEY.replaceAll("%reward%", reward+"")));
+	}
+	
+	@Override
+	public void won(Player player, double reward, int score){
+		if(player.hasPermission(Permissions.getGamePerm(game, "bypass").perm) || !plugin.getEconEnabled() || !(reward > 0)){
+			won(player, score);
+			return;
+		}
+		Main.econ.depositPlayer(player, reward);
+		player.sendMessage(plugin.chatColor(Main.prefix + lang.G_WON_MONEY_WITH_SCORE.replaceAll("%reward%", reward+"").replaceAll("%score%", score +"")));
+	}
+	
+	@Override
+	public void won(Player player, double reward, String time){
+		if(player.hasPermission(Permissions.getGamePerm(game, "bypass").perm) || !plugin.getEconEnabled() || !(reward > 0)){
+			won(player, time);
+			return;
+		}
+		Main.econ.depositPlayer(player, reward);
+		player.sendMessage(plugin.chatColor(Main.prefix + lang.G_WON_MONEY_IN_TIME.replaceAll("%reward%", reward+"").replaceAll("%time%", time)));
 	}
 }

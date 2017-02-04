@@ -24,37 +24,50 @@ inventoryTitles:
   # use %player% for the player name
   mainGUI: '&1Game&1Box&r    Welcome %player%'
 
+general:
+  # use %cost% for the amount payed
+  # %game% for the name of the game
+  payed: " &2You paid &4%cost%&2 for a game of %game%"
+  # %game% for the name of the game
+  notEnoughMoney: " %game% is too expensive for you :("
+  # messages send if there is a money reward paid out to the player
+  #   if not the 'finished' messages will be send
+  finishedWithReward:
+    # %game% for the name of the game
+    # %reward% for the amount rewarded
+    wonMoney: " &2You won &1%reward%&2 in %game%"
+    # %game% for the name of the game
+    # %reward% for the amount rewarded
+    # %score% the score when the game was won
+    wonMoneyWithScore: " &2You won &1%reward%&2 in %game% with a score of %score%"
+    # %game% for the name of the game
+    # %reward% for the amount rewarded
+    # %time% display time
+    wonMoneyInTime: " &2You won &1%reward%&2 in %game% after finishing in &1%time%"
+  # messages send if there is no money reward paid
+  finished:
+    # %game% for the name of the game
+    won: " &2You won a game of %game%"
+    # %game% for the name of the game
+    # %score% the score when the game was won
+    wonWithScore: " &2You finished %game% with a score of %score%"
+    # %game% for the name of the game
+    # %time% display time
+    wonInTime: " &2You finished %game% in &1%time%"
 
-
-gemcrush:
-  econ:
-    # use %cost% for the amount payed
-    payed: " &2You paid &4%cost% for a game of GemCrush"
-    notEnoughMoney: " &4GemCrush is too expensive for you :("
-  # use %score% to display the number of points at the end of the game
-  finishedWithoutPayout: " You finished a game of GemCrush with &2%score%&r points."
-  # use %score% for the score and %reward% for the reward
-  #   rewards are set in the config!
-  # this message will be send instead of the above 'finishedWithoutPayout' if the money reward is > 0
-  finishedWithPayout: " You finished with &2%score%&r points and won &2%reward%&r dollar!"
-  game:
+games:
+  gemcrush:
     # Inventory title
     #   use %moves% for the number of moves left and %score% for the score
     inventoryTitle: "GemCrush  moves: %moves% score: %score%"
 
-minesweeper:
-  econ:
-    # use %cost% for the amount payed
-    payed: " &2You paid &4%cost%"
-    notEnoughMoney: " &4You do not have not enough money!"
-    # use %reward% for the amount the player won
-    wonMoney: " &2You won &1%reward%&2!"
-  inventoryTitles:
-    # displayed before the Game starts
-    beginning: "Minesweeper        &2Click to start"
-    # use %state% to display the number of flags and the number of mines that are left
-    #   %timer% will be replaced by the timer counting up
-    ingame: "Minesweeper     %state%   &1%timer%"
-    # use %timer% to display the time played
-    won: "Minesweeper     &2You won in &1%timer%"
-    lost: "Minesweeper     &4You lost"
+  minesweeper:
+    inventoryTitles:
+      # displayed before the Game starts
+      beginning: "Minesweeper        &2Click to start"
+      # use %state% to display the number of flags and the number of mines that are left
+      #   %timer% will be replaced by the timer counting up
+      ingame: "Minesweeper     %state%   &1%timer%"
+      # use %timer% to display the time played
+      won: "Minesweeper     &2You won in &1%timer%"
+      lost: "Minesweeper     &4You lost"

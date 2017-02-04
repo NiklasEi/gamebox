@@ -9,6 +9,7 @@
       <root url="jar://$USER_HOME$/Dependencies/BuildTools/spigot-1.8.jar!/" />
       <root url="jar://$USER_HOME$/Dependencies/BuildTools/spigot-1.9.4.jar!/" />
       <root url="jar://$USER_HOME$/Dependencies/BuildTools/spigot-1.9.jar!/" />
+      <root url="jar://$USER_HOME$/Dependencies/BuildTools/spigot-1.11.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="https://hub.spigotmc.org/javadocs/spigot/" />
@@ -20,6 +21,7 @@
       <root url="jar://$USER_HOME$/Dependencies/BuildTools/spigot-1.8.jar!/" />
       <root url="jar://$USER_HOME$/Dependencies/BuildTools/spigot-1.9.4.jar!/" />
       <root url="jar://$USER_HOME$/Dependencies/BuildTools/spigot-1.9.jar!/" />
+      <root url="jar://$USER_HOME$/Dependencies/BuildTools/spigot-1.11.jar!/" />
     </SOURCES>
   </library>
 </component>

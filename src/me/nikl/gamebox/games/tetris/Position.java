@@ -4,15 +4,11 @@ import java.util.Random;
 
 /**
  * Created by niklas on 10/31/16.
+ *
+ * possible translational positions of the elements
  */
 public enum Position {
-	ONE(0), TWO(1), THREE(2), FOUR(3);
-	
-	private int rotate;
-	
-	Position(int rotate){
-		this.rotate = rotate;
-	}
+	ONE, TWO, THREE, FOUR;
 	
 	public static Position getRandom() {
 		int random = (new Random()).nextInt(4);
@@ -20,5 +16,35 @@ public enum Position {
 		else if(random == 1) return TWO;
 		else if(random == 2) return THREE;
 		else return FOUR;
+	}
+	
+	public static Position getNextPosition(Position position){
+		switch (position){
+			case ONE:
+				return TWO;
+			case TWO:
+				return THREE;
+			case THREE:
+				return FOUR;
+			case FOUR:
+				return ONE;
+			default:
+				return null;
+		}
+	}
+	
+	public static Position getLastPosition(Position position){
+		switch (position){
+			case ONE:
+				return FOUR;
+			case TWO:
+				return ONE;
+			case THREE:
+				return TWO;
+			case FOUR:
+				return THREE;
+			default:
+				return null;
+		}
 	}
 }

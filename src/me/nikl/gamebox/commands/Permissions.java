@@ -11,8 +11,22 @@ import org.bukkit.Bukkit;
  */
 public enum Permissions {
 	CMD_MAIN_USE("gamebox.use"), CMD_MAIN_RELOAD("gamebox.reload"),
-	GAME_BATTLESHIP_PLAY("gamebox.battleship.play"), GAME_MINESWEEPER_PLAY("gamebox.minesweeper.play"), GAME_GEMCRUSH_PLAY("gamebox.gemcrush.play"),
-	GAME_TETRIS_PLAY("gamebox.tetris.play");
+	/*
+	 Battleship
+	 */
+	GAME_BATTLESHIP_PLAY("gamebox.battleship.play"), GAME_BATTLESHIP_BYPASS("gamebox.battleship.bypass"),
+	/*
+	Minesweeper
+	*/
+	GAME_MINESWEEPER_PLAY("gamebox.minesweeper.play"), GAME_MINESWEEPER_BYPASS("gamebox.minesweeper.bypass"),
+	/*
+	GemCrush
+	*/
+	GAME_GEMCRUSH_PLAY("gamebox.gemcrush.play"), GAME_GEMCRUSH_BYPASS("gamebox.gemcrush.bypass"),
+	/*
+	Tetris
+	*/
+	GAME_TETRIS_PLAY("gamebox.tetris.play"), GAME_TETRIS_BYPASS("gamebox.tetris.bypass");
 	
 	public String perm;
 	

@@ -52,4 +52,16 @@ public interface IGameManager {
 	void disableGame(IGame game);
 	
 	double getPrice();
+	
+	void won(Player player);
+	
+	void won(Player player, int score);
+	
+	void won(Player player, String time);
+	
+	void won(Player player, double reward);
+	
+	void won(Player player, double reward, int score);
+	
+	void won(Player player, double reward, String time);
 }

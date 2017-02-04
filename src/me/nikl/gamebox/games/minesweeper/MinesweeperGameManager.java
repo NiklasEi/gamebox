@@ -3,6 +3,8 @@ package me.nikl.gamebox.games.minesweeper;
 import me.nikl.gamebox.EnumGames;
 import me.nikl.gamebox.Language;
 import me.nikl.gamebox.Main;
+import me.nikl.gamebox.commands.Permissions;
+import me.nikl.gamebox.games.gemcrush.GemCrushGame;
 import me.nikl.gamebox.guis.gameguis.AGameGUI;
 import me.nikl.gamebox.games.AGameManager;
 import me.nikl.gamebox.games.IGame;
@@ -21,15 +23,16 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Created by niklas on 10/30/16.
+ * Game manager for the game minesweeper
+ *
  */
 public class MinesweeperGameManager extends AGameManager{
-	
-	private final boolean econEnabled;
 	private final double reward;
 	
 	private boolean wonCommandsEnabled;
 	private List wonCommands;
+	
+	boolean automaticReveal;
 	
 	public MinesweeperGameManager(Main plugin){
 		super(plugin, EnumGames.MINESWEEPER);
@@ -38,9 +41,9 @@ public class MinesweeperGameManager extends AGameManager{
 		this.wonCommands = gameConfig.getStringList("wonCommands.commands");
 		
 		
-		this.econEnabled = gameConfig.getBoolean("economy.enabled", false);
-		this.price = gameConfig.getDouble("economy.cost", 0.);
 		this.reward = gameConfig.getDouble("economy.reward", 0.);
+		this.automaticReveal = !gameConfig.getBoolean("rules.turnOffAutomaticRevealing");
+		
 		this.gameGUI = new MinesweeperGameGUI(plugin, this);
 	}
 	
@@ -50,9 +53,7 @@ public class MinesweeperGameManager extends AGameManager{
 			return;
 		}
 		e.setCancelled(true);
-		/*if(!e.getClickedInventory().equals((MinesweeperGame)games.get(e.getWhoClicked().getUniqueId())).getInv()){
-			return;
-		}*/
+		
 		if(e.getRawSlot() != e.getSlot()){
 			return;
 		}
@@ -75,14 +76,10 @@ public class MinesweeperGameManager extends AGameManager{
 				if(game.isWon()){
 					game.cancelTimer();
 					game.reveal();
-					game.setState(lang.MINESWEEPER_TITLE_END.replaceAll("%timer%", game.getDisplayTime()+""));
-					if(plugin.getEconEnabled() && !e.getWhoClicked().hasPermission("gamebox.minesweeper.bypass")){
-						Player player = (Player) e.getWhoClicked();
-						Main.econ.depositPlayer(player, plugin.getConfig().getDouble("economy.reward"));
-						player.sendMessage(plugin.chatColor(Main.prefix + lang.MINESWEEPER_GAME_WON_MONEY.replaceAll("%reward%", reward+"")));
-					}
-					if(wonCommandsEnabled && !e.getWhoClicked().hasPermission("gamebox.minesweeper.bypass")){
-						Player player = (Player) e.getWhoClicked();
+					game.setState(lang.MINESWEEPER_TITLE_END.replaceAll("%timer%", game.getDisplayTime()));
+					Player player = (Player) e.getWhoClicked();
+					super.won(player, reward, game.getDisplayTime());
+					if(wonCommandsEnabled && !e.getWhoClicked().hasPermission(Permissions.GAME_MINESWEEPER_BYPASS.perm)){
 						for(Object cmd : wonCommands){
 							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), ((String)cmd).replace("%player%", player.getName()));
 						}
@@ -99,41 +96,11 @@ public class MinesweeperGameManager extends AGameManager{
 		e.setCancelled(true);
 	}
 	
-	@Override
-	public void onInvClose(InventoryCloseEvent e) {
-		if(games.get(e.getPlayer().getUniqueId()) == null )
-			return;
-		MinesweeperGame game = (MinesweeperGame) games.get(e.getPlayer().getUniqueId());
-		if(game.isChangingInv()) return;
-		game.cancelTimer();
-		games.remove(e.getPlayer().getUniqueId());
-	}
 	
 	@Override
 	public boolean startGame(Player player) {
-		if(!player.hasPermission("gamebox.minesweeper.play")){
-			player.sendMessage(plugin.chatColor(Main.prefix + lang.CMD_NO_PERM));
-			return false;
-		}
-		if(Main.debug)Bukkit.getConsoleSender().sendMessage("pluginEcon: " + plugin.getEconEnabled() + "   bypassPerm: " + player.hasPermission("gamebox.minesweeper.bypass") + "    price: " + price);
-		if(plugin.getEconEnabled() && !player.hasPermission("gamebox.minesweeper.bypass") && price > 0){
-			if(Main.econ.getBalance(player) >= price){
-				Main.econ.withdrawPlayer(player, price);
-				player.sendMessage(plugin.chatColor(Main.prefix + lang.MINESWEEPER_GAME_PAYED.replaceAll("%cost%", price+"")));
-				games.put(player.getUniqueId(), new MinesweeperGame(plugin, player.getUniqueId(), this));
-				return true;
-			} else {
-				player.sendMessage(plugin.chatColor(Main.prefix + lang.MINESWEEPER_GAME_NOT_ENOUGH_MONEY));
-				return false;
-			}
-		} else {
-			games.put(player.getUniqueId(), new MinesweeperGame(plugin, player.getUniqueId(), this));
-			return true;
-		}
-	}
-	
-	@Override
-	public double getPrice(){
-		return this.price;
+		if(!super.startGame(player)) return false;
+		games.put(player.getUniqueId(), new MinesweeperGame(plugin, player.getUniqueId(), this));
+		return true;
 	}
 }

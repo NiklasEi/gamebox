@@ -45,4 +45,8 @@ games:
     enabled: true
     # use "Material:data" or "ID:data"
     symbol: "diamond"
+  tetris:
+    enabled: true
+    # use "Material:data" or "ID:data"
+    symbol: "stained_glass_pane:14"
 

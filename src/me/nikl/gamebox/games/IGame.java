@@ -14,9 +14,6 @@ public interface IGame {
 	// called on disable
 	void onDisable();
 	
-	// called if the game was won by one of the players
-	void won(Player... players);
-	
 	// return all players
 	Player[] getPlayers();
 	

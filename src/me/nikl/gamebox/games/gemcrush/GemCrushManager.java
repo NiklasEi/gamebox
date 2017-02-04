@@ -20,8 +20,6 @@ import java.util.*;
  * Manager für GemCrush
  */
 public class GemCrushManager extends AGameManager{
-	private boolean econEnabled;
-	
 	private Map<UUID, Integer> clicks;
 	
 	private boolean pay, sendMessages, sendBroadcasts, dispatchCommands;
@@ -32,18 +30,6 @@ public class GemCrushManager extends AGameManager{
 	
 	public GemCrushManager(Main plugin){
 		super(plugin, EnumGames.GEMCRUSH);
-		
-		if(this.gameConfig.isDouble("economy.cost") || this.gameConfig.isInt("economy.cost")){
-			this.price = this.gameConfig.getDouble("economy.cost");
-		} else {
-			this.price = 0;
-		}
-		
-		if(this.gameConfig.isBoolean("economy.enabled")){
-			this.econEnabled = this.gameConfig.getBoolean("economy.enabled");
-		} else {
-			this.econEnabled = false;
-		}
 		
 		this.clicks = new HashMap<>();
 		getOnGameEnd();
@@ -120,38 +106,10 @@ public class GemCrushManager extends AGameManager{
 	}
 	
 	@Override
-	public void onInvClose(InventoryCloseEvent e) {
-		if(!isIngame(e.getPlayer().getUniqueId())){
-			return;
-		}
-		if(Main.debug)e.getPlayer().sendMessage("Inventory was closed");//XXX
-		games.remove(e.getPlayer().getUniqueId());
-	}
-	
-	@Override
 	public boolean startGame(Player player) {
-		if(!player.hasPermission("gamebox.gemcrush.play")){
-			player.sendMessage(chatColor(Main.prefix + lang.CMD_NO_PERM));
-			return false;
-		}
-		if(plugin.getEconEnabled() && this.econEnabled && !player.hasPermission("gamebox.gemcrush.bypass")){
-			if(Main.econ.getBalance(player) >= this.price){
-				Main.econ.withdrawPlayer(player, this.price);
-				player.sendMessage(chatColor(Main.prefix + lang.GEMCRUSH_PAYED.replaceAll("%cost%", this.price+"")));
-				games.put(player.getUniqueId(), new GemCrushGame(this, player.getUniqueId()));
-				return true;
-			} else {
-				player.sendMessage(chatColor(Main.prefix + lang.GEMCRUSH_NOT_ENOUGH_MONEY));
-				return false;
-			}
-		}
+		if(!super.startGame(player)) return false;
 		games.put(player.getUniqueId(), new GemCrushGame(this, player.getUniqueId()));
 		return true;
-	}
-	
-	@Override
-	public double getPrice() {
-		return this.price;
 	}
 	
 	
@@ -245,16 +203,11 @@ public class GemCrushManager extends AGameManager{
 	private void onGameEnd(int score, Player player, boolean payOut, boolean sendMessages, boolean dispatchCommands, boolean sendBroadcasts){
 		//plugin.setStatistics(player.getUniqueId(), score);
 		int key = getKey(score);
-		if(plugin.getEconEnabled() && this.econEnabled && this.pay && payOut){
+		if(this.econEnabled && this.pay && payOut){
 			double reward = prices.get(key);
-			if(plugin.getEconEnabled() && reward > 0){
-				Main.econ.depositPlayer(player, reward);
-				player.sendMessage(chatColor(Main.prefix + plugin.lang.GEMCRUSH_FINISHED_WITH_PAY.replaceAll("%score%", score +"").replaceAll("%reward%", reward + "")));
-			} else {
-				player.sendMessage(chatColor(Main.prefix + plugin.lang.GEMCRUSH_FINISHED_NO_PAY.replaceAll("%score%", score +"")));
-			}
+			super.won(player, reward, score);
 		} else {
-			player.sendMessage(chatColor(Main.prefix + plugin.lang.GEMCRUSH_FINISHED_NO_PAY.replaceAll("%score%", score +"")));
+			super.won(player, score);
 		}
 		
 		if(sendMessages && this.sendMessages && messages != null && messages.get(key) != null && messages.get(key).size() > 0){

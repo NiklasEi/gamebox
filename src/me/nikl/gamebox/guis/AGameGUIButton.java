@@ -9,7 +9,7 @@ import me.nikl.gamebox.games.IGameManager;
  * saving the gamemanager here
  */
 public abstract class AGameGUIButton extends AButton{
-	private IGameManager gameManager;
+	IGameManager gameManager;
 	
 	public AGameGUIButton(IGameManager gameManager){
 		this.gameManager = gameManager;

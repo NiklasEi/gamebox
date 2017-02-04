@@ -6,6 +6,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -24,40 +26,57 @@ public class Language {
 	public String CMD_NO_PERM, CMD_ONLY_PLAYER, CMD_RELOADED;
 	public List<String> CMD_HELP, CMD_WRONG_USAGE;
 	private YamlConfiguration defaultLang;
+	
+	// Inv titles
 	public String TITLE_MAIN_GUI;
+	
+	//general
+	public String G_PAYED, G_NOT_ENOUGH_MONEY, G_WON, G_WON_MONEY, G_WON_IN_TIME,
+			G_WON_MONEY_IN_TIME, G_WON_WITH_SCORE, G_WON_MONEY_WITH_SCORE;
+		
 	
 	// buttons
 	public String BUTTON_EXIT, BUTTON_MAIN_GUI, BUTTON_GAME_GUI, BUTTON_BACK, BUTTON_FORWARD;
 	
 	// GemCrush
-	public String GEMCRUSH_FINISHED_WITH_PAY, GEMCRUSH_FINISHED_NO_PAY, GEMCRUSH_PAYED, GEMCRUSH_NOT_ENOUGH_MONEY;
 	public String GEMCRUSH_GAME_TITLE;
 	
 	// Minesweeper
-	public String MINESWEEPER_GAME_PAYED, MINESWEEPER_GAME_NOT_ENOUGH_MONEY, MINESWEEPER_GAME_WON_MONEY, MINESWEEPER_TITLE_BEGINNING,
-		MINESWEEPER_TITLE_INGAME, MINESWEEPER_TITLE_END, MINESWEEPER_TITLE_LOST;
+	public String MINESWEEPER_TITLE_BEGINNING, MINESWEEPER_TITLE_INGAME, MINESWEEPER_TITLE_END, MINESWEEPER_TITLE_LOST;
 	
 	Language(Main plugin){
 		this.plugin = plugin;
 		getLangFile();
 		
 		getCommandMessages();
-		getInvTitles();
-		getGemCrushMessages();
+		getGeneral();
 		getButtons();
+		getInvTitles();
+		
+		getGemCrushMessages();
 		getMinesweeperMessages();
+	}
+	
+	private void getGeneral() {
+		G_PAYED = getString("general.payed");
+		G_NOT_ENOUGH_MONEY = getString("general.notEnoughMoney");
+		
+		G_WON = getString("general.finished.won");
+		G_WON_MONEY = getString("general.finishedWithReward.wonMoney");
+		
+		G_WON_IN_TIME = getString("general.finished.wonInTime");
+		G_WON_MONEY_IN_TIME = getString("general.finishedWithReward.wonMoneyInTime");
+		
+		G_WON_WITH_SCORE = getString("general.finished.wonWithScore");
+		G_WON_MONEY_WITH_SCORE = getString("general.finishedWithReward.wonMoneyWithScore");
 	}
 	
 	
 	private void getMinesweeperMessages() {
-		MINESWEEPER_GAME_PAYED = getString("minesweeper.econ.payed");
-		MINESWEEPER_GAME_NOT_ENOUGH_MONEY = getString("minesweeper.econ.notEnoughMoney");
-		MINESWEEPER_GAME_WON_MONEY = getString("minesweeper.econ.wonMoney");
-		
-		MINESWEEPER_TITLE_BEGINNING = getString("minesweeper.inventoryTitles.beginning");
-		MINESWEEPER_TITLE_INGAME = getString("minesweeper.inventoryTitles.ingame");
-		MINESWEEPER_TITLE_END = getString("minesweeper.inventoryTitles.won");
-		MINESWEEPER_TITLE_LOST = getString("minesweeper.inventoryTitles.lost");
+		MINESWEEPER_TITLE_BEGINNING = getString("games.minesweeper.inventoryTitles.beginning");
+		MINESWEEPER_TITLE_INGAME = getString("games.minesweeper.inventoryTitles.ingame");
+		MINESWEEPER_TITLE_END = getString("games.minesweeper.inventoryTitles.won");
+		MINESWEEPER_TITLE_LOST = getString("games.minesweeper.inventoryTitles.lost");
 	}
 	
 	private void getButtons() {
@@ -69,12 +88,7 @@ public class Language {
 	}
 	
 	private void getGemCrushMessages() {
-		GEMCRUSH_FINISHED_WITH_PAY  = getString("gemcrush.finishedWithPayout");
-		GEMCRUSH_FINISHED_NO_PAY = getString("gemcrush.finishedWithoutPayout");
-		GEMCRUSH_PAYED = getString("gemcrush.econ.payed");
-		GEMCRUSH_NOT_ENOUGH_MONEY = getString("gemcrush.econ.notEnoughMoney");
-		
-		GEMCRUSH_GAME_TITLE = getString("gemcrush.game.inventoryTitle");
+		GEMCRUSH_GAME_TITLE = getString("games.gemcrush.inventoryTitle");
 	}
 	
 	private void getInvTitles() {
@@ -97,14 +111,20 @@ public class Language {
 	
 	private List<String> getStringList(String path) {
 		if(!langFile.isList(path)){
-			return defaultLang.getStringList(path);
+			if(defaultLang.isList(path)) {
+				return defaultLang.getStringList(path);
+			} else {
+				return Arrays.asList(path);
+			}
 		}
 		return langFile.getStringList(path);
 	}
 	
 	private String getString(String path) {
 		if(!langFile.isString(path)){
-			return defaultLang.getString(path);
+			if(defaultLang.isString(path)) {
+				return defaultLang.getString(path);
+			} else return path;
 		}
 		return langFile.getString(path);
 	}

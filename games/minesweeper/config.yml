@@ -3,21 +3,23 @@
 #                             Minesweeper config                              #
 #                                                                             #
 # ----------------------------------------------------------------------------#
-
-# name of the language file (in the folder 'language')
-langFile: "lang_en.yml"
-
-
 # number of mines in the game (only integer from 1 to 30)
 mines: 8
 
-# requires vault
+rules:
+  # when you reveal an empty slot automatic revealing will uncover all attached empty slots until the first slot
+  #   is not empty
+  # change this to true if you DON'T want this option
+  turnOffAutomaticRevealing: false
+
+
+# requires vault and an economy plugin
 economy:
   enabled: false
   cost: 0
   reward: 0
 
-  
+
 # you can use the section below to run commands if a player won a game
 #   %player% will be replaced by the players name
 wonCommands:
@@ -35,9 +37,8 @@ materials:
   mine: "TNT"
   warning: "WOOL:1"
 
-# you can use colors with &
 displaynames:
-  cover: "&9Cover"
-  warning: "&eWarning"
-  mine: "&4Boooom!"
-  flag: "&2Flag"
+  cover: "Cover"
+  warning: "Warning"
+  mine: "Boooom!"
+  flag: "Flag"

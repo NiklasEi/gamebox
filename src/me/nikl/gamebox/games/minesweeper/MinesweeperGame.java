@@ -1,5 +1,6 @@
 package me.nikl.gamebox.games.minesweeper;
 
+import io.netty.util.internal.ConcurrentSet;
 import me.nikl.gamebox.Language;
 import me.nikl.gamebox.Main;
 import me.nikl.gamebox.games.AGame;
@@ -17,6 +18,7 @@ import org.bukkit.material.Wool;
 
 import java.util.Arrays;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -119,18 +121,7 @@ public class MinesweeperGame extends AGame{
 	
 	@Override
 	public void onDisable() {
-		
-	}
-	
-	private void won(UUID player){
-		Player[] players = new Player[1];
-		players[0] = Bukkit.getPlayer(player);
-		this.won(players);
-	}
-	
-	@Override
-	public void won(Player... players) {
-		
+		cancelTimer();
 	}
 	
 	@Override
@@ -144,6 +135,89 @@ public class MinesweeperGame extends AGame{
 	public int getNumPlayers() {
 		return numPlayers;
 	}
+	
+	
+	private void uncoverEmpty(int slot) {
+		Set<Integer> uncover = new ConcurrentSet<>();
+		Set<Integer> newUncover = new ConcurrentSet<>();
+		
+		uncover.add(slot);
+		int currentSlot = slot;
+		
+		int[] add = getSurroundings(slot);
+		for(int i = 0; i < add.length; i++){
+			add[i] = add[i] + currentSlot;
+			if(!uncover.contains(add[i])){
+				newUncover.add(add[i]);
+			}
+		}
+		while (!newUncover.isEmpty()){
+			for(int checkSlot : newUncover){
+				if (!uncover.contains(checkSlot)){
+					uncover.add(checkSlot);
+					newUncover.remove(checkSlot);
+					if(positions[checkSlot].equalsIgnoreCase("0")){
+						int[] newAdd = getSurroundings(checkSlot);
+						for(int i = 0; i < newAdd.length; i++){
+							newAdd[i] = newAdd[i] + checkSlot;
+							if(!uncover.contains(newAdd[i]) && !newUncover.contains(newAdd[i])){
+								newUncover.add(newAdd[i]);
+							}
+						}
+					}
+				}
+			}
+		}
+		for(int uncoverSlot : uncover){
+			int amount = 0;
+			try {
+				amount = Integer.parseInt(positions[uncoverSlot]);
+			} catch (NumberFormatException e) {
+				Bukkit.getLogger().severe("Something went wrong while building the game");
+			}
+			if(amount == 0){
+				this.inv.setItem(uncoverSlot, empty);
+			} else {
+				number.setAmount(amount);
+				this.inv.setItem(uncoverSlot, number);
+			}
+			cov[uncoverSlot] = false;
+		}
+	}
+	
+	public int[] getSurroundings(int slot){
+		int[] add;
+		if(slot == 0){// corner left top
+			add = new int[3];
+			add[0] = 1; add[1] = 9; add[2] = 10;
+		} else if (slot == 8){// corner top right
+			add = new int[3];
+			add[0] = -1; add[1] = 8; add[2] = 9;
+		} else if (slot == 45){// corner bottom left
+			add = new int[3];
+			add[0] = -9; add[1] = -8; add[2] = 1;
+		} else if (slot == 53){// corner bottom right
+			add = new int[3];
+			add[0] = -10; add[1] = -9; add[2] = -1;
+		} else if(slot>0 && slot<8){// edge top
+			add = new int[5];
+			add[0] = -1; add[1] = 1; add[2] = 8; add[3] = 9; add[4] = 10;
+		} else if(slot == 17 || slot == 26 || slot == 35 || slot == 44){// edge right
+			add = new int[5];
+			add[0] = -10; add[1] = -9; add[2] = -1; add[3] = 8; add[4] = 9;
+		} else if(slot>45 && slot<53){// edge bottom
+			add = new int[5];
+			add[0] = -1; add[1] = -10; add[2] = -9; add[3] = -8; add[4] = 1;
+		} else if(slot == 9 || slot == 18 || slot == 27 || slot == 36){// edge left
+			add = new int[5];
+			add[0] = -9; add[1] = -8; add[2] = 1; add[3] = 9; add[4] = 10;
+		} else {
+			add = new int[8];
+			add[0] = -10; add[1] = -9; add[2] = -8; add[3] = -1; add[4] = 1; add[5] = 8; add[6] = 9; add[7] = 10;
+		}
+		return add;
+	}
+	
 	
 	
 	private Boolean getMaterials() {
@@ -259,35 +333,7 @@ public class MinesweeperGame extends AGame{
 	
 	private String getNextMines(int i) {
 		int count = 0;
-		int[] add;
-		if(i == 0){// corner left top
-			add = new int[3];
-			add[0] = 1; add[1] = 9; add[2] = 10;
-		} else if (i == 8){// corner top right
-			add = new int[3];
-			add[0] = -1; add[1] = 8; add[2] = 9;
-		} else if (i == 45){// corner bottom left
-			add = new int[3];
-			add[0] = -9; add[1] = -8; add[2] = 1;
-		} else if (i == 53){// corner bottom right
-			add = new int[3];
-			add[0] = -10; add[1] = -9; add[2] = -1;
-		} else if(i>0 && i<8){// edge top
-			add = new int[5];
-			add[0] = -1; add[1] = 1; add[2] = 8; add[3] = 9; add[4] = 10;
-		} else if(i == 17 || i == 26 || i == 35 || i == 44){// edge right
-			add = new int[5];
-			add[0] = -10; add[1] = -9; add[2] = -1; add[3] = 8; add[4] = 9;
-		} else if(i>45 && i<53){// edge bottom
-			add = new int[5];
-			add[0] = -1; add[1] = -10; add[2] = -9; add[3] = -8; add[4] = 1;
-		} else if(i == 9 || i == 18 || i == 27 || i == 36){// edge left
-			add = new int[5];
-			add[0] = -9; add[1] = -8; add[2] = 1; add[3] = 9; add[4] = 10;
-		} else {
-			add = new int[8];
-			add[0] = -10; add[1] = -9; add[2] = -8; add[3] = -1; add[4] = 1; add[5] = 8; add[6] = 9; add[7] = 10;
-		}
+		int[] add = getSurroundings(i);
 		for (int a : add){
 			if(!(i+a >= 0 && i+a < num)){
 				continue;
@@ -378,6 +424,9 @@ public class MinesweeperGame extends AGame{
 			}
 			if(amount == 0){
 				this.inv.setItem(slot, empty);
+				if(gManager.automaticReveal) {
+					uncoverEmpty(slot);
+				}
 			} else {
 				number.setAmount(amount);
 				this.inv.setItem(slot, number);
@@ -394,8 +443,6 @@ public class MinesweeperGame extends AGame{
 			}
 		}
 		if(count == bombsNum){
-			//plugin.setStatistics(this.player, this.displayTime, bombsNum);
-			this.won(player);
 			return true;
 		}
 		return false;

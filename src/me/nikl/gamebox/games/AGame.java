@@ -1,5 +1,6 @@
 package me.nikl.gamebox.games;
 
+import me.nikl.gamebox.nms.NMSUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -11,14 +12,18 @@ import java.util.UUID;
  * abstract MinesweeperGame class implementing IGame
  */
 public abstract class AGame implements IGame{
-	private Player[] players;
+	protected Player[] players;
 	protected int numPlayers;
-	private IGameManager gameManager;
+	protected IGameManager gameManager;
+	protected NMSUtil nms;
+	
 	
 	public AGame(Player[] players, IGameManager gameManager){
 		this.gameManager = gameManager;
 		this.players = players;
 		this.numPlayers = players.length;
+		
+		this.nms = gameManager.getPlugin().getNMS();
 	}
 	
 	public AGame(UUID[] players, IGameManager gameManager){
@@ -28,6 +33,8 @@ public abstract class AGame implements IGame{
 			this.players[i] = Bukkit.getPlayer(players[i]);
 		}
 		this.numPlayers = players.length;
+		
+		this.nms = gameManager.getPlugin().getNMS();
 	}
 	
 	
@@ -36,6 +43,8 @@ public abstract class AGame implements IGame{
 		this.numPlayers = 1;
 		this.players = new Player[1];
 		this.players[0] =  Bukkit.getPlayer(player);
+		
+		this.nms = gameManager.getPlugin().getNMS();
 	}
 	
 	public AGame(Player player, IGameManager gameManager){

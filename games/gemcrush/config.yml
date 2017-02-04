@@ -4,12 +4,6 @@
 #                                                                             #
 # ----------------------------------------------------------------------------#
 
-# name of the language file (in the folder 'language')
-#   the default.yml file is overwriten on every server restart! This means you will have to use the other files
-#     to customize the messages, but since i am adding messages regulary in updates 
-#   You should use the default file if you just want to have the up to date english default messages
-langFile: 'default.yml'
-
 game:
   # number of moves in a default game
   moves: 20
@@ -22,6 +16,15 @@ game:
   #   This number HAS TO BE equal or smaller then the number of gems defined in the section normalGems below
   #   8 or 7 are good numbers. 7 is easier and the game has to shuffle less but 8 is a bit more challenging
   numberOfNormalGems: 8
+  # optional game behaviour
+  behaviour:
+    # options about bombs
+    bombs:
+      enabled: true
+        material: 'tnt'
+        displayName: '&4Bomb'
+        pointsOnBreak: 10
+
 
 
 

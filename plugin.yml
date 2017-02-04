@@ -32,22 +32,28 @@ permissions:
       gamebox.gemcrush.play: true
       gamebox.battleship.play: true
       gamebox.minesweeper.play: true
+      gamebox.tetris.play: true
   gamebox.gemcrush.play:
     description: Allows to play GemCrush
   gamebox.battleship.play:
     description: Allows to play Battleship
   gamebox.minesweeper.play:
     description: Allows to play Minesweeper
+  gamebox.tetris.play:
+    description: Allows to play Tetris
   gamebox.*.bypass:
     description: Allows the player to bypass all costs (also no pay!)
     children:
-      gamebox.gemcrush.play: true
-      gamebox.battleship.play: true
-      gamebox.minesweeper.play: true
+      gamebox.gemcrush.bypass: true
+      gamebox.battleship.bypass: true
+      gamebox.minesweeper.bypass: true
+      gamebox.tetris.bypass: true
   gamebox.gemcrush.bypass:
     description: Allows to bypass GemCrush costs (also no pay!)
   gamebox.battleship.bypass:
     description: Allows to bypass Battleship costs (also no pay!)
   gamebox.minesweeper.bypass:
     description: Allows to bypass Minesweeper costs (also no pay!)
+  gamebox.tetris.bypass:
+    description: Allows to bypass Tetris costs (also no pay!)
 

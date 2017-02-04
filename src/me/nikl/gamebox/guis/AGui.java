@@ -80,4 +80,15 @@ public abstract class AGui implements IGui{
 	public boolean inGUI(UUID uuid){
 		return players.contains(uuid);
 	}
+	
+	public void closeAll(){
+		Player player;
+		for(UUID uuid : players){
+			player = Bukkit.getPlayer(uuid);
+			if(player == null) continue;
+			
+			player.closeInventory();
+		}
+		players.clear();
+	}
 }

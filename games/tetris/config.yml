@@ -3,3 +3,11 @@
 #                              Tetris config                                  #
 #                                                                             #
 # ----------------------------------------------------------------------------#
+
+
+
+# requires vault and an economy plugin
+economy:
+  enabled: false
+  cost: 0
+  reward: 0

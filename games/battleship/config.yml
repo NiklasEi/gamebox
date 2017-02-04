@@ -4,16 +4,9 @@
 #                                                                             #
 # ----------------------------------------------------------------------------#
 
-# name of the language file (in the folder 'language')
-#   the default.yml file is overwriten on every server restart!
-#   This means you will have to use the other files to customize the messages, but since i am adding messages regulary in updates
-#   you can use the default file if you just want to have the up to date english default messages
-langFile: "default.yml"
-
-
 
 # number of ships in the game (only 1 or 2)
-
+#
 # size: 5 blocks
 aircraftCarrier: 1
 # size: 4 blocks
@@ -27,22 +20,25 @@ gameRules:
   # if this is true players can shoot again after a hit and the grids will change after every miss
   #   if it is false the grid will change after every shot regardless of hit/miss
   fireAgainAfterHit: true
+  # false: the player whose fire timer ran out will loose the game
+  # true: If a fire timer runs out it's the other players turn
+  switchAttackerAfterFireTimerRanOut: false
 
 # some stuff you can do when a game ends.
 onGameEnd:
-  # You can dispatch commands. Use %winner% for the playername of the winner and %looser% for the looser 
+  # You can dispatch commands. Use %winner% for the playername of the winner and %looser% for the looser
   dispatchCommands:
     enabled: false
     commands:
     - "give %winner% diamond 1"
     - "tell %winner% congrats!"
     - "tell %looser% next time you'll beat him!"
-  # You can broadcast. Use %winner% for the playername of the winner and %looser% for the looser 
+  # You can broadcast. Use %winner% for the playername of the winner and %looser% for the looser
   broadcast:
     enabled: false
     messages:
     - "%winner% won against %looser% in a game of Battleship!"
-    - "Do &2/bs %winner% &rto try against %winner% yourself ;)"     
+    - "Do &2/bs %winner% &rto try against %winner% yourself ;)"
 
 
 # requires vault and an economy plugin
@@ -61,29 +57,29 @@ materials:
   yourGrid:
     ship:
       material: "Iron_block"
-      name: "ship"
+      name: "&7Ship"
     lockedShip:
       material: "7"
-      name: "Locked ship"
+      name: "&8Locked ship"
     miss:
       material: "160:3"
-      name: "Yeah! A miss!"
+      name: "&2Yeah! A miss!"
     hit:
       material: "35:14"
-      name: "Damn! A hit..."
+      name: "&4Damn! A hit..."
     water:
       material: "160:11"
-      name: "Water"
+      name: "&1Water"
   othersGrid:
     cover:
       material: "WOOL:7"
-      name: "Cover"
+      name: "&6Cover"
     miss:
       material: "160:11"
-      name: "That did not hit..."
+      name: "&4That did not hit..."
     hit:
       material: "Iron_block"
-      name: "Booom! Gotcha"
+      name: "&2Booom! Gotcha"
 
     
 # Customise the timers used in the game (all times in seconds)
