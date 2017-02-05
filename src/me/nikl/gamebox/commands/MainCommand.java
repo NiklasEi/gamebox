@@ -2,6 +2,7 @@ package me.nikl.gamebox.commands;
 
 import me.nikl.gamebox.Language;
 import me.nikl.gamebox.Main;
+import me.nikl.gamebox.Permissions;
 import me.nikl.gamebox.PluginManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
