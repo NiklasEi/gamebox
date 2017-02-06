@@ -13,3 +13,11 @@ hs_err_pid*
 
 # ignore the output
 out/*
+
+.idea/
+.settings/
+
+.project
+.classpath
+
+*.iml
