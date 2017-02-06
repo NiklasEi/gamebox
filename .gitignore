@@ -15,4 +15,9 @@ hs_err_pid*
 out/*
 
 .idea/
+.settings/
+
+.project
+.classpath
+
 *.iml
