@@ -16,3 +16,7 @@ out/*
 
 .idea/
 *.iml
+
+.settings/
+.project
+.classpath
