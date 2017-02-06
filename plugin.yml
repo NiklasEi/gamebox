@@ -5,7 +5,7 @@ version: 1.0
 
 commands:
   gamebox:
-    description: show the main gui
+    description: show the main guis
     usage: /gamebox
     aliases: [games, gb]
 
@@ -23,7 +23,7 @@ permissions:
       gamebox.*.play: true
       gamebox.*.bypass: true
   gamebox.use:
-    description: Allows the player to open the main gui (use /gamebox)
+    description: Allows the player to open the main guis (use /gamebox)
     default: true
   gamebox.*.play:
     description: Allows the player to play all games
