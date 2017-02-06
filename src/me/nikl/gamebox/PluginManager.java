@@ -1,6 +1,7 @@
 package me.nikl.gamebox;
 
-import me.nikl.gamebox.gui.GUIManager;
+import me.nikl.gamebox.game.IGameManager;
+import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.nms.NMSUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -9,7 +10,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,7 +43,7 @@ public class PluginManager implements Listener{
 	public PluginManager(Main plugin){
 		this.plugin = plugin;
 		this.gameGUIs = new HashMap<>();
-		this.pluginGUIs
+		this.pluginGUIs = new HashMap<>();
 		this.lang = plugin.lang;
 		this.nms = plugin.getNMS();
 		this.config = plugin.getConfig();
@@ -80,5 +80,15 @@ public class PluginManager implements Listener{
 	
 	private String chatColor(String message){
 		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+	
+	
+	public boolean openGameGui(Player whoClicked, String... args) {
+		//ToDo
+		return false;
+	}
+	
+	public void registerGame(IGameManager gameManager, String gameID){
+		
 	}
 }

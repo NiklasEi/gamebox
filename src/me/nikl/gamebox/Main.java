@@ -1,6 +1,7 @@
 package me.nikl.gamebox;
 
 import me.nikl.gamebox.commands.MainCommand;
+import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.nms.*;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -45,6 +46,11 @@ public class Main extends JavaPlugin{
 	 * Listens to events and passes them on
  	 */
 	private PluginManager pManager;
+	
+	/*
+	 * GUIManager that manages the guis
+ 	 */
+	private GUIManager guiManager;
 	
 	
 	@Override
@@ -103,6 +109,8 @@ public class Main extends JavaPlugin{
 				return false;
 			}
 		}
+		
+		this.guiManager = new GUIManager(this);
 		
 		// if it's not null disable first then get a new manager
 		if(pManager != null){
@@ -198,4 +206,10 @@ public class Main extends JavaPlugin{
 	public NMSUtil getNMS() {
 		return nms;
 	}
+	
+	public GUIManager getGuiManager() {
+		return guiManager;
+	}
+	
+	public void hook
 }
