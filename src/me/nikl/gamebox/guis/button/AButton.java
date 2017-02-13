@@ -26,12 +26,16 @@ public class AButton extends ItemStack{
 		this.action = action;
 	}
 	
-	public boolean onClick(InventoryClickEvent event){
-		return gui.action(event, action, args);
-	}
-	
 	public void setArgs(String... args){
 		this.args = args;
+	}
+
+	public ClickAction getAction(){
+		return this.action;
+	}
+
+	public String[] getArgs(){
+		return this.args;
 	}
 	
 }
