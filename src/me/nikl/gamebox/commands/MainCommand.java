@@ -27,7 +27,7 @@ public class MainCommand implements CommandExecutor{
 	public MainCommand(Main plugin){
 		this.plugin = plugin;
 		this.pManager = plugin.getPluginManager();
-		this.guiManager = plugin.getGuiManager();
+		this.guiManager = pManager.getGuiManager();
 		this.config = plugin.getConfig();
 		this.lang = plugin.lang;
 	}
@@ -35,47 +35,23 @@ public class MainCommand implements CommandExecutor{
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if(!sender.hasPermission(Permissions.CMD_MAIN.getPermission())){
-			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', Main.prefix + lang.CMD_NO_PERM));
+			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', lang.PREFIX + lang.CMD_NO_PERM));
 			return true;
 		}
 		
 		// main cmd without options
 		//   sender wants to open main Gui
 		//   check ability then open the Gui
-		if(args.length == 0){
-			if(!(sender instanceof Player)){
-				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', Main.prefix + lang.CMD_ONLY_PLAYER));
+		if(args.length == 0) {
+			if (!(sender instanceof Player)) {
+				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', lang.PREFIX + lang.CMD_ONLY_PLAYER));
 				return true;
 			}
 			Player player = (Player) sender;
 			guiManager.openMainGui(player);
 			return true;
-		// CMD with options
-		}/* else if(args.length == 1){
-			
-			// option reload
-			if(args[0].equalsIgnoreCase("reload")){
-				if(!sender.hasPermission(Permissions.CMD_MAIN_RELOAD.getPerm())){
-					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', Main.prefix + lang.CMD_NO_PERM));
-					return true;
-				}
-				plugin.reload();
-				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', Main.prefix + lang.CMD_RELOADED));
-				return true;
-				
-				
-			// option help
-			} else if(args[0].equalsIgnoreCase("help")){
-				for(String message : lang.CMD_HELP){
-					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', Main.prefix + message));
-				}
-				return true;
-			}
 		}
-		// wrong usage... send messages and return true
-		for(String message : lang.CMD_WRONG_USAGE){
-			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', Main.prefix + message));
-		}*/
+		// ToDo: help message
 		return true;
 	}
 }
