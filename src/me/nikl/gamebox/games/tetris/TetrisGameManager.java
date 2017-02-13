@@ -27,6 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class TetrisGameManager extends AGameManager{
 	private Map<UUID, ItemStack[]> savedInv;
+
 	
 	public TetrisGameManager(Main plugin){
 		super(plugin, EnumGames.TETRIS);
