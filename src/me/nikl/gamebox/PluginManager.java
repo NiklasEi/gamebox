@@ -18,7 +18,7 @@ import java.util.UUID;
 /**
  * Created by niklas on 10/17/16.
  *
- * Manage the main GUI and create the GameManagers / register all games
+ * register all games
  * Clicks are managed here
  * Check what GUI is open for the player and then pass the click event on
  */
@@ -26,27 +26,26 @@ public class PluginManager implements Listener{
 	
 	// Main instance
 	private Main plugin;
-	
+
 	// Language
 	private Language lang;
-	
+
 	// plugin configuration
 	private FileConfiguration config;
 	
 	private NMSUtil nms;
 	
-	private Map<String, GUIManager> gameGUIs;
-	private Map<String, GUIManager> pluginGUIs;
-	
 	private GUIManager guiManager;
+
+	private Map<String, IGameManager> games;
 	
 	public PluginManager(Main plugin){
 		this.plugin = plugin;
-		this.gameGUIs = new HashMap<>();
-		this.pluginGUIs = new HashMap<>();
+		this.games = new HashMap<>();
 		this.lang = plugin.lang;
 		this.nms = plugin.getNMS();
 		this.config = plugin.getConfig();
+		this.guiManager = new GUIManager(plugin);
 		
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
@@ -62,12 +61,32 @@ public class PluginManager implements Listener{
 			return;
 		}
 		UUID uuid = event.getWhoClicked().getUniqueId();
-		//ToDo
+
+		for(IGameManager gameManager: games.values()){
+			if(gameManager.isInGame(uuid)){
+				event.setCancelled(true);
+				gameManager.onInventoryClick(event);
+				return;
+			}
+		}
+
+		guiManager.onInvClick(event);
 	}
 	
 	@EventHandler
 	public void onInvClose(InventoryCloseEvent event) {
-		// ToDo
+		UUID uuid = event.getPlayer().getUniqueId();
+
+
+		for(IGameManager gameManager: games.values()){
+			if(gameManager.isInGame(uuid)){
+				gameManager.onInventoryClose(event);
+				return;
+			}
+		}
+
+
+		guiManager.onInvClose(event);
 	}
 	
 	public void shutDown() {
@@ -82,13 +101,16 @@ public class PluginManager implements Listener{
 		return ChatColor.translateAlternateColorCodes('&', message);
 	}
 	
-	
-	public boolean openGameGui(Player whoClicked, String... args) {
-		//ToDo
-		return false;
-	}
-	
 	public void registerGame(IGameManager gameManager, String gameID){
-		
+		games.put(gameID, gameManager);
+		Permissions.addGameID(gameID);
+	}
+
+	public IGameManager getGameManager(String gameID){
+		return games.get(gameID);
+	}
+
+	public GUIManager getGuiManager(){
+		return this.guiManager;
 	}
 }
