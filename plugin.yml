@@ -5,7 +5,7 @@ version: 1.0
 
 commands:
   gamebox:
-    description: show the main guis
+    description: show the main gui
     usage: /gamebox
     aliases: [games, gb]
 
@@ -20,40 +20,13 @@ permissions:
     children:
       gamebox.reload: true
       gamebox.use: true
-      gamebox.*.play: true
-      gamebox.*.bypass: true
+      gamebox.play.*: true
   gamebox.use:
     description: Allows the player to open the main guis (use /gamebox)
     default: true
-  gamebox.*.play:
+  gamebox.play.*:
     description: Allows the player to play all games
     default: true
-    children:
-      gamebox.gemcrush.play: true
-      gamebox.battleship.play: true
-      gamebox.minesweeper.play: true
-      gamebox.tetris.play: true
-  gamebox.gemcrush.play:
-    description: Allows to play GemCrush
-  gamebox.battleship.play:
-    description: Allows to play Battleship
-  gamebox.minesweeper.play:
-    description: Allows to play Minesweeper
-  gamebox.tetris.play:
-    description: Allows to play Tetris
-  gamebox.*.bypass:
-    description: Allows the player to bypass all costs (also no pay!)
-    children:
-      gamebox.gemcrush.bypass: true
-      gamebox.battleship.bypass: true
-      gamebox.minesweeper.bypass: true
-      gamebox.tetris.bypass: true
-  gamebox.gemcrush.bypass:
-    description: Allows to bypass GemCrush costs (also no pay!)
-  gamebox.battleship.bypass:
-    description: Allows to bypass Battleship costs (also no pay!)
-  gamebox.minesweeper.bypass:
-    description: Allows to bypass Minesweeper costs (also no pay!)
-  gamebox.tetris.bypass:
-    description: Allows to bypass Tetris costs (also no pay!)
-
+  gamebox.gamegui.*:
+    default: true
+    description: Allows to open all game guis
