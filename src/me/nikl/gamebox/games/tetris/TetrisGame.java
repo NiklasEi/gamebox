@@ -1,9 +1,8 @@
 package me.nikl.gamebox.games.tetris;
 
 import me.nikl.gamebox.Main;
-import me.nikl.gamebox.games.AGame;
 import me.nikl.gamebox.games.AGameWithTimer;
-import me.nikl.gamebox.games.tetris.elements.Elements;
+import me.nikl.gamebox.games.tetris.elements.AllElements;
 import me.nikl.gamebox.games.tetris.elements.IElement;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -11,13 +10,9 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
 
 /**
  * Created by niklas on 10/31/16.
@@ -69,7 +64,7 @@ public class TetrisGame extends AGameWithTimer{
 		Bukkit.getScheduler().scheduleSyncDelayedTask(gameManager.getPlugin(), new Runnable() {
 			@Override
 			public void run() {
-				fallingElement = Elements.getNewRandom();
+				fallingElement = AllElements.getNewRandom();
 				while (!correctStartPosition(fallingElement, true));
 				setState(GameState.FALLING);
 			}

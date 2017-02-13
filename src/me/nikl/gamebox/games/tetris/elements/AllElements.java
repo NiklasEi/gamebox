@@ -6,11 +6,11 @@ import java.util.Random;
  * Created by niklas on 11/5/16.
  *
  */
-public enum Elements {
+public enum AllElements {
 	I, J, L, O, S, T, Z;
 	
 	public static AElement getNewRandom(){
-		int rand = (new Random()).nextInt(Elements.values().length);
+		int rand = (new Random()).nextInt(AllElements.values().length);
 		if(rand == 0) return new ElementI();
 		if(rand == 1) return new ElementJ();
 		if(rand == 2) return new ElementL();
