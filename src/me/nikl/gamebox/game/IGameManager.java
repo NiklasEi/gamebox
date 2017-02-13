@@ -2,6 +2,7 @@ package me.nikl.gamebox.game;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 
 import java.util.UUID;
 
@@ -12,13 +13,15 @@ import java.util.UUID;
  */
 public interface IGameManager {
 	/**
-	 * Handle a click in the games GUI
-	 * Action is the predefined action, set by the GameManager on hook
+	 * Handle a click in the game
+	 *
 	 * @param event ClickEvent
-	 * @param action defined action on click
-	 * @return action successful
+	 * @return successful
 	 */
-	boolean onInventoryClick(InventoryClickEvent event, String action);
+	boolean onInventoryClick(InventoryClickEvent event);
+
+
+	boolean onInventoryClose(InventoryCloseEvent event);
 	
 	
 	/**
