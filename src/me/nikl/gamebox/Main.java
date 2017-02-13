@@ -27,10 +27,6 @@ public class Main extends JavaPlugin{
 	// plugin configuration
 	private FileConfiguration config;
 	
-	// prefixes
-	public static final String prefix = "[&1GameBox&r]";
-	public static final String plainPrefix = "[GameBox]";
-	
 	// nms util
 	private NMSUtil nms;
 	
@@ -46,25 +42,21 @@ public class Main extends JavaPlugin{
 	 * Listens to events and passes them on
  	 */
 	private PluginManager pManager;
-	
-	/*
-	 * GUIManager that manages the guis
- 	 */
-	private GUIManager guiManager;
+
 	
 	
 	@Override
 	public void onEnable(){
 		// get the version and set up nms
 		if (!setUpNMS()) {
-			getLogger().severe(Main.plainPrefix + " Your server version is not compatible with this plugin!");
+			getLogger().severe(" Your server version is not compatible with this plugin!");
 			
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
 		}
 		
 		if (!reload()) {
-			getLogger().severe(Main.plainPrefix + " Error while loading the plugin! Plugin was disabled!");
+			getLogger().severe(" Error while loading the plugin! Plugin was disabled!");
 			
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
@@ -105,13 +97,11 @@ public class Main extends JavaPlugin{
 		if(getConfig().getBoolean("economy.enabled")){
 			this.econEnabled = true;
 			if (!setupEconomy()){
-				Bukkit.getLogger().log(Level.SEVERE, plainPrefix + " &4No economy found!");
+				Bukkit.getLogger().log(Level.SEVERE, "No economy found!");
 				return false;
 			}
 		}
-		
-		this.guiManager = new GUIManager(this);
-		
+
 		// if it's not null disable first then get a new manager
 		if(pManager != null){
 			pManager.shutDown();
@@ -206,10 +196,12 @@ public class Main extends JavaPlugin{
 	public NMSUtil getNMS() {
 		return nms;
 	}
-	
-	public GUIManager getGuiManager() {
-		return guiManager;
+
+	public static void debug(String message){
+		if(debug) Bukkit.getConsoleSender().sendMessage(message);
 	}
-	
-	public void hook
+
+	public void hook(){
+		// ToDo
+	}
 }
