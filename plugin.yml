@@ -1,7 +1,7 @@
 name: GameBox
 author: Nikl
-main: me.nikl.gamebox.Main
-version: 1.0
+main: me.nikl.gamebox.GameBox
+version: 1.0.0
 
 commands:
   gamebox:
@@ -18,15 +18,23 @@ permissions:
     description: Gives all permissions
     default: op
     children:
-      gamebox.reload: true
       gamebox.use: true
       gamebox.play.*: true
+      gamebox.gamegui.*: true
+      gamebox.info: true
+      gamebox.help: true
   gamebox.use:
     description: Allows the player to open the main guis (use /gamebox)
     default: true
   gamebox.play.*:
-    description: Allows the player to play all games
     default: true
+    description: Allows the player to play all games
   gamebox.gamegui.*:
     default: true
     description: Allows to open all game guis
+  gamebox.info:
+    default: op
+    description: Allows the usage of the subcommand info
+  gamebox.help:
+    default: true
+    description: Allows the usage of the subcommand help or ?
