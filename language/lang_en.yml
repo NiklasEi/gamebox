@@ -33,5 +33,5 @@ inventoryTitles:
   # %game% will be replaced with the games prefix
   gameGUIs: '          %game%&r'
   noPermMessage: '          &4&lNo Permission'
-  notEnoughMoney: '          &4&lNot enough money'
+  notEnoughMoney: '        &4&lNot enough money'
 
