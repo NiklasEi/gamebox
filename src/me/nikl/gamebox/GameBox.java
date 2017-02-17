@@ -1,0 +1,224 @@
+package me.nikl.gamebox;
+
+import me.nikl.gamebox.commands.MainCommand;
+import me.nikl.gamebox.guis.GUIManager;
+import me.nikl.gamebox.nms.*;
+import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.*;
+import java.util.logging.Level;
+
+/**
+ * Created by niklas on 10/27/16.
+ *
+ * GameBox class of the plugin GameBox
+ */
+public class GameBox extends JavaPlugin{
+	
+	// enable debug mode (print debug messages)
+	public static final boolean debug = true;
+
+	// toggle to stop inventory contents to be restored when a new gui is opened and automatically closes the old one
+	public static boolean openingNewGUI = false;
+
+	// toggle for playing sounds
+	public static boolean playSounds = false;
+	
+	// plugin configuration
+	private FileConfiguration config;
+	
+	// nms util
+	private NMSUtil nms;
+	
+	// economy
+	public static Economy econ = null;
+	private boolean econEnabled;
+	
+	// language file
+	public Language lang;
+	
+	/*
+	 * Plugin manager that manages all game managers
+	 * Listens to events and passes them on
+ 	 */
+	private PluginManager pManager;
+
+
+	private MainCommand mainCommand;
+
+	
+	
+	@Override
+	public void onEnable(){
+		// get the version and set up nms
+		if (!setUpNMS()) {
+			getLogger().severe(" Your server version is not compatible with this plugin!");
+			
+			Bukkit.getPluginManager().disablePlugin(this);
+			return;
+		}
+		
+		if (!reload()) {
+			getLogger().severe(" Error while loading the plugin! Plugin was disabled!");
+			
+			Bukkit.getPluginManager().disablePlugin(this);
+			return;
+		}
+	}
+	
+	/***
+	 * Reload method called onEnable and on the reload command
+	 *
+	 * get the configuration
+	 * set up economy if enabled
+	 */
+	public boolean reload(){
+		// save the default configuration file if the file does not exist
+		File con = new File(this.getDataFolder().toString() + File.separatorChar + "config.yml");
+		if(!con.exists()){
+			this.saveResource("config.yml", false);
+		}
+		
+		// reload config
+		try {
+			this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(con), "UTF-8"));
+		} catch (UnsupportedEncodingException | FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		InputStream defConfigStream = this.getResource("config.yml");
+		if (defConfigStream != null){
+			@SuppressWarnings("deprecation")
+			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+			this.config.setDefaults(defConfig);
+		}
+
+		playSounds = config.getBoolean("guiSettings.playSounds");
+
+		this.lang = new Language(this);
+		
+		// set up the economy if enabled in the configuration
+		this.econEnabled = false;
+		if(GameBox.debug)Bukkit.getConsoleSender().sendMessage("econ enabled: " + getConfig().getBoolean("economy.enabled"));
+		if(getConfig().getBoolean("economy.enabled")){
+			this.econEnabled = true;
+			if (!setupEconomy()){
+				Bukkit.getLogger().log(Level.SEVERE, "No economy found!");
+				return false;
+			}
+		}
+
+		// if it's not null disable first then get a new manager
+		if(pManager != null){
+			pManager.shutDown();
+			pManager = null;
+		}
+		pManager = new PluginManager(this);
+		pManager.setGuiManager(new GUIManager(this));
+		
+		// set cmd executor
+		mainCommand = new MainCommand(this);
+		this.getCommand("gamebox").setExecutor(mainCommand);
+		
+		return true;
+	}
+	
+	private boolean setupEconomy() {
+		if (getServer().getPluginManager().getPlugin("Vault") == null) {
+			return false;
+		}
+		RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+		if (rsp == null) {
+			return false;
+		}
+		econ = rsp.getProvider();
+		return econ != null;
+	}
+	
+	private boolean setUpNMS() {
+		String version;
+		
+		try {
+			version = Bukkit.getServer().getClass().getPackage().getName().replace(".",  ",").split(",")[3];
+		} catch (ArrayIndexOutOfBoundsException e) {
+			return false;
+		}
+		
+		if(debug) getLogger().info("Your server is running version " + version);
+		
+		switch (version) {
+			case "v1_10_R1":
+				nms = new NMSUtil_1_10_R1();
+				
+				break;
+			case "v1_9_R2":
+				nms = new NMSUtil_1_9_R2();
+				
+				break;
+			case "v1_9_R1":
+				nms = new NMSUtil_1_9_R1();
+				
+				break;
+			case "v1_8_R3":
+				nms = new NMSUtil_1_8_R3();
+				
+				break;
+			case "v1_8_R2":
+				nms = new NMSUtil_1_8_R2();
+				
+				break;
+			case "v1_8_R1":
+				nms = new NMSUtil_1_8_R1();
+				
+				break;
+			case "v1_11_R1":
+				nms = new NMSUtil_1_11_R1();
+				
+				break;
+		}
+		return nms != null;
+	}
+	
+	@Override
+	public void onDisable(){
+		if(pManager != null) pManager.shutDown();
+	}
+	
+	@Override
+	public FileConfiguration getConfig() {
+		return config;
+	}
+	
+	public PluginManager getPluginManager() {
+		return pManager;
+	}
+	
+	public boolean getEconEnabled() {
+		return econEnabled;
+	}
+	
+	public String chatColor(String message) {
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+	
+	public NMSUtil getNMS() {
+		return nms;
+	}
+
+	public static void debug(String message){
+		if(debug) Bukkit.getConsoleSender().sendMessage(message);
+	}
+
+	public void hook(){
+		// ToDo
+	}
+
+	public MainCommand getMainCommand(){
+		return this.mainCommand;
+	}
+}
