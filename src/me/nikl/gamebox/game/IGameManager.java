@@ -21,6 +21,13 @@ public interface IGameManager {
 	boolean onInventoryClick(InventoryClickEvent event);
 
 
+	/**
+	 * Handle an InventoryCloseEvent
+	 * You should do the same as in IGameManager.removeFromGame
+	 *
+	 * @param event CloseEvent
+	 * @return successful
+	 */
 	boolean onInventoryClose(InventoryCloseEvent event);
 	
 	
@@ -38,4 +45,26 @@ public interface IGameManager {
 	 * @return return whether the game was started or not
 	 */
 	boolean startGame(Player[] players, String... args);
+
+
+	/**
+	 * Remove the specified player from his game
+	 * Do not close the inventory
+	 *
+	 * If the game is not finished yet, consider this as the player closing the inventory
+	 * This method is mainly called when a button from the lower inventory is clicked and the player goes back to one of the menus
+	 *
+	 * @param uuid player to remove
+	 */
+	void removeFromGame(UUID uuid);
+
+/*
+	/**
+	 * Quit all games
+	 *
+	 * There is a reload going on
+	 *//*
+	void shutDown();
+*/
+
 }
