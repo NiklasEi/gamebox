@@ -18,33 +18,50 @@ import java.util.List;
  * save not saved default lang files
  */
 public class Language {
-	private Main plugin;
+	private GameBox plugin;
 	private FileConfiguration langFile;
 
+	private YamlConfiguration defaultLang;
 
-	public final String PREFIX = "[&1GameBox&r]";
+
+	public final String PREFIX = "["+ChatColor.BLUE+"GameBox"+ChatColor.RESET+"]";
+	public final String NAME = ChatColor.BLUE+"GameBox"+ChatColor.RESET;
 	public final String PLAIN_PREFIX = "[GameBox]";
-	
-	// main plugin
+
+	// commands
 	public String CMD_NO_PERM, CMD_ONLY_PLAYER, CMD_RELOADED;
 	public List<String> CMD_HELP, CMD_WRONG_USAGE;
-	private YamlConfiguration defaultLang;
-	
+
+	// Buttons
+	public String BUTTON_EXIT, BUTTON_TO_MAIN_MENU, BUTTON_TO_GAME_MENU;
+	public List<String> BUTTON_MAIN_MENU_INFO;
+
 	// Inv titles
-	public String TITLE_MAIN_GUI;
+	public String TITLE_MAIN_GUI, TITLE_GAME_GUI, TITLE_NO_PERM, TITLE_NOT_ENOUGH_MONEY;
 	
-	Language(Main plugin){
+	Language(GameBox plugin){
 		this.plugin = plugin;
 		getLangFile();
 		
 		getCommandMessages();
 		getInvTitles();
-		
+		getButtons();
 	}
-	
+
+	private void getButtons() {
+		this.BUTTON_EXIT = getString("mainButtons.exitButton");
+		this.BUTTON_TO_MAIN_MENU = getString("mainButtons.toMainGUIButton");
+		this.BUTTON_TO_GAME_MENU = getString("mainButtons.toGameGUIButton");
+		this.BUTTON_MAIN_MENU_INFO = getStringList("mainButtons.infoMainMenu");
+	}
+
 	private void getInvTitles() {
 		// main GUI
 		this.TITLE_MAIN_GUI = getString("inventoryTitles.mainGUI");
+
+		this.TITLE_GAME_GUI = getString("inventoryTitles.gameGUIs");
+		this.TITLE_NO_PERM = getString("inventoryTitles.noPermMessage");
+		this.TITLE_NOT_ENOUGH_MONEY = getString("inventoryTitles.notEnoughMoney");
 		
 		
 	}
@@ -59,30 +76,33 @@ public class Language {
 		this.CMD_HELP = getStringList("commandMessages.help");
 		this.CMD_WRONG_USAGE = getStringList("commandMessages.wrongUsage");
 	}
-	
+
+
+
 	private List<String> getStringList(String path) {
+		List<String> toReturn;
 		if(!langFile.isList(path)){
-			if(defaultLang.isList(path)) {
-				return defaultLang.getStringList(path);
-			} else {
-				return Arrays.asList(path);
+			toReturn = defaultLang.getStringList(path);
+			for(int i = 0; i<toReturn.size(); i++){
+				toReturn.set(i, ChatColor.translateAlternateColorCodes('&',toReturn.get(i)));
 			}
+			return toReturn;
 		}
-		return langFile.getStringList(path);
+		toReturn = langFile.getStringList(path);
+		for(int i = 0; i<toReturn.size(); i++){
+			toReturn.set(i, ChatColor.translateAlternateColorCodes('&',toReturn.get(i)));
+		}
+		return toReturn;
 	}
-	
+
 	private String getString(String path) {
 		if(!langFile.isString(path)){
-			if(defaultLang.isString(path)) {
-				return defaultLang.getString(path);
-			} else return path;
+			return ChatColor.translateAlternateColorCodes('&',defaultLang.getString(path));
 		}
-		return langFile.getString(path);
+		return ChatColor.translateAlternateColorCodes('&',langFile.getString(path));
 	}
 	
 	private void getLangFile() {
-		InputStream inputStream = null;
-		OutputStream outputStream = null;
 		
 		/*
 		 * The default file will always contain the up to date english messages
@@ -90,17 +110,21 @@ public class Language {
 		 * Messages from this file will be used if there are some missing
 		 * in the given language file. The missing keys will be listed in the console.
 		 */
+
+
+		/*
+		InputStream inputStream = null;
+		OutputStream outputStream = null;
 		File defaultFile = null;
 		try {
 			
 			// read this file into InputStream
-			String fileName = "language/lang_en.yml";
 			inputStream = plugin.getResource(fileName);
 			
 			// write the inputStream to a FileOutputStream
 			defaultFile = new File(plugin.getDataFolder().toString() + File.separatorChar + "language" + File.separatorChar + "default.yml");
 			defaultFile.getParentFile().mkdirs();
-			outputStream = new FileOutputStream(defaultFile);
+			outputStream = new FileOutputStream(defaultLang);
 			
 			int read;
 			byte[] bytes = new byte[1024];
@@ -127,10 +151,11 @@ public class Language {
 				}
 				
 			}
-		}
+		}*/
 		try {
-			this.defaultLang =  YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(defaultFile), "UTF-8"));
-		} catch (UnsupportedEncodingException | FileNotFoundException e2) {
+			String fileName = "language/lang_en.yml";
+			this.defaultLang =  YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource(fileName), "UTF-8"));
+		} catch (UnsupportedEncodingException e2) {
 			e2.printStackTrace();
 		}
 		File defaultEn = new File(plugin.getDataFolder().toString() + File.separatorChar + "language" + File.separatorChar + "lang_en.yml");
@@ -159,6 +184,11 @@ public class Language {
 				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " &4Using default language file"));
 				this.langFile = defaultLang;
 			} else {
+				String fileName = plugin.getConfig().getString("langFile");
+				if(fileName.equalsIgnoreCase("default")){
+					this.langFile = defaultLang;
+					return;
+				}
 				File languageFile = new File(plugin.getDataFolder().toString() + File.separatorChar + "language" + File.separatorChar + plugin.getConfig().getString("langFile"));
 				if(!languageFile.exists()){
 					Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&4*******************************************************"));
@@ -200,14 +230,13 @@ public class Language {
 			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + ""));
 			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " &4Game will use default messages for these paths"));
 			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + ""));
-			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " &4Please use an up to date language file"));
-			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " &4Or add the listed paths to your custom file"));
+			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " &4Please get an up to date language file"));
+			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " &4Or add the listed paths to your file"));
 			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " &4*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"));
 		}
 		return;
 		
 	}
-	
-	
+
 }
 
