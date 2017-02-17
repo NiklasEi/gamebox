@@ -1,19 +1,34 @@
 package me.nikl.gamebox;
 
+import me.nikl.gamebox.game.GameContainer;
 import me.nikl.gamebox.game.IGameManager;
 import me.nikl.gamebox.guis.GUIManager;
+import me.nikl.gamebox.guis.timer.TitleTimer;
 import me.nikl.gamebox.nms.NMSUtil;
+import me.nikl.gamebox.players.GBPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
 
 /**
  * Created by niklas on 10/17/16.
@@ -24,8 +39,8 @@ import java.util.UUID;
  */
 public class PluginManager implements Listener{
 	
-	// Main instance
-	private Main plugin;
+	// GameBox instance
+	private GameBox plugin;
 
 	// Language
 	private Language lang;
@@ -37,20 +52,139 @@ public class PluginManager implements Listener{
 	
 	private GUIManager guiManager;
 
-	private Map<String, IGameManager> games;
+	private Map<String, GameContainer> games = new HashMap<>();
+
+	// save the players inventory contents
+	private Map<UUID, ItemStack[]> savedContents  = new HashMap<>();
+    private Map<UUID, Integer> hotBarSlot  = new HashMap<>();
+
+    // timer to reset the title after a title message
+    private Map<UUID, TitleTimer> titleTimers  = new HashMap<>();
+
+    // players
+    private Map<UUID, GBPlayer> gbPlayers = new HashMap<>();
+
+	public static int exit, toMain, toGame, toHold = 0;
+	private Map<Integer, ItemStack> hotbarButtons = new HashMap<>();
+
+	private ArrayList<String> disabledWorlds = new ArrayList<>();
+
+	// hub stuff
+    private boolean hub, setOnWorldJoin;
+    private ItemStack hubItem;
+    private ArrayList<String> hubWorlds;
+    private int slot;
 	
-	public PluginManager(Main plugin){
+	public PluginManager(GameBox plugin){
 		this.plugin = plugin;
-		this.games = new HashMap<>();
 		this.lang = plugin.lang;
 		this.nms = plugin.getNMS();
 		this.config = plugin.getConfig();
-		this.guiManager = new GUIManager(plugin);
-		
+
+		if(config.isList("blockedWorlds")){
+		    disabledWorlds = new ArrayList<>(config.getStringList("blockedWorlds"));
+        }
+
+        loadPlayers();
+
+        setHotBar();
+
+		hub = config.getBoolean("hubMode.enabled", false);
+		if(hub) getHub();
+
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
-	
-	
+
+    private void loadPlayers() {
+	    for(Player player : Bukkit.getOnlinePlayers()){
+            if(!disabledWorlds.contains(player.getLocation().getWorld().getName())){
+                gbPlayers.putIfAbsent(player.getUniqueId(), new GBPlayer(player.getUniqueId()));
+            }
+        }
+    }
+
+    private void setHotBar() {
+        exit = (config.getInt("guiSettings.hotBarNavigation.exitSlot", 4) >= 0 && config.getInt("guiSettings.hotBarNavigation.exitSlot", 4) < 9)? config.getInt("guiSettings.hotBarNavigation.exitSlot", 4):4;
+        toMain = (config.getInt("guiSettings.hotBarNavigation.mainMenuSlot", 0) >= 0 && config.getInt("guiSettings.hotBarNavigation.mainMenuSlot", 0) < 9)? config.getInt("guiSettings.hotBarNavigation.mainMenuSlot", 0):0;
+        toGame = (config.getInt("guiSettings.hotBarNavigation.gameMenuSlot", 8) >= 0 && config.getInt("guiSettings.hotBarNavigation.gameMenuSlot", 8) < 9)? config.getInt("guiSettings.hotBarNavigation.gameMenuSlot", 8):8;
+        while(toHold == exit || toHold == toMain  || toHold == toGame ){
+            toHold++;
+        }
+
+
+        ItemStack toMainItem = new ItemStack(Material.DARK_OAK_DOOR_ITEM), toGameItem = new ItemStack(Material.BIRCH_DOOR_ITEM), exitItem = new ItemStack(Material.BARRIER);
+        ItemMeta meta = toMainItem.getItemMeta(); meta.setDisplayName(chatColor(lang.BUTTON_TO_MAIN_MENU)); toMainItem.setItemMeta(meta);
+        meta = toGameItem.getItemMeta(); meta.setDisplayName(chatColor(lang.BUTTON_TO_GAME_MENU)); toGameItem.setItemMeta(meta);
+        meta = exitItem.getItemMeta(); meta.setDisplayName(chatColor(lang.BUTTON_EXIT)); exitItem.setItemMeta(meta);
+        hotbarButtons.put(toMain, toMainItem); hotbarButtons.put(exit, exitItem); hotbarButtons.put(toGame, toGameItem);
+    }
+
+    private void getHub() {
+        ConfigurationSection hubSec = config.getConfigurationSection("hubMode");
+        if(!hubSec.isString("item.materialData") || !hubSec.isString("item.displayName")){
+            Bukkit.getLogger().log(Level.WARNING, " missing configuration in the 'hubMode' section");
+            hub = false;
+            return;
+        }
+        String matString = hubSec.getString("item.materialData");
+        String[] matStrings = matString.split(":");
+        Material mat = Material.getMaterial(matStrings[0]);
+        if(mat == null){
+            Bukkit.getLogger().log(Level.WARNING, " invalid material in the 'hubMode' section");
+            hub = false;
+            return;
+        }
+        hubItem = new ItemStack(mat);
+        if(matStrings.length == 2) {
+            try {
+                Short.parseShort(matStrings[1]);
+            } catch (NumberFormatException exception) {
+                exception.printStackTrace();
+                hub = false;
+                return;
+            }
+            hubItem.setDurability(Short.parseShort(matStrings[1]));
+        }
+        ItemMeta meta = hubItem.getItemMeta();
+        meta.setDisplayName(chatColor(hubSec.getString("item.displayName")));
+        ArrayList<String> lore;
+        if(hubSec.isList("item.lore")){
+            lore = new ArrayList<>(hubSec.getStringList("item.lore"));
+            for(int i = 0; i < lore.size();i++){
+                lore.set(i, chatColor(lore.get(i)));
+            }
+            meta.setLore(lore);
+        }
+        hubItem.setItemMeta(meta);
+        hubWorlds = new ArrayList<>(hubSec.getStringList("enabledWorlds"));
+        slot = hubSec.getInt("slot", 1);
+        setOnWorldJoin = hubSec.getBoolean("giveItemOnWorldJoin", false);
+    }
+
+    public void saveInventory(Player player){
+		GameBox.debug("saving inventory contents...");
+        hotBarSlot.putIfAbsent(player.getUniqueId(), player.getInventory().getHeldItemSlot());
+		savedContents.putIfAbsent(player.getUniqueId(), player.getInventory().getContents().clone());
+		player.getInventory().clear();
+		player.getInventory().setHeldItemSlot(toHold);
+	}
+
+	public void restoreInventory(Player player){
+		if(!savedContents.containsKey(player.getUniqueId())) return;
+		if(GameBox.openingNewGUI){
+			GameBox.debug("not restoring, because a new gui is being opened...");
+			return;
+		}
+		GameBox.debug("restoring inventory contents...");
+		player.getInventory().setContents(savedContents.get(player.getUniqueId()));
+        player.getInventory().setHeldItemSlot(hotBarSlot.get(player.getUniqueId()));
+		savedContents.remove(player.getUniqueId());
+        hotBarSlot.remove(player.getUniqueId());
+	}
+
+	public boolean hasSavedContents(UUID uuid){
+		return savedContents.containsKey(uuid);
+	}
 	
 	@EventHandler
 	public void onInvClick(InventoryClickEvent event) {
@@ -62,25 +196,75 @@ public class PluginManager implements Listener{
 		}
 		UUID uuid = event.getWhoClicked().getUniqueId();
 
-		for(IGameManager gameManager: games.values()){
+
+		GameBox.debug("checking gameManagers");
+		boolean topInv = event.getRawSlot() == event.getSlot();
+		for(String gameID: games.keySet()){
+            IGameManager gameManager = games.get(gameID).getGameManager();
 			if(gameManager.isInGame(uuid)){
 				event.setCancelled(true);
-				gameManager.onInventoryClick(event);
+				if(topInv || event.getSlot() > 8){
+				    // click in the top or in the upper bottom inventory
+                    // always handel in the game
+				    gameManager.onInventoryClick(event);
+                } else {
+				    if(games.get(gameID).handleClicksOnHotbar()){
+                        gameManager.onInventoryClick(event);
+                    } else {
+				        if(event.getClickedInventory().getItem(event.getSlot()) == null){
+				            GameBox.debug("empty hotbar slot clicked... returning");
+				            return;
+                        }
+                        if(event.getSlot() == this.toGame){
+                            guiManager.openGameGui((Player) event.getWhoClicked(), gameID, GUIManager.MAIN_GAME_GUI);
+                            gameManager.removeFromGame(event.getWhoClicked().getUniqueId());
+                            return;
+                        } else if(event.getSlot() == this.toMain){
+                            guiManager.openMainGui((Player) event.getWhoClicked());
+                            gameManager.removeFromGame(event.getWhoClicked().getUniqueId());
+                        } else if(event.getSlot() == this.exit){
+                            event.getWhoClicked().closeInventory();
+                            ((Player)event.getWhoClicked()).updateInventory();
+                            return;
+                        }
+                    }
+                }
+
+
+				//if(!topInv)guiManager.onInGameBottomInvClick(event, gameID);
 				return;
 			}
 		}
-
+		GameBox.debug("none found... checking GUIs...");
 		guiManager.onInvClick(event);
 	}
 	
 	@EventHandler
 	public void onInvClose(InventoryCloseEvent event) {
+		if(!(event.getPlayer() instanceof Player)) return;
+		removeTitleTimer(event.getPlayer().getUniqueId());
+		if(GameBox.openingNewGUI){
+			GameBox.debug("ignoring close because of flag: GameBox.openingNewGUI");
+			return;
+		}
 		UUID uuid = event.getPlayer().getUniqueId();
 
 
-		for(IGameManager gameManager: games.values()){
-			if(gameManager.isInGame(uuid)){
-				gameManager.onInventoryClose(event);
+		for(GameContainer game: games.values()){
+		    IGameManager manager = game.getGameManager();
+			if(manager.isInGame(uuid)){
+                manager.onInventoryClose(event);
+				if(!manager.isInGame(uuid)){
+					restoreInventory((Player) event.getPlayer());
+                    ((Player)event.getPlayer()).updateInventory();
+					/*new BukkitRunnable(){
+                        Player player = (Player) event.getPlayer();
+                        @Override
+                        public void run() {
+                            player.updateInventory();
+                        }
+                    }.runTaskLater(plugin, 1);*/
+				}
 				return;
 			}
 		}
@@ -88,29 +272,153 @@ public class PluginManager implements Listener{
 
 		guiManager.onInvClose(event);
 	}
-	
+
+	@EventHandler
+    public void onWorldChange(PlayerChangedWorldEvent event){
+        if(!disabledWorlds.contains(event.getPlayer().getLocation().getWorld().getName())){
+            gbPlayers.putIfAbsent(event.getPlayer().getUniqueId(), new GBPlayer(event.getPlayer().getUniqueId()));
+        } else {
+            gbPlayers.remove(event.getPlayer().getUniqueId());
+        }
+	    if(hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName())){
+            if(hub && setOnWorldJoin) {
+                GameBox.debug("in the hub world!");
+                event.getPlayer().getInventory().setItem(slot, hubItem);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event){
+        if(!disabledWorlds.contains(event.getPlayer().getLocation().getWorld().getName())){
+            gbPlayers.putIfAbsent(event.getPlayer().getUniqueId(), new GBPlayer(event.getPlayer().getUniqueId()));
+        }
+        if(hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName())){
+            if(hub && setOnWorldJoin) {
+                GameBox.debug("in the hub world!");
+                event.getPlayer().getInventory().setItem(slot, hubItem);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerLeave(PlayerQuitEvent event){
+        gbPlayers.remove(event.getPlayer().getUniqueId());
+    }
+
+    @EventHandler
+    public void onInteractEvent(PlayerInteractEvent event){
+        if(!hub) return;
+        if(hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName())) {
+            if(event.getItem() == null || event.getItem().getType() != hubItem.getType() || event.getItem().getItemMeta() == null || event.getItem().getItemMeta().getDisplayName() == null) return;
+            if(event.getItem().getItemMeta().getDisplayName().equals(hubItem.getItemMeta().getDisplayName())){
+                event.setCancelled(true);
+                guiManager.openMainGui(event.getPlayer());
+            }
+        }
+    }
+
 	public void shutDown() {
+        for(Player player : Bukkit.getOnlinePlayers()){
+            if(isInGame(player.getUniqueId())){
+                player.closeInventory();
+                restoreInventory(player);
+                continue;
+            }
+            if(guiManager.isInGUI(player.getUniqueId())){
+                player.closeInventory();
+                restoreInventory(player);
+            }
+        }
+        if(savedContents.size() > 0){
+            Bukkit.getLogger().log(Level.SEVERE, "There were left-over inventories after restoring for all players");
+        }
 		// ToDo
+		// go through all guis and games. Shut down everything, restore all player inventories
 	}
 	
-	public Main getPlugin() {
+	public GameBox getPlugin() {
 		return this.plugin;
 	}
 	
 	private String chatColor(String message){
 		return ChatColor.translateAlternateColorCodes('&', message);
 	}
-	
-	public void registerGame(IGameManager gameManager, String gameID){
-		games.put(gameID, gameManager);
+
+
+    public void registerGame(IGameManager gameManager, String gameID, String gameName){
+	    registerGame(gameManager, gameID, gameName, false);
+    }
+
+	public void registerGame(IGameManager gameManager, String gameID, String gameName, boolean handleClicksOnHotbar){
+        GameContainer game = new GameContainer(gameID, gameManager);
+        game.setHandleClicksOnHotbar(handleClicksOnHotbar);
+        game.setName(gameName);
+        game.setPlainName(ChatColor.stripColor(gameName));
+		games.put(gameID, game);
 		Permissions.addGameID(gameID);
 	}
 
 	public IGameManager getGameManager(String gameID){
-		return games.get(gameID);
+		return games.get(gameID).getGameManager();
 	}
 
 	public GUIManager getGuiManager(){
 		return this.guiManager;
 	}
+
+	public Map<Integer, ItemStack> getHotBarButtons(){
+	    return this.hotbarButtons;
+    }
+
+    public void setGuiManager(GUIManager guiManager) {
+        this.guiManager = guiManager;
+    }
+
+    public GameContainer getGame(String gameID){
+	    return games.get(gameID);
+    }
+
+    public GameContainer getGame(UUID uuid){
+        for(String gameID : games.keySet()){
+            if(games.get(gameID).getGameManager().isInGame(uuid)) return games.get(gameID);
+        }
+        return null;
+    }
+
+
+    public void startTitleTimer(Player player, String title, int seconds){
+        UUID uuid = player.getUniqueId();
+        if(titleTimers.keySet().contains(uuid)){
+            titleTimers.get(uuid).cancel();
+        }
+        titleTimers.put(uuid, new TitleTimer(plugin, title, player, System.currentTimeMillis()+seconds*1000));
+    }
+
+    public void removeTitleTimer(UUID uuid) {
+        if(titleTimers.keySet().contains(uuid)){
+            titleTimers.get(uuid).cancel();
+            titleTimers.remove(uuid);
+        }
+    }
+
+
+    private IGameManager getGameManager(UUID uuid){
+        for(String gameID : games.keySet()){
+            if(games.get(gameID).getGameManager().isInGame(uuid)) return games.get(gameID).getGameManager();
+        }
+        return null;
+    }
+
+    public GBPlayer getPlayer(UUID uuid){
+        return gbPlayers.get(uuid);
+    }
+
+    public boolean isInGame(UUID uuid){
+        for(String gameID : games.keySet()){
+            if(games.get(gameID).getGameManager().isInGame(uuid)) return true;
+        }
+        return false;
+    }
+
 }
