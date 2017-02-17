@@ -15,13 +15,16 @@
 
 
 # define the language file you want to use (find the files in the folder 'language')
-#   'default.yml' will be overwriten on restart! So you cannot use it if you want customized messages
-#   but the upside of 'default.yml' is that the messages are always complete
-# If you want custom messages please write your own file or use one of the already writen 'lang_xx.yml' files
+#   to use the default messages just write 'default'
+# If you want custom messages please write your own file or use one of the already written 'lang_xx.yml' files
 # If an update added new messages that are not in your defined file the plugin will print a warning and a list
-#   of missing paths and will use the corresponding messages from the 'default.yml' file until you added them in your file
-langFile: 'default.yml'
+#   of missing paths and will use the corresponding default messages until you added them in your file
+#   To get an up to date language file just delete one of the included files and reload
+langFile: 'default'
 
+# in these worlds the commands will not work
+blockedWorlds:
+  - "world_nether"
 
 economy:
   # this enables economy for the main plugin and all the games
@@ -29,24 +32,27 @@ economy:
   # THIS OPTION REQUIRES VAULT AND AN ECONOMY PLUGIN!
   enabled: false
 
+guiSettings:
+  playSounds: true
+  hotBarNavigation:
+    exitSlot: 4
+    mainMenuSlot: 0
+    gameMenuSlot: 8
 
-# list of games with the possibility to enable/disable each game
-# the symbol will be the clickable item in the GUI to get to the gameGUI (use minecraft materialnames)
-games:
-  minesweeper:
-    enabled: true
-    # use "Material:data" or "ID:data"
-    symbol: "TNT"
-  battleship:
-    enabled: true
-    # use "Material:data" or "ID:data"
-    symbol: "Iron_block"
-  gemcrush:
-    enabled: true
-    # use "Material:data" or "ID:data"
-    symbol: "diamond"
-  tetris:
-    enabled: true
-    # use "Material:data" or "ID:data"
-    symbol: "stained_glass_pane:14"
 
+hubMode:
+  enabled: false
+  enabledWorlds:
+  - "world"
+  giveItemOnWorldJoin: true
+  # slot in the hot bar the item is set to (if giveItemOnWorldJoin)
+  slot: 0
+  item:
+     # define the Material and data for the item (format: 'material:data')
+     materialData: "CHEST"
+     # display name of the button
+     displayName: "&3&lGameBox"
+     # lore of the item (optional)
+     lore:
+     - ""
+     - "&1Click with this item to open the menu"
