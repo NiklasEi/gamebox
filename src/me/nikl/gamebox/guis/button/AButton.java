@@ -16,9 +16,11 @@ public class AButton extends ItemStack{
 	private String[] args;
 	
 	
+	@SuppressWarnings("deprecation")
 	public AButton(MaterialData mat, int count){
 		super(mat.getItemType());
 		this.setData(mat);
+		this.setDurability(mat.getData());
 		this.setAmount(count);
 	}
 	
