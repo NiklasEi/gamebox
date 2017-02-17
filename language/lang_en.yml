@@ -4,70 +4,34 @@
 
 # command messages of the main plugin
 commandMessages:
-  noPermission: ' &2You have no permission to do that!'
-  onlyAsPlayer: ' &2You can only do that as a player'
-  pluginReloaded: ' &4Plugin was reloaded'
+  notInThisWorld: ' &4You can not do this here'
+  noPermission: ' &4You have no permission to do that!'
+  onlyAsPlayer: ' &4You can only do that as a player'
+  pluginReloaded: ' &2Plugin was reloaded'
   wrongUsage:
-  - ' Do &2/gamebox&r to display the main GUI'
-  - ' For more information do &2/gamebox help&r'
+  - ' Do &2/gb&r to display the main GUI'
+  - ' For more information do &2/gb help&r'
   help:
-  - ' ToDo'
+  - ' Do &2/gb&r to display the main GUI'
+  - ' you will get to the games over the menu'
+
 
 mainButtons:
   exitButton: "&4Click to exit"
-  toMainGUIButton: "&2To main GUI"
-  toGameGUIButton: "&2To game GUI"
+  toMainGUIButton: "&2To main menu"
+  toGameGUIButton: "&2To game menu"
   forwardButton: "&2Forward"
   backwardButton: "&2Back"
+  infoMainMenu:
+  - '&1Here you find all the games'
+  - '&1Click on one of the buttons'
+  - '  &1to open the games menu.'
 
 inventoryTitles:
   # use %player% for the player name
-  mainGUI: '&1Game&1Box&r    Welcome %player%'
+  mainGUI: ' Welcome to &1Game&1Box&r %player%'
+  # %game% will be replaced with the games prefix
+  gameGUIs: '          %game%&r'
+  noPermMessage: '          &4&lNo Permission'
+  notEnoughMoney: '          &4&lNot enough money'
 
-general:
-  # use %cost% for the amount payed
-  # %game% for the name of the game
-  payed: " &2You paid &4%cost%&2 for a game of %game%"
-  # %game% for the name of the game
-  notEnoughMoney: " %game% is too expensive for you :("
-  # messages send if there is a money reward paid out to the player
-  #   if not the 'finished' messages will be send
-  finishedWithReward:
-    # %game% for the name of the game
-    # %reward% for the amount rewarded
-    wonMoney: " &2You won &1%reward%&2 in %game%"
-    # %game% for the name of the game
-    # %reward% for the amount rewarded
-    # %score% the score when the game was won
-    wonMoneyWithScore: " &2You won &1%reward%&2 in %game% with a score of %score%"
-    # %game% for the name of the game
-    # %reward% for the amount rewarded
-    # %time% display time
-    wonMoneyInTime: " &2You won &1%reward%&2 in %game% after finishing in &1%time%"
-  # messages send if there is no money reward paid
-  finished:
-    # %game% for the name of the game
-    won: " &2You won a game of %game%"
-    # %game% for the name of the game
-    # %score% the score when the game was won
-    wonWithScore: " &2You finished %game% with a score of %score%"
-    # %game% for the name of the game
-    # %time% display time
-    wonInTime: " &2You finished %game% in &1%time%"
-
-games:
-  gemcrush:
-    # Inventory title
-    #   use %moves% for the number of moves left and %score% for the score
-    inventoryTitle: "GemCrush  moves: %moves% score: %score%"
-
-  minesweeper:
-    inventoryTitles:
-      # displayed before the Game starts
-      beginning: "Minesweeper        &2Click to start"
-      # use %state% to display the number of flags and the number of mines that are left
-      #   %timer% will be replaced by the timer counting up
-      ingame: "Minesweeper     %state%   &1%timer%"
-      # use %timer% to display the time played
-      won: "Minesweeper     &2You won in &1%timer%"
-      lost: "Minesweeper     &4You lost"
