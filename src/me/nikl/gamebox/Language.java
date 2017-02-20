@@ -185,7 +185,7 @@ public class Language {
 				this.langFile = defaultLang;
 			} else {
 				String fileName = plugin.getConfig().getString("langFile");
-				if(fileName.equalsIgnoreCase("default")){
+				if(fileName.equalsIgnoreCase("default") || fileName.equalsIgnoreCase("default.yml")){
 					this.langFile = defaultLang;
 					return;
 				}
