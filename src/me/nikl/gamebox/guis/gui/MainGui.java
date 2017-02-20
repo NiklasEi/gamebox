@@ -6,6 +6,7 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.button.ToggleButton;
+import me.nikl.gamebox.players.GBPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -75,7 +76,21 @@ public class MainGui extends AGui{
 
 	@Override
 	public boolean open(Player player){
+		if(!openInventories.containsKey(player.getUniqueId())){
+			loadMainGui(pluginManager.getPlayer(player.getUniqueId()));
+		}
+		if(super.open(player)){
+			plugin.getNMS().updateInventoryTitle(player, plugin.lang.TITLE_MAIN_GUI.replace("%player%", player.getName()));
+			return true;
+		}
+		return false;
+	}
 
+	public ToggleButton getSoundToggleButton(UUID uuid){
+		return soundButtons.get(uuid);
+	}
+
+	public void loadMainGui(GBPlayer player){
 		ToggleButton soundToggle = new ToggleButton(new MaterialData(Material.RECORD_6), 1, new MaterialData(Material.RECORD_4));
 		ItemMeta meta = soundToggle.getItemMeta();
 		meta.addItemFlags(ItemFlag.values());
@@ -86,28 +101,22 @@ public class MainGui extends AGui{
 		soundToggle.setToggleLore(Arrays.asList(" ", ChatColor.BLUE+"Click to turn sounds on"));
 		soundToggle.setAction(ClickAction.TOGGLE);
 		soundToggle.setArgs("sound");
-		soundButtons.put(player.getUniqueId(), soundToggle);
+		soundButtons.put(player.getUuid(), soundToggle);
 
-
-		Inventory inventory = Bukkit.createInventory(null, 54, "GameBox gui");
+		Inventory inventory = Bukkit.createInventory(null, this.inventory.getSize(), "GameBox gui");
 		inventory.setContents(this.inventory.getContents().clone());
-		toggle(inventory, player.getUniqueId());
-		openInventories.putIfAbsent(player.getUniqueId(),inventory);
+		openInventories.putIfAbsent(player.getUuid(),inventory);
 
-		if(super.open(player)){
-
-			player.getOpenInventory().setItem(soundToggleSlot, soundToggle);
-			plugin.getNMS().updateInventoryTitle(player, plugin.lang.TITLE_MAIN_GUI.replace("%player%", player.getName()));
-			return true;
-		}
-		return false;
+		updateToggles(player);
 	}
 
-	private void toggle(Inventory inventory, UUID uniqueId) {
-		if(!pluginManager.getPlayer(uniqueId).isPlaySounds()) inventory.setItem(soundToggleSlot, this.getSoundToggleButton(uniqueId).toggle());
+	public void updateToggles(GBPlayer player){
+		if(openInventories.get(player.getUuid()) == null) return;
+		if(!player.isPlaySounds()) openInventories.get(player.getUuid()).setItem(soundToggleSlot, this.getSoundToggleButton(player.getUuid()).toggle());
 	}
 
-	public ToggleButton getSoundToggleButton(UUID uuid){
-		return soundButtons.get(uuid);
+	public void removePlayer(UUID uuid) {
+		soundButtons.remove(uuid);
+		openInventories.remove(uuid);
 	}
 }
