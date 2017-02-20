@@ -4,20 +4,23 @@ import me.nikl.gamebox.ClickAction;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.Language;
 import me.nikl.gamebox.Permissions;
-import me.nikl.gamebox.game.IGameManager;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.gui.AGui;
 import me.nikl.gamebox.guis.gui.MainGui;
 import me.nikl.gamebox.guis.gui.game.GameGui;
 import me.nikl.gamebox.guis.gui.game.GameGuiPage;
+import me.nikl.gamebox.guis.gui.game.TopListPage;
 import me.nikl.gamebox.nms.NMSUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +35,7 @@ import java.util.logging.Level;
  * (not mainGUI and not game)
  */
 public class GUIManager implements Listener {
+	public static final String TOP_LIST_KEY_ADDON = "topList";
 	private GameBox plugin;
 	private Map<String, Map<String, GameGui>> gameGuis;
 	private NMSUtil nms;
@@ -51,6 +55,7 @@ public class GUIManager implements Listener {
 		this.gameGuis = new HashMap<>();
 
 		this.mainGui = new MainGui(plugin, this);
+
 	}
 	
 	
@@ -145,7 +150,11 @@ public class GUIManager implements Listener {
 				boolean opened = gameGuis.get(gameID).get(key).open(whoClicked);
 				GameBox.openingNewGUI = false;
 				if(opened){
-					nms.updateInventoryTitle(whoClicked, lang.TITLE_GAME_GUI.replace("%game%", plugin.getPluginManager().getGame(gameID).getName()).replace("%player%", whoClicked.getName()));
+					if(gameGuis.get(gameID).get(key) instanceof GameGuiPage){
+						nms.updateInventoryTitle(whoClicked, ((TopListPage)gameGuis.get(gameID).get(key)).getTitle().replace("%game%", plugin.getPluginManager().getGame(gameID).getName()).replace("%player%", whoClicked.getName()));
+					} else {
+						nms.updateInventoryTitle(whoClicked, lang.TITLE_GAME_GUI.replace("%game%", plugin.getPluginManager().getGame(gameID).getName()).replace("%player%", whoClicked.getName()));
+					}
 				} else {
 					plugin.getPluginManager().restoreInventory(whoClicked);
 				}
@@ -208,6 +217,13 @@ public class GUIManager implements Listener {
 		if(subCommand != null)plugin.getMainCommand().registerSubCommands(gameID, subCommand);
 	}
 
+	public void registerTopList(String gameID, String buttonID, TopListPage topListPage){
+		gameGuis.computeIfAbsent(gameID, k -> new HashMap<>());
+
+		gameGuis.get(gameID).put(buttonID + TOP_LIST_KEY_ADDON, topListPage);
+		GameBox.debug("registered toplist: " + gameID + ", " + buttonID);
+	}
+
 	private String color(String message){
 		return ChatColor.translateAlternateColorCodes('&', message);
 	}
@@ -229,5 +245,15 @@ public class GUIManager implements Listener {
 	}
 
 	public void shutDown() {
+	}
+
+	public MainGui getMainGui(){
+		return this.mainGui;
+	}
+
+	public void removePlayer(UUID uuid){
+		// ToDo
+		// find and remove any special inventories
+		this.mainGui.removePlayer(uuid);
 	}
 }
