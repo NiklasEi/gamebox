@@ -16,13 +16,15 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.AnvilInventory;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -74,6 +76,9 @@ public class PluginManager implements Listener{
     private ItemStack hubItem;
     private ArrayList<String> hubWorlds;
     private int slot;
+
+    //sounds
+    private float volume = 0.5f, pitch= 10f;
 	
 	public PluginManager(GameBox plugin){
 		this.plugin = plugin;
@@ -85,8 +90,6 @@ public class PluginManager implements Listener{
 		    disabledWorlds = new ArrayList<>(config.getStringList("blockedWorlds"));
         }
 
-        loadPlayers();
-
         setHotBar();
 
 		hub = config.getBoolean("hubMode.enabled", false);
@@ -95,10 +98,10 @@ public class PluginManager implements Listener{
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
-    private void loadPlayers() {
+    public void loadPlayers() {
 	    for(Player player : Bukkit.getOnlinePlayers()){
             if(!disabledWorlds.contains(player.getLocation().getWorld().getName())){
-                gbPlayers.putIfAbsent(player.getUniqueId(), new GBPlayer(player.getUniqueId()));
+                gbPlayers.putIfAbsent(player.getUniqueId(), new GBPlayer(plugin, player.getUniqueId()));
             }
         }
     }
@@ -194,6 +197,7 @@ public class PluginManager implements Listener{
 		if(!(event.getWhoClicked() instanceof Player)){
 			return;
 		}
+
 		UUID uuid = event.getWhoClicked().getUniqueId();
 
 
@@ -218,13 +222,22 @@ public class PluginManager implements Listener{
                         if(event.getSlot() == this.toGame){
                             guiManager.openGameGui((Player) event.getWhoClicked(), gameID, GUIManager.MAIN_GAME_GUI);
                             gameManager.removeFromGame(event.getWhoClicked().getUniqueId());
+                            if(GameBox.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
+                                ((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sounds.CLICK.bukkitSound(), volume, pitch);
+                            }
                             return;
                         } else if(event.getSlot() == this.toMain){
                             guiManager.openMainGui((Player) event.getWhoClicked());
                             gameManager.removeFromGame(event.getWhoClicked().getUniqueId());
+                            if(GameBox.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
+                                ((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sounds.CLICK.bukkitSound(), volume, pitch);
+                            }
                         } else if(event.getSlot() == this.exit){
                             event.getWhoClicked().closeInventory();
                             ((Player)event.getWhoClicked()).updateInventory();
+                            if(GameBox.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
+                                ((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sounds.CLICK.bukkitSound(), volume, pitch);
+                            }
                             return;
                         }
                     }
@@ -256,14 +269,8 @@ public class PluginManager implements Listener{
                 manager.onInventoryClose(event);
 				if(!manager.isInGame(uuid)){
 					restoreInventory((Player) event.getPlayer());
+					// update to actually display stuff like shield and armor
                     ((Player)event.getPlayer()).updateInventory();
-					/*new BukkitRunnable(){
-                        Player player = (Player) event.getPlayer();
-                        @Override
-                        public void run() {
-                            player.updateInventory();
-                        }
-                    }.runTaskLater(plugin, 1);*/
 				}
 				return;
 			}
@@ -276,9 +283,9 @@ public class PluginManager implements Listener{
 	@EventHandler
     public void onWorldChange(PlayerChangedWorldEvent event){
         if(!disabledWorlds.contains(event.getPlayer().getLocation().getWorld().getName())){
-            gbPlayers.putIfAbsent(event.getPlayer().getUniqueId(), new GBPlayer(event.getPlayer().getUniqueId()));
+            gbPlayers.putIfAbsent(event.getPlayer().getUniqueId(), new GBPlayer(plugin, event.getPlayer().getUniqueId()));
         } else {
-            gbPlayers.remove(event.getPlayer().getUniqueId());
+            removePlayer(event.getPlayer().getUniqueId());
         }
 	    if(hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName())){
             if(hub && setOnWorldJoin) {
@@ -291,7 +298,7 @@ public class PluginManager implements Listener{
     @EventHandler
     public void onJoin(PlayerJoinEvent event){
         if(!disabledWorlds.contains(event.getPlayer().getLocation().getWorld().getName())){
-            gbPlayers.putIfAbsent(event.getPlayer().getUniqueId(), new GBPlayer(event.getPlayer().getUniqueId()));
+            gbPlayers.putIfAbsent(event.getPlayer().getUniqueId(), new GBPlayer(plugin, event.getPlayer().getUniqueId()));
         }
         if(hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName())){
             if(hub && setOnWorldJoin) {
@@ -303,7 +310,14 @@ public class PluginManager implements Listener{
 
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event){
-        gbPlayers.remove(event.getPlayer().getUniqueId());
+        if(gbPlayers.keySet().contains(event.getPlayer().getUniqueId())) {
+            removePlayer(event.getPlayer().getUniqueId());
+        }
+    }
+
+    public void removePlayer(UUID uuid){
+        gbPlayers.get(uuid).remove();
+        gbPlayers.remove(uuid);
     }
 
     @EventHandler
@@ -333,8 +347,10 @@ public class PluginManager implements Listener{
         if(savedContents.size() > 0){
             Bukkit.getLogger().log(Level.SEVERE, "There were left-over inventories after restoring for all players");
         }
-		// ToDo
-		// go through all guis and games. Shut down everything, restore all player inventories
+		for(GBPlayer player : gbPlayers.values()){
+            player.remove();
+        }
+        gbPlayers.clear();
 	}
 	
 	public GameBox getPlugin() {
