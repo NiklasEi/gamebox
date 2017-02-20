@@ -1,24 +1,32 @@
 package me.nikl.gamebox.guis.gui;
 
 import me.nikl.gamebox.*;
+import me.nikl.gamebox.data.SaveType;
+import me.nikl.gamebox.data.Statistics;
 import me.nikl.gamebox.game.IGameManager;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.button.ToggleButton;
 import me.nikl.gamebox.guis.gui.game.GameGui;
 import me.nikl.gamebox.guis.gui.game.GameGuiPage;
+import me.nikl.gamebox.guis.gui.game.TopListPage;
 import net.minecraft.server.v1_11_R1.PacketPlayOutSetSlot;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.*;
+import java.util.logging.Level;
 
 /**
  * Created by niklas on 2/5/17.
@@ -30,7 +38,7 @@ public abstract class AGui {
 	protected Map<UUID, Inventory> openInventories = new HashMap<>();
 	private ArrayList<String> permissions = new ArrayList<>();
 	private GUIManager guiManager;
-	private Set<UUID> inGui;
+	protected Set<UUID> inGui;
 	protected GameBox plugin;
 	protected PluginManager pluginManager;
 
@@ -58,10 +66,22 @@ public abstract class AGui {
 		inGui = new HashSet<>();
 		permissions.add(Permissions.ADMIN.getPermission());
 
-		this.inventory = Bukkit.createInventory(null, 54, "GameGUI");
+		this.inventory = Bukkit.createInventory(null, slots, "GameGUI");
+	}
+
+	public AGui(GameBox plugin, GUIManager guiManager, InventoryType inventoryType){
+		this.plugin = plugin;
+		this.guiManager = guiManager;
+		this.pluginManager = plugin.getPluginManager();
+		this.grid = new AButton[inventoryType.getDefaultSize()];
+		inGui = new HashSet<>();
+		permissions.add(Permissions.ADMIN.getPermission());
+
+		this.inventory = Bukkit.createInventory(null, inventoryType, "GameGUI");
 	}
 	
 	public boolean open(Player player){
+		GameBox.debug("opening gui (method open in AGui)");
 		// permissions are checked in the GUIManager
 		if(openInventories.keySet().contains(player.getUniqueId())){
 			player.openInventory(openInventories.get(player.getUniqueId()));
@@ -135,7 +155,7 @@ public abstract class AGui {
 						for (int i = 1; i < args.length; i++) {
 							stripedArgs[i - 1] = args[i];
 						}
-						if(manager.startGame(player, stripedArgs)){
+						if(manager.startGame(player, (GameBox.playSounds && pluginManager.getPlayer(player[0].getUniqueId()).isPlaySounds()), stripedArgs)){
 							GameBox.debug("started game "+ args[0]+" for player " + player[0].getName() + " with the arguments: " + Arrays.asList(stripedArgs));
 							this.inGui.remove(player[0].getUniqueId());
 							for(int slot : pluginManager.getHotBarButtons().keySet()){
@@ -166,7 +186,7 @@ public abstract class AGui {
 
 						// trie to start the game without special args
 					} else {
-						if(manager.startGame(player)){
+						if(manager.startGame(player, (GameBox.playSounds && pluginManager.getPlayer(player[0].getUniqueId()).isPlaySounds()))){
 							GameBox.debug("started game "+ args[0]+" for player " + player[0].getName());
 							this.inGui.remove(player[0].getUniqueId());
 							for(int slot : pluginManager.getHotBarButtons().keySet()){
@@ -235,6 +255,18 @@ public abstract class AGui {
 				event.getClickedInventory().setItem(event.getSlot(), ((MainGui)this).getSoundToggleButton(event.getWhoClicked().getUniqueId()).toggle());
 				((Player)event.getWhoClicked()).updateInventory();
 				return true;
+
+			case SHOW_TOP_LIST:
+				if(args.length != 2){
+					Bukkit.getLogger().log(Level.WARNING, "show top list click has the wrong number of arguments: " + args.length);
+					return false;
+				}
+
+				if(guiManager.openGameGui((Player) event.getWhoClicked(),args)){
+					inGui.remove(event.getWhoClicked().getUniqueId());
+					return true;
+				}
+				return false;
 
 
 			default:
