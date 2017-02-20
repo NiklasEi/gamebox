@@ -1,6 +1,7 @@
 package me.nikl.gamebox;
 
 import me.nikl.gamebox.commands.MainCommand;
+import me.nikl.gamebox.data.Statistics;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.nms.*;
 import net.milkbowl.vault.economy.Economy;
@@ -49,8 +50,9 @@ public class GameBox extends JavaPlugin{
  	 */
 	private PluginManager pManager;
 
-
 	private MainCommand mainCommand;
+
+	private Statistics statistics;
 
 	
 	
@@ -59,14 +61,21 @@ public class GameBox extends JavaPlugin{
 		// get the version and set up nms
 		if (!setUpNMS()) {
 			getLogger().severe(" Your server version is not compatible with this plugin!");
-			
+
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
 		}
-		
+
+		this.statistics = new Statistics(this);
+		if(!statistics.load()){
+			Bukkit.getLogger().log(Level.SEVERE, " Something went wrong with the data file");
+			Bukkit.getPluginManager().disablePlugin(this);
+			return;
+		}
+
 		if (!reload()) {
 			getLogger().severe(" Error while loading the plugin! Plugin was disabled!");
-			
+
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
 		}
@@ -91,12 +100,9 @@ public class GameBox extends JavaPlugin{
 		} catch (UnsupportedEncodingException | FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		InputStream defConfigStream = this.getResource("config.yml");
-		if (defConfigStream != null){
-			@SuppressWarnings("deprecation")
-			YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
-			this.config.setDefaults(defConfig);
-		}
+
+		this.lang = new Language(this);
+
 
 		playSounds = config.getBoolean("guiSettings.playSounds");
 
@@ -120,14 +126,18 @@ public class GameBox extends JavaPlugin{
 		}
 		pManager = new PluginManager(this);
 		pManager.setGuiManager(new GUIManager(this));
-		
+		pManager.loadPlayers();
 		// set cmd executor
 		mainCommand = new MainCommand(this);
 		this.getCommand("gamebox").setExecutor(mainCommand);
 		
 		return true;
 	}
-	
+
+	public Statistics getStatistics(){
+		return this.statistics;
+	}
+
 	private boolean setupEconomy() {
 		if (getServer().getPluginManager().getPlugin("Vault") == null) {
 			return false;
@@ -187,6 +197,7 @@ public class GameBox extends JavaPlugin{
 	@Override
 	public void onDisable(){
 		if(pManager != null) pManager.shutDown();
+		statistics.save();
 	}
 	
 	@Override
