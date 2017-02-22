@@ -246,6 +246,16 @@ public abstract class AGui {
 			case NOTHING:
 				return true;
 
+			case START_PLAYER_INPUT:
+				long timeStamp = System.currentTimeMillis();
+				boolean worked = pluginManager.getHandleInviteInput().addWaiting(event.getWhoClicked().getUniqueId(), timeStamp + 15*1000, args);
+				if(worked){
+					event.getWhoClicked().closeInventory();
+					event.getWhoClicked().sendMessage("Please enter the name of the player you would like to invite:");
+					return true;
+				}
+				return false;
+
 			case TOGGLE:
 				if(args != null && args.length == 1){
 					if(args[0].equals("sound")){
