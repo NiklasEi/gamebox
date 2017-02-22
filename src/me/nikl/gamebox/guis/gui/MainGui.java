@@ -115,8 +115,9 @@ public class MainGui extends AGui{
 		if(!player.isPlaySounds()) openInventories.get(player.getUuid()).setItem(soundToggleSlot, this.getSoundToggleButton(player.getUuid()).toggle());
 	}
 
+	@Override
 	public void removePlayer(UUID uuid) {
 		soundButtons.remove(uuid);
-		openInventories.remove(uuid);
+		super.removePlayer(uuid);
 	}
 }
