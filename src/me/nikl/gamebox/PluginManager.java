@@ -6,6 +6,7 @@ import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.timer.TitleTimer;
 import me.nikl.gamebox.nms.NMSUtil;
 import me.nikl.gamebox.players.GBPlayer;
+import me.nikl.gamebox.players.HandleInvitations;
 import me.nikl.gamebox.players.HandleInviteInput;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -54,6 +55,8 @@ public class PluginManager implements Listener{
 
 	// save and manage players that we are waiting for to invite someone in the chat
 	private HandleInviteInput handleInviteInput;
+	// save and handle invitations
+    private HandleInvitations handleInvitations;
 
 	private Map<String, GameContainer> games = new HashMap<>();
 
@@ -371,15 +374,16 @@ public class PluginManager implements Listener{
 	}
 
 
-    public void registerGame(IGameManager gameManager, String gameID, String gameName){
-	    registerGame(gameManager, gameID, gameName, false);
+    public void registerGame(IGameManager gameManager, String gameID, String gameName, int playerNum){
+	    registerGame(gameManager, gameID, gameName, playerNum, false);
     }
 
-	public void registerGame(IGameManager gameManager, String gameID, String gameName, boolean handleClicksOnHotbar){
+	public void registerGame(IGameManager gameManager, String gameID, String gameName, int playerNum, boolean handleClicksOnHotbar){
         GameContainer game = new GameContainer(gameID, gameManager);
         game.setHandleClicksOnHotbar(handleClicksOnHotbar);
         game.setName(gameName);
         game.setPlainName(ChatColor.stripColor(gameName));
+        game.setPlayerNum(playerNum);
 		games.put(gameID, game);
 		Permissions.addGameID(gameID);
 	}
@@ -452,5 +456,13 @@ public class PluginManager implements Listener{
 
     public void setHandleInviteInput(HandleInviteInput handleInviteInput) {
         this.handleInviteInput = handleInviteInput;
+    }
+
+    public HandleInvitations getHandleInvitations() {
+        return handleInvitations;
+    }
+
+    public void setHandleInvitations(HandleInvitations handleInvitations) {
+        this.handleInvitations = handleInvitations;
     }
 }
