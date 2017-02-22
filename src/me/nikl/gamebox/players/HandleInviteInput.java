@@ -37,7 +37,7 @@ public class HandleInviteInput extends BukkitRunnable{
         for(UUID uuid: removing){
             player = Bukkit.getPlayer(uuid);
             if(player != null){
-                player.sendMessage("The time ran out");
+                player.sendMessage(plugin.lang.PREFIX + plugin.lang.INPUT_TIME_RAN_OUT);
             }
         }
     }
@@ -46,6 +46,13 @@ public class HandleInviteInput extends BukkitRunnable{
         if(!waitings.keySet().contains(event.getPlayer().getUniqueId())) return;
 
         String message = event.getMessage();
+
+        if(message.equals("%exit")){
+            event.getPlayer().sendMessage("closed input");
+            waitings.remove(event.getPlayer().getUniqueId());
+            return;
+        }
+
         if(message.split(" ").length > 1){
             event.setCancelled(true);
             event.getPlayer().sendMessage(" not a valid player name");
@@ -60,10 +67,12 @@ public class HandleInviteInput extends BukkitRunnable{
             event.getPlayer().sendMessage(" Maybe he is offline?");
             return;
         }
+
         event.setCancelled(true);
         if(player.getUniqueId().equals(event.getPlayer().getUniqueId())){
             event.getPlayer().sendMessage(" You cannot invite yourself " + message);
         }
+
         Waiting waiting = waitings.get(event.getPlayer().getUniqueId());
         // invite successfull
         plugin.getPluginManager().getHandleInvitations().addInvite(event.getPlayer().getUniqueId(), player.getUniqueId(), System.currentTimeMillis() + 15*1000, waiting.args);
