@@ -4,6 +4,7 @@ import me.nikl.gamebox.commands.MainCommand;
 import me.nikl.gamebox.data.Statistics;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.nms.*;
+import me.nikl.gamebox.players.HandleInviteInput;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -103,10 +104,7 @@ public class GameBox extends JavaPlugin{
 
 		this.lang = new Language(this);
 
-
 		playSounds = config.getBoolean("guiSettings.playSounds");
-
-		this.lang = new Language(this);
 		
 		// set up the economy if enabled in the configuration
 		this.econEnabled = false;
@@ -124,8 +122,10 @@ public class GameBox extends JavaPlugin{
 			pManager.shutDown();
 			pManager = null;
 		}
+		// get a new plugin manager and set the other managers and handlers
 		pManager = new PluginManager(this);
 		pManager.setGuiManager(new GUIManager(this));
+		pManager.setHandleInviteInput(new HandleInviteInput(this));
 		pManager.loadPlayers();
 		// set cmd executor
 		mainCommand = new MainCommand(this);
