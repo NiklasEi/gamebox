@@ -26,6 +26,10 @@ langFile: 'default'
 blockedWorlds:
   - "world_nether"
 
+
+timeForInvitations: 20
+timeForPlayerInput: 20
+
 economy:
   # this enables economy for the main plugin and all the games
   #   you can turn on/off economy for each game in the corresponding game config found in 'games/gameName'
