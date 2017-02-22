@@ -4,6 +4,7 @@ import me.nikl.gamebox.commands.MainCommand;
 import me.nikl.gamebox.data.Statistics;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.nms.*;
+import me.nikl.gamebox.players.HandleInvitations;
 import me.nikl.gamebox.players.HandleInviteInput;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -126,6 +127,7 @@ public class GameBox extends JavaPlugin{
 		pManager = new PluginManager(this);
 		pManager.setGuiManager(new GUIManager(this));
 		pManager.setHandleInviteInput(new HandleInviteInput(this));
+		pManager.setHandleInvitations(new HandleInvitations(this));
 		pManager.loadPlayers();
 		// set cmd executor
 		mainCommand = new MainCommand(this);
