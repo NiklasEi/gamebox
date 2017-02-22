@@ -35,3 +35,10 @@ inventoryTitles:
   noPermMessage: '          &4&lNo Permission'
   notEnoughMoney: '        &4&lNot enough money'
 
+
+others:
+  playerInput:
+    openingMessage: " &l&cPlease enter the name of the player you would like to invite:"
+    helpMessage:
+    - " &cYou got &1%seconds% &cseconds. To stop the input now write '%exit' and press enter"
+    timeRanOut: " &4The time for your input ran out."

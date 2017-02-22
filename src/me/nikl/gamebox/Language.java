@@ -38,6 +38,11 @@ public class Language {
 
 	// Inv titles
 	public String TITLE_MAIN_GUI, TITLE_GAME_GUI, TITLE_NO_PERM, TITLE_NOT_ENOUGH_MONEY;
+
+	// player input
+	public String INPUT_START_MESSAGE, INPUT_TIME_RAN_OUT;
+	public List<String> INPUT_HELP_MESSAGE;
+
 	
 	Language(GameBox plugin){
 		this.plugin = plugin;
@@ -46,6 +51,13 @@ public class Language {
 		getCommandMessages();
 		getInvTitles();
 		getButtons();
+		getOthers();
+	}
+
+	private void getOthers() {
+		this.INPUT_START_MESSAGE = getString("others.playerInput.openingMessage");
+		this.INPUT_TIME_RAN_OUT = getString("others.playerInput.timeRanOut");
+		this.INPUT_HELP_MESSAGE = getStringList("others.playerInput.helpMessage");
 	}
 
 	private void getButtons() {
