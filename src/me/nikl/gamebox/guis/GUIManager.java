@@ -9,6 +9,7 @@ import me.nikl.gamebox.guis.gui.AGui;
 import me.nikl.gamebox.guis.gui.MainGui;
 import me.nikl.gamebox.guis.gui.game.GameGui;
 import me.nikl.gamebox.guis.gui.game.GameGuiPage;
+import me.nikl.gamebox.guis.gui.game.StartMultiplayerGamePage;
 import me.nikl.gamebox.guis.gui.game.TopListPage;
 import me.nikl.gamebox.nms.NMSUtil;
 import org.bukkit.Bukkit;
@@ -151,7 +152,7 @@ public class GUIManager implements Listener {
 				GameBox.openingNewGUI = false;
 				if(opened){
 					if(gameGuis.get(gameID).get(key) instanceof GameGuiPage){
-						nms.updateInventoryTitle(whoClicked, ((TopListPage)gameGuis.get(gameID).get(key)).getTitle().replace("%game%", plugin.getPluginManager().getGame(gameID).getName()).replace("%player%", whoClicked.getName()));
+						nms.updateInventoryTitle(whoClicked, ((GameGuiPage)gameGuis.get(gameID).get(key)).getTitle().replace("%game%", plugin.getPluginManager().getGame(gameID).getName()).replace("%player%", whoClicked.getName()));
 					} else {
 						nms.updateInventoryTitle(whoClicked, lang.TITLE_GAME_GUI.replace("%game%", plugin.getPluginManager().getGame(gameID).getName()).replace("%player%", whoClicked.getName()));
 					}
@@ -252,8 +253,15 @@ public class GUIManager implements Listener {
 	}
 
 	public void removePlayer(UUID uuid){
-		// ToDo
-		// find and remove any special inventories
+
+		for(String gameID : gameGuis.keySet()){
+			Map<String, GameGui> guis = gameGuis.get(gameID);
+			for(GameGui gui : guis.values()){
+				gui.removePlayer(uuid);
+			}
+		}
+
 		this.mainGui.removePlayer(uuid);
+
 	}
 }
