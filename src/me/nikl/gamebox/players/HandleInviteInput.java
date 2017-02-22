@@ -14,8 +14,10 @@ import java.util.*;
  */
 public class HandleInviteInput extends BukkitRunnable{
     private Map<UUID, Waiting> waitings = new HashMap<>();
+    private GameBox plugin;
 
     public HandleInviteInput(GameBox plugin){
+        this.plugin = plugin;
         this.runTaskTimerAsynchronously(plugin, 20, 20);
     }
 
@@ -26,14 +28,23 @@ public class HandleInviteInput extends BukkitRunnable{
         Iterator<Waiting> it = waitings.values().iterator();
         while(it.hasNext()){
             Waiting waiting = it.next();
-            removing.add(waiting.uuid);
-            if(waiting.timestamp < currentTime) it.remove();
+            if(waiting.timestamp < currentTime){
+                removing.add(waiting.uuid);
+                it.remove();
+            }
+        }
+        Player player;
+        for(UUID uuid: removing){
+            player = Bukkit.getPlayer(uuid);
+            if(player != null){
+                player.sendMessage("The time ran out");
+            }
         }
     }
 
     public void onChat(AsyncPlayerChatEvent event){
         if(!waitings.keySet().contains(event.getPlayer().getUniqueId())) return;
-        
+
         String message = event.getMessage();
         if(message.split(" ").length > 1){
             event.setCancelled(true);
@@ -49,7 +60,13 @@ public class HandleInviteInput extends BukkitRunnable{
             event.getPlayer().sendMessage(" Maybe he is offline?");
             return;
         }
+        event.setCancelled(true);
+        if(player.getUniqueId().equals(event.getPlayer().getUniqueId())){
+            event.getPlayer().sendMessage(" You cannot invite yourself " + message);
+        }
+        Waiting waiting = waitings.get(event.getPlayer().getUniqueId());
         // invite successfull
+        plugin.getPluginManager().getHandleInvitations().addInvite(event.getPlayer().getUniqueId(), player.getUniqueId(), System.currentTimeMillis() + 15*1000, waiting.args);
     }
 
     public boolean addWaiting(UUID uuid, long timeStamp, String... args){
