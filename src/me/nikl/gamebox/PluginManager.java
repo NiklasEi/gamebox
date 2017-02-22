@@ -6,6 +6,7 @@ import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.timer.TitleTimer;
 import me.nikl.gamebox.nms.NMSUtil;
 import me.nikl.gamebox.players.GBPlayer;
+import me.nikl.gamebox.players.HandleInviteInput;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -17,10 +18,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -54,6 +52,9 @@ public class PluginManager implements Listener{
 	
 	private GUIManager guiManager;
 
+	// save and manage players that we are waiting for to invite someone in the chat
+	private HandleInviteInput handleInviteInput;
+
 	private Map<String, GameContainer> games = new HashMap<>();
 
 	// save the players inventory contents
@@ -66,9 +67,11 @@ public class PluginManager implements Listener{
     // players
     private Map<UUID, GBPlayer> gbPlayers = new HashMap<>();
 
+    // hot bar stuff
 	public static int exit, toMain, toGame, toHold = 0;
 	private Map<Integer, ItemStack> hotbarButtons = new HashMap<>();
 
+	// list of disabled worlds
 	private ArrayList<String> disabledWorlds = new ArrayList<>();
 
 	// hub stuff
@@ -120,6 +123,12 @@ public class PluginManager implements Listener{
         meta = toGameItem.getItemMeta(); meta.setDisplayName(chatColor(lang.BUTTON_TO_GAME_MENU)); toGameItem.setItemMeta(meta);
         meta = exitItem.getItemMeta(); meta.setDisplayName(chatColor(lang.BUTTON_EXIT)); exitItem.setItemMeta(meta);
         hotbarButtons.put(toMain, toMainItem); hotbarButtons.put(exit, exitItem); hotbarButtons.put(toGame, toGameItem);
+    }
+
+    @EventHandler
+    public void onChat(AsyncPlayerChatEvent event){
+	    if(disabledWorlds.contains(event.getPlayer().getLocation().getWorld().getName())) return;
+	    handleInviteInput.onChat(event);
     }
 
     private void getHub() {
@@ -437,4 +446,11 @@ public class PluginManager implements Listener{
         return false;
     }
 
+    public HandleInviteInput getHandleInviteInput() {
+        return handleInviteInput;
+    }
+
+    public void setHandleInviteInput(HandleInviteInput handleInviteInput) {
+        this.handleInviteInput = handleInviteInput;
+    }
 }
