@@ -56,6 +56,11 @@ public class GameBox extends JavaPlugin{
 
 	private Statistics statistics;
 
+
+	// time in seconds for inputs and invitations
+	public static int timeForPlayerInput;
+	public static int timeForInvitations;
+
 	
 	
 	@Override
@@ -102,6 +107,11 @@ public class GameBox extends JavaPlugin{
 		} catch (UnsupportedEncodingException | FileNotFoundException e) {
 			e.printStackTrace();
 		}
+
+
+		timeForInvitations = config.getInt("timeForInvitations");
+		timeForPlayerInput = config.getInt("timeForPlayerInput");
+
 
 		this.lang = new Language(this);
 
