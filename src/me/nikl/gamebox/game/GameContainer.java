@@ -13,6 +13,7 @@ public class GameContainer {
     private boolean handleClicksOnHotbar;
     private String gameID;
     private String plainName, name;
+    private int playerNum;
 
 
     public GameContainer(String gameID, IGameManager gameManager){
@@ -50,5 +51,13 @@ public class GameContainer {
 
     public IGameManager getGameManager() {
         return gameManager;
+    }
+
+    public int getPlayerNum() {
+        return playerNum;
+    }
+
+    public void setPlayerNum(int playerNum) {
+        this.playerNum = playerNum;
     }
 }
