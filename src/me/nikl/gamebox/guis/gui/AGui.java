@@ -84,6 +84,7 @@ public abstract class AGui {
 		GameBox.debug("opening gui (method open in AGui)");
 		// permissions are checked in the GUIManager
 		if(openInventories.keySet().contains(player.getUniqueId())){
+			GameBox.debug("found and now opening own inventory");
 			player.openInventory(openInventories.get(player.getUniqueId()));
 		} else {
 			player.openInventory(inventory);
@@ -231,8 +232,10 @@ public abstract class AGui {
 
 
 			case CHANGE_GAME_GUI:
-				// ToDo
-				GameBox.debug("ToDo");
+				if(guiManager.openGameGui((Player)event.getWhoClicked(), args)){
+					inGui.remove(event.getWhoClicked().getUniqueId());
+					return true;
+				}
 				return false;
 
 
@@ -248,10 +251,13 @@ public abstract class AGui {
 
 			case START_PLAYER_INPUT:
 				long timeStamp = System.currentTimeMillis();
-				boolean worked = pluginManager.getHandleInviteInput().addWaiting(event.getWhoClicked().getUniqueId(), timeStamp + 15*1000, args);
+				boolean worked = pluginManager.getHandleInviteInput().addWaiting(event.getWhoClicked().getUniqueId(), timeStamp + GameBox.timeForPlayerInput*1000, args);
 				if(worked){
 					event.getWhoClicked().closeInventory();
-					event.getWhoClicked().sendMessage("Please enter the name of the player you would like to invite:");
+					event.getWhoClicked().sendMessage(plugin.lang.PREFIX + plugin.lang.INPUT_START_MESSAGE);
+					for(String message : plugin.lang.INPUT_HELP_MESSAGE){
+						event.getWhoClicked().sendMessage(message.replace("%seconds%", String.valueOf(GameBox.timeForPlayerInput)));
+					}
 					return true;
 				}
 				return false;
@@ -287,7 +293,10 @@ public abstract class AGui {
 
 	public void onInvClick(InventoryClickEvent event){
 		AButton button = grid[event.getRawSlot()];
-		if(button == null) return;
+		if(button == null && event.getCurrentItem() == null) return;
+		if(button == null && event.getCurrentItem() instanceof AButton){
+			button = (AButton) event.getCurrentItem();
+		}
 
 		if(action(event, button.getAction(), button.getArgs())){
 			if(GameBox.playSounds && pluginManager.getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
@@ -368,5 +377,9 @@ public abstract class AGui {
 
 	public AButton getButton(int slot){
 		return grid[slot];
+	}
+
+	public void removePlayer(UUID uuid){
+		openInventories.remove(uuid);
 	}
 }
