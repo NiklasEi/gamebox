@@ -204,11 +204,11 @@ public class PluginManager implements Listener{
 	@EventHandler
 	public void onInvClick(InventoryClickEvent event) {
 		if(event.getClickedInventory() == null || event.getWhoClicked() == null){
-			return;
-		}
-		if(!(event.getWhoClicked() instanceof Player)){
-			return;
-		}
+            return;
+        }
+        if(!(event.getWhoClicked() instanceof Player)){
+            return;
+        }
 
 		UUID uuid = event.getWhoClicked().getUniqueId();
 
