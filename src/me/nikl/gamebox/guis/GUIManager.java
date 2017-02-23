@@ -264,4 +264,22 @@ public class GUIManager implements Listener {
 		this.mainGui.removePlayer(uuid);
 
 	}
+
+	public AGui getGameGui(String gameID, String key){
+		return gameGuis.get(gameID) == null? null : gameGuis.get(gameID).get(key);
+	}
+
+	public void sentInventoryTitleMessage(Player player, String message, String gameID) {
+		String currentTitle = plugin.lang.TITLE_MAIN_GUI.replace("%player%", player.getName());
+		AGui gui = getCurrentGui(player.getUniqueId());
+		if (gui != null) {
+			if (gui instanceof GameGuiPage) {
+				currentTitle = ((GameGuiPage) gui).getTitle().replace("%player%", player.getName());
+			} else if (gui instanceof GameGui) {
+				currentTitle = plugin.lang.TITLE_GAME_GUI.replace("%game%", plugin.getPluginManager().getGame(gameID).getName()).replace("%player%", player.getName());
+			}
+		}
+		plugin.getPluginManager().startTitleTimer(player, currentTitle, titleMessageSeconds);
+		plugin.getNMS().updateInventoryTitle(player, message);
+	}
 }
