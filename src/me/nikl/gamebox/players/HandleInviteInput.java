@@ -48,14 +48,14 @@ public class HandleInviteInput extends BukkitRunnable{
         String message = event.getMessage();
 
         if(message.equals("%exit")){
-            event.getPlayer().sendMessage("closed input");
+            event.getPlayer().sendMessage(plugin.lang.INPUT_CLOSED);
             waitings.remove(event.getPlayer().getUniqueId());
             return;
         }
 
         if(message.split(" ").length > 1){
             event.setCancelled(true);
-            event.getPlayer().sendMessage(" not a valid player name");
+            event.getPlayer().sendMessage(plugin.lang.INVITATION_NOT_VALID_PLAYER_NAME.replace("%player%", message));
             return;
         }
 
@@ -63,8 +63,7 @@ public class HandleInviteInput extends BukkitRunnable{
 
         if(player == null){
             event.setCancelled(true);
-            event.getPlayer().sendMessage(" Could not find the player: " + message);
-            event.getPlayer().sendMessage(" Maybe he is offline?");
+            event.getPlayer().sendMessage(plugin.lang.INVITATION_NOT_ONLINE.replace("%player%", message));
             return;
         }
 
@@ -75,7 +74,10 @@ public class HandleInviteInput extends BukkitRunnable{
 
         Waiting waiting = waitings.get(event.getPlayer().getUniqueId());
         // invite successfull
-        plugin.getPluginManager().getHandleInvitations().addInvite(event.getPlayer().getUniqueId(), player.getUniqueId(), System.currentTimeMillis() + 15*1000, waiting.args);
+        if(plugin.getPluginManager().getHandleInvitations().addInvite(event.getPlayer().getUniqueId(), player.getUniqueId(), System.currentTimeMillis() + 15*1000, waiting.args)){
+            event.getPlayer().sendMessage(plugin.lang.PREFIX + plugin.lang.INVITATION_SUCCESSFUL.replace("%player%", player.getName()));
+            waitings.remove(event.getPlayer().getUniqueId());
+        }
     }
 
     public boolean addWaiting(UUID uuid, long timeStamp, String... args){
