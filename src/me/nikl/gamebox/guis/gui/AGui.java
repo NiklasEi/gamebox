@@ -9,6 +9,7 @@ import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.button.ToggleButton;
 import me.nikl.gamebox.guis.gui.game.GameGui;
 import me.nikl.gamebox.guis.gui.game.GameGuiPage;
+import me.nikl.gamebox.guis.gui.game.StartMultiplayerGamePage;
 import me.nikl.gamebox.guis.gui.game.TopListPage;
 import net.minecraft.server.v1_11_R1.PacketPlayOutSetSlot;
 import org.bukkit.Bukkit;
@@ -122,25 +123,29 @@ public abstract class AGui {
 				if((manager = pluginManager.getGameManager(gameID)) != null){
 					// set flag
 					GameBox.openingNewGUI = true;
-					Player[] player = new Player[1];
+					Player[] player = args.length == 3?new Player[2]:new Player[1];
 					player[0] = (Player) event.getWhoClicked();
-					String[] stripedArgs;
+					if(args.length == 3){
+						// last entry should be a UUID
+						try{
+							UUID uuid = UUID.fromString(args[2]);
+							Player player2 = Bukkit.getPlayer(uuid);
+							if(player == null) return false;
+							player[1] = player2;
+						} catch (IllegalArgumentException exception){
+							exception.printStackTrace();
+							GameBox.debug("tried inviting with a not valid UUID");
+							return false;
+						}
+
+						if(pluginManager.isInGame(player[1].getUniqueId())){
+							guiManager.sentInventoryTitleMessage(player[0], plugin.lang.TITLE_ALREADY_IN_ANOTHER_GAME, gameID);
+						}
+					}
 					if(!event.getWhoClicked().hasPermission(Permissions.PLAY_ALL_GAMES.getPermission()) && !event.getWhoClicked().hasPermission(Permissions.PLAY_GAME.getPermission(gameID))){
-						event.getWhoClicked().sendMessage(color(plugin.lang.CMD_NO_PERM));
+						//event.getWhoClicked().sendMessage(plugin.lang.CMD_NO_PERM);
 
-
-						String currentTitle = plugin.lang.TITLE_MAIN_GUI.replace("%player%", player[0].getName());
-						AGui gui = guiManager.getCurrentGui(player[0].getUniqueId());
-						if(gui != null){
-							if(gui instanceof GameGuiPage){
-								currentTitle = ((GameGuiPage) gui).getTitle().replace("%player%", player[0].getName());
-							} else if(gui instanceof  GameGui){
-								currentTitle = plugin.lang.TITLE_GAME_GUI.replace("%game%", pluginManager.getGame(gameID).getName()).replace("%player%", player[0].getName());
-							}
-						}
-						pluginManager.startTitleTimer(player[0], currentTitle, titleMessageSeconds);
-						plugin.getNMS().updateInventoryTitle(player[0], plugin.lang.TITLE_NO_PERM);
-
+						guiManager.sentInventoryTitleMessage(player[0], plugin.lang.TITLE_NO_PERM, gameID);
 
 						// remove flag
 						GameBox.openingNewGUI = false;
@@ -148,75 +153,39 @@ public abstract class AGui {
 					}
 
 
-					if(args.length > 1) {
-						// try starting a game with args
-
-						// first get rid of the first entry (gameID)
-						stripedArgs = new String[args.length - 1];
-						for (int i = 1; i < args.length; i++) {
-							stripedArgs[i - 1] = args[i];
-						}
-						if(manager.startGame(player, (GameBox.playSounds && pluginManager.getPlayer(player[0].getUniqueId()).isPlaySounds()), stripedArgs)){
-							GameBox.debug("started game "+ args[0]+" for player " + player[0].getName() + " with the arguments: " + Arrays.asList(stripedArgs));
-							this.inGui.remove(player[0].getUniqueId());
-							for(int slot : pluginManager.getHotBarButtons().keySet()){
-								player[0].getInventory().setItem(slot, pluginManager.getHotBarButtons().get(slot));
-							}
-							// remove flag
-							GameBox.openingNewGUI = false;
-							return true;
-						}
-
-						String currentTitle = plugin.lang.TITLE_MAIN_GUI.replace("%player%", player[0].getName());
-						AGui gui = guiManager.getCurrentGui(player[0].getUniqueId());
-						if(gui != null){
-							if(gui instanceof GameGuiPage){
-								currentTitle = ((GameGuiPage) gui).getTitle().replace("%player%", player[0].getName());
-							} else if(gui instanceof  GameGui){
-								currentTitle = plugin.lang.TITLE_GAME_GUI.replace("%game%", pluginManager.getGame(gameID).getName()).replace("%player%", player[0].getName());
+					if(manager.startGame(player, (GameBox.playSounds && pluginManager.getPlayer(player[0].getUniqueId()).isPlaySounds()), args[1])){
+						GameBox.debug("started game "+ args[0]+" for player " + player[0].getName() + (player.length==2?" and " + player[1].getName():"") + " with the arguments: " + Arrays.asList(args[1]));
+						for(Player playerObj : player) {
+							this.inGui.remove(playerObj.getUniqueId());
+							for (int slot : pluginManager.getHotBarButtons().keySet()) {
+								playerObj.getInventory().setItem(slot, pluginManager.getHotBarButtons().get(slot));
 							}
 						}
-						pluginManager.startTitleTimer(player[0], currentTitle, titleMessageSeconds);
-						plugin.getNMS().updateInventoryTitle(player[0], plugin.lang.TITLE_NOT_ENOUGH_MONEY);
-
-
 						// remove flag
 						GameBox.openingNewGUI = false;
-						GameBox.debug("did not start a game");
-						return false;
-
-						// trie to start the game without special args
-					} else {
-						if(manager.startGame(player, (GameBox.playSounds && pluginManager.getPlayer(player[0].getUniqueId()).isPlaySounds()))){
-							GameBox.debug("started game "+ args[0]+" for player " + player[0].getName());
-							this.inGui.remove(player[0].getUniqueId());
-							for(int slot : pluginManager.getHotBarButtons().keySet()){
-								player[0].getInventory().setItem(slot, pluginManager.getHotBarButtons().get(slot));
-							}
-							// remove flag
-							GameBox.openingNewGUI = false;
-							return true;
-						}
-
-
-						String currentTitle = plugin.lang.TITLE_MAIN_GUI.replace("%player%", player[0].getName());
-						AGui gui = guiManager.getCurrentGui(player[0].getUniqueId());
-						if(gui != null){
-							if(gui instanceof GameGuiPage){
-								currentTitle = ((GameGuiPage) gui).getTitle().replace("%player%", player[0].getName());
-							} else if(gui instanceof  GameGui){
-								currentTitle = plugin.lang.TITLE_GAME_GUI.replace("%game%", pluginManager.getGame(gameID).getName()).replace("%player%", player[0].getName());
-							}
-						}
-						pluginManager.startTitleTimer(player[0], currentTitle, titleMessageSeconds);
-						plugin.getNMS().updateInventoryTitle(player[0], plugin.lang.TITLE_NOT_ENOUGH_MONEY);
-
-
-						// remove flag
-						GameBox.openingNewGUI = false;
-						GameBox.debug("did not start a game");
-						return false;
+						return true;
 					}
+
+					for(Player playerObj: player) {
+						String currentTitle = plugin.lang.TITLE_MAIN_GUI.replace("%player%", playerObj.getName());
+						AGui gui = guiManager.getCurrentGui(playerObj.getUniqueId());
+						if (gui != null) {
+							if (gui instanceof GameGuiPage) {
+								currentTitle = ((GameGuiPage) gui).getTitle().replace("%player%", playerObj.getName());
+							} else if (gui instanceof GameGui) {
+								currentTitle = plugin.lang.TITLE_GAME_GUI.replace("%game%", pluginManager.getGame(gameID).getName()).replace("%player%", playerObj.getName());
+							}
+						}
+						pluginManager.startTitleTimer(playerObj, currentTitle, titleMessageSeconds);
+						plugin.getNMS().updateInventoryTitle(playerObj, plugin.lang.TITLE_NOT_ENOUGH_MONEY);
+					}
+
+					// remove flag
+					GameBox.openingNewGUI = false;
+					GameBox.debug("did not start a game");
+					return false;
+
+					// try to start the game without special args
 
 				}
 				GameBox.debug("Game with id: " + args[0] + " was not found");
@@ -293,9 +262,15 @@ public abstract class AGui {
 
 	public void onInvClick(InventoryClickEvent event){
 		AButton button = grid[event.getRawSlot()];
-		if(button == null && event.getCurrentItem() == null) return;
-		if(button == null && event.getCurrentItem() instanceof AButton){
-			button = (AButton) event.getCurrentItem();
+		if(button == null){
+			if(event.getCurrentItem() != null){
+				if(guiManager.getCurrentGui(event.getWhoClicked().getUniqueId()) instanceof StartMultiplayerGamePage){
+					button = ((StartMultiplayerGamePage)guiManager.getCurrentGui(event.getWhoClicked().getUniqueId())).getButton(event.getWhoClicked().getUniqueId(), event.getSlot());
+					if(button == null) return;
+				}
+			} else {
+				return;
+			}
 		}
 
 		if(action(event, button.getAction(), button.getArgs())){
@@ -308,7 +283,6 @@ public abstract class AGui {
 			}
 		}
 	}
-
 	public void onInvClose(InventoryCloseEvent event){
 		inGui.remove(event.getPlayer().getUniqueId());
 		GameBox.debug("GUI was closed");
