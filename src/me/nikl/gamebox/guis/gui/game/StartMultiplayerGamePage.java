@@ -11,15 +11,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.MaterialData;
 
-import java.util.Arrays;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by Niklas on 22.02.2017.
  */
 public class StartMultiplayerGamePage extends GameGuiPage {
+    private Map<UUID, ArrayList<UUID>> invitations = new HashMap<>();
+    private Map<UUID, AButton[]> invitationButtons = new HashMap<>();
+
     public StartMultiplayerGamePage(GameBox plugin, GUIManager guiManager, int slots, String gameID, String key, String title) {
         super(plugin, guiManager, slots, gameID, key, title);
 
@@ -50,17 +53,70 @@ public class StartMultiplayerGamePage extends GameGuiPage {
 
     private void loadInvites(UUID uniqueId) {
         GameBox.debug("loading inventory");
+        invitations.put(uniqueId, new ArrayList<>());
+        invitationButtons.put(uniqueId, new AButton[inventory.getSize()]);
         Inventory inv = Bukkit.createInventory(null, 54, "Your invite inv.");
         inv.setContents(inventory.getContents().clone());
-        ItemStack item = new MaterialData(Material.SKULL_ITEM).toItemStack();
-        item.setAmount(1);
-        item.setDurability((short)3);
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("Your first inv");
-        meta.setLore(Arrays.asList("","your uuid: "+uniqueId.toString()));
-        item.setItemMeta(meta);
-        inv.setItem(1, item);
+
         openInventories.put(uniqueId, inv);
     }
 
+    public void addInvite(UUID uuid1, UUID uuid2){
+        // set maximal 53 invites in the inventory
+        if(!invitations.keySet().contains(uuid2)){
+            invitations.put(uuid2, new ArrayList<>());
+        }
+        if(!invitationButtons.keySet().contains(uuid2)){
+            invitationButtons.put(uuid2, new AButton[inventory.getSize()]);
+        }
+        invitations.get(uuid2).add(uuid1);
+        updateInvitations(uuid2);
+    }
+
+    private void updateInvitations(UUID uuid2) {
+        if(!openInventories.containsKey(uuid2)){
+            openInventories.put(uuid2, Bukkit.createInventory(null, 54, "Your invite inv."));
+        }
+        Inventory inv = openInventories.get(uuid2);
+        inv.setContents(inventory.getContents().clone());
+        int i = 1;
+        for(UUID uuid1 : invitations.get(uuid2)){
+            if(i >= inventory.getSize()) break;
+            Player player1 = Bukkit.getPlayer(uuid1);
+            if(player1 == null) continue;
+            AButton skull =  new AButton(new MaterialData(Material.SKULL_ITEM), 1);
+            skull.setDurability((short) 3);
+            SkullMeta meta = (SkullMeta) skull.getItemMeta();
+            meta.setOwner(player1.getName());
+            meta.setDisplayName(ChatColor.GOLD + player1.getName());
+            meta.setLore(Arrays.asList("", ChatColor.BLUE+"Click to accept the invitation"));
+            skull.setItemMeta(meta);
+            skull.setAction(ClickAction.START_GAME);
+            skull.setArgs(gameID, key, uuid1.toString());
+            inv.setItem(i, skull);
+            invitationButtons.get(uuid2)[i] = skull;
+            i++;
+        }
+    }
+
+    @Override
+    public void removePlayer(UUID uuid){
+        invitations.remove(uuid);
+        super.removePlayer(uuid);
+    }
+
+    public void removeInvite(UUID uuid1, UUID uuid2) {
+        if(!invitations.keySet().contains(uuid2)){
+            return;
+        }
+        invitations.get(uuid2).remove(uuid1);
+        updateInvitations(uuid2);
+    }
+
+    public AButton getButton(UUID uuid, int slot) {
+        if(invitationButtons.containsKey(uuid)){
+            return invitationButtons.get(uuid)[slot];
+        }
+        return null;
+    }
 }
