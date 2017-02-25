@@ -40,7 +40,7 @@ public class Language {
 	public String TITLE_MAIN_GUI, TITLE_GAME_GUI, TITLE_NO_PERM, TITLE_NOT_ENOUGH_MONEY, TITLE_ALREADY_IN_ANOTHER_GAME;
 
 	// player input
-	public String INPUT_START_MESSAGE, INPUT_TIME_RAN_OUT, INVITATION_SUCCESSFUL, INVITATION_ALREADY_THERE, INVITATION_NOT_VALID_PLAYER_NAME, INVITATION_NOT_ONLINE, INPUT_CLOSED;
+	public String INPUT_START_MESSAGE, INPUT_TIME_RAN_OUT, INVITATION_SUCCESSFUL, INVITATION_ALREADY_THERE, INVITATION_NOT_VALID_PLAYER_NAME, INVITATION_NOT_ONLINE, INPUT_CLOSED, INVITATION_NOT_YOURSELF;
 	public List<String> INPUT_HELP_MESSAGE;
 
 
@@ -64,6 +64,7 @@ public class Language {
 		this.INVITATION_NOT_VALID_PLAYER_NAME = getString("others.playerInput.notValidPlayerName");
 		this.INVITATION_NOT_ONLINE = getString("others.playerInput.notOnline");
 		this.INPUT_CLOSED = getString("others.playerInput.inputClosed");
+		this.INVITATION_NOT_YOURSELF = getString("others.playerInput.notInviteYourself");
 	}
 
 	private void getButtons() {
