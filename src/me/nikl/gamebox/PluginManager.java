@@ -180,6 +180,7 @@ public class PluginManager implements Listener{
 		GameBox.debug("saving inventory contents...");
         hotBarSlot.putIfAbsent(player.getUniqueId(), player.getInventory().getHeldItemSlot());
 		savedContents.putIfAbsent(player.getUniqueId(), player.getInventory().getContents().clone());
+
 		player.getInventory().clear();
 		player.getInventory().setHeldItemSlot(toHold);
 	}
@@ -464,5 +465,32 @@ public class PluginManager implements Listener{
 
     public void setHandleInvitations(HandleInvitations handleInvitations) {
         this.handleInvitations = handleInvitations;
+    }
+
+    public boolean addItem(UUID uuid, ItemStack itemStack){
+        if(!savedContents.keySet().contains(uuid) || itemStack == null) return false;
+        GameBox.debug("length is: " + savedContents.get(uuid).length);
+        ItemStack[] savedStacks = savedContents.get(uuid);
+        for(int i = 0; i< 36;i++){
+            if(savedStacks[i] == null) continue;
+            if(savedStacks[i].isSimilar(itemStack) && ((itemStack.getItemMeta().getDisplayName() == null && savedStacks[i].getItemMeta().getDisplayName() == null) || itemStack.getItemMeta().getDisplayName().equals(savedStacks[i].getItemMeta().getDisplayName()))){
+                if(itemStack.getMaxStackSize() >= itemStack.getAmount() + savedStacks[i].getAmount()){
+                    savedStacks[i].setAmount(itemStack.getAmount() + savedStacks[i].getAmount());
+                    return true;
+                } else if(itemStack.getMaxStackSize() >= savedStacks[i].getAmount()){
+                    int rest = itemStack.getAmount() - (itemStack.getMaxStackSize() - savedStacks[i].getAmount());
+                    savedStacks[i].setAmount(itemStack.getMaxStackSize());
+                    itemStack.setAmount(rest);
+                    continue;
+                }
+            }
+        }
+        for(int i = 0; i< 36;i++){
+            if(savedStacks[i] == null){
+                savedStacks[i] = itemStack;
+                return true;
+            }
+        }
+        return false;
     }
 }
