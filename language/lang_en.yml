@@ -39,12 +39,13 @@ inventoryTitles:
 
 others:
   playerInput:
-    openingMessage: " &l&2Please enter the name of the player you would like to invite:"
+    openingMessage: " &l&2Please enter the name of the player you would like to invite."
     helpMessage:
-    - " &2You got &1%seconds% &2seconds. To stop the input now write &4'%exit'&2 and press enter"
-    timeRanOut: " &4The time for your input ran out."
-    inputSuccessful: " &1%player%&2 was invited"
-    inputClosed: " &2Input was closed"
-    sameInvitation: " &4There is already such an invitation"
-    notValidPlayerName: " &1%player%&4 is not a valid player name"
-    notOnline: " &4There is no &1%player%&4 online"
+    - " &2You got &5%seconds% &2seconds. To stop the input now write &c'%exit'&2 and press enter."
+    timeRanOut: " &cThe time for your input ran out."
+    inputSuccessful: " &5%player%&2 was invited."
+    inputClosed: " &2Input was closed."
+    sameInvitation: " &4There is already such an invitation."
+    notValidPlayerName: " &1%player%&4 is not a valid player name."
+    notOnline: " &cThere is no &5%player%&c online."
+    notInviteYourself: " &cYou cannot invite yourself."
