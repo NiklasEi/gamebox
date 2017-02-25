@@ -47,8 +47,9 @@ public class HandleInviteInput extends BukkitRunnable{
 
         String message = event.getMessage();
 
-        if(message.equals("%exit")){
-            event.getPlayer().sendMessage(plugin.lang.INPUT_CLOSED);
+        if(message.equalsIgnoreCase("%exit")){
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(plugin.lang.PREFIX + plugin.lang.INPUT_CLOSED);
             waitings.remove(event.getPlayer().getUniqueId());
             return;
         }
@@ -68,15 +69,16 @@ public class HandleInviteInput extends BukkitRunnable{
         }
 
         event.setCancelled(true);
-        if(player.getUniqueId().equals(event.getPlayer().getUniqueId())){
-            event.getPlayer().sendMessage(" You cannot invite yourself " + message);
+        UUID uuid = event.getPlayer().getUniqueId();
+        if(player.getUniqueId().equals(uuid)){
+            event.getPlayer().sendMessage(plugin.lang.INVITATION_NOT_YOURSELF);
         }
 
-        Waiting waiting = waitings.get(event.getPlayer().getUniqueId());
+        Waiting waiting = waitings.get(uuid);
         // invite successfull
-        if(plugin.getPluginManager().getHandleInvitations().addInvite(event.getPlayer().getUniqueId(), player.getUniqueId(), System.currentTimeMillis() + 15*1000, waiting.args)){
+        if(plugin.getPluginManager().getHandleInvitations().addInvite(uuid, player.getUniqueId(), System.currentTimeMillis() + 15*1000, waiting.args)){
             event.getPlayer().sendMessage(plugin.lang.PREFIX + plugin.lang.INVITATION_SUCCESSFUL.replace("%player%", player.getName()));
-            waitings.remove(event.getPlayer().getUniqueId());
+            waitings.remove(uuid);
         }
     }
 
