@@ -140,6 +140,10 @@ public abstract class AGui {
 
 						if(pluginManager.isInGame(player[1].getUniqueId())){
 							guiManager.sentInventoryTitleMessage(player[0], plugin.lang.TITLE_ALREADY_IN_ANOTHER_GAME, gameID);
+							return false;
+						}
+						if(!guiManager.isInGUI(player[1].getUniqueId())){
+							pluginManager.saveInventory(player[1]);
 						}
 					}
 					if(!event.getWhoClicked().hasPermission(Permissions.PLAY_ALL_GAMES.getPermission()) && !event.getWhoClicked().hasPermission(Permissions.PLAY_GAME.getPermission(gameID))){
@@ -154,7 +158,7 @@ public abstract class AGui {
 
 
 					if(manager.startGame(player, (GameBox.playSounds && pluginManager.getPlayer(player[0].getUniqueId()).isPlaySounds()), args[1])){
-						GameBox.debug("started game "+ args[0]+" for player " + player[0].getName() + (player.length==2?" and " + player[1].getName():"") + " with the arguments: " + Arrays.asList(args[1]));
+						GameBox.debug("started game "+ args[0]+" for player " + player[0].getName() + (player.length==2?" and " + player[1].getName():"") + " with the arguments: " + Arrays.asList(args));
 						for(Player playerObj : player) {
 							this.inGui.remove(playerObj.getUniqueId());
 							for (int slot : pluginManager.getHotBarButtons().keySet()) {
@@ -223,6 +227,7 @@ public abstract class AGui {
 				boolean worked = pluginManager.getHandleInviteInput().addWaiting(event.getWhoClicked().getUniqueId(), timeStamp + GameBox.timeForPlayerInput*1000, args);
 				if(worked){
 					event.getWhoClicked().closeInventory();
+					((Player)event.getWhoClicked()).updateInventory();
 					event.getWhoClicked().sendMessage(plugin.lang.PREFIX + plugin.lang.INPUT_START_MESSAGE);
 					for(String message : plugin.lang.INPUT_HELP_MESSAGE){
 						event.getWhoClicked().sendMessage(message.replace("%seconds%", String.valueOf(GameBox.timeForPlayerInput)));
@@ -261,12 +266,19 @@ public abstract class AGui {
 	}
 
 	public void onInvClick(InventoryClickEvent event){
+		if(event.getCurrentItem() == null) return;
 		AButton button = grid[event.getRawSlot()];
+		boolean perInvitation = false;
+		StartMultiplayerGamePage mpGui = null;
 		if(button == null){
-			if(event.getCurrentItem() != null){
+			if(event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR){
 				if(guiManager.getCurrentGui(event.getWhoClicked().getUniqueId()) instanceof StartMultiplayerGamePage){
-					button = ((StartMultiplayerGamePage)guiManager.getCurrentGui(event.getWhoClicked().getUniqueId())).getButton(event.getWhoClicked().getUniqueId(), event.getSlot());
+					mpGui = (StartMultiplayerGamePage)guiManager.getCurrentGui(event.getWhoClicked().getUniqueId());
+					button = mpGui.getButton(event.getWhoClicked().getUniqueId(), event.getSlot());
 					if(button == null) return;
+					perInvitation = true;
+				} else {
+					return;
 				}
 			} else {
 				return;
@@ -276,6 +288,9 @@ public abstract class AGui {
 		if(action(event, button.getAction(), button.getArgs())){
 			if(GameBox.playSounds && pluginManager.getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
 				((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sounds.CLICK.bukkitSound(), volume, pitch);
+			}
+			if(perInvitation){
+				mpGui.removeInvite( UUID.fromString(button.getArgs()[2]), event.getWhoClicked().getUniqueId());
 			}
 		} else {
 			if(GameBox.playSounds && pluginManager.getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
