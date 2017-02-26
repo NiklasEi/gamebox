@@ -72,6 +72,7 @@ public class HandleInviteInput extends BukkitRunnable{
         UUID uuid = event.getPlayer().getUniqueId();
         if(player.getUniqueId().equals(uuid)){
             event.getPlayer().sendMessage(plugin.lang.INVITATION_NOT_YOURSELF);
+            return;
         }
 
         Waiting waiting = waitings.get(uuid);
