@@ -13,6 +13,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -25,6 +26,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.io.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -279,8 +282,7 @@ public class PluginManager implements Listener{
 		for(GameContainer game: games.values()){
 		    IGameManager manager = game.getGameManager();
 			if(manager.isInGame(uuid)){
-                manager.onInventoryClose(event);
-				if(!manager.isInGame(uuid)){
+				if(manager.onInventoryClose(event) && !manager.isInGame(uuid)){
 					restoreInventory((Player) event.getPlayer());
 					// update to actually display stuff like shield and armor
                     ((Player)event.getPlayer()).updateInventory();
@@ -357,8 +359,46 @@ public class PluginManager implements Listener{
                 restoreInventory(player);
             }
         }
+
+        logging:
         if(savedContents.size() > 0){
+            Bukkit.getLogger().log(Level.SEVERE, "-------------------------------------------------------------------");
             Bukkit.getLogger().log(Level.SEVERE, "There were left-over inventories after restoring for all players");
+            String fileName = LocalDateTime.now().toString() + ".yml";
+            Bukkit.getLogger().log(Level.SEVERE, "Saving those contents in a log file in the folder Logs as: " + fileName);
+
+            File logFile = new File("Logs" + File.pathSeparator + fileName);
+
+            logFile.getParentFile().mkdir();
+            try {
+                logFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            FileConfiguration log;
+
+            try {
+                log = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(logFile), "UTF-8"));
+            } catch (UnsupportedEncodingException | FileNotFoundException e) {
+                e.printStackTrace();
+                break logging;
+            }
+            ItemStack[] saves;
+            for(UUID uuid: savedContents.keySet()){
+                saves = savedContents.get(uuid);
+                log.set(uuid.toString() + ".name", Bukkit.getOfflinePlayer(uuid) == null ? "null":Bukkit.getOfflinePlayer(uuid).getName());
+                for(int i = 0; i< saves.length;i++){
+                    log.set(uuid.toString() + ".items." + i, saves[i].toString());
+                }
+            }
+            savedContents.clear();
+            try {
+                log.save(logFile);
+            } catch (IOException e) {
+                Bukkit.getLogger().log(Level.SEVERE, "Could not save Log", e);
+            }
+            Bukkit.getLogger().log(Level.SEVERE, "-------------------------------------------------------------------");
         }
 		for(GBPlayer player : gbPlayers.values()){
             player.remove();
