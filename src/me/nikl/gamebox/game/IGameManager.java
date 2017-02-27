@@ -44,7 +44,7 @@ public interface IGameManager {
 	 * @param args additional arguments
 	 * @return return whether the game was started or not
 	 */
-	boolean startGame(Player[] players, boolean playSounds, String... args);
+	int startGame(Player[] players, boolean playSounds, String... args);
 
 
 	/**
