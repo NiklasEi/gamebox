@@ -33,6 +33,7 @@ public class Statistics {
     public boolean load(){
         if(!dataFile.exists()){
             try {
+                dataFile.getParentFile().mkdir();
                 dataFile.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
