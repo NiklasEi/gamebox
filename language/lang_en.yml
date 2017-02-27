@@ -34,6 +34,7 @@ inventoryTitles:
   gameGUIs: '          %game%&r'
   noPermMessage: '          &4&lNo Permission'
   notEnoughMoney: '        &4&lNot enough money'
+  otherPlayerNotEnoughMoney: '   &4The other player does not have enough money'
   alreadyInAnotherGame: '     &4Already in another game'
 
 
