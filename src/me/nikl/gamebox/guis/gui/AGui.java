@@ -157,7 +157,8 @@ public abstract class AGui {
 					}
 
 
-					if(manager.startGame(player, (GameBox.playSounds && pluginManager.getPlayer(player[0].getUniqueId()).isPlaySounds()), args[1])){
+					int returnedCode = manager.startGame(player, (GameBox.playSounds && pluginManager.getPlayer(player[0].getUniqueId()).isPlaySounds()), args[1]);
+					if(returnedCode == GameBox.GAME_STARTED){
 						GameBox.debug("started game "+ args[0]+" for player " + player[0].getName() + (player.length==2?" and " + player[1].getName():"") + " with the arguments: " + Arrays.asList(args));
 						for(Player playerObj : player) {
 							this.inGui.remove(playerObj.getUniqueId());
@@ -168,20 +169,18 @@ public abstract class AGui {
 						// remove flag
 						GameBox.openingNewGUI = false;
 						return true;
-					}
-
-					for(Player playerObj: player) {
-						String currentTitle = plugin.lang.TITLE_MAIN_GUI.replace("%player%", playerObj.getName());
-						AGui gui = guiManager.getCurrentGui(playerObj.getUniqueId());
-						if (gui != null) {
-							if (gui instanceof GameGuiPage) {
-								currentTitle = ((GameGuiPage) gui).getTitle().replace("%player%", playerObj.getName());
-							} else if (gui instanceof GameGui) {
-								currentTitle = plugin.lang.TITLE_GAME_GUI.replace("%game%", pluginManager.getGame(gameID).getName()).replace("%player%", playerObj.getName());
-							}
+					} else if(returnedCode == GameBox.GAME_NOT_ENOUGH_MONEY){
+						guiManager.sentInventoryTitleMessage(player[0], plugin.lang.TITLE_NOT_ENOUGH_MONEY, gameID);
+					} else if(returnedCode == GameBox.GAME_NOT_ENOUGH_MONEY_1){
+						guiManager.sentInventoryTitleMessage(player[0], plugin.lang.TITLE_NOT_ENOUGH_MONEY, gameID);
+						guiManager.sentInventoryTitleMessage(player[1], plugin.lang.TITLE_OTHER_PLAYER_NOT_ENOUGH_MONEY, gameID);
+					} else if(returnedCode == GameBox.GAME_NOT_ENOUGH_MONEY_2){
+						guiManager.sentInventoryTitleMessage(player[1], plugin.lang.TITLE_NOT_ENOUGH_MONEY, gameID);
+						guiManager.sentInventoryTitleMessage(player[0], plugin.lang.TITLE_OTHER_PLAYER_NOT_ENOUGH_MONEY, gameID);
+					} else if(returnedCode == GameBox.GAME_NOT_STARTED_ERROR){
+						for(Player playerObj: player) {
+							guiManager.sentInventoryTitleMessage(playerObj, plugin.lang.TITLE_ERROR, gameID);
 						}
-						pluginManager.startTitleTimer(playerObj, currentTitle, titleMessageSeconds);
-						plugin.getNMS().updateInventoryTitle(playerObj, plugin.lang.TITLE_NOT_ENOUGH_MONEY);
 					}
 
 					// remove flag
