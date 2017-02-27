@@ -32,6 +32,8 @@ public class GameBox extends JavaPlugin{
 
 	// toggle for playing sounds
 	public static boolean playSounds = false;
+
+	public static final int GAME_STARTED = 1, GAME_NOT_STARTED_ERROR = 0, GAME_NOT_ENOUGH_MONEY = 2, GAME_NOT_ENOUGH_MONEY_1 = 3, GAME_NOT_ENOUGH_MONEY_2 = 4;
 	
 	// plugin configuration
 	private FileConfiguration config;
