@@ -37,7 +37,7 @@ public class Language {
 	public List<String> BUTTON_MAIN_MENU_INFO;
 
 	// Inv titles
-	public String TITLE_MAIN_GUI, TITLE_GAME_GUI, TITLE_NO_PERM, TITLE_NOT_ENOUGH_MONEY, TITLE_ALREADY_IN_ANOTHER_GAME;
+	public String TITLE_MAIN_GUI, TITLE_GAME_GUI, TITLE_NO_PERM, TITLE_NOT_ENOUGH_MONEY, TITLE_OTHER_PLAYER_NOT_ENOUGH_MONEY, TITLE_ALREADY_IN_ANOTHER_GAME, TITLE_ERROR = ChatColor.RED + "              Error";
 
 	// player input
 	public String INPUT_START_MESSAGE, INPUT_TIME_RAN_OUT, INVITATION_SUCCESSFUL, INVITATION_ALREADY_THERE, INVITATION_NOT_VALID_PLAYER_NAME, INVITATION_NOT_ONLINE, INPUT_CLOSED, INVITATION_NOT_YOURSELF;
@@ -82,8 +82,8 @@ public class Language {
 		this.TITLE_NO_PERM = getString("inventoryTitles.noPermMessage");
 		this.TITLE_NOT_ENOUGH_MONEY = getString("inventoryTitles.notEnoughMoney");
 		this.TITLE_ALREADY_IN_ANOTHER_GAME = getString("inventoryTitles.alreadyInAnotherGame");
-		
-		
+		this.TITLE_OTHER_PLAYER_NOT_ENOUGH_MONEY = getString("inventoryTitles.otherPlayerNotEnoughMoney");
+
 	}
 	
 	private void getCommandMessages() {
