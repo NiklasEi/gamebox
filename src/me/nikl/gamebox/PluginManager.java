@@ -236,15 +236,15 @@ public class PluginManager implements Listener{
 				            return;
                         }
                         if(event.getSlot() == this.toGame){
-                            guiManager.openGameGui((Player) event.getWhoClicked(), gameID, GUIManager.MAIN_GAME_GUI);
                             gameManager.removeFromGame(event.getWhoClicked().getUniqueId());
+                            guiManager.openGameGui((Player) event.getWhoClicked(), gameID, GUIManager.MAIN_GAME_GUI);
                             if(GameBox.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
                                 ((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sounds.CLICK.bukkitSound(), volume, pitch);
                             }
                             return;
                         } else if(event.getSlot() == this.toMain){
-                            guiManager.openMainGui((Player) event.getWhoClicked());
                             gameManager.removeFromGame(event.getWhoClicked().getUniqueId());
+                            guiManager.openMainGui((Player) event.getWhoClicked());
                             if(GameBox.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
                                 ((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sounds.CLICK.bukkitSound(), volume, pitch);
                             }
@@ -302,11 +302,9 @@ public class PluginManager implements Listener{
         } else {
             removePlayer(event.getPlayer().getUniqueId());
         }
-	    if(hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName())){
-            if(hub && setOnWorldJoin) {
-                GameBox.debug("in the hub world!");
-                event.getPlayer().getInventory().setItem(slot, hubItem);
-            }
+	    if(hub && hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName()) && setOnWorldJoin){
+            GameBox.debug("in the hub world!");
+            event.getPlayer().getInventory().setItem(slot, hubItem);
         }
     }
 
@@ -315,11 +313,9 @@ public class PluginManager implements Listener{
         if(!disabledWorlds.contains(event.getPlayer().getLocation().getWorld().getName())){
             gbPlayers.putIfAbsent(event.getPlayer().getUniqueId(), new GBPlayer(plugin, event.getPlayer().getUniqueId()));
         }
-        if(hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName())){
-            if(hub && setOnWorldJoin) {
-                GameBox.debug("in the hub world!");
-                event.getPlayer().getInventory().setItem(slot, hubItem);
-            }
+        if(hub && hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName()) && setOnWorldJoin){
+            GameBox.debug("in the hub world!");
+            event.getPlayer().getInventory().setItem(slot, hubItem);
         }
     }
 
