@@ -33,7 +33,7 @@ public class MainGui extends AGui{
 		super(plugin, guiManager, 54);
 		this.inventory = Bukkit.createInventory(null, 54, "GameBox gui");
 		
-		AButton help = new AButton(new MaterialData(Material.IRON_BLOCK), 1);
+		AButton help = new AButton(new MaterialData(Material.BOOK_AND_QUILL), 1);
 		// test glow on buttons
 		help = (AButton) plugin.getNMS().addGlow(help);
 		ItemMeta meta = help.getItemMeta();
