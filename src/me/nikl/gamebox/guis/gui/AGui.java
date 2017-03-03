@@ -67,7 +67,7 @@ public abstract class AGui {
 		inGui = new HashSet<>();
 		permissions.add(Permissions.ADMIN.getPermission());
 
-		this.inventory = Bukkit.createInventory(null, slots, "GameGUI");
+		this.inventory = Bukkit.createInventory(null, slots, "This title should not show!");
 	}
 
 	public AGui(GameBox plugin, GUIManager guiManager, InventoryType inventoryType){
@@ -285,14 +285,14 @@ public abstract class AGui {
 		}
 
 		if(action(event, button.getAction(), button.getArgs())){
-			if(GameBox.playSounds && pluginManager.getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
+			if(GameBox.playSounds && pluginManager.getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds() && button.getAction() != ClickAction.NOTHING) {
 				((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sounds.CLICK.bukkitSound(), volume, pitch);
 			}
 			if(perInvitation){
 				mpGui.removeInvite( UUID.fromString(button.getArgs()[2]), event.getWhoClicked().getUniqueId());
 			}
 		} else {
-			if(GameBox.playSounds && pluginManager.getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
+			if(GameBox.playSounds && pluginManager.getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds() && button.getAction() != ClickAction.NOTHING) {
 				((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sounds.VILLAGER_NO.bukkitSound(), volume, pitch);
 			}
 		}
