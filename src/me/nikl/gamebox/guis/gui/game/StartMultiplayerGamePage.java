@@ -9,7 +9,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.MaterialData;
@@ -18,6 +17,8 @@ import java.util.*;
 
 /**
  * Created by Niklas on 22.02.2017.
+ *
+ * GUI
  */
 public class StartMultiplayerGamePage extends GameGuiPage {
     private Map<UUID, ArrayList<UUID>> invitations = new HashMap<>();
