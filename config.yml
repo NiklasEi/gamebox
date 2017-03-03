@@ -43,6 +43,16 @@ guiSettings:
     mainMenuSlot: 0
     gameMenuSlot: 8
 
+mysql:
+  enabled: false
+  host: "localhost"
+  port: 3306
+  database: "TestDatabase"
+  username: "user"
+  password: "pass"
+
+
+
 
 hubMode:
   enabled: false
