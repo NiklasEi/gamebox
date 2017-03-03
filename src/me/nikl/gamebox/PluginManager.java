@@ -360,12 +360,17 @@ public class PluginManager implements Listener{
         if(savedContents.size() > 0){
             Bukkit.getLogger().log(Level.SEVERE, "-------------------------------------------------------------------");
             Bukkit.getLogger().log(Level.SEVERE, "There were left-over inventories after restoring for all players");
-            String fileName = LocalDateTime.now().toString() + ".yml";
+            String fileName = LocalDateTime.now().toString();
+            // get rid of the milliseconds
+            // the name now only includes the date and time
+            fileName = fileName.split("\\.")[0];
+            fileName = fileName.replace(":", "_");
+            fileName += ".txt";
             Bukkit.getLogger().log(Level.SEVERE, "Saving those contents in a log file in the folder Logs as: " + fileName);
 
-            File logFile = new File("Logs" + File.pathSeparator + fileName);
+            File logFile = new File(plugin.getDataFolder().toString() + File.separatorChar + "Logs" + File.separatorChar + fileName);
 
-            logFile.getParentFile().mkdir();
+            logFile.getParentFile().mkdirs();
             try {
                 logFile.createNewFile();
             } catch (IOException e) {
@@ -385,7 +390,7 @@ public class PluginManager implements Listener{
                 saves = savedContents.get(uuid);
                 log.set(uuid.toString() + ".name", Bukkit.getOfflinePlayer(uuid) == null ? "null":Bukkit.getOfflinePlayer(uuid).getName());
                 for(int i = 0; i< saves.length;i++){
-                    log.set(uuid.toString() + ".items." + i, saves[i].toString());
+                    if(saves[i] != null)log.set(uuid.toString() + ".items." + i, saves[i].toString());
                 }
             }
             savedContents.clear();
