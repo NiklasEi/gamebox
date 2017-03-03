@@ -26,9 +26,7 @@ public class GBPlayer {
 
     private void loadData() {
         // ToDo
-        if(statistics.isSet(uuid.toString())){
-            playSounds = statistics.getBoolean(uuid, Statistics.PLAYER_PLAY_SOUNDS, true);
-        }
+        playSounds = statistics.getBoolean(uuid, Statistics.PLAYER_PLAY_SOUNDS, true);
     }
 
     public UUID getUuid() {
