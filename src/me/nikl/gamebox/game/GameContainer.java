@@ -1,8 +1,5 @@
 package me.nikl.gamebox.game;
 
-import me.nikl.gamebox.game.IGameManager;
-
-
 /**
  * Created by Niklas on 14.02.2017.
  *
