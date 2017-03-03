@@ -2,6 +2,7 @@ package me.nikl.gamebox;
 
 import me.nikl.gamebox.commands.MainCommand;
 import me.nikl.gamebox.data.Statistics;
+import me.nikl.gamebox.data.StatisticsFile;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.nms.*;
 import me.nikl.gamebox.players.HandleInvitations;
@@ -25,7 +26,7 @@ import java.util.logging.Level;
 public class GameBox extends JavaPlugin{
 	
 	// enable debug mode (print debug messages)
-	public static final boolean debug = true;
+	public static final boolean debug = false;
 
 	// toggle to stop inventory contents to be restored when a new gui is opened and automatically closes the old one
 	public static boolean openingNewGUI = false;
@@ -47,6 +48,8 @@ public class GameBox extends JavaPlugin{
 	
 	// language file
 	public Language lang;
+
+	public static boolean useMysql = false;
 	
 	/*
 	 * Plugin manager that manages all game managers
@@ -75,18 +78,28 @@ public class GameBox extends JavaPlugin{
 			return;
 		}
 
-		this.statistics = new Statistics(this);
-		if(!statistics.load()){
-			Bukkit.getLogger().log(Level.SEVERE, " Something went wrong with the data file");
-			Bukkit.getPluginManager().disablePlugin(this);
-			return;
-		}
-
 		if (!reload()) {
 			getLogger().severe(" Error while loading the plugin! Plugin was disabled!");
 
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
+		}
+
+
+		useMysql = config.getBoolean("mysql.enabled", false);
+		if(useMysql) {
+			useMysql = false;
+		}
+
+		// check again
+		// if connecting to the database failed useMysql will be set to false and the plugin should fall back to file storage
+		if(!useMysql) {
+			this.statistics = new StatisticsFile(this);
+			if (!statistics.load()) {
+				Bukkit.getLogger().log(Level.SEVERE, " Something went wrong with the data file");
+				Bukkit.getPluginManager().disablePlugin(this);
+				return;
+			}
 		}
 	}
 	
