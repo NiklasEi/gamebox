@@ -14,6 +14,7 @@ commandMessages:
   help:
   - ' Do &2/gb&r to display the main GUI'
   - ' you will get to the games over the menu'
+  inDisabledWorld: ' &4Not possible in this world'
 
 
 mainButtons:
