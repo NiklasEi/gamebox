@@ -1,6 +1,5 @@
 package me.nikl.gamebox.guis.gui;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import me.nikl.gamebox.ClickAction;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.guis.GUIManager;
@@ -32,10 +31,10 @@ public class MainGui extends AGui{
 	public MainGui(GameBox plugin, GUIManager guiManager){
 		super(plugin, guiManager, 54);
 		this.inventory = Bukkit.createInventory(null, 54, "GameBox gui");
-		
-		AButton help = new AButton(new MaterialData(Material.BOOK_AND_QUILL), 1);
+		ItemStack helpItem = new ItemStack(Material.BOOK_AND_QUILL, 1);
 		// test glow on buttons
-		help = (AButton) plugin.getNMS().addGlow(help);
+		helpItem = plugin.getNMS().addGlow(helpItem);
+		AButton help = new AButton(helpItem);
 		ItemMeta meta = help.getItemMeta();
 		if(plugin.lang.BUTTON_MAIN_MENU_INFO != null) {
 			if(plugin.lang.BUTTON_MAIN_MENU_INFO.size() > 0)meta.setDisplayName(plugin.lang.BUTTON_MAIN_MENU_INFO.get(0));
