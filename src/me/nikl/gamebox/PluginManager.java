@@ -28,10 +28,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 
 /**
@@ -334,11 +331,13 @@ public class PluginManager implements Listener{
     @EventHandler
     public void onInteractEvent(PlayerInteractEvent event){
         if(!hub) return;
-        if(hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName())) {
-            if(event.getItem() == null || event.getItem().getType() != hubItem.getType() || event.getItem().getItemMeta() == null || event.getItem().getItemMeta().getDisplayName() == null) return;
-            if(event.getItem().getItemMeta().getDisplayName().equals(hubItem.getItemMeta().getDisplayName())){
-                event.setCancelled(true);
+        if(event.getItem() == null || event.getItem().getType() != hubItem.getType() || event.getItem().getItemMeta() == null || event.getItem().getItemMeta().getDisplayName() == null) return;
+        if(event.getItem().getItemMeta().getDisplayName().equals(hubItem.getItemMeta().getDisplayName())){
+            event.setCancelled(true);
+            if(hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName())) {
                 guiManager.openMainGui(event.getPlayer());
+            } else {
+                event.getPlayer().sendMessage(lang.PREFIX + lang.CMD_DISABLED_WORLD);
             }
         }
     }
@@ -533,5 +532,9 @@ public class PluginManager implements Listener{
             }
         }
         return false;
+    }
+
+    public ArrayList<String > getDisabledWorlds(){
+        return this.disabledWorlds;
     }
 }
