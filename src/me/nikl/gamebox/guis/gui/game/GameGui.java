@@ -6,9 +6,12 @@ import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.gui.AGui;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -56,5 +59,25 @@ public class GameGui extends AGui {
 
     public String getKey(){
         return this.key;
+    }
+
+    public void setHelpButton(List<String> list){
+
+        ItemStack helpItem = new ItemStack(Material.BOOK_AND_QUILL, 1);
+        // test glow on buttons
+        helpItem = plugin.getNMS().addGlow(helpItem);
+        AButton help = new AButton(helpItem);
+        ItemMeta meta = help.getItemMeta();
+        if(list != null) {
+            if(list.size() > 0)meta.setDisplayName(list.get(0));
+            if(list.size() > 1){
+                ArrayList<String> lore = new ArrayList<>(list);
+                lore.remove(0);
+                meta.setLore(lore);
+            }
+        }
+        help.setItemMeta(meta);
+        help.setAction(ClickAction.NOTHING);
+        setButton(help, inventory.getSize()-1);
     }
 }
