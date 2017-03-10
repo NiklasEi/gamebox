@@ -78,8 +78,8 @@ public class GameBox extends JavaPlugin{
 			return;
 		}
 
-		if (!reload()) {
-			getLogger().severe(" Error while loading the plugin! Plugin was disabled!");
+		if(!reloadConfiguration()){
+			getLogger().severe(" Failed to load config file!");
 
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
@@ -101,6 +101,13 @@ public class GameBox extends JavaPlugin{
 				return;
 			}
 		}
+
+		if (!reload()) {
+			getLogger().severe(" Error while loading the plugin! Plugin was disabled!");
+
+			Bukkit.getPluginManager().disablePlugin(this);
+			return;
+		}
 	}
 	
 	/***
@@ -110,20 +117,6 @@ public class GameBox extends JavaPlugin{
 	 * set up economy if enabled
 	 */
 	public boolean reload(){
-		// save the default configuration file if the file does not exist
-		File con = new File(this.getDataFolder().toString() + File.separatorChar + "config.yml");
-		if(!con.exists()){
-			this.saveResource("config.yml", false);
-		}
-		
-		// reload config
-		try {
-			this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(con), "UTF-8"));
-		} catch (UnsupportedEncodingException | FileNotFoundException e) {
-			e.printStackTrace();
-		}
-
-
 		timeForInvitations = config.getInt("timeForInvitations");
 		timeForPlayerInput = config.getInt("timeForPlayerInput");
 
@@ -224,7 +217,7 @@ public class GameBox extends JavaPlugin{
 	@Override
 	public void onDisable(){
 		if(pManager != null) pManager.shutDown();
-		statistics.save();
+		if(statistics!=null)statistics.save();
 	}
 	
 	@Override
@@ -252,11 +245,25 @@ public class GameBox extends JavaPlugin{
 		if(debug) Bukkit.getConsoleSender().sendMessage(message);
 	}
 
-	public void hook(){
-		// ToDo
-	}
-
 	public MainCommand getMainCommand(){
 		return this.mainCommand;
+	}
+
+	public boolean reloadConfiguration(){
+
+		// save the default configuration file if the file does not exist
+		File con = new File(this.getDataFolder().toString() + File.separatorChar + "config.yml");
+		if(!con.exists()){
+			this.saveResource("config.yml", false);
+		}
+
+		// reload config
+		try {
+			this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(con), "UTF-8"));
+		} catch (UnsupportedEncodingException | FileNotFoundException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 }
