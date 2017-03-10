@@ -29,7 +29,7 @@ public class Language {
 	public final String PLAIN_PREFIX = "[GameBox]";
 
 	// commands
-	public String CMD_NO_PERM, CMD_ONLY_PLAYER, CMD_RELOADED;
+	public String CMD_NO_PERM, CMD_ONLY_PLAYER, CMD_RELOADED, CMD_DISABLED_WORLD;
 	public List<String> CMD_HELP, CMD_WRONG_USAGE;
 
 	// Buttons
@@ -87,8 +87,9 @@ public class Language {
 	}
 	
 	private void getCommandMessages() {
-		
+
 		this.CMD_NO_PERM = getString("commandMessages.noPermission");
+		this.CMD_DISABLED_WORLD = getString("commandMessages.inDisabledWorld");
 		this.CMD_ONLY_PLAYER = getString("commandMessages.onlyAsPlayer");
 		this.CMD_RELOADED = getString("commandMessages.pluginReloaded");
 		
