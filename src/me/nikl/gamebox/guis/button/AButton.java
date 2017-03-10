@@ -23,6 +23,10 @@ public class AButton extends ItemStack{
 		this.setDurability(mat.getData());
 		this.setAmount(count);
 	}
+
+	public AButton(ItemStack item){
+		super(item);
+	}
 	
 	public void setAction(ClickAction action){
 		this.action = action;
