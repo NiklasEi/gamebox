@@ -297,7 +297,7 @@ public class PluginManager implements Listener{
         if(!disabledWorlds.contains(event.getPlayer().getLocation().getWorld().getName())){
             gbPlayers.putIfAbsent(event.getPlayer().getUniqueId(), new GBPlayer(plugin, event.getPlayer().getUniqueId()));
         } else {
-            removePlayer(event.getPlayer().getUniqueId());
+            if(gbPlayers.get(event.getPlayer().getUniqueId()) != null)removePlayer(event.getPlayer().getUniqueId());
         }
 	    if(hub && hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName()) && setOnWorldJoin){
             GameBox.debug("in the hub world!");
