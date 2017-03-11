@@ -1,7 +1,8 @@
 name: GameBox
 author: Nikl
 main: me.nikl.gamebox.GameBox
-version: 0.0.4BETA
+version: 1.0.0
+website: nikl.me
 softdepend: [Vault]
 
 commands:
