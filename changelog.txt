@@ -1,3 +1,20 @@
+
+v 1.0.0:
+- removing drops on death if player in game/gui
+- restoring inventory if game fails and second player was not in gui before
+- added checks for second player being in gui before sending title messages
+- added check for GBPlayer being loaded before removing on World change
+- cleaned english lang file
+- translated new german lang file
+- standard message on receiving invitation (to be improved later on)
+
+
+
+
+
+
+
+
 - inventory gets saved, cleared and after leaving the gui restored
 - Hot bar is used as navigation system
 - automatically hold an empty slot to get rid of the annoying Animation of the hold item
