@@ -125,6 +125,17 @@ public abstract class AGui {
 					GameBox.openingNewGUI = true;
 					Player[] player = args.length == 3?new Player[2]:new Player[1];
 					player[0] = (Player) event.getWhoClicked();
+
+					if(!event.getWhoClicked().hasPermission(Permissions.PLAY_ALL_GAMES.getPermission()) && !event.getWhoClicked().hasPermission(Permissions.PLAY_GAME.getPermission(gameID))){
+						//event.getWhoClicked().sendMessage(plugin.lang.CMD_NO_PERM);
+
+						guiManager.sentInventoryTitleMessage(player[0], plugin.lang.TITLE_NO_PERM, gameID);
+
+						// remove flag
+						GameBox.openingNewGUI = false;
+						return false;
+					}
+
 					if(args.length == 3){
 						// last entry should be a UUID
 						try{
@@ -146,15 +157,6 @@ public abstract class AGui {
 							pluginManager.saveInventory(player[1]);
 						}
 					}
-					if(!event.getWhoClicked().hasPermission(Permissions.PLAY_ALL_GAMES.getPermission()) && !event.getWhoClicked().hasPermission(Permissions.PLAY_GAME.getPermission(gameID))){
-						//event.getWhoClicked().sendMessage(plugin.lang.CMD_NO_PERM);
-
-						guiManager.sentInventoryTitleMessage(player[0], plugin.lang.TITLE_NO_PERM, gameID);
-
-						// remove flag
-						GameBox.openingNewGUI = false;
-						return false;
-					}
 
 
 					int returnedCode = manager.startGame(player, (GameBox.playSounds && pluginManager.getPlayer(player[0].getUniqueId()).isPlaySounds()), args[1]);
@@ -173,13 +175,40 @@ public abstract class AGui {
 						guiManager.sentInventoryTitleMessage(player[0], plugin.lang.TITLE_NOT_ENOUGH_MONEY, gameID);
 					} else if(returnedCode == GameBox.GAME_NOT_ENOUGH_MONEY_1){
 						guiManager.sentInventoryTitleMessage(player[0], plugin.lang.TITLE_NOT_ENOUGH_MONEY, gameID);
-						guiManager.sentInventoryTitleMessage(player[1], plugin.lang.TITLE_OTHER_PLAYER_NOT_ENOUGH_MONEY, gameID);
+
+						if(args.length == 3){
+							if(guiManager.isInGUI(player[1].getUniqueId())) {
+								guiManager.sentInventoryTitleMessage(player[1], plugin.lang.TITLE_OTHER_PLAYER_NOT_ENOUGH_MONEY, gameID);
+							} else {
+								//ToDo
+								player[1].sendMessage(player[0].getName()+" Does not have enough money to start the game!");
+							}
+						}
 					} else if(returnedCode == GameBox.GAME_NOT_ENOUGH_MONEY_2){
-						guiManager.sentInventoryTitleMessage(player[1], plugin.lang.TITLE_NOT_ENOUGH_MONEY, gameID);
+						if(args.length == 3){
+							if(guiManager.isInGUI(player[1].getUniqueId())) {
+								guiManager.sentInventoryTitleMessage(player[1], plugin.lang.TITLE_NOT_ENOUGH_MONEY, gameID);
+							} else {
+								//ToDo
+								player[1].sendMessage(player[0].getName()+" tried starting a game with you. But you do not have enough money!");
+							}
+						}
 						guiManager.sentInventoryTitleMessage(player[0], plugin.lang.TITLE_OTHER_PLAYER_NOT_ENOUGH_MONEY, gameID);
 					} else if(returnedCode == GameBox.GAME_NOT_STARTED_ERROR){
 						for(Player playerObj: player) {
-							guiManager.sentInventoryTitleMessage(playerObj, plugin.lang.TITLE_ERROR, gameID);
+							if(guiManager.isInGUI(player[1].getUniqueId())) {
+								guiManager.sentInventoryTitleMessage(playerObj, plugin.lang.TITLE_ERROR, gameID);
+							} else {
+								//ToDo
+								playerObj.sendMessage("A game failed to start");
+							}
+						}
+					}
+
+					for(Player playerObj: player) {
+						if (!guiManager.isInGUI(playerObj.getUniqueId()) && !pluginManager.isInGame(playerObj.getUniqueId())) {
+							pluginManager.restoreInventory(playerObj);
+							playerObj.updateInventory();
 						}
 					}
 
