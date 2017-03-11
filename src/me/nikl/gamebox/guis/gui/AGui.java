@@ -205,15 +205,15 @@ public abstract class AGui {
 						}
 					}
 
+					// remove flag
+					GameBox.openingNewGUI = false;
+
 					for(Player playerObj: player) {
 						if (!guiManager.isInGUI(playerObj.getUniqueId()) && !pluginManager.isInGame(playerObj.getUniqueId())) {
 							pluginManager.restoreInventory(playerObj);
 							playerObj.updateInventory();
 						}
 					}
-
-					// remove flag
-					GameBox.openingNewGUI = false;
 					GameBox.debug("did not start a game");
 					return false;
 
