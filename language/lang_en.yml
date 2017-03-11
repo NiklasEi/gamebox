@@ -2,7 +2,7 @@
 #   placeholders will be listed in front of the messages
 
 
-# command messages of the main plugin
+# command messages
 commandMessages:
   notInThisWorld: ' &4You can not do this here'
   noPermission: ' &4You have no permission to do that!'
@@ -43,7 +43,8 @@ others:
   playerInput:
     openingMessage: " &l&2Please enter the name of the player you would like to invite."
     helpMessage:
-    - " &2You got &5%seconds% &2seconds. To stop the input now write &c'%exit'&2 and press enter."
+    - " &2You got &5%seconds% &2seconds."
+    - " &2To stop the input now send &c'%exit'."
     timeRanOut: " &cThe time for your input ran out."
     inputSuccessful: " &5%player%&2 was invited."
     inputClosed: " &2Input was closed."
