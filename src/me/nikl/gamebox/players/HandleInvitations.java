@@ -3,10 +3,6 @@ package me.nikl.gamebox.players;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.guis.gui.game.StartMultiplayerGamePage;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -64,21 +60,8 @@ public class HandleInvitations extends BukkitRunnable{
         Player second = Bukkit.getPlayer(player2);
         
         if(first != null && second != null){
-            TextComponent message = new TextComponent();
-            message.setText(ChatColor.BLUE+first.getName()+" invited you to a game: ");
-            TextComponent accept = new TextComponent();
-            accept.setText(ChatColor.GOLD+"accept");
-            accept.setBold(true);
-            
-            TextComponent toShow = new TextComponent();
-            toShow.setText("Click to accept the invitation");
-    
-            accept.setClickEvent( new ClickEvent( ClickEvent.Action.SUGGEST_COMMAND, "/help" ) );
-            accept.setHoverEvent( new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Click to accept").create()) );
-            
-            message.addExtra(accept);
-            
-            second.spigot().sendMessage(message);
+            // ToDo
+            second.sendMessage(ChatColor.BLUE+first.getName()+ChatColor.RESET+" invited you to a " + pluginManager.getGame(args[0]).getName()+ChatColor.RESET +" game. ");
         } else {
             return false;
         }
