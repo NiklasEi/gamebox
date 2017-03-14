@@ -173,7 +173,7 @@ public class PluginManager implements Listener{
         }
         hubItem.setItemMeta(meta);
         hubWorlds = new ArrayList<>(hubSec.getStringList("enabledWorlds"));
-        slot = hubSec.getInt("slot", 1);
+        slot = hubSec.getInt("slot", 0);
         setOnWorldJoin = hubSec.getBoolean("giveItemOnWorldJoin", false);
     }
 
@@ -302,7 +302,30 @@ public class PluginManager implements Listener{
         }
 	    if(hub && hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName()) && setOnWorldJoin){
             GameBox.debug("in the hub world!");
-            event.getPlayer().getInventory().setItem(slot, hubItem);
+            giveHubItem(event.getPlayer());
+        }
+    }
+
+    private void giveHubItem(Player player) {
+        Inventory inv = player.getInventory();
+        // check the player inventory for the hubItem
+        for(int i = 0; i < inv.getSize(); i++){
+            if(inv.getItem(i).equals(hubItem)){
+                GameBox.debug("found hub item in slot " + i);
+                return;
+            }
+        }
+        // item not found!
+        // check the configured slot and put it there if it is empty
+        if(inv.getItem(slot) == null || inv.getItem(slot).getType() == Material.AIR){
+            player.getInventory().setItem(slot, hubItem);
+        } else { // it's not empty so try to add it to the inventory
+            if(!inv.addItem(hubItem).isEmpty()){
+                // no space for the hubItem found...
+                // override the slot... (It's a hub world + configured to this slot)
+                // if the items are important in this world the server owner should turn of the give item option
+                player.getInventory().setItem(slot, hubItem);
+            }
         }
     }
 
@@ -313,7 +336,7 @@ public class PluginManager implements Listener{
         }
         if(hub && hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName()) && setOnWorldJoin){
             GameBox.debug("in the hub world!");
-            event.getPlayer().getInventory().setItem(slot, hubItem);
+            giveHubItem(event.getPlayer());
         }
     }
 
