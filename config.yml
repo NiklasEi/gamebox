@@ -37,6 +37,8 @@ economy:
   enabled: false
 
 guiSettings:
+  # you should keep this on
+  #   the players can decide to turn sounds off in the gui
   playSounds: true
   hotBarNavigation:
     exitSlot: 4
