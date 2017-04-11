@@ -34,7 +34,10 @@ economy:
   # this enables economy for the main plugin and all the games
   #   you can turn on/off economy for each game in the corresponding game config found in 'games/gameName'
   # THIS OPTION REQUIRES VAULT AND AN ECONOMY PLUGIN!
+  # THIS IS ONLY ABOUT MONEY-ECONOMY! TOKENS ARE SEPARATE
   enabled: false
+  tokens:
+    enabled: true
 
 guiSettings:
   # you should keep this on
