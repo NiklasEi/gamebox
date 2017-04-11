@@ -15,18 +15,20 @@ public class GBPlayer {
     private GameBox plugin;
     private Statistics statistics;
 
+    private int tokens;
+
     public GBPlayer(GameBox plugin, UUID uuid){
         this.uuid = uuid;
         this.plugin = plugin;
         this.statistics = plugin.getStatistics();
 
         loadData();
-        //plugin.getPluginManager().getGuiManager().getMainGui().loadMainGui(this);
     }
 
     private void loadData() {
         // ToDo
         playSounds = statistics.getBoolean(uuid, Statistics.PLAYER_PLAY_SOUNDS, true);
+        tokens = statistics.getInt(uuid, Statistics.TOKEN_PATH, 0);
     }
 
     public UUID getUuid() {
@@ -45,6 +47,14 @@ public class GBPlayer {
         this.playSounds = !playSounds;
     }
 
+    public int getTokens(){
+        return this.tokens;
+    }
+
+    public void setTokens(int newTokens){
+        this.tokens = newTokens;
+    }
+
     public void remove() {
         //TOdO
         // remove special inventories and save any data
@@ -56,5 +66,6 @@ public class GBPlayer {
     public void save() {
         //go through all values and save them
         statistics.set(uuid.toString(), Statistics.PLAYER_PLAY_SOUNDS, playSounds);
+        statistics.set(uuid.toString(), Statistics.TOKEN_PATH, tokens);
     }
 }

@@ -568,4 +568,13 @@ public class PluginManager implements Listener{
     public ArrayList<String > getDisabledWorlds(){
         return this.disabledWorlds;
     }
+
+    public boolean wonTokens(UUID player, int tokens, String gameID) {
+        GBPlayer gbPlayer = gbPlayers.get(player);
+        if(gbPlayer == null) return false;
+
+        gbPlayer.setTokens(gbPlayer.getTokens() + tokens);
+        Bukkit.getPlayer(player).sendMessage(lang.PREFIX + lang.WON_TOKEN.replace("%tokens%", String.valueOf(tokens)).replace("%game%", games.get(gameID).getPlainName()));
+        return true;
+    }
 }
