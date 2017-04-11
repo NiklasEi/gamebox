@@ -45,7 +45,7 @@ public class GameBox extends JavaPlugin{
 	
 	// economy
 	public static Economy econ = null;
-	private boolean econEnabled;
+	private boolean econEnabled, tokensEnabled;
 	
 	// language file
 	public Language lang;
@@ -136,6 +136,7 @@ public class GameBox extends JavaPlugin{
 				return false;
 			}
 		}
+		tokensEnabled = config.getBoolean("economy.tokens.enabled", true);
 
 		// if it's not null disable first then get a new manager
 		if(pManager != null){
@@ -269,6 +270,11 @@ public class GameBox extends JavaPlugin{
 	}
 
 	public boolean wonTokens(UUID player, int tokens, String gameID){
+		if(!tokensEnabled) return false;
 		return this.pManager.wonTokens(player, tokens, gameID);
+	}
+
+	public boolean isTokensEnabled() {
+		return tokensEnabled;
 	}
 }
