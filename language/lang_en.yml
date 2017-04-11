@@ -27,6 +27,8 @@ mainButtons:
   - '&1Here you find all the games'
   - '&1Click on one of the buttons'
   - '  &1to open the games menu.'
+  # %tokens% will be replaced with the players number of tokens
+  tokensButton: "&1Tokens: &2%tokens%"
 
 inventoryTitles:
   # use %player% for the player name
@@ -40,7 +42,7 @@ inventoryTitles:
 
 
 others:
-  wonToken: "You won %tokens% token(s) in &1%game%"
+  wonToken: " You won %tokens% Token in &3%game%"
   playerInput:
     openingMessage: " &l&2Please enter the name of the player you would like to invite."
     helpMessage:
