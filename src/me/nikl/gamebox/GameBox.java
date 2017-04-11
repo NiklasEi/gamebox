@@ -16,6 +16,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
+import java.util.UUID;
 import java.util.logging.Level;
 
 /**
@@ -265,5 +266,9 @@ public class GameBox extends JavaPlugin{
 			return false;
 		}
 		return true;
+	}
+
+	public boolean wonTokens(UUID player, int tokens, String gameID){
+		return this.pManager.wonTokens(player, tokens, gameID);
 	}
 }
