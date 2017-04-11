@@ -25,8 +25,10 @@ import java.util.*;
  */
 public class MainGui extends AGui{
 	private Map<UUID, ToggleButton> soundButtons = new HashMap<>();
+	private Map<UUID, AButton> tokenButtons = new HashMap<>();
 
 	private int soundToggleSlot = 52;
+	private int tokenButtonSlot = 45;
 	 
 	public MainGui(GameBox plugin, GUIManager guiManager){
 		super(plugin, guiManager, 54);
@@ -58,6 +60,17 @@ public class MainGui extends AGui{
 		soundToggle.setAction(ClickAction.TOGGLE);
 		soundToggle.setArgs("sound");
 		setButton(soundToggle, soundToggleSlot);
+
+
+		// set a placeholder in the general main gui
+		ItemStack tokensItem = new AButton(new MaterialData(Material.GOLD_NUGGET), 1);
+		tokensItem = plugin.getNMS().addGlow(tokensItem);
+		AButton tokens = new AButton(tokensItem);
+		meta = tokens.getItemMeta();
+		meta.setDisplayName("Placeholder");
+		tokens.setItemMeta(meta);
+		tokens.setAction(ClickAction.NOTHING);
+		setButton(tokens, tokenButtonSlot);
 
 
 
@@ -102,16 +115,36 @@ public class MainGui extends AGui{
 		soundToggle.setArgs("sound");
 		soundButtons.put(player.getUuid(), soundToggle);
 
+
+		ItemStack tokensItem = new AButton(new MaterialData(Material.GOLD_NUGGET), 1);
+		tokensItem = plugin.getNMS().addGlow(tokensItem);
+		AButton tokens = new AButton(tokensItem);
+		tokens.setAction(ClickAction.NOTHING);
+		tokenButtons.put(player.getUuid(), tokens);
+
 		Inventory inventory = Bukkit.createInventory(null, this.inventory.getSize(), "GameBox gui");
 		inventory.setContents(this.inventory.getContents().clone());
+
 		openInventories.putIfAbsent(player.getUuid(),inventory);
 
-		updateToggles(player);
+		updateButtons(player);
 	}
 
-	public void updateToggles(GBPlayer player){
+	public void updateButtons(GBPlayer player){
 		if(openInventories.get(player.getUuid()) == null) return;
 		if(!player.isPlaySounds()) openInventories.get(player.getUuid()).setItem(soundToggleSlot, this.getSoundToggleButton(player.getUuid()).toggle());
+
+		updateTokens(player);
+	}
+
+	public void updateTokens(GBPlayer player) {
+		if(!tokenButtons.keySet().contains(player.getUuid())) return;
+
+		ItemMeta meta = tokenButtons.get(player.getUuid()).getItemMeta();
+		meta.setDisplayName(plugin.lang.BUTTON_TOKENS.replace("%tokens%", String.valueOf(player.getTokens())));
+		tokenButtons.get(player.getUuid()).setItemMeta(meta);
+
+		openInventories.get(player.getUuid()).setItem(tokenButtonSlot, tokenButtons.get(player.getUuid()));
 	}
 
 	@Override

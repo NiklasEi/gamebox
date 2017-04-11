@@ -53,6 +53,7 @@ public class GBPlayer {
 
     public void setTokens(int newTokens){
         this.tokens = newTokens;
+        plugin.getPluginManager().getGuiManager().getMainGui().updateTokens(this);
     }
 
     public void remove() {
