@@ -51,8 +51,6 @@ public abstract class AGui {
 	protected AButton[] lowerGrid = new AButton[36];
 
 
-	private int titleMessageSeconds = 3;
-
 	/**
 	 * Constructor for a gui
 	 * @param plugin plugin instance
