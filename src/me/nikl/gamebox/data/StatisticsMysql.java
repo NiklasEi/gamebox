@@ -71,6 +71,11 @@ public class StatisticsMysql extends Statistics {
     }
 
     @Override
+    public int getInt(UUID uuid, String path, int defaultValue) {
+        return 0;
+    }
+
+    @Override
     public void addStatistics(UUID uuid, String gameID, String gameTypeID, double value, SaveType saveType) {
 
     }

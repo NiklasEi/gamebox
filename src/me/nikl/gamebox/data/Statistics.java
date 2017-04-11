@@ -17,6 +17,8 @@ public abstract class Statistics {
 
     public static final String PLAYER_PLAY_SOUNDS = "playSounds";
     public static final String GAMES_STATISTICS_NODE = "gameStatistics";
+    public static final String TOKEN_PATH = "tokens";
+
     private GameBox plugin;
 
 
@@ -35,6 +37,8 @@ public abstract class Statistics {
     public abstract void set(String uuid, String path, Object b);
 
     public abstract void save();
+
+    public abstract int getInt(UUID uuid, String path, int defaultValue);
 
     public abstract void addStatistics(UUID uuid, String gameID, String gameTypeID, double value, SaveType saveType);
 

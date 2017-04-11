@@ -69,6 +69,11 @@ public class StatisticsFile extends Statistics {
     }
 
     @Override
+    public int getInt(UUID uuid, String path, int defaultValue) {
+        return data.getInt(uuid + "." + path, defaultValue);
+    }
+
+    @Override
     public void addStatistics(UUID uuid, String gameID, String gameTypeID, double value, SaveType saveType) {
 
         GameBox.debug("Adding statistics '" +uuid.toString()+"."+gameID+"."+gameTypeID+ "." + saveType.toString().toLowerCase()+"' with the value: " + value);
