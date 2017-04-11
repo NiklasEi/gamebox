@@ -40,6 +40,7 @@ inventoryTitles:
 
 
 others:
+  wonToken: "Du hast %tokens% Token in &1%game% gewonnen"
   playerInput:
     openingMessage: " &l&2Gebe den Namen eines Spielers ein, um ihn einzuladen."
     helpMessage:

@@ -40,6 +40,7 @@ inventoryTitles:
 
 
 others:
+  wonToken: "You won %tokens% token(s) in &1%game%"
   playerInput:
     openingMessage: " &l&2Please enter the name of the player you would like to invite."
     helpMessage:

@@ -43,6 +43,9 @@ public class Language {
 	public String INPUT_START_MESSAGE, INPUT_TIME_RAN_OUT, INVITATION_SUCCESSFUL, INVITATION_ALREADY_THERE, INVITATION_NOT_VALID_PLAYER_NAME, INVITATION_NOT_ONLINE, INPUT_CLOSED, INVITATION_NOT_YOURSELF;
 	public List<String> INPUT_HELP_MESSAGE;
 
+	// tokens
+	public String WON_TOKEN;
+
 
 	
 	Language(GameBox plugin){
@@ -65,6 +68,8 @@ public class Language {
 		this.INVITATION_NOT_ONLINE = getString("others.playerInput.notOnline");
 		this.INPUT_CLOSED = getString("others.playerInput.inputClosed");
 		this.INVITATION_NOT_YOURSELF = getString("others.playerInput.notInviteYourself");
+
+		this.WON_TOKEN = getString("others.wonToken");
 	}
 
 	private void getButtons() {
@@ -124,7 +129,7 @@ public class Language {
 	}
 	
 	private void getLangFile() {
-		
+
 		/*
 		 * The default file will always contain the up to date english messages
 		 *
@@ -133,46 +138,6 @@ public class Language {
 		 */
 
 
-		/*
-		InputStream inputStream = null;
-		OutputStream outputStream = null;
-		File defaultFile = null;
-		try {
-			
-			// read this file into InputStream
-			inputStream = plugin.getResource(fileName);
-			
-			// write the inputStream to a FileOutputStream
-			defaultFile = new File(plugin.getDataFolder().toString() + File.separatorChar + "language" + File.separatorChar + "default.yml");
-			defaultFile.getParentFile().mkdirs();
-			outputStream = new FileOutputStream(defaultLang);
-			
-			int read;
-			byte[] bytes = new byte[1024];
-			
-			while ((read = inputStream.read(bytes)) != -1) {
-				outputStream.write(bytes, 0, read);
-			}
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (inputStream != null) {
-				try {
-					inputStream.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			if (outputStream != null) {
-				try {
-					outputStream.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				
-			}
-		}*/
 		try {
 			String fileName = "language/lang_en.yml";
 			this.defaultLang =  YamlConfiguration.loadConfiguration(new InputStreamReader(plugin.getResource(fileName), "UTF-8"));
