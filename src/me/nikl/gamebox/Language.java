@@ -33,7 +33,7 @@ public class Language {
 	public List<String> CMD_HELP, CMD_WRONG_USAGE;
 
 	// Buttons
-	public String BUTTON_EXIT, BUTTON_TO_MAIN_MENU, BUTTON_TO_GAME_MENU;
+	public String BUTTON_EXIT, BUTTON_TO_MAIN_MENU, BUTTON_TO_GAME_MENU, BUTTON_TOKENS;
 	public List<String> BUTTON_MAIN_MENU_INFO;
 
 	// Inv titles
@@ -76,6 +76,8 @@ public class Language {
 		this.BUTTON_EXIT = getString("mainButtons.exitButton");
 		this.BUTTON_TO_MAIN_MENU = getString("mainButtons.toMainGUIButton");
 		this.BUTTON_TO_GAME_MENU = getString("mainButtons.toGameGUIButton");
+		this.BUTTON_TOKENS = getString("mainButtons.tokensButton");
+
 		this.BUTTON_MAIN_MENU_INFO = getStringList("mainButtons.infoMainMenu");
 	}
 
