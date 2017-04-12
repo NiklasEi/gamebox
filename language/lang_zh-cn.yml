@@ -4,6 +4,9 @@
 #   placeholders will be listed in front of the messages
 
 
+prefix: "[&3GameBox&r]"
+name: "&3GameBox&r"
+
 # command messages
 commandMessages:
   notInThisWorld: ' &4你不能这么做'

@@ -2,6 +2,10 @@
 #   platzhater werden vor der jeweiligen nachricht aufgelistet
 
 
+
+prefix: "[&3GameBox&r]"
+name: "&3GameBox&r"
+
 # command messages
 commandMessages:
   notInThisWorld: ' &4Nicht hier!'

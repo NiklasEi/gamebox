@@ -24,9 +24,9 @@ public class Language {
 	private YamlConfiguration defaultLang;
 
 
-	public final String PREFIX = "["+ChatColor.BLUE+"GameBox"+ChatColor.RESET+"]";
-	public final String NAME = ChatColor.BLUE+"GameBox"+ChatColor.RESET;
-	public final String PLAIN_PREFIX = "[GameBox]";
+	public String PREFIX = "["+ChatColor.BLUE+"GameBox"+ChatColor.RESET+"]";
+	public String NAME = ChatColor.BLUE+"GameBox"+ChatColor.RESET;
+	public String PLAIN_PREFIX = "[GameBox]";
 
 	// commands
 	public String CMD_NO_PERM, CMD_ONLY_PLAYER, CMD_RELOADED, CMD_DISABLED_WORLD;
@@ -51,7 +51,11 @@ public class Language {
 	Language(GameBox plugin){
 		this.plugin = plugin;
 		getLangFile();
-		
+
+		PREFIX = getString("prefix");
+		PLAIN_PREFIX = ChatColor.stripColor(PREFIX);
+		NAME = getString("name");
+
 		getCommandMessages();
 		getInvTitles();
 		getButtons();
