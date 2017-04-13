@@ -27,12 +27,14 @@ public class GameGuiPage extends GameGui{
         Map<Integer, ItemStack> hotBarButtons = plugin.getPluginManager().getHotBarButtons();
 
         // set lower grid
-        AButton gameGUI = new AButton(hotBarButtons.get(PluginManager.toGame).getData(), 1);
-        ItemMeta meta = hotBarButtons.get(PluginManager.toGame).getItemMeta();
-        gameGUI.setItemMeta(meta);
-        gameGUI.setAction(ClickAction.OPEN_GAME_GUI);
-        gameGUI.setArgs(gameID, GUIManager.MAIN_GAME_GUI);
-        setLowerButton(gameGUI, PluginManager.toGame);
+        if(hotBarButtons.get(PluginManager.toGame) != null) {
+            AButton gameGUI = new AButton(hotBarButtons.get(PluginManager.toGame).getData(), 1);
+            ItemMeta meta = hotBarButtons.get(PluginManager.toGame).getItemMeta();
+            gameGUI.setItemMeta(meta);
+            gameGUI.setAction(ClickAction.OPEN_GAME_GUI);
+            gameGUI.setArgs(gameID, GUIManager.MAIN_GAME_GUI);
+            setLowerButton(gameGUI, PluginManager.toGame);
+        }
     }
 
     public String getTitle() {

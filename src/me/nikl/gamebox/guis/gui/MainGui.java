@@ -2,9 +2,11 @@ package me.nikl.gamebox.guis.gui;
 
 import me.nikl.gamebox.ClickAction;
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.button.ToggleButton;
+import me.nikl.gamebox.guis.shop.Shop;
 import me.nikl.gamebox.players.GBPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -27,8 +29,10 @@ public class MainGui extends AGui{
 	private Map<UUID, ToggleButton> soundButtons = new HashMap<>();
 	private Map<UUID, AButton> tokenButtons = new HashMap<>();
 
+
 	private int soundToggleSlot = 52;
 	private int tokenButtonSlot = 45;
+	private int shopSlot = 46;
 	 
 	public MainGui(GameBox plugin, GUIManager guiManager){
 		super(plugin, guiManager, 54);
@@ -80,11 +84,17 @@ public class MainGui extends AGui{
 		Map<Integer, ItemStack> hotBarButtons = plugin.getPluginManager().getHotBarButtons();
 
 		// set lower grid
-		AButton exit = new AButton(hotBarButtons.get(4).getData(), 1);
-		meta = hotBarButtons.get(4).getItemMeta();
-		exit.setItemMeta(meta);
-		exit.setAction(ClickAction.CLOSE);
-		setLowerButton(exit, 4);
+		if(hotBarButtons.containsKey(PluginManager.exit)) {
+			AButton exit = new AButton(hotBarButtons.get(PluginManager.exit).getData(), 1);
+			meta = hotBarButtons.get(PluginManager.exit).getItemMeta();
+			exit.setItemMeta(meta);
+			exit.setAction(ClickAction.CLOSE);
+			setLowerButton(exit, PluginManager.exit);
+		}
+	}
+
+	public void registerShop(){
+		setButton(guiManager.getShopManager().getMainButton(), shopSlot);
 	}
 
 
