@@ -50,7 +50,7 @@ others:
     openingMessage: " &l&2Please enter the name of the player you would like to invite."
     helpMessage:
     - " &2You got &5%seconds% &2seconds."
-    - " &2To stop the input now send &c'%exit'."
+    - " &2To stop the input now send &c'%'."
     timeRanOut: " &cThe time for your input ran out."
     inputSuccessful: " &5%player%&2 was invited."
     inputClosed: " &2Input was closed."

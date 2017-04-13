@@ -51,7 +51,7 @@ others:
     openingMessage: " &l&a请输入你想邀请的玩家的名字"
     helpMessage:
     - " &2你必须在 &5%seconds% &2秒内完成"
-    - " &2想要停止邀请，请输入 &c'%exit'."
+    - " &2想要停止邀请，请输入 &c'%'."
     timeRanOut: " &c超时了，邀请失败"
     inputSuccessful: " &5%player%&2 被邀请了"
     inputClosed: " &2输入关闭"
