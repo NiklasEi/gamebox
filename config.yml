@@ -43,6 +43,8 @@ guiSettings:
   # you should keep this on
   #   the players can decide to turn sounds off in the gui
   playSounds: true
+  # you can disable navigation buttons by giving a negative slot
+  #   valid slots are only from 0 to 8
   hotBarNavigation:
     exitSlot: 4
     mainMenuSlot: 0
