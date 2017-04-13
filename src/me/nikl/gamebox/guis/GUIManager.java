@@ -10,6 +10,7 @@ import me.nikl.gamebox.guis.gui.MainGui;
 import me.nikl.gamebox.guis.gui.game.GameGui;
 import me.nikl.gamebox.guis.gui.game.GameGuiPage;
 import me.nikl.gamebox.guis.gui.game.TopListPage;
+import me.nikl.gamebox.guis.shop.ShopManager;
 import me.nikl.gamebox.nms.NMSUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -42,6 +43,8 @@ public class GUIManager implements Listener {
 
 	private int titleMessageSeconds = 3;
 
+	private ShopManager shopManager;
+
 	public static final String MAIN_GAME_GUI = "main", PLAY_GAME_GUI = "play";
 
 
@@ -52,7 +55,8 @@ public class GUIManager implements Listener {
 		this.gameGuis = new HashMap<>();
 
 		this.mainGui = new MainGui(plugin, this);
-
+		shopManager = new ShopManager(plugin, this);
+		mainGui.registerShop();
 	}
 	
 	
@@ -77,7 +81,12 @@ public class GUIManager implements Listener {
 				}
 			}
 		}
-		if(GameBox.debug)Bukkit.getConsoleSender().sendMessage("Not in a GameBox GUI");
+		if(GameBox.debug)Bukkit.getConsoleSender().sendMessage("Not in a GameBox GUI, checking shops now");
+		if(shopManager.inShop(event.getWhoClicked().getUniqueId())){
+			shopManager.onClick(event);
+			return;
+		}
+		if(GameBox.debug)Bukkit.getConsoleSender().sendMessage("Not in a Shop...");
 	}
 
 
@@ -103,7 +112,14 @@ public class GUIManager implements Listener {
 				}
 			}
 		}
-		if(GameBox.debug)Bukkit.getConsoleSender().sendMessage("Not in a GameBox GUI");
+		if(GameBox.debug)Bukkit.getConsoleSender().sendMessage("Not in a GameBox GUI, checking shops now");
+		if(shopManager.inShop(event.getPlayer().getUniqueId())){
+			shopManager.onInvClose(event);
+			plugin.getPluginManager().restoreInventory((Player)event.getPlayer());
+			((Player) event.getPlayer()).updateInventory();
+			return;
+		}
+		if(GameBox.debug)Bukkit.getConsoleSender().sendMessage("Not in a Shop...");
 	}
 	
 	public boolean isInGUI(UUID uuid){
@@ -179,7 +195,7 @@ public class GUIManager implements Listener {
 			plugin.getPluginManager().saveInventory(whoClicked);
 		}
 		if(args == null || args.length==0){
-			if(whoClicked.hasPermission(Permissions.CMD_MAIN.getPermission())){
+			if(whoClicked.hasPermission(Permissions.OPEN_MAIN_GUI.getPermission())){
 				GameBox.openingNewGUI = true;
 				mainGui.open(whoClicked);
 				GameBox.openingNewGUI = false;
@@ -277,5 +293,13 @@ public class GUIManager implements Listener {
 		}
 		plugin.getPluginManager().startTitleTimer(player, currentTitle, titleMessageSeconds);
 		plugin.getNMS().updateInventoryTitle(player, message);
+	}
+
+	public boolean openShopPage(Player whoClicked, String[] args) {
+		return shopManager.openShopPage(whoClicked, args);
+	}
+
+	public ShopManager getShopManager() {
+		return shopManager;
 	}
 }
