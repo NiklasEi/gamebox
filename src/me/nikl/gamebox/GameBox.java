@@ -219,7 +219,7 @@ public class GameBox extends JavaPlugin{
 	@Override
 	public void onDisable(){
 		if(pManager != null) pManager.shutDown();
-		if(statistics!=null)statistics.save();
+		if(statistics!=null) statistics.save();
 	}
 	
 	@Override
@@ -276,5 +276,9 @@ public class GameBox extends JavaPlugin{
 
 	public boolean isTokensEnabled() {
 		return tokensEnabled;
+	}
+
+	public void setTokensEnabled(boolean tokensEnabled){
+		this.tokensEnabled = tokensEnabled;
 	}
 }
