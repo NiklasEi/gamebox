@@ -47,7 +47,7 @@ public class HandleInviteInput extends BukkitRunnable{
 
         String message = event.getMessage();
 
-        if(message.equalsIgnoreCase("%exit")){
+        if(message.contains("%")){
             event.setCancelled(true);
             event.getPlayer().sendMessage(plugin.lang.PREFIX + plugin.lang.INPUT_CLOSED);
             waitings.remove(event.getPlayer().getUniqueId());
