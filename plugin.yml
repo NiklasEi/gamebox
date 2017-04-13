@@ -25,8 +25,12 @@ permissions:
       gamebox.gamegui.*: true
       gamebox.info: true
       gamebox.help: true
+      gamebox.shop: true
   gamebox.use:
     description: Allows the player to open the main guis (use /gamebox)
+    default: true
+  gamebox.shop:
+    description: Allows the player to open the shop from the main menu
     default: true
   gamebox.play.*:
     default: true
