@@ -16,7 +16,7 @@ commandMessages:
   - ' For more information do &2/gb help&r'
   help:
   - ' Do &2/gb&r to display the main GUI'
-  - ' you will get to the games over the menu'
+  - ' you will get to the games through the menu'
   inDisabledWorld: ' &4Not possible in this world'
 
 
