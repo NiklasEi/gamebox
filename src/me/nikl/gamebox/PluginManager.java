@@ -204,8 +204,9 @@ public class PluginManager implements Listener{
 	}
 	
 	@EventHandler
+    @SuppressWarnings("deprecation")
 	public void onInvClick(InventoryClickEvent event) {
-		if(event.getClickedInventory() == null || event.getWhoClicked() == null){
+		if(event.getSlot() < 0 || event.getInventory() == null || event.getWhoClicked() == null){
             return;
         }
         if(!(event.getWhoClicked() instanceof Player)){
@@ -215,38 +216,39 @@ public class PluginManager implements Listener{
 		UUID uuid = event.getWhoClicked().getUniqueId();
 
 
-		GameBox.debug("checking gameManagers");
+		GameBox.debug("checking gameManagers     clicked inv has " + event.getInventory().getSize() + " slots");
 		boolean topInv = event.getRawSlot() == event.getSlot();
 		for(String gameID: games.keySet()){
             IGameManager gameManager = games.get(gameID).getGameManager();
 			if(gameManager.isInGame(uuid)){
 				event.setCancelled(true);
-				if(topInv || event.getSlot() > 8){
+				if((event.getRawSlot() - event.getSlot()) < event.getView().getTopInventory().getSize()){
 				    // click in the top or in the upper bottom inventory
                     // always handel in the game
+                    GameBox.debug("click in top or middle inventory");
 				    gameManager.onInventoryClick(event);
                 } else {
 				    if(games.get(gameID).handleClicksOnHotbar()){
                         gameManager.onInventoryClick(event);
                     } else {
-				        if(event.getClickedInventory().getItem(event.getSlot()) == null){
+				        if(event.getView().getBottomInventory().getItem(event.getSlot()) == null){
 				            GameBox.debug("empty hotbar slot clicked... returning");
 				            return;
                         }
-                        if(event.getSlot() == this.toGame){
+                        if(event.getSlot() == toGame){
                             gameManager.removeFromGame(event.getWhoClicked().getUniqueId());
                             guiManager.openGameGui((Player) event.getWhoClicked(), gameID, GUIManager.MAIN_GAME_GUI);
                             if(GameBox.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
                                 ((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sounds.CLICK.bukkitSound(), volume, pitch);
                             }
                             return;
-                        } else if(event.getSlot() == this.toMain){
+                        } else if(event.getSlot() == toMain){
                             gameManager.removeFromGame(event.getWhoClicked().getUniqueId());
                             guiManager.openMainGui((Player) event.getWhoClicked());
                             if(GameBox.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
                                 ((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sounds.CLICK.bukkitSound(), volume, pitch);
                             }
-                        } else if(event.getSlot() == this.exit){
+                        } else if(event.getSlot() == exit){
                             event.getWhoClicked().closeInventory();
                             ((Player)event.getWhoClicked()).updateInventory();
                             if(GameBox.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
@@ -267,6 +269,7 @@ public class PluginManager implements Listener{
 	}
 	
 	@EventHandler
+    @SuppressWarnings("deprecation")
 	public void onInvClose(InventoryCloseEvent event) {
 		if(!(event.getPlayer() instanceof Player)) return;
 		removeTitleTimer(event.getPlayer().getUniqueId());

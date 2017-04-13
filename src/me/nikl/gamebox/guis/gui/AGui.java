@@ -268,7 +268,7 @@ public abstract class AGui {
 						pluginManager.getPlayer(event.getWhoClicked().getUniqueId()).toggleSound();
 					}
 				}
-				event.getClickedInventory().setItem(event.getSlot(), ((MainGui)this).getSoundToggleButton(event.getWhoClicked().getUniqueId()).toggle());
+				event.getInventory().setItem(event.getSlot(), ((MainGui)this).getSoundToggleButton(event.getWhoClicked().getUniqueId()).toggle());
 				((Player)event.getWhoClicked()).updateInventory();
 				return true;
 
