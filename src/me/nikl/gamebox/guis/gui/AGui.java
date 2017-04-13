@@ -1,30 +1,19 @@
 package me.nikl.gamebox.guis.gui;
 
 import me.nikl.gamebox.*;
-import me.nikl.gamebox.data.SaveType;
-import me.nikl.gamebox.data.Statistics;
 import me.nikl.gamebox.game.IGameManager;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
-import me.nikl.gamebox.guis.button.ToggleButton;
 import me.nikl.gamebox.guis.gui.game.GameGui;
-import me.nikl.gamebox.guis.gui.game.GameGuiPage;
 import me.nikl.gamebox.guis.gui.game.StartMultiplayerGamePage;
-import me.nikl.gamebox.guis.gui.game.TopListPage;
-import net.minecraft.server.v1_11_R1.PacketPlayOutSetSlot;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -38,7 +27,7 @@ public abstract class AGui {
 	protected Inventory inventory;
 	protected Map<UUID, Inventory> openInventories = new HashMap<>();
 	private ArrayList<String> permissions = new ArrayList<>();
-	private GUIManager guiManager;
+	protected GUIManager guiManager;
 	protected Set<UUID> inGui;
 	protected GameBox plugin;
 	protected PluginManager pluginManager;
@@ -124,7 +113,7 @@ public abstract class AGui {
 					Player[] player = args.length == 3?new Player[2]:new Player[1];
 					player[0] = (Player) event.getWhoClicked();
 
-					if(!event.getWhoClicked().hasPermission(Permissions.PLAY_ALL_GAMES.getPermission()) && !event.getWhoClicked().hasPermission(Permissions.PLAY_GAME.getPermission(gameID))){
+					if(!event.getWhoClicked().hasPermission(Permissions.PLAY_ALL_GAMES.getPermission()) && !event.getWhoClicked().hasPermission(Permissions.PLAY_SPECIFIC_GAME.getPermission(gameID))){
 						//event.getWhoClicked().sendMessage(plugin.lang.CMD_NO_PERM);
 
 						guiManager.sentInventoryTitleMessage(player[0], plugin.lang.TITLE_NO_PERM, gameID);
@@ -223,6 +212,7 @@ public abstract class AGui {
 			
 			case OPEN_MAIN_GUI:
 				if(this instanceof MainGui) return false;
+				GameBox.debug("guimanager = null? " + String.valueOf(guiManager == null));
 				if(guiManager.openMainGui((Player)event.getWhoClicked())){
 					inGui.remove(event.getWhoClicked().getUniqueId());
 					return true;
@@ -282,6 +272,18 @@ public abstract class AGui {
 					inGui.remove(event.getWhoClicked().getUniqueId());
 					return true;
 				}
+				return false;
+
+			case OPEN_SHOP_PAGE:
+				if(args.length != 2){
+					Bukkit.getLogger().log(Level.WARNING, "OPEN_SHOP_PAGE has the wrong number of arguments: " + args.length);
+					return false;
+				}
+				if(guiManager.openShopPage((Player)event.getWhoClicked(), args)){
+					inGui.remove(event.getWhoClicked().getUniqueId());
+					return true;
+				}
+
 				return false;
 
 
