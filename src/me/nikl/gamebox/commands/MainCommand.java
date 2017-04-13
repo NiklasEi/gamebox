@@ -5,7 +5,6 @@ import me.nikl.gamebox.Language;
 import me.nikl.gamebox.Permissions;
 import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.guis.GUIManager;
-import me.nikl.gamebox.guis.gui.game.GameGui;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -42,7 +41,7 @@ public class MainCommand implements CommandExecutor{
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if(!sender.hasPermission(Permissions.CMD_MAIN.getPermission())){
+		if(!sender.hasPermission(Permissions.OPEN_MAIN_GUI.getPermission())){
 			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', lang.PREFIX + lang.CMD_NO_PERM));
 			return true;
 		}
@@ -56,10 +55,15 @@ public class MainCommand implements CommandExecutor{
 				return true;
 			}
 			if(plugin.getPluginManager().getDisabledWorlds().contains(((Player) sender).getLocation().getWorld().getName())){
-				sender.sendMessage(lang.CMD_DISABLED_WORLD);
+				sender.sendMessage(lang.PREFIX + lang.CMD_DISABLED_WORLD);
 				return true;
 			}
 			Player player = (Player) sender;
+
+			if(!player.hasPermission(Permissions.OPEN_MAIN_GUI.getPermission())){
+				player.sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
+				return true;
+			}
 			guiManager.openMainGui(player);
 			return true;
 		} else if(args.length == 1){
