@@ -117,6 +117,20 @@ public class PluginManager implements Listener{
         exit = (config.getInt("guiSettings.hotBarNavigation.exitSlot", 4) >= 0 && config.getInt("guiSettings.hotBarNavigation.exitSlot", 4) < 9)? config.getInt("guiSettings.hotBarNavigation.exitSlot", 4):4;
         toMain = (config.getInt("guiSettings.hotBarNavigation.mainMenuSlot", 0) >= 0 && config.getInt("guiSettings.hotBarNavigation.mainMenuSlot", 0) < 9)? config.getInt("guiSettings.hotBarNavigation.mainMenuSlot", 0):0;
         toGame = (config.getInt("guiSettings.hotBarNavigation.gameMenuSlot", 8) >= 0 && config.getInt("guiSettings.hotBarNavigation.gameMenuSlot", 8) < 9)? config.getInt("guiSettings.hotBarNavigation.gameMenuSlot", 8):8;
+
+        if(config.getInt("guiSettings.hotBarNavigation.exitSlot") < 0){
+            plugin.getLogger().log(Level.WARNING, " The exit button is disabled!");
+            exit = -999;
+        }
+        if(config.getInt("guiSettings.hotBarNavigation.mainMenuSlot") < 0){
+            plugin.getLogger().log(Level.WARNING, " The back-to-main-menu button is disabled!");
+            toMain = -999;
+        }
+        if(config.getInt("guiSettings.hotBarNavigation.gameMenuSlot") < 0){
+            plugin.getLogger().log(Level.WARNING, " The back-to-game-menu button is disabled!");
+            toGame = -999;
+        }
+
         while(toHold == exit || toHold == toMain  || toHold == toGame ){
             toHold++;
         }
@@ -126,7 +140,9 @@ public class PluginManager implements Listener{
         ItemMeta meta = toMainItem.getItemMeta(); meta.setDisplayName(chatColor(lang.BUTTON_TO_MAIN_MENU)); toMainItem.setItemMeta(meta);
         meta = toGameItem.getItemMeta(); meta.setDisplayName(chatColor(lang.BUTTON_TO_GAME_MENU)); toGameItem.setItemMeta(meta);
         meta = exitItem.getItemMeta(); meta.setDisplayName(chatColor(lang.BUTTON_EXIT)); exitItem.setItemMeta(meta);
-        hotbarButtons.put(toMain, toMainItem); hotbarButtons.put(exit, exitItem); hotbarButtons.put(toGame, toGameItem);
+        if(toMain >= 0)hotbarButtons.put(toMain, toMainItem);
+        if(exit >= 0)hotbarButtons.put(exit, exitItem);
+        if(toGame >= 0)hotbarButtons.put(toGame, toGameItem);
     }
 
     @EventHandler
@@ -313,6 +329,7 @@ public class PluginManager implements Listener{
         Inventory inv = player.getInventory();
         // check the player inventory for the hubItem
         for(int i = 0; i < inv.getSize(); i++){
+            if(inv.getItem(i) == null) continue;
             if(inv.getItem(i).equals(hubItem)){
                 GameBox.debug("found hub item in slot " + i);
                 return;
@@ -369,7 +386,11 @@ public class PluginManager implements Listener{
         if(event.getItem().getItemMeta().getDisplayName().equals(hubItem.getItemMeta().getDisplayName())){
             event.setCancelled(true);
             if(hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName())) {
-                guiManager.openMainGui(event.getPlayer());
+                if(event.getPlayer().hasPermission(Permissions.OPEN_MAIN_GUI.getPermission())) {
+                    guiManager.openMainGui(event.getPlayer());
+                } else {
+                    event.getPlayer().sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
+                }
             } else {
                 event.getPlayer().sendMessage(lang.PREFIX + lang.CMD_DISABLED_WORLD);
             }
@@ -384,6 +405,11 @@ public class PluginManager implements Listener{
                 continue;
             }
             if(guiManager.isInGUI(player.getUniqueId())){
+                player.closeInventory();
+                restoreInventory(player);
+                continue;
+            }
+            if(guiManager.getShopManager().inShop(player.getUniqueId())){
                 player.closeInventory();
                 restoreInventory(player);
             }
