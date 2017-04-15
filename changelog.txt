@@ -1,3 +1,7 @@
+v.1.1.1:
+- improved default lang messages (en)
+- player now drop their old inventory contents on death
+
 
 v 1.0.0:
 - removing drops on death if player in game/gui
