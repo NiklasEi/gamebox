@@ -10,8 +10,10 @@ import me.nikl.gamebox.guis.gui.MainGui;
 import me.nikl.gamebox.guis.gui.game.GameGui;
 import me.nikl.gamebox.guis.gui.game.GameGuiPage;
 import me.nikl.gamebox.guis.gui.game.TopListPage;
+import me.nikl.gamebox.guis.shop.Page;
 import me.nikl.gamebox.guis.shop.ShopManager;
 import me.nikl.gamebox.nms.NMSUtil;
+import me.nikl.gamebox.players.GBPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -56,7 +58,7 @@ public class GUIManager implements Listener {
 
 		this.mainGui = new MainGui(plugin, this);
 		shopManager = new ShopManager(plugin, this);
-		mainGui.registerShop();
+		if(plugin.isTokensEnabled())mainGui.registerShop();
 	}
 	
 	
@@ -83,6 +85,7 @@ public class GUIManager implements Listener {
 		}
 		if(GameBox.debug)Bukkit.getConsoleSender().sendMessage("Not in a GameBox GUI, checking shops now");
 		if(shopManager.inShop(event.getWhoClicked().getUniqueId())){
+			event.setCancelled(true);
 			shopManager.onClick(event);
 			return;
 		}
@@ -254,7 +257,7 @@ public class GUIManager implements Listener {
 				}
 			}
 		}
-		return null;
+		return shopManager.getShopGui(uuid);
 	}
 
 	public void shutDown() {
@@ -289,6 +292,8 @@ public class GUIManager implements Listener {
 				currentTitle = ((GameGuiPage) gui).getTitle().replace("%player%", player.getName());
 			} else if (gui instanceof GameGui) {
 				currentTitle = plugin.lang.TITLE_GAME_GUI.replace("%game%", plugin.getPluginManager().getGame(gameID).getName()).replace("%player%", player.getName());
+			} else if (gui instanceof Page){
+				currentTitle = plugin.lang.SHOP_TITLE_PAGE_SHOP.replace("%page%", String.valueOf(((Page)gui).getPage() + 1));
 			}
 		}
 		plugin.getPluginManager().startTitleTimer(player, currentTitle, titleMessageSeconds);
@@ -301,5 +306,10 @@ public class GUIManager implements Listener {
 
 	public ShopManager getShopManager() {
 		return shopManager;
+	}
+
+	public void updateTokens(GBPlayer gbPlayer) {
+		mainGui.updateTokens(gbPlayer);
+		shopManager.updateTokens(gbPlayer);
 	}
 }
