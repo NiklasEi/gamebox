@@ -38,12 +38,27 @@ inventoryTitles:
   # 使用 %player% 变量表示玩家
   mainGUI: ' 欢迎来到 &1Game&1Box&r %player%'
   # %game% 变量表示游戏
-  gameGUIs: '          %game%&r'
+  gameGUIs: '             %game%&r'
   noPermMessage: '          &4&l没有权限'
   notEnoughMoney: '        &4&l钱不够'
+  notEnoughTokens: '        &4&lNot enough tokens'
   otherPlayerNotEnoughMoney: '   &4另一个玩家钱不够'
   alreadyInAnotherGame: '     &4已经在另一个游戏里了'
 
+
+shop:
+  freeItem: "&9Free"
+  moneyItem: "&9Money: &4%money%"
+  tokenItem: "&9Token: &4%token%"
+  notEnoughMoney: '        &4&lNot enough money'
+  notEnoughTokens: '        &4&lNot enough tokens'
+  inventoryIsFull: '        &4&lFull inventory'
+  boughtSuccessful: '        &9&lBought successfully'
+  shopIsClosed: '        &4&lShop is closed'
+  # 使用 %player% 变量表示玩家
+  mainShop: '   &cHappy shopping, &1%player%'
+  # use %page% for the page number
+  pageShop: '             &9Page Nr. &l%page%'
 
 others:
   wonToken: " 你获得了 %tokens% 筹码！ 来自游戏 &3%game%"

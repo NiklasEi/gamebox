@@ -36,12 +36,27 @@ inventoryTitles:
   # use %player% for the player name
   mainGUI: ' Wilkommen bei &1Game&1Box&r %player%'
   # %game% will be replaced with the games prefix
-  gameGUIs: '          %game%&r'
+  gameGUIs: '             %game%&r'
   noPermMessage: '          &4&lKeine Erlaubnis'
   notEnoughMoney: '        &4&lNicht genug Geld'
+  notEnoughTokens: '        &4&lNicht genug Token'
   otherPlayerNotEnoughMoney: '   &4Der andere Spieler hat nicht genug Geld'
   alreadyInAnotherGame: '     &4Bereits in einem anderen Spiel'
 
+
+shop:
+  freeItem: "&9Umsonst"
+  moneyItem: "&9Geld: &4%money%"
+  tokenItem: "&9Token: &4%token%"
+  notEnoughMoney: '        &4&lNicht genug Geld'
+  notEnoughTokens: '        &4&lNicht genug Token'
+  inventoryIsFull: '        &4&lVolles Inventar!'
+  shopIsClosed: '         &4&lGeschlossen'
+  boughtSuccessful: '        &9&lErfolgreich gekauft'
+  # use %player% for the player name
+  mainShop: '   &cFröhliches einkaufen, &1%player%'
+  # use %page% for the page number
+  pageShop: '             &9Seite Nr. &l%page%'
 
 others:
   wonToken: "Du hast %tokens% Token in &3%game% gewonnen"

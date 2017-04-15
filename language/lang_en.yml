@@ -24,8 +24,8 @@ mainButtons:
   exitButton: "&4Click to exit"
   toMainGUIButton: "&2To main menu"
   toGameGUIButton: "&2To game menu"
-  forwardButton: "&2Forward"
-  backwardButton: "&2Back"
+  forwardButton: "&2&lNext"
+  backwardButton: "&2&lBack"
   infoMainMenu:
   - '&1Here you find all the games'
   - '&1Click on one of the buttons'
@@ -37,11 +37,27 @@ inventoryTitles:
   # use %player% for the player name
   mainGUI: ' Welcome to &1Game&1Box&r %player%'
   # %game% will be replaced with the games prefix
-  gameGUIs: '          %game%&r'
+  gameGUIs: '             %game%&r'
   noPermMessage: '          &4&lNo Permission'
   notEnoughMoney: '        &4&lNot enough money'
+  notEnoughTokens: '        &4&lNot enough tokens'
   otherPlayerNotEnoughMoney: '   &4The other player does not have enough money'
   alreadyInAnotherGame: '     &4Already in another game'
+
+
+shop:
+  freeItem: "&9Free"
+  moneyItem: "&9Money: &4%money%"
+  tokenItem: "&9Tokens: &4%token%"
+  notEnoughMoney: '        &4&lNot enough money'
+  notEnoughTokens: '        &4&lNot enough tokens'
+  inventoryIsFull: '        &4&lFull inventory'
+  boughtSuccessful: '        &9&lBought successfully'
+  shopIsClosed: '        &4&lShop is closed atm'
+  # use %player% for the player name
+  mainShop: '   &9Happy shopping, &1%player%'
+  # use %page% for the page number
+  pageShop: '             &9Page Nr. &l%page%'
 
 
 others:
