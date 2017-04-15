@@ -31,6 +31,12 @@ public class AButton extends ItemStack{
 	public void setAction(ClickAction action){
 		this.action = action;
 	}
+
+	public AButton setActionAndArgs(ClickAction action, String... args){
+		this.action = action;
+		this.args = args;
+		return this;
+	}
 	
 	public void setArgs(String... args){
 		this.args = args;
