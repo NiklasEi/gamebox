@@ -344,7 +344,7 @@ public class PluginManager implements Listener{
                 // no space for the hubItem found...
                 // override the slot... (It's a hub world + configured to this slot)
                 // if the items are important in this world the server owner should turn of the give item option
-                player.getInventory().setItem(slot, hubItem);
+                player.sendMessage(lang.PREFIX + " Failed to give you the hub item (Full inventory)");
             }
         }
     }
@@ -371,6 +371,8 @@ public class PluginManager implements Listener{
     public void onPlayerDeath(PlayerDeathEvent event){
         if(isInGame(event.getEntity().getUniqueId()) || guiManager.isInGUI(event.getEntity().getUniqueId())){
             event.getDrops().clear();
+            event.getDrops().addAll(Arrays.asList(savedContents.get(event.getEntity().getUniqueId())));
+            savedContents.remove(event.getEntity().getUniqueId());
         }
     }
 
@@ -569,17 +571,29 @@ public class PluginManager implements Listener{
 
     public boolean addItem(UUID uuid, ItemStack itemStack){
         if(!savedContents.keySet().contains(uuid) || itemStack == null) return false;
+
+        // map for the possibilities to fill already existing stacks up
+        List<Integer> fillUpPossibilities = new ArrayList<>();
+
         GameBox.debug("length is: " + savedContents.get(uuid).length);
         ItemStack[] savedStacks = savedContents.get(uuid);
         for(int i = 0; i< 36;i++){
             if(savedStacks[i] == null) continue;
-            if(savedStacks[i].isSimilar(itemStack) && ((itemStack.getItemMeta().getDisplayName() == null && savedStacks[i].getItemMeta().getDisplayName() == null) || itemStack.getItemMeta().getDisplayName().equals(savedStacks[i].getItemMeta().getDisplayName()))){
+            if(savedStacks[i].isSimilar(itemStack)
+                    && ((itemStack.getItemMeta() == null && savedStacks[i].getItemMeta() == null)
+                    || (itemStack.getItemMeta().getDisplayName() == null && savedStacks[i].getItemMeta().getDisplayName() == null)
+                    || itemStack.getItemMeta().getDisplayName().equals(savedStacks[i].getItemMeta().getDisplayName()))){
                 if(itemStack.getMaxStackSize() >= itemStack.getAmount() + savedStacks[i].getAmount()){
                     savedStacks[i].setAmount(itemStack.getAmount() + savedStacks[i].getAmount());
+                    if(!fillUpPossibilities.isEmpty()){
+                        for(int slot : fillUpPossibilities){
+                            savedStacks[slot].setAmount(itemStack.getMaxStackSize());
+                        }
+                    }
                     return true;
-                } else if(itemStack.getMaxStackSize() >= savedStacks[i].getAmount()){
+                } else if(itemStack.getMaxStackSize() > savedStacks[i].getAmount()){
                     int rest = itemStack.getAmount() - (itemStack.getMaxStackSize() - savedStacks[i].getAmount());
-                    savedStacks[i].setAmount(itemStack.getMaxStackSize());
+                    fillUpPossibilities.add(i);
                     itemStack.setAmount(rest);
                     continue;
                 }
@@ -588,6 +602,11 @@ public class PluginManager implements Listener{
         for(int i = 0; i< 36;i++){
             if(savedStacks[i] == null){
                 savedStacks[i] = itemStack;
+                if(!fillUpPossibilities.isEmpty()){
+                    for(int slot : fillUpPossibilities){
+                        savedStacks[slot].setAmount(itemStack.getMaxStackSize());
+                    }
+                }
                 return true;
             }
         }
