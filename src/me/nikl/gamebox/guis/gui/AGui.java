@@ -9,11 +9,13 @@ import me.nikl.gamebox.guis.gui.game.StartMultiplayerGamePage;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -183,10 +185,9 @@ public abstract class AGui {
 						guiManager.sentInventoryTitleMessage(player[0], plugin.lang.TITLE_OTHER_PLAYER_NOT_ENOUGH_MONEY, gameID);
 					} else if(returnedCode == GameBox.GAME_NOT_STARTED_ERROR){
 						for(Player playerObj: player) {
-							if(guiManager.isInGUI(player[1].getUniqueId())) {
+							if(player.length > 1 && guiManager.isInGUI(player[1].getUniqueId())) {
 								guiManager.sentInventoryTitleMessage(playerObj, plugin.lang.TITLE_ERROR, gameID);
 							} else {
-								//ToDo
 								playerObj.sendMessage("A game failed to start");
 							}
 						}
@@ -286,6 +287,58 @@ public abstract class AGui {
 
 				return false;
 
+			case BUY:
+
+				// check for closed shop
+				if(guiManager.getShopManager().isClosed()){
+					guiManager.sentInventoryTitleMessage((Player)event.getWhoClicked(), plugin.lang.SHOP_IS_CLOSED, null);
+					return false;
+				}
+
+				// check whether player can pay
+				int tokens, money;
+				try{
+					tokens = Integer.parseInt(args[2]);
+					money = Integer.parseInt(args[3]);
+				} catch (NumberFormatException exception){
+					exception.printStackTrace();
+					Bukkit.getLogger().log(Level.WARNING, "a shop item had wrong cost-info args: " + Arrays.asList(args));
+					return false;
+				}
+
+				int hasToken = 0;
+				if(tokens > 0 ){
+					if((hasToken = pluginManager.getPlayer(event.getWhoClicked().getUniqueId()).getTokens()) < tokens){
+						guiManager.sentInventoryTitleMessage((Player)event.getWhoClicked(), plugin.lang.SHOP_TITLE_NOT_ENOUGH_TOKEN, null);
+						return false;
+					}
+				}
+				if(money > 0){
+					if(!plugin.getEconEnabled() || GameBox.econ.getBalance((OfflinePlayer) event.getWhoClicked()) < money){
+						guiManager.sentInventoryTitleMessage((Player)event.getWhoClicked(), plugin.lang.SHOP_TITLE_NOT_ENOUGH_MONEY, null);
+						return false;
+					}
+				}
+
+				ItemStack item = guiManager.getShopManager().getShopItem(args[0], args[1]).clone();
+				if(item == null) return false;
+
+
+				if(!pluginManager.addItem(event.getWhoClicked().getUniqueId(), item)){
+					guiManager.sentInventoryTitleMessage((Player)event.getWhoClicked(), plugin.lang.SHOP_TITLE_INVENTORY_FULL, null);
+					return false;
+				} else {
+					guiManager.sentInventoryTitleMessage((Player)event.getWhoClicked(), plugin.lang.SHOP_TITLE_BOUGHT_SUCCESSFULLY, null);
+				}
+
+				if(tokens > 0 ){
+					pluginManager.getPlayer(event.getWhoClicked().getUniqueId()).setTokens(hasToken - tokens);
+				}
+				if(money > 0){
+					GameBox.econ.withdrawPlayer((OfflinePlayer) event.getWhoClicked(), money);
+				}
+
+				return true;
 
 			default:
 				Bukkit.getConsoleSender().sendMessage("Missing case: "+action);
