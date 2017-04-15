@@ -1,0 +1,165 @@
+# this file contains the whole shop
+# it is sorted in categories that will be selectable on the first Main-page of the shop
+# The number of items per category is basically infinite (fun bug I had: the plugin kept putting the same item. At ~9 million items the server crashed)
+
+# A page system will automatically open new pages and build the 'next' and 'back' buttons accordingly
+
+# this is to make sure that you customized the shop before players can buy stuff
+#   set it to true to enable shoping
+open: false
+
+shop:
+  button:
+     # define the Material and data for the item (format: 'material:data')
+     materialData: "STORAGE_MINECART"
+     # display name of the button
+     displayName: "&3&lShop"
+     # lore of the item (optional)
+     lore:
+     - ""
+     - "&1Click to open the shop"
+     glow: true
+  categories:
+    # unique key of the category
+    blocks:
+      materialData: "159:1"
+      displayName: "&3&lBlock section with several pages"
+      lore:
+      - ""
+      - "&1Buy useless blocks"
+      glow: false
+      items:
+        # unique key for an item
+        dirt:
+          # material data of item to be sold
+          materialData: "dirt"
+          # price in token (optional)
+          #   if both (token AND money) is set, players have to pay both!
+          tokens: 1
+          # money price (optional)
+          money: 0
+          # optional count (only up to max stack size of the particular item)
+          count: 2
+        sapling:
+          materialData: "sapling"
+        blueClay:
+          materialData: "wood"
+          tokens: 1
+          money: 0
+        blueClayd37:
+          materialData: "452"
+          tokens: 100
+          money: 1000
+        yellowClay:
+          materialData: "159:4"
+          tokens: 1
+          money: 1
+        blueClay1:
+          materialData: "159:11"
+          tokens: 1
+          money: 0
+        yellowClay1:
+          materialData: "159:4"
+          tokens: 1
+          money: 1
+        blueClay2:
+          materialData: "159:11"
+          tokens: 1
+          money: 0
+        yellowClay2:
+          materialData: "159:4"
+          tokens: 1
+          money: 1
+        blueClay3:
+          materialData: "159:11"
+          tokens: 1
+          money: 0
+        yellowClay3:
+          materialData: "159:4"
+          tokens: 1
+          money: 1
+        blueClay4:
+          materialData: "159:11"
+          tokens: 1
+          money: 0
+        yellowClay4:
+          materialData: "159:4"
+          tokens: 1
+          money: 1
+        blueClay5:
+          materialData: "159:11"
+          tokens: 1
+          money: 0
+        yellowClay5:
+          materialData: "159:4"
+          tokens: 1
+          money: 1
+        blueClay6:
+          materialData: "159:11"
+          tokens: 1
+          money: 0
+        yellowClay6:
+          materialData: "159:4"
+          tokens: 1
+          money: 1
+        blueClay27:
+          materialData: "159:11"
+          tokens: 1
+          money: 0
+        yellowClay27:
+          materialData: "159:4"
+          tokens: 1
+          money: 1
+        blueClay37:
+          materialData: "159:11"
+          tokens: 1
+          money: 0
+        yellowClay37:
+          materialData: "159:4"
+          tokens: 1
+          money: 1
+        blueClay47:
+          materialData: "159:11"
+          tokens: 1
+          money: 0
+        yellowClay47:
+          materialData: "159:4"
+          tokens: 1
+          money: 1
+        blueClay57:
+          materialData: "159:11"
+          tokens: 1
+          money: 0
+    food:
+      materialData: "wheat"
+      displayName: "&3&lFood section"
+      lore:
+      - ""
+      - "&1Buy food"
+      glow: false
+      items:
+        blueClay:
+          materialData: "cake"
+          tokens: 10
+          money: 100
+        yellowClay:
+          materialData: "bread"
+          tokens: 1
+          money: 1
+    glow:
+      materialData: "159:1"
+      displayName: "&1&lThe mysterious glowing section"
+      lore:
+      - ""
+      - "&1Buy Stuff"
+      - "&4&lYou should really customize this ;)"
+      glow: true
+      items:
+        blueClay:
+          materialData: "GOLD_INGOT"
+          tokens: 1
+          money: 0
+        yellowClay:
+          materialData: "CHEST"
+          tokens: 1
+          money: 1
