@@ -6,6 +6,8 @@ import me.nikl.gamebox.Language;
 import me.nikl.gamebox.Permissions;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
+import me.nikl.gamebox.guis.gui.AGui;
+import me.nikl.gamebox.players.GBPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -39,6 +41,8 @@ public class ShopManager {
 
     protected GUIManager guiManager;
 
+    private boolean closed;
+
     private GameBox plugin;
     private Language lang;
 
@@ -59,6 +63,7 @@ public class ShopManager {
             return;
         }
 
+        this.closed = !shop.getBoolean("open");
 
         List<String> lore;
         ItemStack mainItem = getItemStack(shop.getString("shop.button.materialData", Material.STORAGE_MINECART.toString()));
@@ -87,10 +92,10 @@ public class ShopManager {
 
 
     private void loadFile() {
-        shopFile = new File(plugin.getDataFolder().toString() + File.separatorChar + "shop.yml");
+        shopFile = new File(plugin.getDataFolder().toString() + File.separatorChar + "tokenShop.yml");
         if(!shopFile.exists()){
             shopFile.getParentFile().mkdirs();
-            plugin.saveResource("shop.yml", false);
+            plugin.saveResource("tokenShop.yml", false);
         }
         try {
             this.shop =  YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(shopFile), "UTF-8"));
@@ -152,8 +157,29 @@ public class ShopManager {
                 mainShop.open(whoClicked);
                 GameBox.openingNewGUI = false;
 
-                plugin.getNMS().updateInventoryTitle(whoClicked, "Our shop is closed atm, sorry");
+                if(closed){
+                    plugin.getNMS().updateInventoryTitle(whoClicked, plugin.lang.SHOP_IS_CLOSED);
+                } else {
+                    plugin.getNMS().updateInventoryTitle(whoClicked, plugin.lang.SHOP_TITLE_MAIN_SHOP.replace("%player%", whoClicked.getDisplayName()));
+                }
                 return true;
+            } else if(categories.containsKey(args[0])) {
+                int page;
+                try {
+                    page = Integer.parseInt(args[1]);
+                } catch (NumberFormatException exception){
+                    Bukkit.getLogger().log(Level.SEVERE, "failed to open shop page due to corrupted args!");
+                    return false;
+                }
+                GameBox.openingNewGUI = true;
+                boolean open = categories.get(args[0]).openPage(whoClicked, page);
+                GameBox.openingNewGUI = false;
+                if(open) {
+                    plugin.getNMS().updateInventoryTitle(whoClicked, plugin.lang.SHOP_TITLE_PAGE_SHOP.replace("%page%",String.valueOf(page+1)));
+                    return true;
+                } else {
+                    return false;
+                }
             }
         } else {
             if (saved) plugin.getPluginManager().restoreInventory(whoClicked);
@@ -179,8 +205,7 @@ public class ShopManager {
     }
 
     public void loadCategory(String cat) {
-        // ToDo;
-        categories.put(cat, new Category(this, guiManager, cat));
+        categories.put(cat, new Category(plugin, this, guiManager, cat));
     }
 
     public boolean inShop(UUID uuid) {
@@ -222,5 +247,35 @@ public class ShopManager {
                 category.onInvClose(event);
             }
         }
+    }
+
+    public void updateTokens(GBPlayer gbPlayer) {
+        mainShop.updateTokens(gbPlayer);
+        for (Category category : categories.values()){
+            category.updateTokens(gbPlayer);
+        }
+    }
+
+    public ItemStack getShopItem(String category, String counter){
+        if(categories.get(category) != null){
+            return categories.get(category).getShopItem(counter);
+        }
+        return null;
+    }
+
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public AGui getShopGui(UUID uuid) {
+        if(mainShop.isInGui(uuid)){
+            return mainShop;
+        }
+        for(Category category : categories.values()){
+            if(category.inCategory(uuid)){
+                return category.getShopGui(uuid);
+            }
+        }
+        return null;
     }
 }
