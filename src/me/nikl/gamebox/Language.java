@@ -6,7 +6,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.*;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -33,11 +32,17 @@ public class Language {
 	public List<String> CMD_HELP, CMD_WRONG_USAGE;
 
 	// Buttons
-	public String BUTTON_EXIT, BUTTON_TO_MAIN_MENU, BUTTON_TO_GAME_MENU, BUTTON_TOKENS;
+	public String BUTTON_EXIT, BUTTON_TO_MAIN_MENU, BUTTON_TO_GAME_MENU, BUTTON_TOKENS
+			, BUTTON_FORWARD, BUTTON_BACK;
 	public List<String> BUTTON_MAIN_MENU_INFO;
 
 	// Inv titles
-	public String TITLE_MAIN_GUI, TITLE_GAME_GUI, TITLE_NO_PERM, TITLE_NOT_ENOUGH_MONEY, TITLE_OTHER_PLAYER_NOT_ENOUGH_MONEY, TITLE_ALREADY_IN_ANOTHER_GAME, TITLE_ERROR = ChatColor.RED + "              Error";
+	public String TITLE_MAIN_GUI, TITLE_GAME_GUI, TITLE_NO_PERM, TITLE_NOT_ENOUGH_MONEY, TITLE_OTHER_PLAYER_NOT_ENOUGH_MONEY, TITLE_ALREADY_IN_ANOTHER_GAME,
+			TITLE_ERROR = ChatColor.RED + "              Error", TITLE_NOT_ENOUGH_TOKEN;
+
+	// shop
+	public String SHOP_TITLE_BOUGHT_SUCCESSFULLY, SHOP_TITLE_INVENTORY_FULL, SHOP_TITLE_MAIN_SHOP, SHOP_TITLE_PAGE_SHOP, SHOP_TITLE_NOT_ENOUGH_TOKEN
+			, SHOP_TITLE_NOT_ENOUGH_MONEY, SHOP_FREE, SHOP_MONEY, SHOP_TOKEN, SHOP_IS_CLOSED;
 
 	// player input
 	public String INPUT_START_MESSAGE, INPUT_TIME_RAN_OUT, INVITATION_SUCCESSFUL, INVITATION_ALREADY_THERE, INVITATION_NOT_VALID_PLAYER_NAME, INVITATION_NOT_ONLINE, INPUT_CLOSED, INVITATION_NOT_YOURSELF;
@@ -60,6 +65,7 @@ public class Language {
 		getInvTitles();
 		getButtons();
 		getOthers();
+		getShop();
 	}
 
 	private void getOthers() {
@@ -82,6 +88,9 @@ public class Language {
 		this.BUTTON_TO_GAME_MENU = getString("mainButtons.toGameGUIButton");
 		this.BUTTON_TOKENS = getString("mainButtons.tokensButton");
 
+		this.BUTTON_FORWARD = getString("mainButtons.forwardButton");
+		this.BUTTON_BACK = getString("mainButtons.backwardButton");
+
 		this.BUTTON_MAIN_MENU_INFO = getStringList("mainButtons.infoMainMenu");
 	}
 
@@ -92,6 +101,7 @@ public class Language {
 		this.TITLE_GAME_GUI = getString("inventoryTitles.gameGUIs");
 		this.TITLE_NO_PERM = getString("inventoryTitles.noPermMessage");
 		this.TITLE_NOT_ENOUGH_MONEY = getString("inventoryTitles.notEnoughMoney");
+		this.TITLE_NOT_ENOUGH_TOKEN = getString("inventoryTitles.notEnoughTokens");
 		this.TITLE_ALREADY_IN_ANOTHER_GAME = getString("inventoryTitles.alreadyInAnotherGame");
 		this.TITLE_OTHER_PLAYER_NOT_ENOUGH_MONEY = getString("inventoryTitles.otherPlayerNotEnoughMoney");
 
@@ -107,6 +117,21 @@ public class Language {
 		
 		this.CMD_HELP = getStringList("commandMessages.help");
 		this.CMD_WRONG_USAGE = getStringList("commandMessages.wrongUsage");
+	}
+
+	private void getShop(){
+		this.SHOP_TITLE_MAIN_SHOP = getString("shop.mainShop");
+		this.SHOP_TITLE_PAGE_SHOP = getString("shop.pageShop");
+
+		this.SHOP_TITLE_INVENTORY_FULL = getString("shop.inventoryIsFull");
+		this.SHOP_TITLE_BOUGHT_SUCCESSFULLY = getString("shop.boughtSuccessful");
+		this.SHOP_TITLE_NOT_ENOUGH_TOKEN = getString("shop.notEnoughTokens");
+		this.SHOP_TITLE_NOT_ENOUGH_MONEY = getString("shop.notEnoughMoney");
+		this.SHOP_IS_CLOSED = getString("shop.shopIsClosed");
+
+		this.SHOP_FREE = getString("shop.freeItem");
+		this.SHOP_MONEY = getString("shop.moneyItem");
+		this.SHOP_TOKEN = getString("shop.tokenItem");
 	}
 
 
