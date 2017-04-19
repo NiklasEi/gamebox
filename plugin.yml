@@ -1,0 +1,6 @@
+name: ConnectFour
+author: Nikl
+main: me.nikl.connectfour.Main
+version: 0.0.1
+website: nikl.me
+depend: [GameBox]

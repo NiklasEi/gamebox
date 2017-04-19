@@ -1,0 +1,29 @@
+# use & for colors
+#   placeholders will be listed in front of the keys
+
+# messages and inventory titles directly related to the game
+game:
+  econ:
+    # use %cost% for the amount payed
+    payed: " &2Du hast &4%cost% gezahlt"
+    notEnoughMoney: " &4Du hast nicht genug Geld!"
+    # use %reward% for the amount the player won
+    wonMoney: " Du hast &2\$%reward%&r gewonnen!"
+  inventoryTitles:
+    # %player% will be replaced by the name of the player whos turn it is to play
+    ingame: "&3Connect4     &1%player% ist am Zug"
+    won: "&3Connect4         &2Gewonnen"
+    lost: "&3Connect4         &4Verloren"
+
+
+
+prefix: "[&3Connect4&r]"
+name: "&1Connect4&r"
+
+gameHelp:
+  - "&1&lThrow chips into the game by clicking"
+  - "  &1&lwhen it's your turn."
+  - '&1&lChips allways fall down until the they'
+  - "  &1&lreach the bottom or another chip."
+  - ""
+  - '&1&lWin the game by getting 4 in a row'
