@@ -123,6 +123,15 @@ public class Language {
 					Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " " + key));
 					count++;
 				}
+			} else if (defaultLang.isList(key)){
+				if(!this.langFile.isList(key)){// there is a message missing
+					if(count == 0){
+						Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " &4*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"));
+						Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " &4Missing message(s) in your language file!"));
+					}
+					Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " " + key + "     (StringList!)"));
+					count++;
+				}
 			}
 		}
 		if(count > 0){
