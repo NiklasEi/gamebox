@@ -101,7 +101,6 @@ public class GUIManager implements Listener {
 		if(mainGui.isInGui(uuid)){
 			mainGui.onInvClose(event);
 			plugin.getPluginManager().restoreInventory((Player)event.getPlayer());
-			((Player) event.getPlayer()).updateInventory();
 			return;
 		}
 		for(String gameID : gameGuis.keySet()){
@@ -110,7 +109,6 @@ public class GUIManager implements Listener {
 				if(gui.isInGui(uuid)){
 					gui.onInvClose(event);
 					plugin.getPluginManager().restoreInventory((Player)event.getPlayer());
-					((Player) event.getPlayer()).updateInventory();
 					return;
 				}
 			}
@@ -119,7 +117,6 @@ public class GUIManager implements Listener {
 		if(shopManager.inShop(event.getPlayer().getUniqueId())){
 			shopManager.onInvClose(event);
 			plugin.getPluginManager().restoreInventory((Player)event.getPlayer());
-			((Player) event.getPlayer()).updateInventory();
 			return;
 		}
 		if(GameBox.debug)Bukkit.getConsoleSender().sendMessage("Not in a Shop...");
