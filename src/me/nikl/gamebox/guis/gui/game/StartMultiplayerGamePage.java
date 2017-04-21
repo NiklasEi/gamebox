@@ -32,8 +32,8 @@ public class StartMultiplayerGamePage extends GameGuiPage {
         button.setAction(ClickAction.START_PLAYER_INPUT);
         button.setArgs(gameID, key);
         ItemMeta meta = button.getItemMeta();
-        meta.setDisplayName(ChatColor.GOLD + "Invite someone");
-        meta.setLore(Arrays.asList("",ChatColor.BLUE+"Click to invite someone over chat"));
+        meta.setDisplayName(plugin.lang.BUTTON_INVITE_BUTTON_NAME);
+        meta.setLore(plugin.lang.BUTTON_INVITE_BUTTON_LORE);
         button.setItemMeta(meta);
 
         setButton(button, 0);
@@ -89,8 +89,8 @@ public class StartMultiplayerGamePage extends GameGuiPage {
             skull.setDurability((short) 3);
             SkullMeta meta = (SkullMeta) skull.getItemMeta();
             meta.setOwner(player1.getName());
-            meta.setDisplayName(ChatColor.GOLD + player1.getName());
-            meta.setLore(Arrays.asList("", ChatColor.BLUE+"Click to accept the invitation"));
+            meta.setDisplayName(plugin.lang.BUTTON_INVITE_SKULL_NAME.replace("%player%", player1.getName()));
+            meta.setLore(plugin.lang.BUTTON_INVITE_SKULL_LORE);
             skull.setItemMeta(meta);
             skull.setAction(ClickAction.START_GAME);
             skull.setArgs(gameID, key, uuid1.toString());

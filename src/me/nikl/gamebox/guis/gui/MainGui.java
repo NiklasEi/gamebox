@@ -118,11 +118,11 @@ public class MainGui extends AGui{
 		ToggleButton soundToggle = new ToggleButton(new MaterialData(Material.RECORD_6), 1, new MaterialData(Material.RECORD_4));
 		ItemMeta meta = soundToggle.getItemMeta();
 		meta.addItemFlags(ItemFlag.values());
-		meta.setDisplayName(ChatColor.BLUE+"Sound on");
-		meta.setLore(Arrays.asList(" ", ChatColor.BLUE+"Click to turn sounds off"));
+		meta.setDisplayName(plugin.lang.BUTTON_SOUND_ON_NAME);
+		meta.setLore(plugin.lang.BUTTON_SOUND_ON_LORE);
 		soundToggle.setItemMeta(meta);
-		soundToggle.setToggleDisplayName(ChatColor.RED+"Sound off");
-		soundToggle.setToggleLore(Arrays.asList(" ", ChatColor.BLUE+"Click to turn sounds on"));
+		soundToggle.setToggleDisplayName(plugin.lang.BUTTON_SOUND_OFF_NAME);
+		soundToggle.setToggleLore(plugin.lang.BUTTON_SOUND_OFF_LORE);
 		soundToggle.setAction(ClickAction.TOGGLE);
 		soundToggle.setArgs("sound");
 		soundButtons.put(player.getUuid(), soundToggle);

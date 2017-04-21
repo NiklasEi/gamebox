@@ -32,6 +32,29 @@ mainButtons:
   - '  &1to open the games menu.'
   # %tokens% will be replaced with the players number of tokens
   tokensButton: "&1Tokens: &2%tokens%"
+  soundToggle:
+    onDisplayName: "&1Sound on"
+    onLore:
+    - ""
+    - "&1Click to turn sounds off"
+    offDisplayName: "&4Sound off"
+    offLore:
+    - ""
+    - "&1Click to turn sounds on"
+  inviteButton:
+    displayName: "&eInvite someone"
+    lore:
+    - ""
+    - "&1Click to invite someone over chat"
+  # this is the name and lore of an invite. It is the players skull in the invitation GUI.
+  invitationSkull:
+    # %player% will be replaced by the players name
+    displayName: "&e%player%"
+    lore:
+    - ""
+    - "&1Click to accept the invitation"
+
+
 
 inventoryTitles:
   # use %player% for the player name
@@ -74,3 +97,6 @@ others:
     notValidPlayerName: " &1%player%&4 is not a valid player name."
     notOnline: " &cThere is no &5%player%&c online."
     notInviteYourself: " &cYou cannot invite yourself."
+  invitation:
+  - " &3%player%&r invited you to a round of &3%game%"
+  - " Go to the invitation GUI of &3%game%&r to accept the invite"

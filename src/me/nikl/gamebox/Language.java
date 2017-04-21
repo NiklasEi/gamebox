@@ -7,6 +7,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.*;
 import java.util.List;
+import java.util.logging.Level;
 
 
 /**
@@ -33,8 +34,10 @@ public class Language {
 
 	// Buttons
 	public String BUTTON_EXIT, BUTTON_TO_MAIN_MENU, BUTTON_TO_GAME_MENU, BUTTON_TOKENS
-			, BUTTON_FORWARD, BUTTON_BACK;
-	public List<String> BUTTON_MAIN_MENU_INFO;
+			, BUTTON_FORWARD, BUTTON_BACK, BUTTON_SOUND_ON_NAME, BUTTON_SOUND_OFF_NAME
+			, BUTTON_INVITE_BUTTON_NAME, BUTTON_INVITE_SKULL_NAME;
+	public List<String> BUTTON_MAIN_MENU_INFO, BUTTON_SOUND_ON_LORE, BUTTON_SOUND_OFF_LORE
+			, BUTTON_INVITE_BUTTON_LORE, BUTTON_INVITE_SKULL_LORE;
 
 	// Inv titles
 	public String TITLE_MAIN_GUI, TITLE_GAME_GUI, TITLE_NO_PERM, TITLE_NOT_ENOUGH_MONEY, TITLE_OTHER_PLAYER_NOT_ENOUGH_MONEY, TITLE_ALREADY_IN_ANOTHER_GAME,
@@ -50,6 +53,9 @@ public class Language {
 
 	// tokens
 	public String WON_TOKEN;
+
+	// invitation
+	public List<String> INVITE_MESSAGE;
 
 
 	
@@ -80,6 +86,8 @@ public class Language {
 		this.INVITATION_NOT_YOURSELF = getString("others.playerInput.notInviteYourself");
 
 		this.WON_TOKEN = getString("others.wonToken");
+
+		INVITE_MESSAGE = getStringList("others.invitation");
 	}
 
 	private void getButtons() {
@@ -92,6 +100,17 @@ public class Language {
 		this.BUTTON_BACK = getString("mainButtons.backwardButton");
 
 		this.BUTTON_MAIN_MENU_INFO = getStringList("mainButtons.infoMainMenu");
+
+		BUTTON_SOUND_ON_NAME = getString("mainButtons.soundToggle.onDisplayName");
+		BUTTON_SOUND_OFF_NAME = getString("mainButtons.soundToggle.offDisplayName");
+		BUTTON_SOUND_ON_LORE = getStringList("mainButtons.soundToggle.onLore");
+		BUTTON_SOUND_OFF_LORE = getStringList("mainButtons.soundToggle.offLore");
+
+		BUTTON_INVITE_BUTTON_NAME = getString("mainButtons.inviteButton.displayName");
+		BUTTON_INVITE_BUTTON_LORE = getStringList("mainButtons.inviteButton.lore");
+
+		BUTTON_INVITE_SKULL_NAME = getString("mainButtons.invitationSkull.displayName");
+		BUTTON_INVITE_SKULL_LORE = getStringList("mainButtons.invitationSkull.lore");
 	}
 
 	private void getInvTitles() {
@@ -243,6 +262,15 @@ public class Language {
 						Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " &4Missing message(s) in your language file!"));
 					}
 					Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " " + key));
+					count++;
+				}
+			} else if (defaultLang.isList(key)){
+				if(!this.langFile.isList(key)){// there is a message missing
+					if(count == 0){
+						Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " &4*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"));
+						Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " &4Missing message(s) in your language file!"));
+					}
+					Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " " + key + "     (StringList!)"));
 					count++;
 				}
 			}

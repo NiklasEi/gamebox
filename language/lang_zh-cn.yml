@@ -33,6 +33,27 @@ mainButtons:
   - '&a点击一个游戏来开始吧!'
   # %tokens% 变量表示筹码
   tokensButton: "&1筹码: &2%tokens%"
+  soundToggle:
+    onDisplayName: "&1Sound on"
+    onLore:
+    - ""
+    - "&1Click to turn sounds off"
+    onDisplayName: "&4Sound off"
+    onLore:
+    - ""
+    - "&1Click to turn sounds on"
+  inviteButton:
+    displayName: "&eInvite someone"
+    lore:
+    - ""
+    - "&1Click to invite someone over chat"
+  # this is the name and lore of an invite. It is the players skull in the invitation GUI.
+  invitationSkull:
+    # %player% will be replaced by the players name
+    displayName: "&e%player%"
+    lore:
+    - ""
+    - "&1Click to accept the invitation"
 
 inventoryTitles:
   # 使用 %player% 变量表示玩家
@@ -74,3 +95,6 @@ others:
     notValidPlayerName: " &1%player%&4 玩家不存在！"
     notOnline: " &c玩家 &5%player%&c 不在线！"
     notInviteYourself: " &c你居然邀请自己？是太寂寞了吗..."
+  invitation:
+  - " &3%player%&r invited you to a round of &3%game%"
+  - " Go to the invitation GUI of &3%game%&r to accept the invite"

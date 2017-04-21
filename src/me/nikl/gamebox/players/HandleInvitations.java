@@ -60,8 +60,9 @@ public class HandleInvitations extends BukkitRunnable{
         Player second = Bukkit.getPlayer(player2);
         
         if(first != null && second != null){
-            // ToDo
-            second.sendMessage(ChatColor.BLUE+first.getName()+ChatColor.RESET+" invited you to a " + pluginManager.getGame(args[0]).getName()+ChatColor.RESET +" game. ");
+            for(String message : plugin.lang.INVITE_MESSAGE) {
+                second.sendMessage(plugin.lang.PREFIX + message.replace("%player%", first.getName()).replace("%game%", pluginManager.getGame(args[0]).getName()));
+            }
         } else {
             return false;
         }

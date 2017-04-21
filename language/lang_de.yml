@@ -31,6 +31,27 @@ mainButtons:
   - '&1Hier befinden sich alle Spiele'
   - '&1Klicke auf einen Button um'
   - '  &1in das Spielmenü zu gelangen.'
+  soundToggle:
+    onDisplayName: "&1Sounds an"
+    onLore:
+    - ""
+    - "&1Klicke zum stumm schlaten"
+    offDisplayName: "&4Sounds aus"
+    offLore:
+    - ""
+    - "&1Klicke um Geräusche zu erlauben"
+  inviteButton:
+    displayName: "&eLade jemanden ein"
+    lore:
+    - ""
+    - "&1Klicke hier, um jemanden über den chat einzuladen"
+  # this is the name and lore of an invite. It is the players skull in the invitation GUI.
+  invitationSkull:
+    # %player% will be replaced by the players name
+    displayName: "&e%player%"
+    lore:
+    - ""
+    - "&1Klicke um die Einladung zu akzeptieren"
 
 inventoryTitles:
   # use %player% for the player name
@@ -72,3 +93,6 @@ others:
     notValidPlayerName: " &1%player%&4 ist kein gültiger Spielername."
     notOnline: " &cEs ist kein &5%player%&c online."
     notInviteYourself: " &cDu kannst dich nicht selber einladen..."
+  invitation:
+  - " &3%player%&r hat dich zu einer Runde &3%game% eingeladen"
+  - " Besuche das Einladungs-Menü von &3%game%&r zum annehmen"
