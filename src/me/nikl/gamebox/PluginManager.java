@@ -26,6 +26,7 @@ import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -202,7 +203,8 @@ public class PluginManager implements Listener{
 		player.getInventory().setHeldItemSlot(toHold);
 	}
 
-	public void restoreInventory(Player player){
+	@SuppressWarnings("deprecation")
+    public void restoreInventory(Player player){
 		if(!savedContents.containsKey(player.getUniqueId())) return;
 		if(GameBox.openingNewGUI){
 			GameBox.debug("not restoring, because a new gui is being opened...");
@@ -211,6 +213,16 @@ public class PluginManager implements Listener{
 		GameBox.debug("restoring inventory contents...");
 		player.getInventory().setContents(savedContents.get(player.getUniqueId()));
         player.getInventory().setHeldItemSlot(hotBarSlot.get(player.getUniqueId()));
+        if(plugin.delayedInventoryUpdate) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    player.updateInventory();
+                }
+            }.runTaskLater(plugin, 1);
+        } else {
+            player.updateInventory();
+        }
 		savedContents.remove(player.getUniqueId());
         hotBarSlot.remove(player.getUniqueId());
 	}
@@ -301,8 +313,6 @@ public class PluginManager implements Listener{
 			if(manager.isInGame(uuid)){
 				if(manager.onInventoryClose(event) && !manager.isInGame(uuid)){
 					restoreInventory((Player) event.getPlayer());
-					// update to actually display stuff like shield and armor
-                    ((Player)event.getPlayer()).updateInventory();
 				}
 				return;
 			}
