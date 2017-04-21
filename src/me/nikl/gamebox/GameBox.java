@@ -62,6 +62,8 @@ public class GameBox extends JavaPlugin{
 
 	private Statistics statistics;
 
+	public boolean delayedInventoryUpdate = false;
+
 
 	// time in seconds for inputs and invitations
 	public static int timeForPlayerInput;
@@ -198,15 +200,18 @@ public class GameBox extends JavaPlugin{
 				break;
 			case "v1_8_R3":
 				nms = new NMSUtil_1_8_R3();
-				
+				delayedInventoryUpdate = true;
+
 				break;
 			case "v1_8_R2":
 				nms = new NMSUtil_1_8_R2();
-				
+				delayedInventoryUpdate = true;
+
 				break;
 			case "v1_8_R1":
 				nms = new NMSUtil_1_8_R1();
-				
+				delayedInventoryUpdate = true;
+
 				break;
 			case "v1_11_R1":
 				nms = new NMSUtil_1_11_R1();
