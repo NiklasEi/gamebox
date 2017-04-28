@@ -16,6 +16,10 @@ public class Language {
 	public String PREFIX = "[Connect4]", NAME = "&1Connect4&r";
 	public List<String> GAME_HELP;
 	private YamlConfiguration defaultLang;
+
+	public String GAME_NOT_ENOUGH_MONEY, GAME_PAYED, GAME_WON_MONEY, GAME_WON_MONEY_GAVE_UP
+			, GAME_WON, GAME_LOSE, GAME_GAVE_UP, GAME_OTHER_GAVE_UP, TITLE_DRAW;
+	public String TITLE_IN_GAME, TITLE_WON, TITLE_LOST;
 	
 	public Language(Main plugin){
 		this.plugin = plugin;
@@ -25,8 +29,26 @@ public class Language {
 
 
 		this.GAME_HELP = getStringList("gameHelp");
+
+		getGameLang();
 	}
 
+	private void getGameLang() {
+		this.GAME_NOT_ENOUGH_MONEY = getString("game.econ.notEnoughMoney");
+		this.GAME_PAYED = getString("game.econ.payed");
+		this.GAME_WON_MONEY = getString("game.econ.wonMoney");
+		this.GAME_WON_MONEY_GAVE_UP = getString("game.econ.wonMoneyGaveUp");
+
+		this.GAME_WON = getString("game.won");
+		this.GAME_LOSE = getString("game.lost");
+		this.GAME_GAVE_UP = getString("game.gaveUp");
+		this.GAME_OTHER_GAVE_UP = getString("game.otherGaveUp");
+
+		this.TITLE_IN_GAME = getString("game.inventoryTitles.ingame");
+		this.TITLE_WON = getString("game.inventoryTitles.won");
+		this.TITLE_LOST = getString("game.inventoryTitles.lost");
+		this.TITLE_DRAW = getString("game.inventoryTitles.draw");
+	}
 
 
 	private List<String> getStringList(String path) {
@@ -145,6 +167,5 @@ public class Language {
 		return;
 		
 	}
-	
 }
 

@@ -6,6 +6,7 @@ import me.nikl.gamebox.data.SaveType;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.gui.game.GameGui;
+import me.nikl.gamebox.guis.gui.game.StartMultiplayerGamePage;
 import me.nikl.gamebox.guis.gui.game.TopListPage;
 import me.nikl.gamebox.nms.NMSUtil;
 import net.milkbowl.vault.economy.Economy;
@@ -48,7 +49,7 @@ public class Main extends JavaPlugin {
 
     private final String[] subCommands = new String[]{"connect4", "c4"};
     private final SaveType topListSaveType = SaveType.WINS;
-    private final int playerNum = 1;
+    private final int playerNum = 2;
 
     GameBox gameBox;
     private FileConfiguration config;
@@ -96,6 +97,7 @@ public class Main extends JavaPlugin {
 
         gameBox = (GameBox) Bukkit.getPluginManager().getPlugin("GameBox");
 
+        // Version check
         String[] versionString = gameBox.getDescription().getVersion().split("\\.");
         String[] minVersionString = depends[1][1].split("\\.");
         Integer[] version = new Integer[versionString.length];
@@ -120,10 +122,10 @@ public class Main extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
             disabled = true;
             return;
-        }
+        }// version is fine
 
 
-        // disable economy if it is disabled for either one of the plugins
+        // disable economy/sounds if it is disabled for either one of the plugins
         this.econEnabled = this.econEnabled && gameBox.getEconEnabled();
         playSounds = playSounds && GameBox.playSounds;
 
@@ -140,6 +142,7 @@ public class Main extends JavaPlugin {
 
         Map<String, GameRules> gameTypes = new HashMap<>();
 
+        // Get the buttons and load the GameRules
         if (config.isConfigurationSection("gameBox.gameButtons")) {
             ConfigurationSection gameButtons = config.getConfigurationSection("gameBox.gameButtons");
             ConfigurationSection buttonSec;
@@ -186,9 +189,12 @@ public class Main extends JavaPlugin {
                 }
 
 
-                button.setAction(ClickAction.START_GAME);
+
+                guiManager.registerGameGUI(gameID, buttonID, new StartMultiplayerGamePage(gameBox, guiManager, 54, gameID, buttonID, chatColor(buttonSec.getString("inviteGuiTitle","&4title not set in config"))));
+
 
                 button.setItemMeta(meta);
+                button.setAction(ClickAction.CHANGE_GAME_GUI);
                 button.setArgs(gameID, buttonID);
 
 
@@ -217,10 +223,11 @@ public class Main extends JavaPlugin {
             }
         }
 
-
+        // register all the GameRules with he game manager
         this.gameManager.setGameTypes(gameTypes);
 
 
+        // load main button
         getMainButton:
         if (config.isConfigurationSection("gameBox.mainButton")) {
             ConfigurationSection mainButtonSec = config.getConfigurationSection("gameBox.mainButton");
@@ -328,7 +335,8 @@ public class Main extends JavaPlugin {
 
                 TopListPage topListPage = new TopListPage(gameBox, guiManager, 54, gameID
                         , buttonID + GUIManager.TOP_LIST_KEY_ADDON
-                        , buttonSec.isString("inventoryTitle")?ChatColor.translateAlternateColorCodes('&', buttonSec.getString("inventoryTitle")) : "Title missing in config"
+                        , buttonSec.isString("inventoryTitle")?ChatColor.translateAlternateColorCodes('&'
+                            , buttonSec.getString("inventoryTitle")):"Title missing in config"
                         , this.topListSaveType, lore);
 
                 guiManager.registerTopList(gameID, buttonID, topListPage);
@@ -433,5 +441,9 @@ public class Main extends JavaPlugin {
 
     public boolean getPlaySounds() {
         return playSounds;
+    }
+
+    public boolean isEconEnabled(){
+        return this.econEnabled;
     }
 }
