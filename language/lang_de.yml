@@ -17,23 +17,22 @@ game:
     won: "&3Connect4         &2Gewonnen"
     lost: "&3Connect4         &4Verloren"
     draw: "&3Connect4      &3Unentschieden!"
-  won: " &2You won the game!"
-  lost: " &4You lost the game"
+  won: " &2Du hast das Spiel gewonnen!"
+  lost: " &4Du hast das Spiel verloren"
   # gave up message
-  gaveUp: " &4You gave up"
+  gaveUp: " &4Du hast aufgegeben"
   # won message send when the other player gave up
   #   use %loser% for the name of the player that gave up
-  otherGaveUp: " &2You won! %loser% gave up."
-
+  otherGaveUp: " &2Gewonnen! %loser% hat aufgegeben."
 
 
 prefix: "[&3Connect4&r]"
 name: "&1Connect4&r"
 
 gameHelp:
-  - "&1&lThrow chips into the game by clicking"
-  - "  &1&lwhen it's your turn."
-  - '&1&lChips allways fall down until the they'
-  - "  &1&lreach the bottom or another chip."
+  - "&1&lWerfe chips in das spiel indem du klicks"
+  - "  &1&lwenn du am Zug bist."
+  - '&1&lChips fallen immer, bis sie auf einen anderen'
+  - "  &1&lchip oder den Boden des Spielfeldes treffen."
   - ""
-  - '&1&lWin the game by getting 4 in a row'
+  - '&1&lBilde eine Reihe von vier chips um zu gewinnen'
