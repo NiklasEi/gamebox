@@ -34,7 +34,7 @@ import java.util.logging.Level;
  * Main class for the GameBox game 2048
  */
 public class Main extends JavaPlugin {
-    public static boolean debug = true;
+    public static boolean debug = false;
     public static String gameID = "connect4";
 
     public static Economy econ = null;
