@@ -118,6 +118,10 @@ public class Game extends BukkitRunnable{
                         return;
                     } else if(isDraw()) {
                         state = GameState.FINISHED;
+                        if(first!=null && second!=null){
+                            plugin.getNms().updateInventoryTitle(first, plugin.lang.TITLE_DRAW);
+                            plugin.getNms().updateInventoryTitle(second, plugin.lang.TITLE_DRAW);
+                        }
                         return;
                     } else {
                         state = GameState.SECOND_TURN;
@@ -137,11 +141,6 @@ public class Game extends BukkitRunnable{
                     if(checkForMatches(chip)){
                         onGameEnd();
                         state = GameState.FINISHED;
-                        if(first!=null && second!=null){
-                            plugin.getNms().updateInventoryTitle(second, plugin.lang.TITLE_WON);
-                            plugin.getNms().updateInventoryTitle(first, plugin.lang.TITLE_LOST);
-                        }
-                        cancel();
                         return;
                     } else if(isDraw()) {
                         state = GameState.FINISHED;
@@ -164,8 +163,14 @@ public class Game extends BukkitRunnable{
     private void onGameEnd(){
         cancel();
 
-        Player winner = state==GameState.SECOND_TURN?second:first;
-        Player loser = state==GameState.SECOND_TURN?first:second;
+        if(state != GameState.FALLING_SECOND && state != GameState.FALLING_FIRST){
+            Bukkit.getConsoleSender().sendMessage(plugin.lang.PREFIX + " *** wrong game state on game end ***");
+            Bukkit.getConsoleSender().sendMessage(" Please contact Nikl on Spigot and show him this log");
+            return;
+        }
+
+        Player winner = state==GameState.FALLING_SECOND?second:first;
+        Player loser = state==GameState.FALLING_SECOND?first:second;
 
         Language lang = plugin.lang;
 
