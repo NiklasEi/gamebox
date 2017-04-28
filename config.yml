@@ -31,6 +31,7 @@ gameBox:
       cost: 5
       reward: 7
       tokens: 3
+      inviteGuiTitle: "  Start a game of &3ConnectFour"
     saveStats:
       materialData: "diamond_block"
       displayName: "&c&lCompetition"
@@ -48,6 +49,7 @@ gameBox:
       # if true the best score of this button is saved
       saveStats: true
       tokens: 3
+      inviteGuiTitle: "     Start a &cCompetition"
   topListButtons:
     # use the same key as the game you want to display the top list for
     #   for that button 'saveStats' must be true (see above)
@@ -64,7 +66,7 @@ gameBox:
       skullLore:
       - ''
       - '&6Rank:&1 %rank%'
-      - '&6Score:&1 %score%'
+      - '&6Wins:&1 %wins%'
 
 
 rules:
@@ -81,10 +83,17 @@ economy:
 chips:
   enzy:
     materialData: "340"
-    displayName: "&3Encyclopedia"
+    displayName: "&3%player%'s Encyclopedia"
+    # optional lore
     lore:
     - ""
-    - "&cHeavy book"
+    - "&cPretty heavy..."
   sparks:
     materialData: "377"
-    displayName: "&3Sparks"
+    displayName: "&3%player%'s Sparks"
+  dia:
+    materialData: "diamond"
+    displayName: "&3%player%'s treasure"
+  apple:
+    materialData: "apple"
+    displayName: "&3%player%'s apple"

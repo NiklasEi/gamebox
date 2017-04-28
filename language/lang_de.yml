@@ -9,11 +9,21 @@ game:
     notEnoughMoney: " &4Du hast nicht genug Geld!"
     # use %reward% for the amount the player won
     wonMoney: " Du hast &2\$%reward%&r gewonnen!"
+    # use %reward% for the amount the player won and %loser% for the player that gave up
+    wonMoneyGaveUp: " &2You won &1%reward%&2! %loser% gave up."
   inventoryTitles:
     # %player% will be replaced by the name of the player whos turn it is to play
     ingame: "&3Connect4     &1%player% ist am Zug"
     won: "&3Connect4         &2Gewonnen"
     lost: "&3Connect4         &4Verloren"
+    draw: "&3Connect4      &3Unentschieden!"
+  won: " &2You won the game!"
+  lost: " &4You lost the game"
+  # gave up message
+  gaveUp: " &4You gave up"
+  # won message send when the other player gave up
+  #   use %loser% for the name of the player that gave up
+  otherGaveUp: " &2You won! %loser% gave up."
 
 
 
