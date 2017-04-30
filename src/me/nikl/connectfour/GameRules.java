@@ -2,6 +2,8 @@ package me.nikl.connectfour;
 
 /**
  * Created by Niklas on 16.02.2017.
+ *
+ * This class stores settings for a game mode
  */
 public class GameRules {
 
