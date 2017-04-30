@@ -8,7 +8,13 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.*;
 import java.util.List;
 
-
+/**
+ * Class loading and storing messages.
+ *
+ * All messages are loaded from the configured language file
+ * and if not present there from the english file included in the jar.
+ * Color codes are translated on load.
+ */
 public class Language {
 	private Main plugin;
 	private FileConfiguration langFile;
