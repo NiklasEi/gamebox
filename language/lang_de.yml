@@ -10,7 +10,7 @@ game:
     # use %reward% for the amount the player won
     wonMoney: " Du hast &2\$%reward%&r gewonnen!"
     # use %reward% for the amount the player won and %loser% for the player that gave up
-    wonMoneyGaveUp: " &2You won &1%reward%&2! %loser% gave up."
+    wonMoneyGaveUp: " &2Du hast &1%reward%&2 gewonnen! %loser% hat aufgegeben."
   inventoryTitles:
     # %player% will be replaced by the name of the player whos turn it is to play
     ingame: "&3Connect4     &1%player% ist am Zug"
