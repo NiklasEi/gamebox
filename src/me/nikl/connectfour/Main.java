@@ -89,6 +89,8 @@ public class Main extends JavaPlugin {
     private void hook() {
         if (Bukkit.getPluginManager().getPlugin("GameBox") == null || !Bukkit.getPluginManager().getPlugin("GameBox").isEnabled()) {
             Bukkit.getLogger().log(Level.SEVERE, " GameBox not found");
+            Bukkit.getLogger().log(Level.SEVERE, "   Get the newest version here:");
+            Bukkit.getLogger().log(Level.SEVERE, "   https://www.spigotmc.org/resources/37273/");
             Bukkit.getPluginManager().disablePlugin(this);
             disabled = true;
             return;
