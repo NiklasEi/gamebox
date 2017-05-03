@@ -96,6 +96,10 @@ public class Language {
 		if(!defaultDe.exists()){
 			plugin.saveResource("language" + File.separatorChar + "lang_de.yml", false);
 		}
+		File defaultZh = new File(plugin.getDataFolder().toString() + File.separatorChar + "language" + File.separatorChar + "lang_zh-cn.yml");
+		if(!defaultZh.exists()){
+			plugin.saveResource("language" + File.separatorChar + "lang_zh-cn.yml", false);
+		}
 		if(!plugin.getConfig().isString("langFile")){
 			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&4*******************************************************"));
 			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " &4Language file is missing in the config!"));
