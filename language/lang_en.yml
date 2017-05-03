@@ -14,9 +14,9 @@ game:
   inventoryTitles:
     # %player% will be replaced by the name of the player whos turn it is to play
     ingame: "&3Connect4   It's &1%player%'s&3 turn"
-    won: "&3Connect4         &2You won"
-    lost: "&3Connect4         &4You lost"
-    draw: "&3Connect4         &3Draw!"
+    won: "&3Connect4           &2You won"
+    lost: "&3Connect4           &4You lost"
+    draw: "&3Connect4           &3Draw!"
   won: " &2You won the game!"
   lost: " &4You lost the game"
   # gave up message
