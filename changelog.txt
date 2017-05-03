@@ -1,0 +1,7 @@
+- add chinese lang file
+- improved default lang file
+- improved default config
+- add sounds
+
+
+------------------------------------
