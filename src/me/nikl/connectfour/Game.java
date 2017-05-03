@@ -3,6 +3,7 @@ package me.nikl.connectfour;
 import me.nikl.gamebox.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -29,6 +30,14 @@ public class Game extends BukkitRunnable{
     private ItemStack firstChip, secondChip;
 
     private Inventory inv;
+
+    private Sound falling = Sounds.WOOD_CLICK.bukkitSound()
+            , insert = Sounds.CLICK.bukkitSound()
+            , turn = Sounds.NOTE_PLING.bukkitSound()
+            , won = Sounds.VILLAGER_YES.bukkitSound()
+            , lose = Sounds.VILLAGER_NO.bukkitSound();
+
+    private float volume = 0.5f, pitch= 1f;
 
     private GameState state;
     private int chip;
@@ -111,21 +120,34 @@ public class Game extends BukkitRunnable{
                     chip +=9;
                     plugin.debug("set " + chip + " to chip");
                     inv.setItem(chip, firstChip);
+                    if(playSounds) {
+                        first.playSound(first.getLocation(), falling, volume*0.5f, pitch);
+                        second.playSound(second.getLocation(), falling, volume*0.5f, pitch);
+                    }
                 } else {
                     if(checkForMatches(chip)){
                         onGameEnd();
                         state = GameState.FINISHED;
+                        if(playSounds) {
+                            first.playSound(first.getLocation(), won, volume, pitch);
+                            second.playSound(second.getLocation(), lose, volume, pitch);
+                        }
                         return;
                     } else if(isDraw()) {
                         state = GameState.FINISHED;
                         if(first!=null && second!=null){
                             plugin.getNms().updateInventoryTitle(first, plugin.lang.TITLE_DRAW);
                             plugin.getNms().updateInventoryTitle(second, plugin.lang.TITLE_DRAW);
+                            if(playSounds) {
+                                first.playSound(first.getLocation(), lose, volume, pitch);
+                                second.playSound(second.getLocation(), lose, volume, pitch);
+                            }
                         }
                         return;
                     } else {
                         state = GameState.SECOND_TURN;
                         updateStatus();
+                        if(playSounds) second.playSound(second.getLocation(), turn, volume, pitch);
                         return;
                     }
                 }
@@ -137,22 +159,35 @@ public class Game extends BukkitRunnable{
                     chip +=9;
                     plugin.debug("set " + chip + " to chip");
                     inv.setItem(chip, secondChip);
+                    if(playSounds) {
+                        first.playSound(first.getLocation(), falling, volume*0.5f, pitch);
+                        second.playSound(second.getLocation(), falling, volume*0.5f, pitch);
+                    }
                 } else {
                     if(checkForMatches(chip)){
                         onGameEnd();
                         state = GameState.FINISHED;
+                        if(playSounds) {
+                            first.playSound(first.getLocation(), lose, volume, pitch);
+                            second.playSound(second.getLocation(), won, volume, pitch);
+                        }
                         return;
                     } else if(isDraw()) {
                         state = GameState.FINISHED;
                         if(first!=null && second!=null){
                             plugin.getNms().updateInventoryTitle(first, plugin.lang.TITLE_DRAW);
                             plugin.getNms().updateInventoryTitle(second, plugin.lang.TITLE_DRAW);
+                            if(playSounds) {
+                                first.playSound(first.getLocation(), lose, volume, pitch);
+                                second.playSound(second.getLocation(), lose, volume, pitch);
+                            }
                         }
                         cancel();
                         return;
                     } else {
                         state = GameState.FIRST_TURN;
                         updateStatus();
+                        if(playSounds) first.playSound(first.getLocation(), turn, volume, pitch);
                         return;
                     }
                 }
@@ -397,10 +432,30 @@ public class Game extends BukkitRunnable{
             inv.setItem(inventoryClickEvent.getSlot(), firstChip);
             chip = inventoryClickEvent.getSlot();
             state = GameState.FALLING_FIRST;
+            if(playSounds) first.playSound(first.getLocation(), insert, volume, pitch);
         } else if(uuid == secondUUID && state == GameState.SECOND_TURN){
             inv.setItem(inventoryClickEvent.getSlot(), secondChip);
             chip = inventoryClickEvent.getSlot();
             state = GameState.FALLING_SECOND;
+            if(playSounds) second.playSound(second.getLocation(), insert, volume, pitch);
+        }
+    }
+
+    public void onRemove(boolean firstClosed) {
+        if(firstClosed){
+            if(first != null){
+                if(playSounds) first.playSound(first.getLocation(), lose, volume, pitch);
+            }
+            if(second != null){
+                if(playSounds) second.playSound(second.getLocation(), won, volume, pitch);
+            }
+        } else {
+            if(first != null){
+                if(playSounds) first.playSound(first.getLocation(), won, volume, pitch);
+            }
+            if(second != null){
+                if(playSounds) second.playSound(second.getLocation(), lose, volume, pitch);
+            }
         }
     }
 }
