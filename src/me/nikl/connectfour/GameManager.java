@@ -137,11 +137,14 @@ public class GameManager implements IGameManager {
 
     private void removeFromGame(boolean firstClosed, Player winner, Player loser, Game game) {
         // make sure the player is not counted as in game anymore
+        if(game.getState() != GameState.FINISHED) game.onRemove(firstClosed);
+
         if(firstClosed){
             game.setFirst(null);
         } else {
             game.setSecond(null);
         }
+
 
         if(game.getState() != GameState.FINISHED) {
             game.cancel();
@@ -165,7 +168,13 @@ public class GameManager implements IGameManager {
             game.setState(GameState.FINISHED);
 
 
-            onGameEnd(winner, loser, game.getRule().getKey());
+
+            if(game.getRule().getTokens() > 0){
+                plugin.gameBox.wonTokens(winner.getUniqueId(), game.getRule().getTokens(), Main.gameID);
+            }
+
+            // this would also save stats when someone gives up... not want this
+            //onGameEnd(winner, loser, game.getRule().getKey());
         }
     }
 
