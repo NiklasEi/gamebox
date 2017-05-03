@@ -21,7 +21,7 @@ gameBox:
   gameButtons:
     easy:
       materialData: "22"
-      displayName: "&aTest game"
+      displayName: "&aTraining"
       lore:
       - ""
       - "&1Cost: &45"
@@ -29,7 +29,7 @@ gameBox:
       slot: 20
       cost: 5
       reward: 7
-      inviteGuiTitle: "  Start a game of &3ConnectFour"
+      inviteGuiTitle: "  Start &3ConnectFour &rTraining"
     saveStats:
       materialData: "gold_block"
       displayName: "&c&lCompetition"
@@ -96,3 +96,10 @@ chips:
   apple:
     materialData: "apple"
     displayName: "&3%player%'s apple"
+  emerald:
+    materialData: "388"
+    displayName: "&3%player%'s Gem"
+  crystal:
+    materialData: "406"
+    displayName: "&3%player%'s Crystal"
+
