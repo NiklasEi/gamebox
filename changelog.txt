@@ -1,7 +1,8 @@
+- small code improvements
+
+------------------------------------
+v 1.0.1
 - add chinese lang file
 - improved default lang file
 - improved default config
 - add sounds
-
-
-------------------------------------
