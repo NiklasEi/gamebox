@@ -40,7 +40,8 @@ public class Game extends BukkitRunnable{
     private float volume = 0.5f, pitch= 1f;
 
     private GameState state;
-    private int chip;
+
+    private int fallingChip;
 
 
     public Game(GameRules rule, Main plugin, boolean playSounds, Player[] players, Map<Integer, ItemStack> chips){
@@ -114,18 +115,18 @@ public class Game extends BukkitRunnable{
             case FIRST_TURN:
                 break;
             case FALLING_FIRST:
-                if(chip/9 < 5 && (inv.getItem(chip+9) == null || inv.getItem(chip+9).getType() == Material.AIR)){
-                    plugin.debug("set " + chip + " to null");
-                    inv.setItem(chip, null);
-                    chip +=9;
-                    plugin.debug("set " + chip + " to chip");
-                    inv.setItem(chip, firstChip);
+                if(fallingChip /9 < 5 && (inv.getItem(fallingChip +9) == null || inv.getItem(fallingChip +9).getType() == Material.AIR)){
+                    plugin.debug("set " + fallingChip + " to null");
+                    inv.setItem(fallingChip, null);
+                    fallingChip +=9;
+                    plugin.debug("set " + fallingChip + " to fallingChip");
+                    inv.setItem(fallingChip, firstChip);
                     if(playSounds) {
                         first.playSound(first.getLocation(), falling, volume*0.5f, pitch);
                         second.playSound(second.getLocation(), falling, volume*0.5f, pitch);
                     }
                 } else {
-                    if(checkForMatches(chip)){
+                    if(checkForMatches(fallingChip)){
                         onGameEnd();
                         state = GameState.FINISHED;
                         if(playSounds) {
@@ -153,18 +154,18 @@ public class Game extends BukkitRunnable{
                 }
                 break;
             case FALLING_SECOND:
-                if(chip/9 < 5 && (inv.getItem(chip+9) == null || inv.getItem(chip+9).getType() == Material.AIR)){
-                    plugin.debug("set " + chip + " to null");
-                    inv.setItem(chip, null);
-                    chip +=9;
-                    plugin.debug("set " + chip + " to chip");
-                    inv.setItem(chip, secondChip);
+                if(fallingChip /9 < 5 && (inv.getItem(fallingChip +9) == null || inv.getItem(fallingChip +9).getType() == Material.AIR)){
+                    plugin.debug("set " + fallingChip + " to null");
+                    inv.setItem(fallingChip, null);
+                    fallingChip +=9;
+                    plugin.debug("set " + fallingChip + " to fallingChip");
+                    inv.setItem(fallingChip, secondChip);
                     if(playSounds) {
                         first.playSound(first.getLocation(), falling, volume*0.5f, pitch);
                         second.playSound(second.getLocation(), falling, volume*0.5f, pitch);
                     }
                 } else {
-                    if(checkForMatches(chip)){
+                    if(checkForMatches(fallingChip)){
                         onGameEnd();
                         state = GameState.FINISHED;
                         if(playSounds) {
@@ -352,7 +353,7 @@ public class Game extends BukkitRunnable{
     }
 
     private boolean checkEntry(int newChip) {
-        if(inv.getItem(newChip) != null && inv.getItem(newChip).getType() != Material.AIR && inv.getItem(newChip).isSimilar(inv.getItem(chip))){
+        if(inv.getItem(newChip) != null && inv.getItem(newChip).getType() != Material.AIR && inv.getItem(newChip).isSimilar(inv.getItem(fallingChip))){
             plugin.debug("found " + newChip);
             return true;
         } else {
@@ -379,6 +380,43 @@ public class Game extends BukkitRunnable{
         return false;
     }
 
+    public void onClick(InventoryClickEvent inventoryClickEvent) {
+        plugin.debug("onClick in game called");
+        // clicked slot is empty!
+        UUID uuid = inventoryClickEvent.getWhoClicked().getUniqueId();
+        if(uuid.equals(firstUUID) && state == GameState.FIRST_TURN){
+            inv.setItem(inventoryClickEvent.getSlot(), firstChip);
+            fallingChip = inventoryClickEvent.getSlot();
+            state = GameState.FALLING_FIRST;
+            if(playSounds) first.playSound(first.getLocation(), insert, volume, pitch);
+        } else if(uuid.equals(secondUUID) && state == GameState.SECOND_TURN){
+            inv.setItem(inventoryClickEvent.getSlot(), secondChip);
+            fallingChip = inventoryClickEvent.getSlot();
+            state = GameState.FALLING_SECOND;
+            if(playSounds) second.playSound(second.getLocation(), insert, volume, pitch);
+        }
+    }
+
+    public void onRemove(boolean firstClosed) {
+        if(firstClosed){
+            if(first != null){
+                if(playSounds) first.playSound(first.getLocation(), lose, volume, pitch);
+            }
+            if(second != null){
+                if(playSounds) second.playSound(second.getLocation(), won, volume, pitch);
+            }
+        } else {
+            if(first != null){
+                if(playSounds) first.playSound(first.getLocation(), won, volume, pitch);
+            }
+            if(second != null){
+                if(playSounds) second.playSound(second.getLocation(), lose, volume, pitch);
+            }
+        }
+    }
+
+
+    // Getters and setters
 
     public UUID getFirstUUID() {
         return firstUUID;
@@ -422,40 +460,5 @@ public class Game extends BukkitRunnable{
 
     public GameRules getRule() {
         return rule;
-    }
-
-    public void onClick(InventoryClickEvent inventoryClickEvent) {
-        plugin.debug("onClick in game called");
-        // clicked slot is empty!
-        UUID uuid = inventoryClickEvent.getWhoClicked().getUniqueId();
-        if(uuid == firstUUID && state == GameState.FIRST_TURN){
-            inv.setItem(inventoryClickEvent.getSlot(), firstChip);
-            chip = inventoryClickEvent.getSlot();
-            state = GameState.FALLING_FIRST;
-            if(playSounds) first.playSound(first.getLocation(), insert, volume, pitch);
-        } else if(uuid == secondUUID && state == GameState.SECOND_TURN){
-            inv.setItem(inventoryClickEvent.getSlot(), secondChip);
-            chip = inventoryClickEvent.getSlot();
-            state = GameState.FALLING_SECOND;
-            if(playSounds) second.playSound(second.getLocation(), insert, volume, pitch);
-        }
-    }
-
-    public void onRemove(boolean firstClosed) {
-        if(firstClosed){
-            if(first != null){
-                if(playSounds) first.playSound(first.getLocation(), lose, volume, pitch);
-            }
-            if(second != null){
-                if(playSounds) second.playSound(second.getLocation(), won, volume, pitch);
-            }
-        } else {
-            if(first != null){
-                if(playSounds) first.playSound(first.getLocation(), won, volume, pitch);
-            }
-            if(second != null){
-                if(playSounds) second.playSound(second.getLocation(), lose, volume, pitch);
-            }
-        }
     }
 }
