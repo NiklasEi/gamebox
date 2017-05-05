@@ -209,6 +209,15 @@ public class GUIManager implements Listener {
 		return false;
 	}
 
+	/**
+	 * Register a game GUI with a separate button and no shortcut commands
+	 *
+	 * You should only use this for multi player invitation GUIs
+	 * Use the register method with button and shortcut commands for main GUIs
+	 * @param gameID gameID of the GUI
+	 * @param arg GUI argument
+	 * @param gui GUI
+	 */
 	public void registerGameGUI(String gameID, String arg, GameGui gui){
 		gameGuis.computeIfAbsent(gameID, k -> new HashMap<>());
 
@@ -217,17 +226,20 @@ public class GUIManager implements Listener {
 	}
 
 	public void registerGameGUI(String gameID, String arg, GameGui gui, ItemStack button){
-		registerGameGUI( gameID,  arg,  gui);
+		registerGameGUI(gameID, arg, gui, button, null);
+	}
+
+	public void registerGameGUI(String gameID, String arg, GameGui gui, ItemStack button, String... subCommand){
+		gameGuis.computeIfAbsent(gameID, k -> new HashMap<>());
+
+		gameGuis.get(gameID).put(arg, gui);
+		GameBox.debug("registered gamegui: " + gameID + ", " + arg);
 		AButton gameButton = new AButton(button.getData(), 1);
 		gameButton.setItemMeta(button.getItemMeta());
 		gameButton.setAction(ClickAction.OPEN_GAME_GUI);
 		gameButton.setArgs(gameID);
 		mainGui.setButton(gameButton);
-	}
-
-	public void registerGameGUI(String gameID, String arg, GameGui gui, ItemStack button, String... subCommand){
-		registerGameGUI(gameID, arg, gui, button);
-		if(subCommand != null)plugin.getMainCommand().registerSubCommands(gameID, subCommand);
+		plugin.getMainCommand().registerSubCommands(gameID, subCommand);
 	}
 
 	public void registerTopList(String gameID, String buttonID, TopListPage topListPage){
