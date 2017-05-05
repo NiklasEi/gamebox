@@ -2,6 +2,8 @@ package me.nikl.gamebox.players;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.data.Statistics;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
@@ -68,5 +70,9 @@ public class GBPlayer {
         //go through all values and save them
         statistics.set(uuid.toString(), Statistics.PLAYER_PLAY_SOUNDS, playSounds);
         statistics.set(uuid.toString(), Statistics.TOKEN_PATH, tokens);
+        Player player = Bukkit.getPlayer(uuid);
+        if(Bukkit.getPlayer(uuid) != null){
+            statistics.set(uuid.toString(), "name", player.getName());
+        }
     }
 }
