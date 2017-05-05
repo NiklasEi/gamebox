@@ -1,7 +1,7 @@
 name: GameBox
 author: Nikl
 main: me.nikl.gamebox.GameBox
-version: 1.1.1
+version: 1.1.2
 website: nikl.me
 softdepend: [Vault]
 
@@ -10,6 +10,10 @@ commands:
     description: show the main gui
     usage: /gamebox
     aliases: [games, gb]
+  gameboxadmin:
+    description: admin commands
+    usage: /gameboxadmin
+    aliases: [gbadmin, gba]
 
 permissions:
   gamebox.*:
