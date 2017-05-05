@@ -32,9 +32,10 @@ commandMessages:
     # %shorts will be replaced by all available shortcut commands%
     # %playerNum% will give the number of players needed per game
     perGame:
-    - ' &l&c%name%:'
+    - ' &3&l%name%:'
     - '   &2/gb <%shorts%>'
     - '   Spieler: %playerNum%'
+    footer:
     - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
 
 
@@ -48,6 +49,8 @@ mainButtons:
   - '&1Hier befinden sich alle Spiele'
   - '&1Klicke auf einen Button um'
   - '  &1in das Spielmenü zu gelangen.'
+  # %tokens% will be replaced with the players number of tokens
+  tokensButton: "&1Token: &2%tokens%"
   soundToggle:
     onDisplayName: "&1Sounds an"
     onLore:

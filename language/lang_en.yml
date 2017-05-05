@@ -32,9 +32,10 @@ commandMessages:
     # %shorts will be replaced by all available shortcut commands%
     # %playerNum% will give the number of players needed per game
     perGame:
-    - ' &l&c%name%:'
+    - ' &3&l%name%:'
     - '   &2/gb <%shorts%>'
     - '   Players per game: %playerNum%'
+    footer:
     - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
 
 
