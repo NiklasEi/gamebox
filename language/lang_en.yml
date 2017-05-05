@@ -21,6 +21,21 @@ commandMessages:
   - '   to get information about all installed games'
   - '   do &2/gb info&r'
   inDisabledWorld: ' &4Not possible in this world'
+  # customize info output here
+  #   the first output will always be version and author
+  info:
+    header:
+    - '&6&lList of all installed games:'
+    - ''
+    - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
+    # use %name% for the game name
+    # %shorts will be replaced by all available shortcut commands%
+    # %playerNum% will give the number of players needed per game
+    perGame:
+    - '&l&c%name%:'
+    - '   &2/gb <%shorts%>'
+    - '   Players per game: %playerNum%'
+    - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
 
 
 mainButtons:

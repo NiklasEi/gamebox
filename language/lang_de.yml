@@ -18,7 +18,24 @@ commandMessages:
   help:
   - ' Benutze &2/gb&r um das GUI zu öffnen'
   - ' Die einzelnen Spiele lassen sich über das GUI öffnen'
+  - ' Oder öffne die Spiel GUIs mit: &2/gb <game>&r'
+  - '   &2/gb info&r für Informationen über die Spiele'
   inDisabledWorld: ' &4Nicht in dieser Welt'
+  # customize info output here
+  #   the first output will always be version and author
+  info:
+    header:
+    - '&6&lListe aller installierten Spiele:'
+    - ''
+    - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
+    # use %name% for the game name
+    # %shorts will be replaced by all available shortcut commands%
+    # %playerNum% will give the number of players needed per game
+    perGame:
+    - '&l&c%name%:'
+    - '   &2/gb <%shorts%>'
+    - '   Spieler: %playerNum%'
+    - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
 
 
 mainButtons:
