@@ -1,4 +1,5 @@
 - improved lang_de.yml
+- updated mandarin lang file
 
 --------------------------------------------------
 v 1.2.0:
