@@ -4,6 +4,7 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.Language;
 import me.nikl.gamebox.Permissions;
 import me.nikl.gamebox.PluginManager;
+import me.nikl.gamebox.game.GameContainer;
 import me.nikl.gamebox.guis.GUIManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -69,6 +70,7 @@ public class MainCommand implements CommandExecutor{
 		} else if(args.length == 1){
 			// check weather the given argument is a listed sub command
 			for(String id : subCommands.keySet()){
+				if(subCommands.get(id) == null) continue;
 				if(subCommands.get(id).contains(args[0].toLowerCase())){
 					if (!(sender instanceof Player)) {
 						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', lang.PREFIX + lang.CMD_ONLY_PLAYER));
@@ -99,6 +101,43 @@ public class MainCommand implements CommandExecutor{
 					return true;
 				}
 				sender.sendMessage(lang.PREFIX + " version " + plugin.getDescription().getVersion() + " by " + ChatColor.GOLD + "Nikl");
+				sender.sendMessage(lang.PREFIX);
+
+				// send info header
+				for(String message : lang.CMD_INFO_HEADER){
+					sender.sendMessage(lang.PREFIX + message);
+				}
+
+				String allSubCommands;
+				GameContainer gameContainer;
+				for(String gameID : subCommands.keySet()) {
+
+					gameContainer = plugin.getPluginManager().getGame(gameID);
+					if (gameContainer == null) continue;
+
+					// get subcommands
+					if(subCommands.get(gameID) != null && !subCommands.get(gameID).isEmpty()){
+						allSubCommands = "";
+						for(String sub : subCommands.get(gameID)){
+							if(allSubCommands.length() != 0) allSubCommands += ":";
+							allSubCommands += sub;
+						}
+					} else {
+						allSubCommands = " ";
+					}
+
+					// send per game info
+					for (String message : lang.CMD_INFO_PER_GAME) {
+						sender.sendMessage(lang.PREFIX + message
+								.replace("%name%", ChatColor.stripColor(gameContainer.getName()))
+								.replace("%shorts%", allSubCommands)
+								.replace("%playerNum%", String.valueOf(gameContainer.getPlayerNum())));
+					}
+				}
+				// send info footer
+				for(String message : lang.CMD_INFO_FOOTER){
+					sender.sendMessage(lang.PREFIX + message);
+				}
 				return true;
 			}
 			// not a listed sub command
@@ -112,7 +151,10 @@ public class MainCommand implements CommandExecutor{
 	}
 
 	public void registerSubCommands(String gameID, String... subCommands){
-		if(subCommands == null || subCommands.length < 1) return;
+		if(subCommands == null || subCommands.length < 1){
+			this.subCommands.put(gameID, null);
+			return;
+		}
 		for(int i = 0; i < subCommands.length;i++){
 			subCommands[i] = subCommands[i].toLowerCase();
 		}
