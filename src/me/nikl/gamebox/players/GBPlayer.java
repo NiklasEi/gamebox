@@ -24,6 +24,12 @@ public class GBPlayer {
         this.plugin = plugin;
         this.statistics = plugin.getStatistics();
 
+        // save current name of player for easier management
+        Player player = Bukkit.getPlayer(uuid);
+        if(Bukkit.getPlayer(uuid) != null){
+            statistics.set(uuid.toString(), "name", player.getName());
+        }
+
         loadData();
     }
 
@@ -70,9 +76,5 @@ public class GBPlayer {
         //go through all values and save them
         statistics.set(uuid.toString(), Statistics.PLAYER_PLAY_SOUNDS, playSounds);
         statistics.set(uuid.toString(), Statistics.TOKEN_PATH, tokens);
-        Player player = Bukkit.getPlayer(uuid);
-        if(Bukkit.getPlayer(uuid) != null){
-            statistics.set(uuid.toString(), "name", player.getName());
-        }
     }
 }
