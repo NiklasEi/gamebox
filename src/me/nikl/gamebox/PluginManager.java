@@ -16,13 +16,13 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.*;
-import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -40,7 +40,7 @@ import java.util.logging.Level;
  * Clicks are managed here
  * Check what GUI is open for the player and then pass the click event on
  */
-public class PluginManager implements Listener{
+public class PluginManager implements Listener {
 	
 	// GameBox instance
 	private GameBox plugin;
@@ -103,8 +103,11 @@ public class PluginManager implements Listener{
 		hub = config.getBoolean("hubMode.enabled", false);
 		if(hub) getHub();
 
+
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
+
+
 
     public void loadPlayers() {
 	    for(Player player : Bukkit.getOnlinePlayers()){
@@ -377,12 +380,23 @@ public class PluginManager implements Listener{
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerDeath(PlayerDeathEvent event){
+        // close inv on death. This will trigger a restore of the inventory contents
+        // drops can then be handled by later listeners and option 'keepInventory'
         if(isInGame(event.getEntity().getUniqueId()) || guiManager.isInGUI(event.getEntity().getUniqueId())){
-            event.getDrops().clear();
-            event.getDrops().addAll(Arrays.asList(savedContents.get(event.getEntity().getUniqueId())));
-            savedContents.remove(event.getEntity().getUniqueId());
+            Bukkit.getConsoleSender().sendMessage("Player in game on death! should not happen!");
+            Bukkit.getConsoleSender().sendMessage("  Please tell Nikl about this on Spigot");
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onPlayerDeath(EntityDamageEvent event){
+        if(!(event.getEntity() instanceof  Player)) return;
+        // if player is in gui or in game close the inventory
+        // this should fire before death event and thus will fix problems with drops on death
+        if(isInGame(event.getEntity().getUniqueId()) || guiManager.isInGUI(event.getEntity().getUniqueId())){
+            ((Player)event.getEntity()).closeInventory();
         }
     }
 
