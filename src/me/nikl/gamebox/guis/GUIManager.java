@@ -178,9 +178,10 @@ public class GUIManager implements Listener {
 					String currentTitle = plugin.lang.TITLE_MAIN_GUI.replace("%player%", whoClicked.getName());
 					plugin.getPluginManager().startTitleTimer(whoClicked, currentTitle, titleMessageSeconds);
 					plugin.getNMS().updateInventoryTitle(whoClicked, plugin.lang.TITLE_NO_PERM);
+				} else {
+					plugin.getPluginManager().restoreInventory(whoClicked);
 				}
 				whoClicked.sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
-				plugin.getPluginManager().restoreInventory(whoClicked);
 				return false;
 			}
 		} else {
