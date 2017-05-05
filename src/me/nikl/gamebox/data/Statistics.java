@@ -11,6 +11,8 @@ import java.util.logging.Level;
 
 /**
  * Created by Niklas on 19.02.2017.
+ *
+ *
  */
 public abstract class Statistics {
 
@@ -22,6 +24,8 @@ public abstract class Statistics {
     private GameBox plugin;
 
 
+    // ToDo: this whole class is chaotic
+    //   restructure for next main version update!
     public Statistics(GameBox plugin){
         this.plugin = plugin;
     }
@@ -43,6 +47,9 @@ public abstract class Statistics {
     public abstract void addStatistics(UUID uuid, String gameID, String gameTypeID, double value, SaveType saveType);
 
     public abstract ArrayList<Stat> getTopList(String gameID, String gameTypeID, SaveType saveType, int maxNumber);
+
+    public abstract boolean isSet(String path);
+
 
     public class Stat{
         private double value;

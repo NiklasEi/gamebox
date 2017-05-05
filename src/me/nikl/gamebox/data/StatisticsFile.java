@@ -161,4 +161,9 @@ public class StatisticsFile extends Statistics {
         }
         return toReturn;
     }
+
+    @Override
+    public boolean isSet(String path) {
+        return data.isSet(path);
+    }
 }

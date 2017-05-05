@@ -84,6 +84,12 @@ public class StatisticsMysql extends Statistics {
     public ArrayList<Stat> getTopList(String gameID, String gameTypeID, SaveType saveType, int maxNumber) {
         return null;
     }
+
+    @Override
+    public boolean isSet(String path) {
+        return false;
+    }
+
     public void openConnection() throws SQLException, ClassNotFoundException {
         if (connection != null && !connection.isClosed()) {
             return;
