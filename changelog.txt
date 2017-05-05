@@ -1,4 +1,12 @@
-v.1.1.1:
+- printing warning and additional info in console if no NMS found for version
+
+
+--------------------------------------------------
+v 1.1.2:
+- add spanish lang file
+- close inventory on damage event!
+
+v 1.1.1:
 - improved default lang messages (en)
 - player now drop their old inventory contents on death
 
@@ -11,20 +19,3 @@ v 1.0.0:
 - cleaned english lang file
 - translated new german lang file
 - standard message on receiving invitation (to be improved later on)
-
-
-
-
-
-
-
-
-- inventory gets saved, cleared and after leaving the gui restored
-- Hot bar is used as navigation system
-- automatically hold an empty slot to get rid of the annoying Animation of the hold item
-- hub mode with configurable worlds, itemSlot and item. You can tell the plugin to give the hubItem to players on world join
-- toggle button for sound
-
-ToDo:
-- move stats system to GameBox. Add argument 'stats' to start games with saving stats. Provide gui top lists for the saved stats.
-- support 2 player games. code invitation system
