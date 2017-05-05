@@ -44,7 +44,7 @@ public class Game extends BukkitRunnable{
     private int fallingChip;
 
 
-    public Game(GameRules rule, Main plugin, boolean playSounds, Player[] players, Map<Integer, ItemStack> chips){
+    Game(GameRules rule, Main plugin, boolean playSounds, Player[] players, Map<Integer, ItemStack> chips){
         this.plugin = plugin;
         this.rule = rule;
         this.playSounds = playSounds;
@@ -361,7 +361,7 @@ public class Game extends BukkitRunnable{
         }
     }
 
-    private boolean mark(Set<Integer> toMark) {
+    private boolean mark(final Set<Integer> toMark) {
         plugin.debug("   toMark entries: " + toMark.size());
         if(toMark.size() > 3){
 
@@ -380,7 +380,7 @@ public class Game extends BukkitRunnable{
         return false;
     }
 
-    public void onClick(InventoryClickEvent inventoryClickEvent) {
+    void onClick(InventoryClickEvent inventoryClickEvent) {
         plugin.debug("onClick in game called");
         // clicked slot is empty!
         UUID uuid = inventoryClickEvent.getWhoClicked().getUniqueId();
@@ -397,7 +397,7 @@ public class Game extends BukkitRunnable{
         }
     }
 
-    public void onRemove(boolean firstClosed) {
+    void onRemove(boolean firstClosed) {
         if(firstClosed){
             if(first != null){
                 if(playSounds) first.playSound(first.getLocation(), lose, volume, pitch);
@@ -418,47 +418,39 @@ public class Game extends BukkitRunnable{
 
     // Getters and setters
 
-    public UUID getFirstUUID() {
+    UUID getFirstUUID() {
         return firstUUID;
     }
 
-    public void setFirstUUID(UUID firstUUID) {
-        this.firstUUID = firstUUID;
-    }
-
-    public UUID getSecondUUID() {
+    UUID getSecondUUID() {
         return secondUUID;
     }
 
-    public void setSecondUUID(UUID secondUUID) {
-        this.secondUUID = secondUUID;
-    }
-
-    public Player getFirst() {
+    Player getFirst() {
         return first;
     }
 
-    public void setFirst(Player first) {
+    void setFirst(Player first) {
         this.first = first;
     }
 
-    public Player getSecond() {
+    Player getSecond() {
         return second;
     }
 
-    public void setSecond(Player second) {
+    void setSecond(Player second) {
         this.second = second;
     }
 
-    public GameState getState() {
+    GameState getState() {
         return state;
     }
 
-    public void setState(GameState state) {
+    void setState(GameState state) {
         this.state = state;
     }
 
-    public GameRules getRule() {
+    GameRules getRule() {
         return rule;
     }
 }
