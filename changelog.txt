@@ -1,7 +1,19 @@
-- printing warning and additional info in console if no NMS found for version
 
 
 --------------------------------------------------
+v 1.2.0:
+- printing warning and additional info in console if no NMS found for version
+- added missing message to lang_de
+- added info messages to lang_en and lang_de
+- permission gamebox.info is now a default permission
+- list all installed games and give tha shortcut commands for them on /gb info
+- added /gbadmin oder /gba
+--- permission gamebox.admin needed!
+- saving name for UUIDs in data for easier manual management
+- admin commands
+--- /gba givetoken/taketoken/settoken player count
+--- works with offline and online players as long as the player has played on the server before!
+
 v 1.1.2:
 - add spanish lang file
 - close inventory on damage event!
