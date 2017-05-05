@@ -7,7 +7,7 @@
 prefix: "[&3GameBox&r]"
 name: "&3GameBox&r"
 
-# command messages
+
 commandMessages:
   notInThisWorld: ' &4你不能这么做'
   noPermission: ' &4你没有权限!'
@@ -34,26 +34,26 @@ mainButtons:
   # %tokens% 变量表示筹码
   tokensButton: "&1筹码: &2%tokens%"
   soundToggle:
-    onDisplayName: "&1Sound on"
+    onDisplayName: "&a声音：开启"
     onLore:
     - ""
-    - "&1Click to turn sounds off"
-    onDisplayName: "&4Sound off"
-    onLore:
+    - "&7点击关闭游戏声音"
+    offDisplayName: "&c声音：关闭"
+    offLore:
     - ""
-    - "&1Click to turn sounds on"
+    - "&7点击开启声音"
   inviteButton:
-    displayName: "&eInvite someone"
+    displayName: "&e邀请玩家"
     lore:
     - ""
-    - "&1Click to invite someone over chat"
-  # this is the name and lore of an invite. It is the players skull in the invitation GUI.
+    - "&b点击在聊天栏里邀请玩家"
+  # 这行是邀请者出现在GUI里的信息
   invitationSkull:
-    # %player% will be replaced by the players name
-    displayName: "&e%player%"
+    # %player% 是玩家变量
+    displayName: "&e%player% 邀请你玩"
     lore:
     - ""
-    - "&1Click to accept the invitation"
+    - "&a点击接受邀请"
 
 inventoryTitles:
   # 使用 %player% 变量表示玩家
@@ -68,18 +68,18 @@ inventoryTitles:
 
 
 shop:
-  freeItem: "&9Free"
-  moneyItem: "&9Money: &4%money%"
-  tokenItem: "&9Token: &4%token%"
-  notEnoughMoney: '        &4&lNot enough money'
-  notEnoughTokens: '        &4&lNot enough tokens'
-  inventoryIsFull: '        &4&lFull inventory'
-  boughtSuccessful: '        &9&lBought successfully'
-  shopIsClosed: '        &4&lShop is closed'
+  freeItem: "&9免费"
+  moneyItem: "&9花费金钱: &4%money%"
+  tokenItem: "&9花费筹码: &4%token%"
+  notEnoughMoney: '        &4&l金钱不够'
+  notEnoughTokens: '        &4&l筹码不够'
+  inventoryIsFull: '        &4&l背包已满'
+  boughtSuccessful: '        &9&l成功购买'
+  shopIsClosed: '        &4&l商店系统未启用'
   # 使用 %player% 变量表示玩家
-  mainShop: '   &cHappy shopping, &1%player%'
+  mainShop: '   &c商店, &1%player%'
   # use %page% for the page number
-  pageShop: '             &9Page Nr. &l%page%'
+  pageShop: '             &9页码 &l%page%'
 
 others:
   wonToken: " 你获得了 %tokens% 筹码！ 来自游戏 &3%game%"
@@ -96,5 +96,5 @@ others:
     notOnline: " &c玩家 &5%player%&c 不在线！"
     notInviteYourself: " &c你居然邀请自己？是太寂寞了吗..."
   invitation:
-  - " &3%player%&r invited you to a round of &3%game%"
-  - " Go to the invitation GUI of &3%game%&r to accept the invite"
+  - " &3%player%&r 邀请你来玩游戏 &3%game%"
+  - " &a请输入/gb并选择相应游戏 &3%game%&a 的相应模式接受邀请"
