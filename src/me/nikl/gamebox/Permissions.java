@@ -12,8 +12,10 @@ import java.util.logging.Level;
  * just change the permission nodes here
  */
 public enum Permissions {
-	SEE_GAME("see", true), PLAY_SPECIFIC_GAME("play", true), PLAY_ALL_GAMES("play.*"), OPEN_GAME_GUI("gamegui", true), OPEN_ALL_GAME_GUI("gamegui.*"), OPEN_MAIN_GUI("use"), ADMIN("admin"), CMD_INFO("info"), CMD_HELP("help"),
-	BYPASS_ALL("bypass"), BYPASS_GAME("bypass", true), OPEN_SHOP("shop");
+	SEE_GAME("see", true), PLAY_SPECIFIC_GAME("play", true), PLAY_ALL_GAMES("play.*")
+	, OPEN_GAME_GUI("gamegui", true), OPEN_ALL_GAME_GUI("gamegui.*")
+	, OPEN_MAIN_GUI("use"), ADMIN("admin"), CMD_INFO("info"), CMD_HELP("help")
+	, BYPASS_ALL("bypass"), BYPASS_GAME("bypass", true), OPEN_SHOP("shop");
 	
 	
 	private static ArrayList<String> gameIDs  = new ArrayList<>();
