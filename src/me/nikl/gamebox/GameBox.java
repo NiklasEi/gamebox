@@ -75,7 +75,11 @@ public class GameBox extends JavaPlugin{
 	public void onEnable(){
 		// get the version and set up nms
 		if (!setUpNMS()) {
-			getLogger().severe(" Your server version is not compatible with this plugin!");
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " Your server version is not compatible with this plugin!");
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "   Get the newest version on Spigot:");
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "   https://www.spigotmc.org/resources/37273/");
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
 
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
