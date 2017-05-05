@@ -30,7 +30,7 @@ public class Language {
 
 	// commands
 	public String CMD_NO_PERM, CMD_ONLY_PLAYER, CMD_RELOADED, CMD_DISABLED_WORLD;
-	public List<String> CMD_HELP, CMD_WRONG_USAGE;
+	public List<String> CMD_HELP, CMD_WRONG_USAGE, CMD_INFO_HEADER, CMD_INFO_PER_GAME, CMD_INFO_FOOTER;
 
 	// Buttons
 	public String BUTTON_EXIT, BUTTON_TO_MAIN_MENU, BUTTON_TO_GAME_MENU, BUTTON_TOKENS
@@ -136,6 +136,10 @@ public class Language {
 		
 		this.CMD_HELP = getStringList("commandMessages.help");
 		this.CMD_WRONG_USAGE = getStringList("commandMessages.wrongUsage");
+
+		this.CMD_INFO_HEADER = getStringList("commandMessages.info.header");
+		this.CMD_INFO_PER_GAME = getStringList("commandMessages.info.perGame");
+		this.CMD_INFO_FOOTER = getStringList("commandMessages.info.footer");
 	}
 
 	private void getShop(){
