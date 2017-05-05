@@ -1,4 +1,4 @@
-- small code improvements
+- small code improvements in game
 
 ------------------------------------
 v 1.0.1
