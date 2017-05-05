@@ -91,7 +91,7 @@ public class AdminCommand implements CommandExecutor {
                             return false;
 
                     }
-                    sender.sendMessage(lang.PREFIX + ChatColor.GREEN + " " + player.getName() + " has now " + gbPlayer.getTokens() + " token");
+                    sender.sendMessage(lang.PREFIX + lang.CMD_TOKEN.replace("%player%", player.getName()).replace("%token%", String.valueOf(gbPlayer.getTokens())));
                     return true;
                 }
 
@@ -114,7 +114,7 @@ public class AdminCommand implements CommandExecutor {
                             return false;
 
                     }
-                    sender.sendMessage(lang.PREFIX + ChatColor.GREEN + " " + player.getName() + " has now " + count + " token");
+                    sender.sendMessage(lang.PREFIX + lang.CMD_TOKEN.replace("%player%", player.getName()).replace("%token%", String.valueOf(count)));
                     return true;
                 } else {
                     int oldCount = plugin.getStatistics().getInt(player.getUniqueId(), Statistics.TOKEN_PATH, 0);
@@ -139,7 +139,7 @@ public class AdminCommand implements CommandExecutor {
                             return false;
 
                     }
-                    sender.sendMessage(lang.PREFIX + ChatColor.GREEN + " " + player.getName() + " has now " + plugin.getStatistics().getInt(player.getUniqueId(), Statistics.TOKEN_PATH, 0) + " token");
+                    sender.sendMessage(lang.PREFIX + lang.CMD_TOKEN.replace("%player%", player.getName()).replace("%token%", String.valueOf(plugin.getStatistics().getInt(player.getUniqueId(), Statistics.TOKEN_PATH, 0))));
                     return true;
                 }
             } // end of give/take/set token cmd
@@ -161,16 +161,16 @@ public class AdminCommand implements CommandExecutor {
                     if(gbPlayer == null){
                         break cachedPlayer;
                     }
-                    sender.sendMessage(lang.PREFIX + ChatColor.GREEN + " " + player.getName() + " has " + gbPlayer.getTokens() + " token");
+                    sender.sendMessage(lang.PREFIX + lang.CMD_TOKEN.replace("%player%", player.getName()).replace("%token%", String.valueOf(gbPlayer.getTokens())));
                     return true;
                 }
 
-                sender.sendMessage(lang.PREFIX + ChatColor.GREEN + " " + player.getName() + " has "
-                        + plugin.getStatistics().getInt(player.getUniqueId(), Statistics.TOKEN_PATH, 0) + " token");
+                sender.sendMessage(lang.PREFIX + lang.CMD_TOKEN.replace("%player%", player.getName()).replace("%token%"
+                        , String.valueOf(plugin.getStatistics().getInt(player.getUniqueId(), Statistics.TOKEN_PATH, 0))));
                 return true;
             }
         }
-        sender.sendMessage(lang.PREFIX + " no such command found");
+        sender.sendMessage(lang.PREFIX + ChatColor.RED + " no such command found");
         return true;
     }
 }
