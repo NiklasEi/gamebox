@@ -37,6 +37,7 @@ commandMessages:
     - '   Players per game: %playerNum%'
     footer:
     - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
+  tokenInfo: ' &2%player% has %token% token'
 
 
 mainButtons:

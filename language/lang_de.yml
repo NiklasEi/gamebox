@@ -37,6 +37,7 @@ commandMessages:
     - '   Spieler: %playerNum%'
     footer:
     - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
+  tokenInfo: ' &2%player% has %token% token'
 
 
 mainButtons:
@@ -100,7 +101,7 @@ shop:
   pageShop: '             &9Seite Nr. &l%page%'
 
 others:
-  wonToken: "Du hast %tokens% Token in &3%game% gewonnen"
+  wonToken: " Du hast %tokens% Token in &3%game%&r gewonnen"
   playerInput:
     openingMessage: " &l&2Gebe den Namen eines Spielers ein, um ihn einzuladen."
     helpMessage:
