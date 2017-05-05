@@ -1,5 +1,6 @@
 package me.nikl.gamebox;
 
+import me.nikl.gamebox.commands.AdminCommand;
 import me.nikl.gamebox.commands.MainCommand;
 import me.nikl.gamebox.data.Statistics;
 import me.nikl.gamebox.data.StatisticsFile;
@@ -158,6 +159,7 @@ public class GameBox extends JavaPlugin{
 		// set cmd executor
 		mainCommand = new MainCommand(this);
 		this.getCommand("gamebox").setExecutor(mainCommand);
+		this.getCommand("gameboxadmin").setExecutor(new AdminCommand(this));
 		
 		return true;
 	}
