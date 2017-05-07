@@ -12,9 +12,9 @@ import java.util.logging.Level;
  * just change the permission nodes here
  */
 public enum Permissions {
-	SEE_GAME("see", true), PLAY_SPECIFIC_GAME("play", true), PLAY_ALL_GAMES("play.*")
+	PLAY_SPECIFIC_GAME("play", true), PLAY_ALL_GAMES("play.*")
 	, OPEN_GAME_GUI("gamegui", true), OPEN_ALL_GAME_GUI("gamegui.*")
-	, OPEN_MAIN_GUI("use"), ADMIN("admin"), CMD_INFO("info"), CMD_HELP("help")
+	, USE("use"), ADMIN("admin"), CMD_INFO("info"), CMD_HELP("help")
 	, BYPASS_ALL("bypass"), BYPASS_GAME("bypass", true), OPEN_SHOP("shop");
 	
 	
@@ -31,7 +31,13 @@ public enum Permissions {
 	Permissions(String perm){
 		this(perm, false);
 	}
-	
+
+	/**
+	 * Get the permission corresponding to the enum for the
+	 * specified game.
+	 * @param gameID ID of the game
+	 * @return Permission
+	 */
 	public String getPermission(String gameID){
 		if(!gameIDs.contains(gameID)) Bukkit.getLogger().log(Level.WARNING, "Permissions could not find the game: " + gameID);
 		if(!perGame) Bukkit.getLogger().log(Level.WARNING, "accessing a per game permission without a gameID");
