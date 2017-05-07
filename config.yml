@@ -77,3 +77,9 @@ hubMode:
      lore:
      - ""
      - "&1Click with this item to open the menu"
+
+
+settings:
+  # this enables players to accept game invitations without having the play permission.
+  #   The permission is still needed to send the invitation though.
+  exceptInvitesWithoutPlayPermission: false
