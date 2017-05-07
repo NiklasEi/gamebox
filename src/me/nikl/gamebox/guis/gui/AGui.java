@@ -43,7 +43,8 @@ public abstract class AGui {
 
 
 	/**
-	 * Constructor for a gui
+	 * Constructor for a AGui
+	 *
 	 * @param plugin plugin instance
 	 * @param guiManager GUIManager instance
 	 * @param slots number of slots in the inventory
@@ -115,8 +116,13 @@ public abstract class AGui {
 					Player[] player = args.length == 3?new Player[2]:new Player[1];
 					player[0] = (Player) event.getWhoClicked();
 
+					checkPerms:
 					if(!event.getWhoClicked().hasPermission(Permissions.PLAY_ALL_GAMES.getPermission()) && !event.getWhoClicked().hasPermission(Permissions.PLAY_SPECIFIC_GAME.getPermission(gameID))){
-						//event.getWhoClicked().sendMessage(plugin.lang.CMD_NO_PERM);
+
+						// special case for multiplayer games and option 'ExceptInvitesWithoutPlayPermission'
+						if(player.length > 1 && GameBoxSettings.exceptInvitesWithoutPlayPermission){
+							break checkPerms;
+						}
 
 						guiManager.sentInventoryTitleMessage(player[0], plugin.lang.TITLE_NO_PERM, gameID);
 
@@ -151,8 +157,12 @@ public abstract class AGui {
 					int returnedCode = manager.startGame(player, (GameBox.playSounds && pluginManager.getPlayer(player[0].getUniqueId()).isPlaySounds()), args[1]);
 					if(returnedCode == GameBox.GAME_STARTED){
 						GameBox.debug("started game "+ args[0]+" for player " + player[0].getName() + (player.length==2?" and " + player[1].getName():"") + " with the arguments: " + Arrays.asList(args));
+						AGui gui;
 						for(Player playerObj : player) {
-							this.inGui.remove(playerObj.getUniqueId());
+							gui = guiManager.getCurrentGui(playerObj.getUniqueId());
+							if(gui != null){
+								gui.removePlayer(playerObj.getUniqueId());
+							}
 							for (int slot : pluginManager.getHotBarButtons().keySet()) {
 								playerObj.getInventory().setItem(slot, pluginManager.getHotBarButtons().get(slot));
 							}
@@ -205,7 +215,6 @@ public abstract class AGui {
 					GameBox.debug("did not start a game");
 					return false;
 
-					// try to start the game without special args
 
 				}
 				GameBox.debug("Game with id: " + args[0] + " was not found");
@@ -240,6 +249,15 @@ public abstract class AGui {
 				return true;
 
 			case START_PLAYER_INPUT:
+				if(this instanceof StartMultiplayerGamePage){
+					// if this gets called from a StartMultiplayerGamePage it is the beginning of an invite!
+					// check for perm in this case and stop invite if necessary
+					if(!event.getWhoClicked().hasPermission(Permissions.PLAY_ALL_GAMES.getPermission())
+							&& !event.getWhoClicked().hasPermission(Permissions.PLAY_SPECIFIC_GAME.getPermission(args[0]))){
+						guiManager.sentInventoryTitleMessage((Player)event.getWhoClicked(), plugin.lang.TITLE_NO_PERM, args[0]);
+						return false;
+					}
+				}
 				long timeStamp = System.currentTimeMillis();
 				boolean worked = pluginManager.getHandleInviteInput().addWaiting(event.getWhoClicked().getUniqueId(), timeStamp + GameBox.timeForPlayerInput*1000, args);
 				if(worked){
@@ -449,7 +467,14 @@ public abstract class AGui {
 		return grid[slot];
 	}
 
+	/**
+	 * Remove the player from the gui
+	 * Also remove existent personal inventories
+	 *
+	 * @param uuid player-uuid
+	 */
 	public void removePlayer(UUID uuid){
+		inGui.remove(uuid);
 		openInventories.remove(uuid);
 	}
 }
