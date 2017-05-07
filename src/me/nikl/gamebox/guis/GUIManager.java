@@ -158,7 +158,7 @@ public class GUIManager implements Listener {
 		}
 		if(args.length == 2) {
 			String gameID = args[0], key = args[1];
-			if (whoClicked.hasPermission(Permissions.ADMIN.getPermission()) || whoClicked.hasPermission(Permissions.OPEN_ALL_GAME_GUI.getPermission())|| whoClicked.hasPermission(Permissions.OPEN_GAME_GUI.getPermission(gameID))) {
+			if (whoClicked.hasPermission(Permissions.OPEN_ALL_GAME_GUI.getPermission())|| whoClicked.hasPermission(Permissions.OPEN_GAME_GUI.getPermission(gameID))) {
 				GameBox.openingNewGUI = true;
 				boolean opened = gameGuis.get(gameID).get(key).open(whoClicked);
 				GameBox.openingNewGUI = false;
@@ -173,11 +173,9 @@ public class GUIManager implements Listener {
 				}
 				return opened;
 			} else {
-				if(mainGui.isInGui(whoClicked.getUniqueId())){
-
-					String currentTitle = plugin.lang.TITLE_MAIN_GUI.replace("%player%", whoClicked.getName());
-					plugin.getPluginManager().startTitleTimer(whoClicked, currentTitle, titleMessageSeconds);
-					plugin.getNMS().updateInventoryTitle(whoClicked, plugin.lang.TITLE_NO_PERM);
+				if(isInGUI(whoClicked.getUniqueId())){
+					// only possible if in main gui @version 1.2.0
+					sentInventoryTitleMessage(whoClicked, plugin.lang.TITLE_NO_PERM, null);
 				} else {
 					plugin.getPluginManager().restoreInventory(whoClicked);
 				}
@@ -186,26 +184,28 @@ public class GUIManager implements Listener {
 			}
 		} else {
 			Bukkit.getConsoleSender().sendMessage("unknown number of arguments in GUIManager.openGameGui");
-			plugin.getPluginManager().restoreInventory(whoClicked);
+			if(!isInGUI(whoClicked.getUniqueId()) && !plugin.getPluginManager().isInGame(whoClicked.getUniqueId())) plugin.getPluginManager().restoreInventory(whoClicked);
 			return false;
 		}
 	}
 	
 	public boolean openMainGui(Player whoClicked, String... args) {
-		if(!plugin.getPluginManager().hasSavedContents(whoClicked.getUniqueId())){
-			plugin.getPluginManager().saveInventory(whoClicked);
-		}
-		if(args == null || args.length==0){
-			if(whoClicked.hasPermission(Permissions.OPEN_MAIN_GUI.getPermission())){
-				GameBox.openingNewGUI = true;
-				mainGui.open(whoClicked);
-				GameBox.openingNewGUI = false;
-				return true;
-			}
-			plugin.getPluginManager().restoreInventory(whoClicked);
+		if(!whoClicked.hasPermission(Permissions.USE.getPermission())) {
 			whoClicked.sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
 			return false;
 		}
+
+		if(!plugin.getPluginManager().hasSavedContents(whoClicked.getUniqueId())){
+			plugin.getPluginManager().saveInventory(whoClicked);
+		}
+
+		if(args == null || args.length==0){
+			GameBox.openingNewGUI = true;
+			mainGui.open(whoClicked);
+			GameBox.openingNewGUI = false;
+			return true;
+		}
+
 		Bukkit.getLogger().log(Level.WARNING, "in openMainGui not supported arg found: " + args.toString());
 		return false;
 	}
@@ -259,11 +259,9 @@ public class GUIManager implements Listener {
 			return mainGui;
 		}
 		for(String gameID : gameGuis.keySet()){
-			if(isInGameGUI(uuid,gameID)){
-				for(GameGui gui : gameGuis.get(gameID).values()){
-					if(gui.isInGui(uuid)){
-						return gui;
-					}
+			for(GameGui gui : gameGuis.get(gameID).values()){
+				if(gui.isInGui(uuid)){
+					return gui;
 				}
 			}
 		}
