@@ -42,7 +42,7 @@ public class MainCommand implements CommandExecutor{
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if(!sender.hasPermission(Permissions.OPEN_MAIN_GUI.getPermission())){
+		if(!sender.hasPermission(Permissions.USE.getPermission())){
 			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', lang.PREFIX + lang.CMD_NO_PERM));
 			return true;
 		}
@@ -61,10 +61,6 @@ public class MainCommand implements CommandExecutor{
 			}
 			Player player = (Player) sender;
 
-			if(!player.hasPermission(Permissions.OPEN_MAIN_GUI.getPermission())){
-				player.sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
-				return true;
-			}
 			guiManager.openMainGui(player);
 			return true;
 		} else if(args.length == 1){

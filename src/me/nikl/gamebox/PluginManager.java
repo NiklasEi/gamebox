@@ -248,7 +248,7 @@ public class PluginManager implements Listener {
 
 
 		GameBox.debug("checking gameManagers     clicked inv has " + event.getInventory().getSize() + " slots");
-		boolean topInv = event.getRawSlot() == event.getSlot();
+
 		for(String gameID: games.keySet()){
             IGameManager gameManager = games.get(gameID).getGameManager();
 			if(gameManager.isInGame(uuid)){
@@ -412,7 +412,7 @@ public class PluginManager implements Listener {
         if(event.getItem().getItemMeta().getDisplayName().equals(hubItem.getItemMeta().getDisplayName())){
             event.setCancelled(true);
             if(hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName())) {
-                if(event.getPlayer().hasPermission(Permissions.OPEN_MAIN_GUI.getPermission())) {
+                if(event.getPlayer().hasPermission(Permissions.USE.getPermission())) {
                     guiManager.openMainGui(event.getPlayer());
                 } else {
                     event.getPlayer().sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
