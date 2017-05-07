@@ -23,12 +23,12 @@ import java.util.logging.Level;
 /**
  * Created by niklas on 10/27/16.
  *
- * GameBox class of the plugin GameBox
+ * Main class of the plugin GameBox
  */
 public class GameBox extends JavaPlugin{
-	
+
 	// enable debug mode (print debug messages)
-	public static final boolean debug = false;
+	public static final boolean debug = true;
 
 	// toggle to stop inventory contents to be restored when a new gui is opened and automatically closes the old one
 	public static boolean openingNewGUI = false;
@@ -93,6 +93,7 @@ public class GameBox extends JavaPlugin{
 			return;
 		}
 
+		GameBoxSettings.loadSettings(this);
 
 		useMysql = config.getBoolean("mysql.enabled", false);
 		if(useMysql) {
@@ -230,7 +231,7 @@ public class GameBox extends JavaPlugin{
 	@Override
 	public void onDisable(){
 		if(pManager != null) pManager.shutDown();
-		if(statistics!=null) statistics.save();
+		if(statistics != null) statistics.save();
 	}
 	
 	@Override
