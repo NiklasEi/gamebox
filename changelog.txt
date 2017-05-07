@@ -1,3 +1,9 @@
+
+
+- fixed a bug where GameBox thought that a player was in the main gui after using the 'back to game' button while playing a game
+- permission 'gamebox.use' now prevents any usage of the command /gamebox and its aliases and also prevents usage of the hub item
+- play permission fixed for multiplayer games
+- option to allow accepting of game invitations WITHOUT having the permission to play said game
 - improved lang_de.yml
 - updated mandarin lang file
 
