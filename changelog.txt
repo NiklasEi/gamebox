@@ -1,9 +1,17 @@
 
+
+------------------------------------
+v 1.1.0
+- centralised more code to GameBox
+--- use static main-key from GUIManager (GameBox) for guis
+--- chat color in Main class
+--- Sounds
+--- use ItemStackUtil from GameBox to load ItemStacks
 - removed deprecated methods and variables (now depends on GB version 1.3.0)
 - small code improvements in game
 - replace all non numbers in gb version
 
-------------------------------------
+
 v 1.0.1
 - add chinese lang file
 - improved default lang file
