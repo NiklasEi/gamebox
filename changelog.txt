@@ -1,4 +1,6 @@
+
 - small code improvements in game
+- replace all non numbers in gb version
 
 ------------------------------------
 v 1.0.1
