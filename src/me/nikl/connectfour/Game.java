@@ -1,6 +1,7 @@
 package me.nikl.connectfour;
 
 import me.nikl.gamebox.*;
+import me.nikl.gamebox.Sounds;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
