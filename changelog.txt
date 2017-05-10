@@ -1,4 +1,5 @@
 
+- removed deprecated methods and variables (now depends on GB version 1.3.0)
 - small code improvements in game
 - replace all non numbers in gb version
 
