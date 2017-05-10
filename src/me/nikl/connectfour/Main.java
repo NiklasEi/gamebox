@@ -2,6 +2,7 @@ package me.nikl.connectfour;
 
 import me.nikl.gamebox.ClickAction;
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.data.SaveType;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
@@ -44,7 +45,7 @@ public class Main extends JavaPlugin {
 
     private final String[][] depends = new String[][]{
             new String[]{"Vault", "1.5"},
-            new String[]{"GameBox", "1.0.1"}
+            new String[]{"GameBox", "1.3.0"}
     };
 
     private final String[] subCommands = new String[]{"connect4", "c4"};
@@ -128,8 +129,8 @@ public class Main extends JavaPlugin {
 
 
         // disable economy/sounds if it is disabled for either one of the plugins
-        this.econEnabled = this.econEnabled && gameBox.getEconEnabled();
-        playSounds = playSounds && GameBox.playSounds;
+        this.econEnabled = this.econEnabled && GameBoxSettings.econEnabled;
+        playSounds = playSounds && GameBoxSettings.playSounds;
 
         GUIManager guiManager = gameBox.getPluginManager().getGuiManager();
 
