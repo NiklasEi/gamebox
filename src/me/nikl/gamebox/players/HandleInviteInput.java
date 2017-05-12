@@ -2,6 +2,7 @@ package me.nikl.gamebox.players;
 
 import me.nikl.gamebox.GameBox;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -47,28 +48,26 @@ public class HandleInviteInput extends BukkitRunnable{
 
         String message = event.getMessage();
 
+        event.setCancelled(true);
+
         if(message.contains("%")){
-            event.setCancelled(true);
             event.getPlayer().sendMessage(plugin.lang.PREFIX + plugin.lang.INPUT_CLOSED);
             waitings.remove(event.getPlayer().getUniqueId());
             return;
         }
 
         if(message.split(" ").length > 1){
-            event.setCancelled(true);
             event.getPlayer().sendMessage(plugin.lang.INVITATION_NOT_VALID_PLAYER_NAME.replace("%player%", message));
             return;
         }
 
-        Player player = Bukkit.getPlayer(message);
+        Player player = Bukkit.getPlayer(ChatColor.stripColor(message));
 
         if(player == null){
-            event.setCancelled(true);
             event.getPlayer().sendMessage(plugin.lang.INVITATION_NOT_ONLINE.replace("%player%", message));
             return;
         }
 
-        event.setCancelled(true);
         UUID uuid = event.getPlayer().getUniqueId();
         if(player.getUniqueId().equals(uuid)){
             event.getPlayer().sendMessage(plugin.lang.INVITATION_NOT_YOURSELF);
