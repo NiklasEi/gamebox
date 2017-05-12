@@ -2,7 +2,7 @@ package me.nikl.gamebox.data;
 
 import java.sql.Connection;
 import me.nikl.gamebox.GameBox;
-import org.bukkit.Bukkit;
+import me.nikl.gamebox.GameBoxSettings;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.sql.DriverManager;
@@ -37,7 +37,7 @@ public class StatisticsMysql extends Statistics {
             openConnection();
             Statement statement = connection.createStatement();
         } catch (ClassNotFoundException | SQLException e) {
-            GameBox.useMysql = false;
+            GameBoxSettings.useMysql = false;
             plugin.getLogger().log(Level.SEVERE, " Failed to establish a connection to the MySql database!");
             plugin.getLogger().log(Level.SEVERE, " Falling back to file storage...");
             e.printStackTrace();
