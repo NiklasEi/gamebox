@@ -125,7 +125,7 @@ public class AdminCommand implements CommandExecutor {
 
                         case "taketoken":
                             if(oldCount >= count){
-                                plugin.getStatistics().set(player.getUniqueId().toString(), Statistics.TOKEN_PATH, count - oldCount);
+                                plugin.getStatistics().set(player.getUniqueId().toString(), Statistics.TOKEN_PATH, oldCount - count);
                             } else {
                                 sender.sendMessage(lang.PREFIX + ChatColor.RED + " " + player.getName() + " only has " + oldCount + " token!");
                                 return true;
