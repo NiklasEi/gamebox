@@ -105,6 +105,9 @@ public class MainGui extends AGui{
 		}
 		if(super.open(player)){
 			plugin.getNMS().updateInventoryTitle(player, plugin.lang.TITLE_MAIN_GUI.replace("%player%", player.getName()));
+			if(pluginManager.getGames().isEmpty()){
+				plugin.getNMS().updateInventoryTitle(player, ChatColor.translateAlternateColorCodes('&', "&c&l %player% you should get some games on Spigot ;)".replace("%player%", player.getName())));
+			}
 			return true;
 		}
 		return false;
