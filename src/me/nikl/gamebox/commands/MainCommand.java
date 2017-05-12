@@ -64,7 +64,7 @@ public class MainCommand implements CommandExecutor{
 			guiManager.openMainGui(player);
 			return true;
 		} else if(args.length == 1){
-			// check weather the given argument is a listed sub command
+			// check whether the given argument is a listed sub command
 			for(String id : subCommands.keySet()){
 				if(subCommands.get(id) == null) continue;
 				if(subCommands.get(id).contains(args[0].toLowerCase())){
@@ -72,6 +72,14 @@ public class MainCommand implements CommandExecutor{
 						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', lang.PREFIX + lang.CMD_ONLY_PLAYER));
 						return true;
 					}
+
+					// this will be checked again when opening the gui but checking it here
+					//   removes the necessity to save and later restore the inventory of the player
+					if(!sender.hasPermission(Permissions.OPEN_ALL_GAME_GUI.getPermission()) && !sender.hasPermission(Permissions.OPEN_GAME_GUI.getPermission(id))){
+						sender.sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
+						return true;
+					}
+
 					Player player = (Player) sender;
 					String[] arguments = new String[2];
 					arguments[0] = id; arguments[1] = GUIManager.MAIN_GAME_GUI;
