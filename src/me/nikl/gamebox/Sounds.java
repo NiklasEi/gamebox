@@ -5,6 +5,9 @@ import org.bukkit.Sound;
 
 /**
  * Version independent spigot sounds.
+ *
+ * One Enum for each sound containing
+ * the pre 1.9 and post 1.9 name
  */
 public enum Sounds {
 	AMBIENCE_CAVE("AMBIENCE_CAVE", "AMBIENT_CAVE"),
@@ -204,21 +207,29 @@ public enum Sounds {
 	
 	private String pre19sound;
 	private String post19sound;
-	private Sound resolvedSound = null;
+	private Sound cached = null;
 	
 	Sounds(String pre19sound, String post19sound) {
 		this.pre19sound = pre19sound;
 		this.post19sound = post19sound;
 	}
-	
+
+	/**
+	 * Gets the bukkit sound
+	 *
+	 * caches sound on first use
+	 * @return corresponding org.bukkit.Sound
+	 */
 	public Sound bukkitSound() {
-		if (resolvedSound != null) return resolvedSound;
-		
+		// check for already cached sound
+		if (cached != null) return cached;
+
+		// cache the sound
 		try {
-			return resolvedSound = Sound.valueOf(post19sound);
+			return cached = Sound.valueOf(post19sound);
 		} catch (IllegalArgumentException e) {
-			//Try 1.8 sound
-			return resolvedSound = Sound.valueOf(pre19sound);
+			//1.8 sound
+			return cached = Sound.valueOf(pre19sound);
 		}
 	}
 	
