@@ -154,7 +154,7 @@ public abstract class AGui {
 					}
 
 
-					int returnedCode = manager.startGame(player, (GameBox.playSounds && pluginManager.getPlayer(player[0].getUniqueId()).isPlaySounds()), args[1]);
+					int returnedCode = manager.startGame(player, (GameBoxSettings.playSounds && pluginManager.getPlayer(player[0].getUniqueId()).isPlaySounds()), args[1]);
 					if(returnedCode == GameBox.GAME_STARTED){
 						GameBox.debug("started game "+ args[0]+" for player " + player[0].getName() + (player.length==2?" and " + player[1].getName():"") + " with the arguments: " + Arrays.asList(args));
 						AGui gui;
@@ -259,13 +259,13 @@ public abstract class AGui {
 					}
 				}
 				long timeStamp = System.currentTimeMillis();
-				boolean worked = pluginManager.getHandleInviteInput().addWaiting(event.getWhoClicked().getUniqueId(), timeStamp + GameBox.timeForPlayerInput*1000, args);
+				boolean worked = pluginManager.getHandleInviteInput().addWaiting(event.getWhoClicked().getUniqueId(), timeStamp + GameBoxSettings.timeForPlayerInput*1000, args);
 				if(worked){
 					event.getWhoClicked().closeInventory();
 					((Player)event.getWhoClicked()).updateInventory();
 					event.getWhoClicked().sendMessage(plugin.lang.PREFIX + plugin.lang.INPUT_START_MESSAGE);
 					for(String message : plugin.lang.INPUT_HELP_MESSAGE){
-						event.getWhoClicked().sendMessage(message.replace("%seconds%", String.valueOf(GameBox.timeForPlayerInput)));
+						event.getWhoClicked().sendMessage(message.replace("%seconds%", String.valueOf(GameBoxSettings.timeForPlayerInput)));
 					}
 					return true;
 				}
@@ -385,14 +385,14 @@ public abstract class AGui {
 		}
 
 		if(action(event, button.getAction(), button.getArgs())){
-			if(GameBox.playSounds && pluginManager.getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds() && button.getAction() != ClickAction.NOTHING) {
+			if(GameBoxSettings.playSounds && pluginManager.getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds() && button.getAction() != ClickAction.NOTHING) {
 				((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sounds.CLICK.bukkitSound(), volume, pitch);
 			}
 			if(perInvitation){
 				mpGui.removeInvite( UUID.fromString(button.getArgs()[2]), event.getWhoClicked().getUniqueId());
 			}
 		} else {
-			if(GameBox.playSounds && pluginManager.getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds() && button.getAction() != ClickAction.NOTHING) {
+			if(GameBoxSettings.playSounds && pluginManager.getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds() && button.getAction() != ClickAction.NOTHING) {
 				((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sounds.VILLAGER_NO.bukkitSound(), volume, pitch);
 			}
 		}
@@ -442,7 +442,7 @@ public abstract class AGui {
 	public void onBottomInvClick(InventoryClickEvent event) {
 		if(lowerGrid != null && lowerGrid[event.getSlot()] != null){
 			if(action(event, lowerGrid[event.getSlot()].getAction(), lowerGrid[event.getSlot()].getArgs())){
-				if(GameBox.playSounds && pluginManager.getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
+				if(GameBoxSettings.playSounds && pluginManager.getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
 					((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sounds.CLICK.bukkitSound(), volume, pitch);
 				}
 			} else {

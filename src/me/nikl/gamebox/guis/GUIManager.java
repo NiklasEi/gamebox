@@ -1,9 +1,6 @@
 package me.nikl.gamebox.guis;
 
-import me.nikl.gamebox.ClickAction;
-import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.Language;
-import me.nikl.gamebox.Permissions;
+import me.nikl.gamebox.*;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.gui.AGui;
 import me.nikl.gamebox.guis.gui.MainGui;
@@ -58,7 +55,7 @@ public class GUIManager implements Listener {
 
 		this.mainGui = new MainGui(plugin, this);
 		shopManager = new ShopManager(plugin, this);
-		if(plugin.isTokensEnabled())mainGui.registerShop();
+		if(GameBoxSettings.tokensEnabled)mainGui.registerShop();
 	}
 	
 	
