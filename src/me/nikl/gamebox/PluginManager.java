@@ -41,7 +41,10 @@ import java.util.logging.Level;
  * Check what GUI is open for the player and then pass the click event on
  */
 public class PluginManager implements Listener {
-	
+
+    // count the number of registered games
+    public static int gamesRegistered = 0;
+
 	// GameBox instance
 	private GameBox plugin;
 
@@ -269,20 +272,20 @@ public class PluginManager implements Listener {
                         if(event.getSlot() == toGame){
                             gameManager.removeFromGame(event.getWhoClicked().getUniqueId());
                             guiManager.openGameGui((Player) event.getWhoClicked(), gameID, GUIManager.MAIN_GAME_GUI);
-                            if(GameBox.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
+                            if(GameBoxSettings.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
                                 ((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sounds.CLICK.bukkitSound(), volume, pitch);
                             }
                             return;
                         } else if(event.getSlot() == toMain){
                             gameManager.removeFromGame(event.getWhoClicked().getUniqueId());
                             guiManager.openMainGui((Player) event.getWhoClicked());
-                            if(GameBox.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
+                            if(GameBoxSettings.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
                                 ((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sounds.CLICK.bukkitSound(), volume, pitch);
                             }
                         } else if(event.getSlot() == exit){
                             event.getWhoClicked().closeInventory();
                             ((Player)event.getWhoClicked()).updateInventory();
-                            if(GameBox.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
+                            if(GameBoxSettings.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
                                 ((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sounds.CLICK.bukkitSound(), volume, pitch);
                             }
                             return;
@@ -439,6 +442,7 @@ public class PluginManager implements Listener {
                 player.closeInventory();
                 restoreInventory(player);
             }
+            gamesRegistered = 0;
         }
 
         logging:
@@ -513,6 +517,7 @@ public class PluginManager implements Listener {
         game.setPlayerNum(playerNum);
 		games.put(gameID, game);
 		Permissions.addGameID(gameID);
+        gamesRegistered ++;
 	}
 
 	public IGameManager getGameManager(String gameID){
@@ -648,5 +653,9 @@ public class PluginManager implements Listener {
         gbPlayer.setTokens(gbPlayer.getTokens() + tokens);
         Bukkit.getPlayer(player).sendMessage(lang.PREFIX + lang.WON_TOKEN.replace("%tokens%", String.valueOf(tokens)).replace("%game%", games.get(gameID).getPlainName()));
         return true;
+    }
+
+    public Map<String, GameContainer> getGames(){
+        return this.games;
     }
 }
