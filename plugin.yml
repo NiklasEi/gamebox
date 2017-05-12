@@ -1,7 +1,7 @@
 name: GameBox
 author: Nikl
 main: me.nikl.gamebox.GameBox
-version: 1.2.0
+version: 1.3.0
 website: nikl.me
 softdepend: [Vault]
 
@@ -19,19 +19,18 @@ permissions:
   gamebox.*:
     description: Gives all permissions
     children:
-      gamebox.admin: true
-  gamebox.admin:
-    description: Gives all permissions
-    default: op
-    children:
       gamebox.use: true
       gamebox.play.*: true
       gamebox.gamegui.*: true
       gamebox.info: true
       gamebox.help: true
       gamebox.shop: true
+      gamebox.admin: true
+  gamebox.admin:
+    description: Gives permission to use admin commands
+    default: op
   gamebox.use:
-    description: Allows the player to open the main guis (use /gamebox)
+    description: Allows the player to use /gamebox and the hub item
     default: true
   gamebox.shop:
     description: Allows the player to open the shop from the main menu
