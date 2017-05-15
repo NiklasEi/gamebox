@@ -56,7 +56,7 @@ mainButtons:
     onDisplayName: "&1Sounds an"
     onLore:
     - ""
-    - "&1Klicke zum stumm schlaten"
+    - "&1Klicke zum stumm schalten"
     offDisplayName: "&4Sounds aus"
     offLore:
     - ""
