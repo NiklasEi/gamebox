@@ -12,6 +12,7 @@ import java.util.UUID;
  *
  */
 public interface IGameManager {
+
 	/**
 	 * Handle a click in the game
 	 *
