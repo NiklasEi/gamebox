@@ -383,6 +383,26 @@ public class PluginManager implements Listener {
         }
     }
 
+    /**
+     * Prevent players that had their inventories saved and cleaned from
+     * picking up items to the GUI or to games.
+     *
+     * It there is space in the saved inventory the item is added.
+     * Otherwise the PickUpEvent is cancelled.
+     * @param playerPickupItemEvent called Event
+     */
+    @EventHandler
+    public void onPickUp(PlayerPickupItemEvent playerPickupItemEvent){
+        if(!isInGame(playerPickupItemEvent.getPlayer().getUniqueId()) && !guiManager.isInGUI(playerPickupItemEvent.getPlayer().getUniqueId())) return;
+
+        // ToDo: change #addItem() and this method to allow for partial pick up
+        if(addItem(playerPickupItemEvent.getPlayer().getUniqueId(), playerPickupItemEvent.getItem().getItemStack())){
+            playerPickupItemEvent.getItem().remove();
+        }
+
+        playerPickupItemEvent.setCancelled(true);
+    }
+
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerDeath(PlayerDeathEvent event){
         // close inv on death. This will trigger a restore of the inventory contents
@@ -598,6 +618,12 @@ public class PluginManager implements Listener {
         this.handleInvitations = handleInvitations;
     }
 
+    /**
+     * Tries to add an itemStack to the players inventory
+     * @param uuid Player
+     * @param itemStack Item
+     * @return item successfully given
+     */
     public boolean addItem(UUID uuid, ItemStack itemStack){
         if(!savedContents.keySet().contains(uuid) || itemStack == null) return false;
 

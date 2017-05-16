@@ -1,6 +1,8 @@
 
 
 - corrected german lang file
+- prevent players from picking up items into GUIs or games
+--- The items are added to the saved inventory if there is enough space for them.
 
 --------------------------------------------------
 v 1.3.0:
