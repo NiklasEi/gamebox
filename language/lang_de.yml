@@ -6,6 +6,19 @@
 prefix: "[&3GameBox&r]"
 name: "&3GameBox&r"
 
+
+jsonPrefix:
+  # colors for JSON have to be named! valid colors:
+  #   black, white, dark_blue, dark_green, dark_aqua, dark_red, dark_purple, gold, gray
+  #   green, aqua, red, light_purple, yellow, dark_gray, blue,
+  preText: "["
+  preColor: "white"
+  text: "GameBox"
+  color: "dark_aqua"
+  afterText: "]"
+  afterColor: "white"
+
+
 # command messages
 commandMessages:
   notInThisWorld: ' &4Nicht hier!'
@@ -115,5 +128,25 @@ others:
     notOnline: " &cEs ist kein &5%player%&c online."
     notInviteYourself: " &cDu kannst dich nicht selber einladen..."
   invitation:
-  - " &3%player%&r hat dich zu einer Runde &3%game% eingeladen"
-  - " Besuche das Einladungs-Menü von &3%game%&r zum annehmen"
+  - " &3%player%&r hat dich zu &3%game% eingeladen"
+
+  # this message is sent in the JSON format and has to be customised differently
+
+  # The message that gets send to the invited player (if not opt out in the config) consists of four parts
+  #   1. normal message before the clickable and hover-able part (called pre-)
+  #   2. clickable part (called click-)
+  #   3. the clickable part also includes a hover action (called hover-)
+  #   4. normal message after the clickable part (called after-)
+
+  # colors have to be named! valid colors:
+  #   black, white, dark_blue, dark_green, dark_aqua, dark_red, dark_purple, gold, gray
+  #   green, aqua, red, light_purple, yellow, dark_gray, blue,
+  invitationClickMessage:
+    preText: ""
+    preColor: "green"
+    clickText: " Klick hier um zu der Einladung zu gelangen"
+    clickColor: "blue"
+    hoverText: "Bring mich zur Einladung"
+    hoverColor: "gold"
+    afterText: ""
+    afterColor: "blue"
