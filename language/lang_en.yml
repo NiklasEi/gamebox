@@ -6,7 +6,7 @@ game:
   econ:
     # use %cost% for the amount payed
     payed: " &2You paid &4%cost%"
-    notEnoughMoney: " &4You do not have not enough money!"
+    notEnoughMoney: " &4You do not have enough money!"
     # use %reward% for the amount the player won
     wonMoney: " &2You won &1%reward%&2!"
     # use %reward% for the amount the player won and %loser% for the player that gave up

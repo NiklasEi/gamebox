@@ -1,5 +1,5 @@
 
-
+- correct lang_en
 ------------------------------------
 v 1.1.0
 - centralised more code to GameBox
