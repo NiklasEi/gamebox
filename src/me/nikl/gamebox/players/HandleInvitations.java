@@ -1,7 +1,11 @@
 package me.nikl.gamebox.players;
 
+import jdk.nashorn.internal.ir.debug.JSONWriter;
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.GameBoxSettings;
+import me.nikl.gamebox.Language;
 import me.nikl.gamebox.PluginManager;
+import me.nikl.gamebox.commands.MainCommand;
 import me.nikl.gamebox.guis.gui.game.StartMultiplayerGamePage;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -20,9 +24,12 @@ public class HandleInvitations extends BukkitRunnable{
     private PluginManager pluginManager;
     private GameBox plugin;
 
+    private Language lang;
+
     public HandleInvitations(GameBox plugin){
         pluginManager = plugin.getPluginManager();
         this.plugin = plugin;
+        this.lang = plugin.lang;
         this.runTaskTimerAsynchronously(plugin, 20, 10);
     }
 
@@ -55,18 +62,33 @@ public class HandleInvitations extends BukkitRunnable{
                 // for now just continue and allow it
             }
         }
-        
+
         Player first = Bukkit.getPlayer(player1);
         Player second = Bukkit.getPlayer(player2);
-        
+
         if(first != null && second != null){
             for(String message : plugin.lang.INVITE_MESSAGE) {
                 second.sendMessage(plugin.lang.PREFIX + message.replace("%player%", first.getName()).replace("%game%", pluginManager.getGame(args[0]).getName()));
             }
+
+            boolean boldClick = false;
+
+            if(GameBoxSettings.sendInviteClickMessage) {
+                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "tellraw "
+                        + second.getName()
+                        + " [{\"text\":\"" + lang.JSON_PREFIX_PRE_TEXT + "\",\"color\":\"" + lang.JSON_PREFIX_PRE_COLOR + "\"},{\"text\":\"" + lang.JSON_PREFIX_TEXT + "\",\"color\":\""
+                        + lang.JSON_PREFIX_COLOR + "\"},{\"text\":\"" + lang.JSON_PREFIX_AFTER_TEXT + "\",\"color\":\"" + lang.JSON_PREFIX_AFTER_COLOR + "\"}" +
+                        ",{\"text\":\"" + lang.INVITATION_PRE_TEXT + "\",\"color\":\""
+                        + lang.INVITATION_PRE_COLOR + "\"},{\"text\":\"" + lang.INVITATION_CLICK_TEXT + "\",\"color\":\""
+                        + lang.INVITATION_CLICK_COLOR + "\",\"bold\":" + boldClick + ",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/gb "
+                        + MainCommand.inviteClickCommand + " " + args[0] + " " + args[1]
+                        + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + lang.INVITATION_HOVER_TEXT + "\",\"color\":\""
+                        + lang.INVITATION_HOVER_COLOR + "\"}}}, {\"text\":\"" + lang.INVITATION_AFTER_TEXT + "\",\"color\":\"" + lang.INVITATION_AFTER_COLOR + "\"}]");
+            }
         } else {
             return false;
         }
-        
+
         new Invitation(player1, player2, timeStamp, args);
         ((StartMultiplayerGamePage)pluginManager.getGuiManager().getGameGui(args[0], args[1])).addInvite(player1, player2);
         return true;
