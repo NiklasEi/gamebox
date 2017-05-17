@@ -48,7 +48,13 @@ public class Language {
 			, SHOP_TITLE_NOT_ENOUGH_MONEY, SHOP_FREE, SHOP_MONEY, SHOP_TOKEN, SHOP_IS_CLOSED;
 
 	// player input
-	public String INPUT_START_MESSAGE, INPUT_TIME_RAN_OUT, INVITATION_SUCCESSFUL, INVITATION_ALREADY_THERE, INVITATION_NOT_VALID_PLAYER_NAME, INVITATION_NOT_ONLINE, INPUT_CLOSED, INVITATION_NOT_YOURSELF;
+	public String INPUT_START_MESSAGE, INPUT_TIME_RAN_OUT, INVITATION_SUCCESSFUL, INVITATION_ALREADY_THERE, INVITATION_NOT_VALID_PLAYER_NAME
+			, INVITATION_NOT_ONLINE, INPUT_CLOSED, INVITATION_NOT_YOURSELF, INVITATION_PRE_TEXT, INVITATION_PRE_COLOR, INVITATION_CLICK_TEXT, INVITATION_CLICK_COLOR
+			, INVITATION_HOVER_TEXT, INVITATION_HOVER_COLOR, INVITATION_AFTER_TEXT, INVITATION_AFTER_COLOR;
+
+	// JSON prefix parts (click invite message)
+	public String JSON_PREFIX_PRE_TEXT, JSON_PREFIX_PRE_COLOR, JSON_PREFIX_TEXT, JSON_PREFIX_COLOR, JSON_PREFIX_AFTER_TEXT, JSON_PREFIX_AFTER_COLOR;
+
 	public List<String> INPUT_HELP_MESSAGE;
 
 	// tokens
@@ -72,9 +78,31 @@ public class Language {
 		getButtons();
 		getOthers();
 		getShop();
+
+		// JSON prefix
+
+		this.JSON_PREFIX_PRE_TEXT = getString("jsonPrefix.preText");
+		this.JSON_PREFIX_PRE_COLOR = getString("jsonPrefix.preColor");
+		this.JSON_PREFIX_TEXT = getString("jsonPrefix.text");
+		this.JSON_PREFIX_COLOR = getString("jsonPrefix.color");
+		this.JSON_PREFIX_AFTER_TEXT = getString("jsonPrefix.afterText");
+		this.JSON_PREFIX_AFTER_COLOR = getString("jsonPrefix.afterColor");
 	}
 
 	private void getOthers() {
+		// clickable invite message
+		this.INVITATION_PRE_TEXT = getString("others.invitationClickMessage.preText");
+		this.INVITATION_PRE_COLOR = getString("others.invitationClickMessage.preColor");
+		this.INVITATION_CLICK_TEXT = getString("others.invitationClickMessage.clickText");
+		this.INVITATION_CLICK_COLOR = getString("others.invitationClickMessage.clickColor");
+		this.INVITATION_HOVER_TEXT = getString("others.invitationClickMessage.hoverText");
+		this.INVITATION_HOVER_COLOR = getString("others.invitationClickMessage.hoverColor");
+		this.INVITATION_AFTER_TEXT = getString("others.invitationClickMessage.afterText");
+		this.INVITATION_AFTER_COLOR = getString("others.invitationClickMessage.afterColor");
+
+
+
+
 		this.INPUT_START_MESSAGE = getString("others.playerInput.openingMessage");
 		this.INPUT_TIME_RAN_OUT = getString("others.playerInput.timeRanOut");
 		this.INPUT_HELP_MESSAGE = getStringList("others.playerInput.helpMessage");
