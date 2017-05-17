@@ -13,10 +13,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 /**
  * Created by niklas on 10/17/16.
@@ -29,6 +28,8 @@ public class MainCommand implements CommandExecutor{
 	private PluginManager pManager;
 	private GUIManager guiManager;
 	private Language lang;
+
+	public static String inviteClickCommand = "clickableMessageWasClicked";
 
 	private Map<String, ArrayList<String>> subCommands = new HashMap<>();
 	
@@ -55,7 +56,7 @@ public class MainCommand implements CommandExecutor{
 				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', lang.PREFIX + lang.CMD_ONLY_PLAYER));
 				return true;
 			}
-			if(plugin.getPluginManager().getDisabledWorlds().contains(((Player) sender).getLocation().getWorld().getName())){
+			if (plugin.getPluginManager().getDisabledWorlds().contains(((Player) sender).getLocation().getWorld().getName())) {
 				sender.sendMessage(lang.PREFIX + lang.CMD_DISABLED_WORLD);
 				return true;
 			}
@@ -63,6 +64,13 @@ public class MainCommand implements CommandExecutor{
 
 			guiManager.openMainGui(player);
 			return true;
+
+
+		} if (args[0].equalsIgnoreCase(inviteClickCommand) && sender instanceof Player){
+			// handle click commands from clickable invite messages
+			return inviteClickCommand((Player) sender, args);
+
+
 		} else if(args.length == 1){
 			// check whether the given argument is a listed sub command
 			for(String id : subCommands.keySet()){
@@ -151,6 +159,21 @@ public class MainCommand implements CommandExecutor{
 		for(String message : lang.CMD_WRONG_USAGE){
 			sender.sendMessage(lang.PREFIX + message);
 		}
+		return true;
+	}
+
+	/**
+	 * Open the invitation gui the invite is in
+	 * @param sender player
+	 * @param argsOld old command args containing the clickCommandUUID
+	 * @return true (permission messages are send)
+	 */
+	private boolean inviteClickCommand(Player sender, String[] argsOld) {
+		String[] args = new String[argsOld.length - 1];
+		for(int i = 1; i < argsOld.length; i++){
+			args[i-1] = argsOld[i];
+		}
+		guiManager.openGameGui(sender, args);
 		return true;
 	}
 
