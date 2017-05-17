@@ -97,4 +97,3 @@ others:
     notInviteYourself: " &c你居然邀请自己？是太寂寞了吗..."
   invitation:
   - " &3%player%&r 邀请你来玩游戏 &3%game%"
-  - " &a请输入/gb并选择相应游戏 &3%game%&a 的相应模式接受邀请"
