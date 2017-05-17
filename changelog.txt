@@ -1,5 +1,9 @@
 
-
+- added clickable invitation message
+--- the message is configurable in the language files (14! new strings...)
+--- click message can be opt out in the configuration file
+- doubled the time in default config until an invite runs out
+- added comments in the default config for invite timings
 - corrected german lang file
 - prevent players from picking up items into GUIs or games
 --- The items are added to the saved inventory if there is enough space for them.
