@@ -22,10 +22,13 @@ public class GameBoxSettings {
     public static boolean econEnabled = false;
     public static boolean tokensEnabled = false;
 
+    public static boolean sendInviteClickMessage = true;
+
 
     public static void loadSettings(GameBox plugin){
         FileConfiguration config = plugin.getConfig();
 
+        sendInviteClickMessage = config.getBoolean("settings.invitations.clickMessage.enabled", true);
         tokensEnabled = config.getBoolean("economy.tokens.enabled", false);
         econEnabled = config.getBoolean("economy.enabled", false);
         playSounds = config.getBoolean("guiSettings.playSounds", true);
