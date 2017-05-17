@@ -27,7 +27,9 @@ blockedWorlds:
   - "world_nether"
 
 
-timeForInvitations: 20
+# time an invite stays valid (in seconds)
+timeForInvitations: 40
+# time the input stays open (in seconds)
 timeForPlayerInput: 20
 
 economy:
@@ -83,3 +85,8 @@ settings:
   # this enables players to accept game invitations without having the play permission.
   #   The permission is still needed to send the invitation though.
   exceptInvitesWithoutPlayPermission: false
+  # invitation settings
+  invitations:
+    clickMessage:
+      # whether players can click to get to the invite
+      enabled: true
