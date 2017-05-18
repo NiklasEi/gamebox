@@ -1,4 +1,6 @@
 
+TODO: timers! and chips always from top
+
 - correct lang_en
 ------------------------------------
 v 1.1.0
