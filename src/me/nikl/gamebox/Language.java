@@ -188,8 +188,16 @@ public class Language {
 		this.SHOP_TOKEN = getString("shop.tokenItem");
 	}
 
-
-
+	/**
+	 * Load list messages from the language file
+	 *
+	 * If the requested path is not valid for the chosen
+	 * language file the corresponding list from the default
+	 * file is returned.
+	 * ChatColor is translated here.
+	 * @param path path to the message
+	 * @return message
+	 */
 	private List<String> getStringList(String path) {
 		List<String> toReturn;
 		if(!langFile.isList(path)){
@@ -206,6 +214,16 @@ public class Language {
 		return toReturn;
 	}
 
+	/**
+	 * Get a message from the language file
+	 *
+	 * If the requested path is not valid for the
+	 * configured language file the corresponding
+	 * message from the default file is returned.
+	 * ChatColor is translated when reading the message.
+	 * @param path path to the message
+	 * @return message
+	 */
 	private String getString(String path) {
 		if(!langFile.isString(path)){
 			return ChatColor.translateAlternateColorCodes('&',defaultLang.getString(path));
