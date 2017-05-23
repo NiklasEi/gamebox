@@ -6,6 +6,7 @@ import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.gui.game.GameGui;
 import me.nikl.gamebox.guis.gui.game.StartMultiplayerGamePage;
+import me.nikl.gamebox.guis.shop.ShopItem;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -338,15 +339,45 @@ public abstract class AGui {
 					}
 				}
 
-				ItemStack item = guiManager.getShopManager().getShopItem(args[0], args[1]).clone();
+				ItemStack item = guiManager.getShopManager().getShopItemStack(args[0], args[1]).clone();
 				if(item == null) return false;
 
+				ShopItem shopItem = guiManager.getShopManager().getShopItem(args[0], args[1]);
+
+				// test for perms
+				if(!shopItem.getPermissions().isEmpty()){
+					for(String permission : shopItem.getPermissions()){
+						if(!event.getWhoClicked().hasPermission(permission)){
+							Bukkit.getConsoleSender().sendMessage("does not have  " + permission);
+							guiManager.sentInventoryTitleMessage((Player)event.getWhoClicked(), plugin.lang.SHOP_TITLE_REQUIREMENT_NOT_FULFILLED, null);
+							return false;
+						}
+					}
+				}
+
+				if(!shopItem.getNoPermissions().isEmpty()){
+					for(String noPermission : shopItem.getNoPermissions()){
+						if(event.getWhoClicked().hasPermission(noPermission)){
+							Bukkit.getConsoleSender().sendMessage("has " + noPermission);
+							guiManager.sentInventoryTitleMessage((Player)event.getWhoClicked(), plugin.lang.SHOP_TITLE_REQUIREMENT_NOT_FULFILLED, null);
+							return false;
+						}
+					}
+				}
 
 				if(!pluginManager.addItem(event.getWhoClicked().getUniqueId(), item)){
 					guiManager.sentInventoryTitleMessage((Player)event.getWhoClicked(), plugin.lang.SHOP_TITLE_INVENTORY_FULL, null);
 					return false;
 				} else {
 					guiManager.sentInventoryTitleMessage((Player)event.getWhoClicked(), plugin.lang.SHOP_TITLE_BOUGHT_SUCCESSFULLY, null);
+				}
+
+				// ToDo: compatibility for give commands
+				// item was given now check for commands and sent them
+				if(!shopItem.getCommands().isEmpty()){
+					for(String command : shopItem.getCommands()){
+						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", event.getWhoClicked().getName()));
+					}
 				}
 
 				if(tokens > 0 ){
