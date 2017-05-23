@@ -32,6 +32,7 @@ shop:
         # unique key for an item
         dirt:
           # material data of item to be sold
+          #   if not set, no item will be sold, but commands are still send
           materialData: "dirt"
           # price in token (optional)
           #   if both (token AND money) is set, players have to pay both!
@@ -40,6 +41,24 @@ shop:
           money: 0
           # optional count (only up to max stack size of the particular item)
           count: 2
+          # this item is displayed and is the same as the item that gets sold by default
+          buttonItem:
+            glow: true
+            additionalLore:
+            - "&1testing additional lore"
+            - "&2row Nr. 2"
+            displayName: "&2Test"
+
+          # if not all requirements are fulfilled, a message will be send over the inventory title
+          requirements:
+            permissions:
+            - "gamebox.testing1"
+            - "gamebox.testing2"
+            noPermissions:
+            - "gamebox.play.battleship"
+            - "gamebox.play.*"
+          commands:
+          - "tell %player% Hi"
         sapling:
           materialData: "sapling"
         blueClay:
@@ -50,6 +69,7 @@ shop:
           materialData: "452"
           tokens: 100
           money: 1000
+          glow: true
         yellowClay:
           materialData: "159:4"
           tokens: 1
