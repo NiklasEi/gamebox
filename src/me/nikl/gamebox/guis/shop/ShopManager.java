@@ -256,7 +256,14 @@ public class ShopManager {
         }
     }
 
-    public ItemStack getShopItem(String category, String counter){
+    public ItemStack getShopItemStack(String category, String counter){
+        if(categories.get(category) != null){
+            return categories.get(category).getShopItemStack(counter);
+        }
+        return null;
+    }
+
+    public ShopItem getShopItem(String category, String counter){
         if(categories.get(category) != null){
             return categories.get(category).getShopItem(counter);
         }
