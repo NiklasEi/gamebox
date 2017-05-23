@@ -1,9 +1,6 @@
 package me.nikl.gamebox.guis.shop;
 
-import me.nikl.gamebox.ClickAction;
-import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.Language;
-import me.nikl.gamebox.Permissions;
+import me.nikl.gamebox.*;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.gui.AGui;
@@ -46,7 +43,7 @@ public class ShopManager {
     private GameBox plugin;
     private Language lang;
 
-    private int mainSlots = 27, pageSlots = 54, titleMessageSeconds = 3;
+    private int mainSlots = 27, titleMessageSeconds = 3;
 
     public ShopManager(GameBox plugin, GUIManager guiManager) {
         this.plugin = plugin;
@@ -59,7 +56,7 @@ public class ShopManager {
         if (!shop.isConfigurationSection("shop") || !shop.isConfigurationSection("shop.button") || !shop.isConfigurationSection("shop.categories")) {
             Bukkit.getLogger().log(Level.WARNING, "The shop is not correctly set up!");
             Bukkit.getLogger().log(Level.WARNING, "Disabling tokens!");
-            plugin.setTokensEnabled(false);
+            GameBoxSettings.tokensEnabled = false;
             return;
         }
 

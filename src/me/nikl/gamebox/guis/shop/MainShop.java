@@ -2,6 +2,7 @@ package me.nikl.gamebox.guis.shop;
 
 import me.nikl.gamebox.ClickAction;
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.players.GBPlayer;
@@ -31,7 +32,7 @@ public class MainShop extends Shop {
 
         tokenButtonSlot = slots - 9;
 
-        if(plugin.isTokensEnabled()) {
+        if(GameBoxSettings.tokensEnabled) {
             // set a placeholder in the general main gui
             ItemStack tokensItem = new AButton(new MaterialData(Material.GOLD_NUGGET), 1);
             tokensItem = plugin.getNMS().addGlow(tokensItem);
@@ -102,7 +103,7 @@ public class MainShop extends Shop {
 
     public void loadMainGui(GBPlayer player){
 
-        if(plugin.isTokensEnabled()) {
+        if(GameBoxSettings.tokensEnabled) {
             ItemStack tokensItem = new AButton(new MaterialData(Material.GOLD_NUGGET), 1);
             tokensItem = plugin.getNMS().addGlow(tokensItem);
             AButton tokens = new AButton(tokensItem);
@@ -119,7 +120,7 @@ public class MainShop extends Shop {
     }
 
     public void updateTokens(GBPlayer player) {
-        if(!plugin.isTokensEnabled()) return;
+        if(!GameBoxSettings.tokensEnabled) return;
         if(!tokenButtons.keySet().contains(player.getUuid())) return;
 
         ItemMeta meta = tokenButtons.get(player.getUuid()).getItemMeta();
