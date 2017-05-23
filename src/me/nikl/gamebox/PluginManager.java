@@ -77,6 +77,7 @@ public class PluginManager implements Listener {
 
     // hot bar stuff
 	public static int exit, toMain, toGame, toHold = 0;
+    public static List<Integer> slotsToKeep = new ArrayList<>();
 	private Map<Integer, ItemStack> hotbarButtons = new HashMap<>();
 
 	// list of disabled worlds
@@ -86,7 +87,7 @@ public class PluginManager implements Listener {
     private boolean hub, setOnWorldJoin;
     private ItemStack hubItem;
     private ArrayList<String> hubWorlds;
-    private int slot;
+    private int hubItemSlot;
 
     //sounds
     private float volume = 0.5f, pitch= 10f;
@@ -138,10 +139,6 @@ public class PluginManager implements Listener {
             toGame = -999;
         }
 
-        while(toHold == exit || toHold == toMain  || toHold == toGame ){
-            toHold++;
-        }
-
 
         ItemStack toMainItem = new ItemStack(Material.DARK_OAK_DOOR_ITEM), toGameItem = new ItemStack(Material.BIRCH_DOOR_ITEM), exitItem = new ItemStack(Material.BARRIER);
         ItemMeta meta = toMainItem.getItemMeta(); meta.setDisplayName(chatColor(lang.BUTTON_TO_MAIN_MENU)); toMainItem.setItemMeta(meta);
@@ -150,6 +147,33 @@ public class PluginManager implements Listener {
         if(toMain >= 0)hotbarButtons.put(toMain, toMainItem);
         if(exit >= 0)hotbarButtons.put(exit, exitItem);
         if(toGame >= 0)hotbarButtons.put(toGame, toGameItem);
+
+
+        // load special hot bar slots which keep their items
+        if(config.isSet("guiSettings.keepItemsSlots") && config.isList("guiSettings.keepItemsSlots")){
+            slotsToKeep = config.getIntegerList("guiSettings.keepItemsSlots");
+        }
+        if(slotsToKeep == null) slotsToKeep = new ArrayList<>();
+
+        // do not use the slots that are already taken by a navigation button
+        Iterator<Integer> it = slotsToKeep.iterator();
+
+        while(it.hasNext()){
+            int slot = it.next();
+            if(slot == toMain || slot == exit || slot == toGame) it.remove();
+            if(slot < 0 || slot > 8) it.remove();
+        }
+
+        // try finding an empty hubItemSlot to hold while in GUI/game
+        if(hotbarButtons.values().size() + slotsToKeep.size() < 9){
+            while(toHold == exit || toHold == toMain  || toHold == toGame || slotsToKeep.contains(toHold)){
+                toHold++;
+            }
+        } else {
+            while(toHold == exit || toHold == toMain  || toHold == toGame ){
+                toHold++;
+            }
+        }
     }
 
     @EventHandler
@@ -196,7 +220,7 @@ public class PluginManager implements Listener {
         }
         hubItem.setItemMeta(meta);
         hubWorlds = new ArrayList<>(hubSec.getStringList("enabledWorlds"));
-        slot = hubSec.getInt("slot", 0);
+        hubItemSlot = hubSec.getInt("slot", 0);
         setOnWorldJoin = hubSec.getBoolean("giveItemOnWorldJoin", false);
     }
 
@@ -346,20 +370,18 @@ public class PluginManager implements Listener {
         // check the player inventory for the hubItem
         for(int i = 0; i < inv.getSize(); i++){
             if(inv.getItem(i) == null) continue;
-            if(inv.getItem(i).equals(hubItem)){
+            if(inv.getItem(i).isSimilar(hubItem)){
                 GameBox.debug("found hub item in slot " + i);
                 return;
             }
         }
         // item not found!
-        // check the configured slot and put it there if it is empty
-        if(inv.getItem(slot) == null || inv.getItem(slot).getType() == Material.AIR){
-            player.getInventory().setItem(slot, hubItem);
+        // check the configured hubItemSlot and put it there if it is empty
+        if(inv.getItem(hubItemSlot) == null || inv.getItem(hubItemSlot).getType() == Material.AIR){
+            player.getInventory().setItem(hubItemSlot, hubItem);
         } else { // it's not empty so try to add it to the inventory
             if(!inv.addItem(hubItem).isEmpty()){
                 // no space for the hubItem found...
-                // override the slot... (It's a hub world + configured to this slot)
-                // if the items are important in this world the server owner should turn of the give item option
                 player.sendMessage(lang.PREFIX + " Failed to give you the hub item (Full inventory)");
             }
         }
@@ -630,7 +652,7 @@ public class PluginManager implements Listener {
         // map for the possibilities to fill already existing stacks up
         List<Integer> fillUpPossibilities = new ArrayList<>();
 
-        GameBox.debug("length is: " + savedContents.get(uuid).length);
+        GameBox.debug("trying to add an item...");
         ItemStack[] savedStacks = savedContents.get(uuid);
         for(int i = 0; i< 36;i++){
             if(savedStacks[i] == null) continue;
@@ -665,6 +687,7 @@ public class PluginManager implements Listener {
                 return true;
             }
         }
+        GameBox.debug("   Failed!");
         return false;
     }
 
@@ -683,5 +706,13 @@ public class PluginManager implements Listener {
 
     public Map<String, GameContainer> getGames(){
         return this.games;
+    }
+
+    public void setItemsToKeep(Player player) {
+        if(!savedContents.containsKey(player.getUniqueId())) return;
+        GameBox.debug("setting the items to keep: " + slotsToKeep);
+        for(int slot : slotsToKeep) {
+            player.getInventory().setItem(slot, savedContents.get(player.getUniqueId())[slot]);
+        }
     }
 }
