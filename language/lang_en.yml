@@ -109,6 +109,7 @@ shop:
   notEnoughMoney: '        &4&lNot enough money'
   notEnoughTokens: '        &4&lNot enough tokens'
   inventoryIsFull: '        &4&lFull inventory'
+  requirementNotFulfilled: '       &4&lFailed requirements'
   boughtSuccessful: '        &9&lBought successfully'
   shopIsClosed: '        &4&lShop is closed atm'
   # use %player% for the player name
