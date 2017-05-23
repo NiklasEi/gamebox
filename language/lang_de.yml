@@ -120,7 +120,7 @@ others:
     openingMessage: " &l&2Gebe den Namen eines Spielers ein, um ihn einzuladen."
     helpMessage:
     - " &2Du hast &5%seconds% &2Sekunden Zeit."
-    - " &2Um die Eingabe zu stoppen sende &c'%'."
+    - " &2Um die Eingabe zu stoppen sende &c'%'&2."
     timeRanOut: " &cDie Eingabe-zeit ist vorbei."
     inputSuccessful: " &5%player%&2 wurde eingeladen."
     inputClosed: " &2Die Eingabe wurde beendet."
