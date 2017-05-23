@@ -5,7 +5,7 @@
 # A page system will automatically open new pages and build the 'next' and 'back' buttons accordingly
 
 # this is to make sure that you customized the shop before players can buy stuff
-#   set it to true to enable shoping
+#   set it to true to enable shopping
 open: false
 
 shop:
@@ -29,7 +29,7 @@ shop:
       - "&1Buy useless blocks"
       glow: false
       items:
-        # unique key for an item
+        # example with all the possible features
         dirt:
           # material data of item to be sold
           #   if not set, no item will be sold, but commands are still send
@@ -38,46 +38,98 @@ shop:
           #   if both (token AND money) is set, players have to pay both!
           tokens: 1
           # money price (optional)
-          money: 0
+          money: 1
           # optional count (only up to max stack size of the particular item)
+          #   default is 1
           count: 2
-          # this item is displayed and is the same as the item that gets sold by default
+          # this item is the item displayed in the shop
+          #   if not set the item that is sold is used
+          #   customizing this make the most sense for "selling" commands
           buttonItem:
+            # only the displayed item will glow
+            #   the sold item is normal dirt
             glow: true
+
+            # optional lore added to the default shop lore that already contains the price of the item/command
             additionalLore:
-            - "&1testing additional lore"
-            - "&2row Nr. 2"
-            displayName: "&2Test"
+            - "&6Personal greeting by the server"
+
+            # optional display name
+            displayName: "&2Example"
 
           # if not all requirements are fulfilled, a message will be send over the inventory title
+          #   you can customize the message in the language file
           requirements:
+
+            # the player must have all of these permissions!
             permissions:
             - "gamebox.testing1"
             - "gamebox.testing2"
+
+            # the player is not allowed to have any of these permissions
             noPermissions:
             - "gamebox.play.battleship"
             - "gamebox.play.*"
+
+          # optional commands to run when the player buys this
+          #   %player% will be replaced by the player name
           commands:
           - "tell %player% Hi"
+
+        # minimalistic example
+        #   the following item will be for free
         sapling:
-          materialData: "sapling"
+          materialData: "sapling:3"
+
+        # item only for people with special permission
         blueClay:
-          materialData: "wood"
+          materialData: "obsidian"
           tokens: 1
-          money: 0
+          buttonItem:
+            additionalLore:
+            - "&1You need the following permission"
+            - "&1  to buy this item:"
+            - " "
+            - "&6  my.server.builder"
+          requirements:
+            permissions:
+            - "my.server.builder"
+
+        # selling a glowing item
         blueClayd37:
           materialData: "452"
           tokens: 100
           money: 1000
           glow: true
-        yellowClay:
-          materialData: "159:4"
+
+        # run command if player has/hasn't some permission
+        commandExample:
           tokens: 1
           money: 1
+          buttonItem:
+            materialData: "nether_star"
+            displayName: "&9&lExample Command"
+            additionalLore:
+            - "&1If you buy this, the server"
+            - "&1  will thank you ;)"
+            - " "
+            - "&1Do not have the permission:"
+            - "&6  my.server.builder"
+            - " "
+            - "&1Have the permission:"
+            - "&6  gamebox.play.*"
+          requirements:
+            permissions:
+            - "gamebox.play.*"
+            noPermissions:
+            - "my.server.builder"
+          commands:
+          - "tell %player% Thanks for buying, %player%!"
+
+
         blueClay1:
-          materialData: "159:11"
+          materialData: "159:6"
           tokens: 1
-          money: 0
         yellowClay1:
           materialData: "159:4"
           tokens: 1
@@ -117,7 +169,6 @@ shop:
         blueClay6:
           materialData: "159:11"
           tokens: 1
-          money: 0
         yellowClay6:
           materialData: "159:4"
           tokens: 1
@@ -125,7 +176,6 @@ shop:
         blueClay27:
           materialData: "159:11"
           tokens: 1
-          money: 0
         yellowClay27:
           materialData: "159:4"
           tokens: 1
@@ -133,20 +183,11 @@ shop:
         blueClay37:
           materialData: "159:11"
           tokens: 1
-          money: 0
         yellowClay37:
           materialData: "159:4"
           tokens: 1
           money: 1
         blueClay47:
-          materialData: "159:11"
-          tokens: 1
-          money: 0
-        yellowClay47:
-          materialData: "159:4"
-          tokens: 1
-          money: 1
-        blueClay57:
           materialData: "159:11"
           tokens: 1
           money: 0
