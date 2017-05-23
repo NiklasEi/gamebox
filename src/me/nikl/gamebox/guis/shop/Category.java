@@ -8,6 +8,7 @@ import me.nikl.gamebox.guis.gui.AGui;
 import me.nikl.gamebox.players.GBPlayer;
 import me.nikl.gamebox.util.ItemStackUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -18,7 +19,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
-import java.util.logging.Level;
 
 /**
  * Created by Niklas on 13.04.2017.
@@ -37,7 +37,7 @@ public class Category {
 
     private FileConfiguration shop;
 
-    private Map<String, ItemStack> shopItems = new HashMap<>();
+    private Map<String, ShopItem> shopItems = new HashMap<>();
 
     private int slots = 27, itemsPerPage = 18, backSlot = 21, forSlot = 23;
 
@@ -61,11 +61,11 @@ public class Category {
         meta.setDisplayName(plugin.lang.BUTTON_FORWARD);
         forward.setItemMeta(meta);
 
-        loadPages();
+        loadShopItems();
     }
 
 
-    private void loadPages() {
+    private void loadShopItems() {
         ConfigurationSection pageSection = shop.getConfigurationSection("shop.categories." + key + ".items");
         if(pageSection == null) return;
 
@@ -75,10 +75,9 @@ public class Category {
         List<String> lore = new ArrayList<>();
         int counter = 0, token = 0, money = 0, amount = 0;
         for(String itemKey : pageSection.getKeys(false)){
-            if((itemStack = ItemStackUtil.getItemStack(pageSection.getString(itemKey+".materialData"))) == null){
-                Bukkit.getLogger().log(Level.WARNING, "can not load shop item    " + "shop.categories." + key + ".items." + itemKey);
-                continue;
-            }
+
+            // if null no item will be given
+            itemStack = ItemStackUtil.getItemStack(pageSection.getString(itemKey+".materialData"));
 
             // load the prices of the item
             if(pageSection.isSet(itemKey+".tokens") && pageSection.isInt(itemKey+".tokens")){
@@ -96,7 +95,7 @@ public class Category {
             }
 
             // get the amount of the item (default = 1). Check for MaxStackSize!
-            if(pageSection.isSet(itemKey+".count") && pageSection.isInt(itemKey+".count")){
+            if(itemStack != null && pageSection.isSet(itemKey+".count") && pageSection.isInt(itemKey+".count")){
                 amount = pageSection.getInt(itemKey+".count");
 
                 if(amount > itemStack.getMaxStackSize()){
@@ -105,13 +104,42 @@ public class Category {
                     itemStack.setAmount(amount);
                 }
             }
+            ItemStack buttonItem = getButtonItem(itemStack, pageSection, itemKey);
+            if(buttonItem == null){
+                Bukkit.getConsoleSender().sendMessage(plugin.lang.PREFIX + ChatColor.RED + " problem in Shop: " + ChatColor.GREEN + "tokenShop.yml " + pageSection.getCurrentPath() + "." + itemKey);
+                Bukkit.getConsoleSender().sendMessage(plugin.lang.PREFIX + ChatColor.RED + " Item AND PresentItem are not defined or not valid");
+                Bukkit.getConsoleSender().sendMessage(plugin.lang.PREFIX + ChatColor.RED + "   Skipping...");
+                continue;
+            }
 
 
-            shopItems.put(String.valueOf(counter), new ItemStack(itemStack));
+            // load shop item
+            ShopItem shopItem = new ShopItem();
 
-            AButton item = new AButton(itemStack);
-            item.setAction(ClickAction.BUY);
-            meta = item.getItemMeta();
+            if(itemStack != null) {
+                shopItem.setItemStack(new ItemStack(itemStack));
+            }
+
+            if(pageSection.isList(itemKey + ".requirements" + ".permissions")){
+                shopItem.setPermissions(pageSection.getStringList(itemKey + ".requirements" + ".permissions"));
+            }
+
+            if(pageSection.isList(itemKey + ".requirements" + ".noPermissions")){
+                shopItem.setNoPermissions(pageSection.getStringList(itemKey + ".requirements" + ".noPermissions"));
+            }
+
+            if(pageSection.isList(itemKey + ".commands")){
+                shopItem.setCommands(pageSection.getStringList(itemKey + ".commands"));
+            }
+
+
+            // load button
+            AButton button = new AButton(buttonItem);
+            button.setAction(ClickAction.BUY);
+
+
+            meta = button.getItemMeta();
+            lore.clear();
             lore.add("");
             if(money == 0 && token == 0){
                 lore.add(plugin.lang.SHOP_FREE);
@@ -121,12 +149,18 @@ public class Category {
             if(money!=0){
                 lore.add(this.plugin.lang.SHOP_MONEY.replace("%money%", String.valueOf(money)));
             }
-            meta.setLore(lore);
-            lore.clear();
-            item.setItemMeta(meta);
 
-            item.setArgs(key, String.valueOf(counter), String.valueOf(token), String.valueOf(money));
-            allItems.put(counter, item);
+            if(meta.hasLore())lore.addAll(meta.getLore());
+
+            meta.setLore(lore);
+            button.setItemMeta(meta);
+
+            button.setArgs(key, String.valueOf(counter), String.valueOf(token), String.valueOf(money));
+
+            allItems.put(counter, button);
+
+            shopItems.put(String.valueOf(counter), shopItem);
+
             counter++;
         }
         GameBox.debug("All loaded items of page " + key + ":");
@@ -155,9 +189,51 @@ public class Category {
             page.setButton(allItems.get(counter));
             allItems.remove(counter);
             counter++;
-            if(counter > 100) break;
         }
 
+    }
+
+    private ItemStack getButtonItem(ItemStack itemStack, ConfigurationSection pageSection, String itemKey) {
+        String path = itemKey + ".buttonItem";
+        ItemStack presentItem = ItemStackUtil.getItemStack(pageSection.getString(path+".materialData"));
+        if(presentItem == null && itemStack == null){
+            return null;
+        }
+
+        if(presentItem == null){
+            presentItem = new ItemStack(itemStack);
+        }
+
+        if(pageSection.getBoolean(path+".glow", false)){
+            presentItem = plugin.getNMS().addGlow(presentItem);
+        }
+
+        if(pageSection.isInt(path + ".count")){
+            presentItem.setAmount(pageSection.getInt(path + ".count"));
+        }
+
+        ItemMeta meta = presentItem.getItemMeta();
+
+        if(pageSection.isString(path + ".displayName")){
+            meta.setDisplayName(GameBox.chatColor(pageSection.getString(path + ".displayName")));
+        }
+
+        if(pageSection.isList(path + ".additionalLore")){
+            List<String> lore = new ArrayList<>();
+            lore.add(" "); lore.add(ChatColor.GOLD + "- - - - - - - - - - - - - -"); lore.add(" ");
+
+            List<String> addLore = new ArrayList<>(pageSection.getStringList(path + ".additionalLore"));
+            for (int i = 0; i < addLore.size(); i++) {
+                addLore.set(i, GameBox.chatColor(addLore.get(i)));
+            }
+            lore.addAll(addLore);
+            meta.setLore(lore);
+        }
+
+        presentItem.setItemMeta(meta);
+
+
+        return presentItem;
     }
 
     protected boolean inCategory(UUID uuid){
@@ -209,7 +285,11 @@ public class Category {
         }
     }
 
-    public ItemStack getShopItem(String counter){
+    public ItemStack getShopItemStack(String counter){
+        return shopItems.get(counter).getItemStack();
+    }
+
+    public ShopItem getShopItem(String counter){
         return shopItems.get(counter);
     }
 
