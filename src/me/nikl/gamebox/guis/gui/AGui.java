@@ -81,7 +81,11 @@ public abstract class AGui {
 		} else {
 			player.openInventory(inventory);
 		}
+
 		player.getOpenInventory().getBottomInventory().setContents(lowerGrid);
+
+		pluginManager.setItemsToKeep(player);
+
 		inGui.add(player.getUniqueId());
 		return true;
 	}
@@ -339,8 +343,7 @@ public abstract class AGui {
 					}
 				}
 
-				ItemStack item = guiManager.getShopManager().getShopItemStack(args[0], args[1]).clone();
-				if(item == null) return false;
+				ItemStack item = guiManager.getShopManager().getShopItemStack(args[0], args[1]);
 
 				ShopItem shopItem = guiManager.getShopManager().getShopItem(args[0], args[1]);
 
@@ -365,11 +368,13 @@ public abstract class AGui {
 					}
 				}
 
-				if(!pluginManager.addItem(event.getWhoClicked().getUniqueId(), item)){
-					guiManager.sentInventoryTitleMessage((Player)event.getWhoClicked(), plugin.lang.SHOP_TITLE_INVENTORY_FULL, null);
-					return false;
-				} else {
-					guiManager.sentInventoryTitleMessage((Player)event.getWhoClicked(), plugin.lang.SHOP_TITLE_BOUGHT_SUCCESSFULLY, null);
+				if(item != null) {
+					if (!pluginManager.addItem(event.getWhoClicked().getUniqueId(), item)) {
+						guiManager.sentInventoryTitleMessage((Player) event.getWhoClicked(), plugin.lang.SHOP_TITLE_INVENTORY_FULL, null);
+						return false;
+					} else {
+						guiManager.sentInventoryTitleMessage((Player) event.getWhoClicked(), plugin.lang.SHOP_TITLE_BOUGHT_SUCCESSFULLY, null);
+					}
 				}
 
 				// ToDo: compatibility for give commands
