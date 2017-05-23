@@ -45,12 +45,21 @@ guiSettings:
   # you should keep this on
   #   the players can decide to turn sounds off in the gui
   playSounds: true
-  # you can disable navigation buttons by giving a negative slot
+  # you can disable navigation buttons by giving them a negative slot
   #   valid slots are only from 0 to 8
   hotBarNavigation:
     exitSlot: 4
     mainMenuSlot: 0
     gameMenuSlot: 8
+
+  # you will keep the items that are in these slots while you are in a GUI/Game
+  #   This should only be used to guaranty compatibility for plugins which only function
+  #   when players have certain items in the inventory
+  # Slots from 0 - 8
+  # Do not use a slot that is taken by navigation buttons
+  keepItemsSlots:
+  #- 2
+  #- 6
 
 mysql:
   enabled: false
