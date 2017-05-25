@@ -216,6 +216,7 @@ public class GUIManager implements Listener {
 	 * @param arg GUI argument
 	 * @param gui GUI
 	 */
+	@Deprecated
 	public void registerGameGUI(String gameID, String arg, GameGui gui){
 		gameGuis.computeIfAbsent(gameID, k -> new HashMap<>());
 
@@ -225,10 +226,34 @@ public class GUIManager implements Listener {
 		GameBox.debug("registered gamegui: " + gameID + ", " + arg);
 	}
 
+
+	/**
+	 * Register a GUI
+	 *
+	 * To use this method the args of the gui have to be set already
+	 * @param gui Gui to register
+	 */
+	public void registerGameGUI(GameGui gui){
+		if(gui.getArgs() == null || gui.getArgs().length != 2){
+			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED + " Error while registering a gui");
+			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED + "   missing args");
+			return;
+		}
+
+		String[] args = gui.getArgs();
+
+		gameGuis.computeIfAbsent(args[0], k -> new HashMap<>());
+
+		gameGuis.get(args[0]).put(args[1], gui);
+		GameBox.debug("registered gamegui: " + args[0] + ", " + args[1]);
+	}
+
+	@Deprecated
 	public void registerGameGUI(String gameID, String arg, GameGui gui, ItemStack button){
 		registerGameGUI(gameID, arg, gui, button, null);
 	}
 
+	@Deprecated
 	public void registerGameGUI(String gameID, String arg, GameGui gui, ItemStack button, String... subCommand){
 		gameGuis.computeIfAbsent(gameID, k -> new HashMap<>());
 
@@ -244,6 +269,57 @@ public class GUIManager implements Listener {
 		plugin.getMainCommand().registerSubCommands(gameID, subCommand);
 	}
 
+	/**
+	 * Register game main gui without sub commands
+	 *
+	 * Register with sub commands!
+	 * @param gui
+	 * @param button
+	 */
+	@Deprecated
+	public void registerGameGUI(GameGui gui, ItemStack button){
+		registerMainGameGUI(gui, button, null);
+	}
+
+	/**
+	 * Register the main GUI of a game
+	 *
+	 *
+	 * @param gui
+	 * @param button
+	 * @param subCommand
+	 */
+	public void registerMainGameGUI(GameGui gui, ItemStack button, String... subCommand){
+		if(gui.getArgs() == null || gui.getArgs().length != 2){
+			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED + " Error while registering a gui");
+			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED + "   missing args");
+			return;
+		}
+
+		String[] args = gui.getArgs();
+
+		gameGuis.computeIfAbsent(args[0], k -> new HashMap<>());
+
+		gameGuis.get(args[0]).put(args[1], gui);
+		GameBox.debug("registered gamegui: " + args[0] + ", " + args[1]);
+		AButton gameButton = new AButton(button.getData(), 1);
+		gameButton.setItemMeta(button.getItemMeta());
+		gameButton.setAction(ClickAction.OPEN_GAME_GUI);
+		gameButton.setArgs(args[0]);
+		mainGui.setButton(gameButton);
+		plugin.getMainCommand().registerSubCommands(args[0], subCommand);
+	}
+
+	/**
+	 * Registering of a top list GUI
+	 *
+	 * Register it as normal game GUI instead!
+	 * Remember to use
+	 * @param gameID
+	 * @param buttonID
+	 * @param topListPage
+	 */
+	@Deprecated
 	public void registerTopList(String gameID, String buttonID, TopListPage topListPage){
 		gameGuis.computeIfAbsent(gameID, k -> new HashMap<>());
 
