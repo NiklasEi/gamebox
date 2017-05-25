@@ -29,8 +29,8 @@ public class Page extends Shop{
 
     private Map<UUID, AButton> tokenButtons = new HashMap<>();
 
-    public Page(GameBox plugin, GUIManager guiManager, int slots, int page, ShopManager shopManager) {
-        super(plugin, guiManager, slots, shopManager);
+    public Page(GameBox plugin, GUIManager guiManager, int slots, int page, ShopManager shopManager, String[] args) {
+        super(plugin, guiManager, slots, shopManager, args);
         this.page = page;
 
         tokenButtonSlot = slots - 9;

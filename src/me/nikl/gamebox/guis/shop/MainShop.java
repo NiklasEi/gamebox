@@ -27,8 +27,8 @@ public class MainShop extends Shop {
 
     private int tokenButtonSlot;
 
-    public MainShop(GameBox plugin, GUIManager guiManager, int slots, ShopManager shopManager) {
-        super(plugin, guiManager, slots, shopManager);
+    public MainShop(GameBox plugin, GUIManager guiManager, int slots, ShopManager shopManager, String[] args) {
+        super(plugin, guiManager, slots, shopManager, args);
 
         tokenButtonSlot = slots - 9;
 

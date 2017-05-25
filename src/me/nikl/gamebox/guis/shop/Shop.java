@@ -24,8 +24,8 @@ public class Shop extends AGui{
 
     ShopManager shopManager;
 
-    public Shop(GameBox plugin, GUIManager guiManager, int slots, ShopManager shopManager) {
-        super(plugin, guiManager, slots);
+    public Shop(GameBox plugin, GUIManager guiManager, int slots, ShopManager shopManager, String[] args) {
+        super(plugin, guiManager, slots, args);
         this.shopManager = shopManager;
         this.shop = shopManager.getShop();
 

@@ -84,7 +84,7 @@ public class ShopManager {
         mainButton.setAction(ClickAction.OPEN_SHOP_PAGE);
         mainButton.setArgs(MAIN, "0");
 
-        mainShop = new MainShop(plugin, guiManager, mainSlots, this);
+        mainShop = new MainShop(plugin, guiManager, mainSlots, this, new String[]{MAIN, "0"});
     }
 
 
