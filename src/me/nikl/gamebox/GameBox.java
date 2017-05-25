@@ -1,7 +1,9 @@
 package me.nikl.gamebox;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.nikl.gamebox.commands.AdminCommand;
 import me.nikl.gamebox.commands.MainCommand;
+import me.nikl.gamebox.data.PlaceholderAPIHook;
 import me.nikl.gamebox.data.Statistics;
 import me.nikl.gamebox.data.StatisticsFile;
 import me.nikl.gamebox.guis.GUIManager;
@@ -112,6 +114,10 @@ public class GameBox extends JavaPlugin{
 				}
 			}
 		}.runTaskLaterAsynchronously(this, 100);
+
+		if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
+			new PlaceholderAPIHook(this, "gamebox");
+		}
 	}
 	
 	/***
