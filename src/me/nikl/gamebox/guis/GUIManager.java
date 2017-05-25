@@ -219,6 +219,8 @@ public class GUIManager implements Listener {
 	public void registerGameGUI(String gameID, String arg, GameGui gui){
 		gameGuis.computeIfAbsent(gameID, k -> new HashMap<>());
 
+		gui.setArgs(new String[]{gameID, arg});
+
 		gameGuis.get(gameID).put(arg, gui);
 		GameBox.debug("registered gamegui: " + gameID + ", " + arg);
 	}
@@ -229,6 +231,8 @@ public class GUIManager implements Listener {
 
 	public void registerGameGUI(String gameID, String arg, GameGui gui, ItemStack button, String... subCommand){
 		gameGuis.computeIfAbsent(gameID, k -> new HashMap<>());
+
+		gui.setArgs(new String[]{gameID, arg});
 
 		gameGuis.get(gameID).put(arg, gui);
 		GameBox.debug("registered gamegui: " + gameID + ", " + arg);
@@ -242,6 +246,8 @@ public class GUIManager implements Listener {
 
 	public void registerTopList(String gameID, String buttonID, TopListPage topListPage){
 		gameGuis.computeIfAbsent(gameID, k -> new HashMap<>());
+
+		topListPage.setArgs(new String[]{gameID, buttonID + TOP_LIST_KEY_ADDON});
 
 		gameGuis.get(gameID).put(buttonID + TOP_LIST_KEY_ADDON, topListPage);
 		GameBox.debug("registered toplist: " + gameID + ", " + buttonID);
