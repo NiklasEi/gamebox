@@ -95,14 +95,34 @@ public class Category {
             }
 
             // get the amount of the item (default = 1). Check for MaxStackSize!
-            if(itemStack != null && pageSection.isSet(itemKey+".count") && pageSection.isInt(itemKey+".count")){
-                amount = pageSection.getInt(itemKey+".count");
+            if(itemStack != null){
+                if(pageSection.isSet(itemKey+".count") && pageSection.isInt(itemKey+".count")) {
+                    amount = pageSection.getInt(itemKey + ".count");
 
-                if(amount > itemStack.getMaxStackSize()){
-                    itemStack.setAmount(itemStack.getMaxStackSize());
-                } else {
-                    itemStack.setAmount(amount);
+                    if (amount > itemStack.getMaxStackSize()) {
+                        itemStack.setAmount(itemStack.getMaxStackSize());
+                    } else {
+                        itemStack.setAmount(amount);
+                    }
                 }
+                if(pageSection.getBoolean(itemKey+".glow", false)){
+                    itemStack = plugin.getNMS().addGlow(itemStack);
+                }
+
+                meta = itemStack.getItemMeta();
+                if(pageSection.isString(itemKey + ".displayName")){
+                    meta.setDisplayName(GameBox.chatColor(pageSection.getString(itemKey + ".displayName")));
+                }
+
+                if(pageSection.isList(itemKey + ".lore")){
+                    lore = new ArrayList<>(pageSection.getStringList(itemKey + ".lore"));
+
+                    for (int i = 0; i < lore.size(); i++) {
+                        lore.set(i, GameBox.chatColor(lore.get(i)));
+                    }
+                    meta.setLore(lore);
+                }
+                itemStack.setItemMeta(meta);
             }
             ItemStack buttonItem = getButtonItem(itemStack, pageSection, itemKey);
             if(buttonItem == null){
@@ -126,6 +146,10 @@ public class Category {
 
             if(pageSection.isList(itemKey + ".requirements" + ".noPermissions")){
                 shopItem.setNoPermissions(pageSection.getStringList(itemKey + ".requirements" + ".noPermissions"));
+            }
+
+            if(pageSection.getBoolean(itemKey + ".manipulatesInventory", false)){
+                shopItem.setManipulatesInventory(true);
             }
 
             if(pageSection.isList(itemKey + ".commands")){
@@ -174,7 +198,7 @@ public class Category {
         while (!allItems.isEmpty()){
             GameBox.debug(allItems.keySet().size()+" Items left to sort");
             if((counter)%itemsPerPage == 0){
-                pages.put(counter/itemsPerPage, (page = new Page(plugin, guiManager, slots, counter/itemsPerPage, shopManager)));
+                pages.put(counter/itemsPerPage, (page = new Page(plugin, guiManager, slots, counter/itemsPerPage, shopManager, new String[]{key, String.valueOf(counter/itemsPerPage)})));
                 if(counter/itemsPerPage == 0){
                     page.setButton(new AButton(back).setActionAndArgs(ClickAction.OPEN_SHOP_PAGE, ShopManager.MAIN, "0"), backSlot);
                 } else {
