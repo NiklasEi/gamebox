@@ -13,6 +13,8 @@ public class ShopItem {
     private List<String> permissions = new ArrayList<>();
     private List<String> noPermissions = new ArrayList<>();
 
+    private boolean manipulatesInventory = false;
+
     private ItemStack itemStack;
 
 
@@ -46,5 +48,13 @@ public class ShopItem {
 
     public void setItemStack(ItemStack itemStack) {
         this.itemStack = itemStack;
+    }
+
+    public boolean manipulatesInventory() {
+        return manipulatesInventory;
+    }
+
+    public void setManipulatesInventory(boolean manipulatesInventory) {
+        this.manipulatesInventory = manipulatesInventory;
     }
 }
