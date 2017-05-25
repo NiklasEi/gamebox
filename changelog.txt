@@ -1,12 +1,18 @@
 
-- add option in config to keep items in certain slots i the hot bar
+- add option in config to keep items in certain slots in the hot bar
 --- solves compatibility issues with plugins that require specific items in the players inventory
 - add more options for the shop
 --- distinguish between an item that is sold and the item that is displayed
+--- sold item can now have custom display name/lore/glow
 --- add requirements (player has to have permissions and not have other permissions)
 --- dispatch commands when player buys
 --- better default tokenShop.yml with examples showcasing all the possibilities
-
+--- option for commands that manipulate the inventory (give commands and similar)
+------ use with caution... this closes the inventory before executing the command and then reopens it
+------ you have to handle a possibly full inventory yourself
+------ better is to sell the item without using a command (build it with custom display name and lore)
+- improved gui system
+--- you should update games asap since they are using deprecated methods now
 
 --------------------------------------------------
 v 1.3.1:
