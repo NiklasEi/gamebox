@@ -545,4 +545,8 @@ public abstract class AGui {
 	public void setArgs(String[] args){
 		this.args = args;
 	}
+
+	public String[] getArgs(){
+		return this.args;
+	}
 }
