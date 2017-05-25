@@ -6,6 +6,7 @@ import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.gui.game.GameGui;
 import me.nikl.gamebox.guis.gui.game.StartMultiplayerGamePage;
+import me.nikl.gamebox.guis.shop.Shop;
 import me.nikl.gamebox.guis.shop.ShopItem;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -42,6 +43,7 @@ public abstract class AGui {
 	protected AButton[] grid;
 	protected AButton[] lowerGrid = new AButton[36];
 
+	protected String[] args;
 
 	/**
 	 * Constructor for a AGui
@@ -50,6 +52,7 @@ public abstract class AGui {
 	 * @param guiManager GUIManager instance
 	 * @param slots number of slots in the inventory
 	 */
+	@Deprecated
 	public AGui(GameBox plugin, GUIManager guiManager, int slots){
 		this.plugin = plugin;
 		this.guiManager = guiManager;
@@ -61,15 +64,24 @@ public abstract class AGui {
 		this.inventory = Bukkit.createInventory(null, slots, "This title should not show!");
 	}
 
-	public AGui(GameBox plugin, GUIManager guiManager, InventoryType inventoryType){
+
+	/**
+	 * Constructor for an AGui
+	 * @param plugin instance
+	 * @param guiManager manager instance
+	 * @param slots number of slots in the gui
+	 * @param args keys for the gui
+	 */
+	public AGui(GameBox plugin, GUIManager guiManager, int slots, String[] args){
 		this.plugin = plugin;
+		this.args = args;
 		this.guiManager = guiManager;
 		this.pluginManager = plugin.getPluginManager();
-		this.grid = new AButton[inventoryType.getDefaultSize()];
+		this.grid = new AButton[slots];
 		inGui = new HashSet<>();
 		permissions.add(Permissions.ADMIN.getPermission());
 
-		this.inventory = Bukkit.createInventory(null, inventoryType, "GameGUI");
+		this.inventory = Bukkit.createInventory(null, slots, "This title should not show!");
 	}
 	
 	public boolean open(Player player){
@@ -343,7 +355,10 @@ public abstract class AGui {
 					}
 				}
 
-				ItemStack item = guiManager.getShopManager().getShopItemStack(args[0], args[1]);
+				// clone the item if it exists
+				//   otherwise the number beeing given to the player is wrong after the first buy
+				ItemStack item = guiManager.getShopManager().getShopItemStack(args[0], args[1]) == null?
+						null: guiManager.getShopManager().getShopItemStack(args[0], args[1]).clone();
 
 				ShopItem shopItem = guiManager.getShopManager().getShopItem(args[0], args[1]);
 
@@ -377,12 +392,24 @@ public abstract class AGui {
 					}
 				}
 
+
 				// ToDo: compatibility for give commands
+				if(shopItem.manipulatesInventory() && this instanceof Shop){
+					GameBox.debug("   closed due to shop item manipulating the inventory");
+					event.getWhoClicked().closeInventory();
+				}
+
 				// item was given now check for commands and sent them
 				if(!shopItem.getCommands().isEmpty()){
 					for(String command : shopItem.getCommands()){
 						Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", event.getWhoClicked().getName()));
 					}
+				}
+
+				// reopen shop page
+				if(shopItem.manipulatesInventory() && this instanceof Shop){
+					GameBox.debug("   reopening the gui");
+					guiManager.openShopPage((Player) event.getWhoClicked(), this.args);
 				}
 
 				if(tokens > 0 ){
@@ -512,5 +539,10 @@ public abstract class AGui {
 	public void removePlayer(UUID uuid){
 		inGui.remove(uuid);
 		openInventories.remove(uuid);
+	}
+
+	@Deprecated
+	public void setArgs(String[] args){
+		this.args = args;
 	}
 }
