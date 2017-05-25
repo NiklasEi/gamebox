@@ -1,6 +1,6 @@
 # this file contains the whole shop
 # it is sorted in categories that will be selectable on the first Main-page of the shop
-# The number of items per category is basically infinite (fun bug I had: the plugin kept putting the same item. At ~9 million items the server crashed)
+# The number of items per category is basically infinite (fun bug I had: the plugin kept putting the same item in one page. At ~9 million items the server crashed)
 
 # A page system will automatically open new pages and build the 'next' and 'back' buttons accordingly
 
@@ -22,18 +22,31 @@ shop:
   categories:
     # unique key of the category
     blocks:
+      # material data of the button for the category
       materialData: "159:1"
+      # display name of the button
       displayName: "&3&lBlock section with several pages"
+      # lore of the button
       lore:
       - ""
       - "&1Buy useless blocks"
+      # should it glow?
       glow: false
+      # items in the pages of the shop
       items:
         # example with all the possible features
-        dirt:
+        maximumExample:
           # material data of item to be sold
           #   if not set, no item will be sold, but commands are still send
           materialData: "dirt"
+          # optional display name of the sold item
+          displayName: "&2Special dirt"
+          # optional lore of the sold item
+          lore:
+          - ""
+          - "&1smells very special..."
+          # optional glow of the sold item
+          glow: true
           # price in token (optional)
           #   if both (token AND money) is set, players have to pay both!
           tokens: 1
@@ -53,6 +66,14 @@ shop:
             # optional lore added to the default shop lore that already contains the price of the item/command
             additionalLore:
             - "&6Personal greeting by the server"
+            - ""
+            - "Have the permissions:"
+            - "- gamebox.testing1"
+            - "- gamebox.testing2"
+            - ""
+            - "Do not have the permissions:"
+            - "- gamebox.play.battleship"
+            - "- gamebox.play.*"
 
             # optional display name
             displayName: "&2Example"
@@ -76,9 +97,17 @@ shop:
           commands:
           - "tell %player% Hi"
 
+          # optional! default: false
+          #    see 'commandManipulatingInventoryExample' for an example usage
+          # caution with this option
+          #    you should only use commands that manipulate the player inventory
+          #    if there is no other solution
+          #      like building the custom item with the lore and display name and sell it the normal way
+          manipulatesInventory: false
+
         # minimalistic example
         #   the following item will be for free
-        sapling:
+        minimalExample:
           materialData: "sapling:3"
 
         # item only for people with special permission
@@ -126,6 +155,31 @@ shop:
           commands:
           - "tell %player% Thanks for buying, %player%!"
 
+        # run command if player has/hasn't some permission
+        commandManipulatingInventoryExample:
+          tokens: 1
+          money: 1
+          buttonItem:
+            materialData: "obsidian"
+            displayName: "&9&lExample give Command"
+            additionalLore:
+            - "&1Gives you 59 obsidian per command"
+            - "   &6If you have &2my.server.builder"
+            glow: true
+          requirements:
+            permissions:
+            - "my.server.builder"
+
+          # this command will manipulate the players inventory
+          #   thus the option below is set
+          commands:
+          - "give %player% obsidian 59"
+
+          # caution with this option
+          #    you should only use commands that manipulate the player inventory
+          #    if there is no other solution
+          #      like building the custom item with the lore and display name and sell it the normal way
+          manipulatesInventory: true
 
         blueClay1:
           materialData: "159:6"
@@ -218,9 +272,9 @@ shop:
       items:
         blueClay:
           materialData: "GOLD_INGOT"
-          tokens: 1
+          tokens: 1000
           money: 0
         yellowClay:
           materialData: "CHEST"
-          tokens: 1
-          money: 1
+          tokens: 10
+          money: 150
