@@ -1,4 +1,8 @@
 
+
+
+--------------------------------------------------
+v 1.4.0:
 - add option in config to keep items in certain slots in the hot bar
 --- solves compatibility issues with plugins that require specific items in the players inventory
 - add more options for the shop
@@ -13,8 +17,8 @@
 ------ better is to sell the item without using a command (build it with custom display name and lore)
 - improved gui system
 --- you should update games asap since they are using deprecated methods now
+- added hook to PlaceholderAPI
 
---------------------------------------------------
 v 1.3.1:
 - added clickable invitation message
 --- the message is configurable in the language files (14! new strings...)
