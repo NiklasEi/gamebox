@@ -65,15 +65,15 @@ shop:
 
             # optional lore added to the default shop lore that already contains the price of the item/command
             additionalLore:
-            - "&6Personal greeting by the server"
+            - "&1Personal greeting by the server"
             - ""
-            - "Have the permissions:"
-            - "- gamebox.testing1"
-            - "- gamebox.testing2"
+            - "&1Have the permissions:"
+            - "&6   gamebox.testing1"
+            - "&6   gamebox.testing2"
             - ""
-            - "Do not have the permissions:"
-            - "- gamebox.play.battleship"
-            - "- gamebox.play.*"
+            - "&1Do not have the permissions:"
+            - "&6   gamebox.play.battleship"
+            - "&6   gamebox.play.*"
 
             # optional display name
             displayName: "&2Example"
@@ -155,7 +155,9 @@ shop:
           commands:
           - "tell %player% Thanks for buying, %player%!"
 
-        # run command if player has/hasn't some permission
+        # run /give command if player has/hasn't some permission
+        #    you shouldn't give items in this way
+        #    here you could simply sell the obsidian the normal way instead
         commandManipulatingInventoryExample:
           tokens: 1
           money: 1
@@ -164,7 +166,8 @@ shop:
             displayName: "&9&lExample give Command"
             additionalLore:
             - "&1Gives you 59 obsidian per command"
-            - "   &6If you have &2my.server.builder"
+            - "   &1If you have"
+            - "   &6my.server.builder"
             glow: true
           requirements:
             permissions:
