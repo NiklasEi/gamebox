@@ -24,8 +24,8 @@ public class Language {
 	private YamlConfiguration defaultLang;
 
 
-	public String PREFIX = "["+ChatColor.BLUE+"GameBox"+ChatColor.RESET+"]";
-	public String NAME = ChatColor.BLUE+"GameBox"+ChatColor.RESET;
+	public String PREFIX = "["+ChatColor.DARK_AQUA+"GameBox"+ChatColor.RESET+"]";
+	public String NAME = ChatColor.DARK_AQUA+"GameBox"+ChatColor.RESET;
 	public String PLAIN_PREFIX = "[GameBox]";
 
 	// commands
