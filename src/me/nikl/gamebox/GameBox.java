@@ -99,7 +99,6 @@ public class GameBox extends JavaPlugin{
 
 		// check for registered games
 		new BukkitRunnable(){
-
 			@Override
 			public void run() {
 				if(PluginManager.gamesRegistered == 0){
@@ -117,6 +116,7 @@ public class GameBox extends JavaPlugin{
 
 		if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
 			new PlaceholderAPIHook(this, "gamebox");
+			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Hooked into PlaceholderAPI");
 		}
 	}
 	
