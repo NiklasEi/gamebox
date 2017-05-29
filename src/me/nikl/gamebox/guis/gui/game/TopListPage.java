@@ -4,9 +4,10 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.data.SaveType;
 import me.nikl.gamebox.data.Statistics;
 import me.nikl.gamebox.guis.GUIManager;
-import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.block.Skull;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -35,7 +36,6 @@ public class TopListPage  extends GameGuiPage{
         return super.open(player);
     }
 
-    @SuppressWarnings("deprecation")
     public void update(){
 
         ArrayList<Statistics.Stat> topList = plugin.getStatistics().getTopList(args[0], args[1].replace(GUIManager.TOP_LIST_KEY_ADDON, ""), saveType, inventory.getSize());
@@ -50,7 +50,7 @@ public class TopListPage  extends GameGuiPage{
             rank ++;
             skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
             skullMeta = (SkullMeta) skull.getItemMeta();
-            skullLore = (ArrayList<String>) this.skullLore.clone();
+            skullLore = new ArrayList<>(this.skullLore);
 
             player = Bukkit.getOfflinePlayer(stat.getUuid());
 
