@@ -44,7 +44,7 @@ public class GUIManager implements Listener {
 
 	private ShopManager shopManager;
 
-	public static final String MAIN_GAME_GUI = "main", PLAY_GAME_GUI = "play";
+	public static final String MAIN_GAME_GUI = "main";
 
 
 	public GUIManager(GameBox plugin){
@@ -55,7 +55,7 @@ public class GUIManager implements Listener {
 
 		this.mainGui = new MainGui(plugin, this);
 		shopManager = new ShopManager(plugin, this);
-		if(GameBoxSettings.tokensEnabled)mainGui.registerShop();
+		if(GameBoxSettings.tokensEnabled) mainGui.registerShop();
 	}
 	
 	
@@ -153,40 +153,50 @@ public class GUIManager implements Listener {
 		if(!plugin.getPluginManager().hasSavedContents(whoClicked.getUniqueId())){
 			plugin.getPluginManager().saveInventory(whoClicked);
 		}
-		if(args.length == 2) {
-			String gameID = args[0], key = args[1];
-			if (whoClicked.hasPermission(Permissions.OPEN_ALL_GAME_GUI.getPermission())|| whoClicked.hasPermission(Permissions.OPEN_GAME_GUI.getPermission(gameID))) {
-				GameBox.openingNewGUI = true;
-				boolean opened = gameGuis.get(gameID).get(key).open(whoClicked);
-				GameBox.openingNewGUI = false;
-				if(opened){
-					if(gameGuis.get(gameID).get(key) instanceof GameGuiPage){
-						nms.updateInventoryTitle(whoClicked, ((GameGuiPage)gameGuis.get(gameID).get(key)).getTitle().replace("%game%", plugin.getPluginManager().getGame(gameID).getName()).replace("%player%", whoClicked.getName()));
-					} else {
-						nms.updateInventoryTitle(whoClicked, lang.TITLE_GAME_GUI.replace("%game%", plugin.getPluginManager().getGame(gameID).getName()).replace("%player%", whoClicked.getName()));
-					}
-				} else {
-					plugin.getPluginManager().restoreInventory(whoClicked);
-				}
-				return opened;
-			} else {
-				if(isInGUI(whoClicked.getUniqueId())){
-					// only possible if in main gui @version 1.2.0
-					sentInventoryTitleMessage(whoClicked, plugin.lang.TITLE_NO_PERM, null);
-				} else {
-					plugin.getPluginManager().restoreInventory(whoClicked);
-				}
-				whoClicked.sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
-				return false;
-			}
-		} else {
+
+		if(args.length != 2) {
 			Bukkit.getConsoleSender().sendMessage("unknown number of arguments in GUIManager.openGameGui");
 			if(!isInGUI(whoClicked.getUniqueId()) && !plugin.getPluginManager().isInGame(whoClicked.getUniqueId())) plugin.getPluginManager().restoreInventory(whoClicked);
 			return false;
 		}
+
+		String gameID = args[0], key = args[1];
+		if (whoClicked.hasPermission(Permissions.OPEN_ALL_GAME_GUI.getPermission())|| whoClicked.hasPermission(Permissions.OPEN_GAME_GUI.getPermission(gameID))) {
+			AGui gui = gameGuis.get(gameID).get(key);
+			GameBox.openingNewGUI = true;
+			boolean opened = gui.open(whoClicked);
+			GameBox.openingNewGUI = false;
+			if(opened){
+				nms.updateInventoryTitle(whoClicked, gui.getTitle().replace("%game%", plugin.getPluginManager().getGame(gameID).getName()).replace("%player%", whoClicked.getName()));
+			} else {
+				if(whoClicked.getOpenInventory() != null){
+					whoClicked.closeInventory();
+				}
+				plugin.getPluginManager().restoreInventory(whoClicked);
+			}
+			return opened;
+		} else {
+			if(isInGUI(whoClicked.getUniqueId())){
+				// player is in main or in a game gui of a multi-player game
+				sentInventoryTitleMessage(whoClicked, plugin.lang.TITLE_NO_PERM, null);
+			} else {
+				if(whoClicked.getOpenInventory() != null){
+					whoClicked.closeInventory();
+				}
+				plugin.getPluginManager().restoreInventory(whoClicked);
+			}
+			whoClicked.sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
+			return false;
+		}
 	}
-	
-	public boolean openMainGui(Player whoClicked, String... args) {
+
+	/**
+	 * Open the plugins main gui for the player
+	 *
+	 * @param whoClicked player
+	 * @return success in opening the gui
+	 */
+	public boolean openMainGui(Player whoClicked) {
 		if(!whoClicked.hasPermission(Permissions.USE.getPermission())) {
 			whoClicked.sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
 			return false;
@@ -196,34 +206,18 @@ public class GUIManager implements Listener {
 			plugin.getPluginManager().saveInventory(whoClicked);
 		}
 
-		if(args == null || args.length==0){
-			GameBox.openingNewGUI = true;
-			mainGui.open(whoClicked);
-			GameBox.openingNewGUI = false;
-			return true;
+		GameBox.openingNewGUI = true;
+		boolean open = mainGui.open(whoClicked);
+		GameBox.openingNewGUI = false;
+		if(open) return true;
+
+		// the gui didn't open. Make sure to restore all inventory content
+		if(whoClicked.getOpenInventory() != null){
+			whoClicked.closeInventory();
 		}
+		plugin.getPluginManager().restoreInventory(whoClicked);
 
-		Bukkit.getLogger().log(Level.WARNING, "in openMainGui not supported arg found: " + args.toString());
 		return false;
-	}
-
-	/**
-	 * Register a game GUI with a separate button and no shortcut commands
-	 *
-	 * You should only use this for multi player invitation GUIs
-	 * Use the register method with button and shortcut commands for main GUIs
-	 * @param gameID gameID of the GUI
-	 * @param arg GUI argument
-	 * @param gui GUI
-	 */
-	@Deprecated
-	public void registerGameGUI(String gameID, String arg, GameGui gui){
-		gameGuis.computeIfAbsent(gameID, k -> new HashMap<>());
-
-		gui.setArgs(new String[]{gameID, arg});
-
-		gameGuis.get(gameID).put(arg, gui);
-		GameBox.debug("registered gamegui: " + gameID + ", " + arg);
 	}
 
 
@@ -248,46 +242,13 @@ public class GUIManager implements Listener {
 		GameBox.debug("registered gamegui: " + args[0] + ", " + args[1]);
 	}
 
-	@Deprecated
-	public void registerGameGUI(String gameID, String arg, GameGui gui, ItemStack button){
-		registerGameGUI(gameID, arg, gui, button, null);
-	}
-
-	@Deprecated
-	public void registerGameGUI(String gameID, String arg, GameGui gui, ItemStack button, String... subCommand){
-		gameGuis.computeIfAbsent(gameID, k -> new HashMap<>());
-
-		gui.setArgs(new String[]{gameID, arg});
-
-		gameGuis.get(gameID).put(arg, gui);
-		GameBox.debug("registered gamegui: " + gameID + ", " + arg);
-		AButton gameButton = new AButton(button.getData(), 1);
-		gameButton.setItemMeta(button.getItemMeta());
-		gameButton.setAction(ClickAction.OPEN_GAME_GUI);
-		gameButton.setArgs(gameID);
-		mainGui.setButton(gameButton);
-		plugin.getMainCommand().registerSubCommands(gameID, subCommand);
-	}
-
-	/**
-	 * Register game main gui without sub commands
-	 *
-	 * Register with sub commands!
-	 * @param gui
-	 * @param button
-	 */
-	@Deprecated
-	public void registerGameGUI(GameGui gui, ItemStack button){
-		registerMainGameGUI(gui, button, null);
-	}
-
 	/**
 	 * Register the main GUI of a game
 	 *
 	 *
-	 * @param gui
-	 * @param button
-	 * @param subCommand
+	 * @param gui game gui to register
+	 * @param button button in the main gui that will open the game gui
+	 * @param subCommand optional sub commands to fast-open the game gui
 	 */
 	public void registerMainGameGUI(GameGui gui, ItemStack button, String... subCommand){
 		if(gui.getArgs() == null || gui.getArgs().length != 2){
@@ -310,29 +271,6 @@ public class GUIManager implements Listener {
 		plugin.getMainCommand().registerSubCommands(args[0], subCommand);
 	}
 
-	/**
-	 * Registering of a top list GUI
-	 *
-	 * Register it as normal game GUI instead!
-	 * Remember to use
-	 * @param gameID
-	 * @param buttonID
-	 * @param topListPage
-	 */
-	@Deprecated
-	public void registerTopList(String gameID, String buttonID, TopListPage topListPage){
-		gameGuis.computeIfAbsent(gameID, k -> new HashMap<>());
-
-		topListPage.setArgs(new String[]{gameID, buttonID + TOP_LIST_KEY_ADDON});
-
-		gameGuis.get(gameID).put(buttonID + TOP_LIST_KEY_ADDON, topListPage);
-		GameBox.debug("registered toplist: " + gameID + ", " + buttonID);
-	}
-
-	private String color(String message){
-		return ChatColor.translateAlternateColorCodes('&', message);
-	}
-
 	public AGui getCurrentGui(UUID uuid){
 		if(mainGui.isInGui(uuid)){
 			return mainGui;
@@ -345,9 +283,6 @@ public class GUIManager implements Listener {
 			}
 		}
 		return shopManager.getShopGui(uuid);
-	}
-
-	public void shutDown() {
 	}
 
 	public MainGui getMainGui(){
