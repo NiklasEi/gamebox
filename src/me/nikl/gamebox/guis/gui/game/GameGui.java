@@ -16,9 +16,10 @@ import java.util.Map;
 
 /**
  * Created by Niklas on 13.02.2017.
+ *
  */
 public class GameGui extends AGui {
-    String gameID, key;
+
     /**
      * Constructor for a gamegui
      *
@@ -28,10 +29,7 @@ public class GameGui extends AGui {
      * @param slots      number of slots in the inventory
      */
     public GameGui(GameBox plugin, GUIManager guiManager, int slots, String gameID, String key) {
-        super(plugin, guiManager, slots);
-        this.gameID = gameID;
-        if(!key.equalsIgnoreCase(MAIN)) GameBox.debug("GameGui has not the key 'main'");
-        this.key = key;
+        super(plugin, guiManager, slots, new String[]{gameID, key});
 
 
         Map<Integer, ItemStack> hotBarButtons = plugin.getPluginManager().getHotBarButtons();
@@ -54,15 +52,16 @@ public class GameGui extends AGui {
             main.setAction(ClickAction.OPEN_MAIN_GUI);
             setLowerButton(main, PluginManager.toMain);
         }
-
     }
 
+    @Deprecated
     public String getGameID(){
-        return this.gameID;
+        return this.args[0];
     }
 
+    @Deprecated
     public String getKey(){
-        return this.key;
+        return this.args[1];
     }
 
     public void setHelpButton(List<String> list){

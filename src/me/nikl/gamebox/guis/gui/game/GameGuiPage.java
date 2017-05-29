@@ -20,8 +20,6 @@ public class GameGuiPage extends GameGui{
 
     public GameGuiPage(GameBox plugin, GUIManager guiManager, int slots, String gameID, String key, String title) {
         super(plugin, guiManager, slots, gameID, key);
-        this.gameID = gameID;
-        this.key = key;
         this.title = title;
 
         Map<Integer, ItemStack> hotBarButtons = plugin.getPluginManager().getHotBarButtons();

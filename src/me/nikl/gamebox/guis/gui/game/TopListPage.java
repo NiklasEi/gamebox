@@ -38,7 +38,7 @@ public class TopListPage  extends GameGuiPage{
     @SuppressWarnings("deprecation")
     public void update(){
 
-        ArrayList<Statistics.Stat> topList = plugin.getStatistics().getTopList(gameID, key.replace(GUIManager.TOP_LIST_KEY_ADDON, ""), saveType, inventory.getSize());
+        ArrayList<Statistics.Stat> topList = plugin.getStatistics().getTopList(args[0], args[1].replace(GUIManager.TOP_LIST_KEY_ADDON, ""), saveType, inventory.getSize());
 
         Statistics.Stat stat;
         ItemStack skull;

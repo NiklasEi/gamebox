@@ -93,7 +93,7 @@ public class StartMultiplayerGamePage extends GameGuiPage {
             meta.setLore(plugin.lang.BUTTON_INVITE_SKULL_LORE);
             skull.setItemMeta(meta);
             skull.setAction(ClickAction.START_GAME);
-            skull.setArgs(gameID, key, uuid1.toString());
+            skull.setArgs(args[0], args[1], uuid1.toString());
             inv.setItem(i, skull);
             invitationButtons.get(uuid2)[i] = skull;
             i++;
