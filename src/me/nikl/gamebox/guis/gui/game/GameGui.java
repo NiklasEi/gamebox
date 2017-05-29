@@ -3,10 +3,12 @@ package me.nikl.gamebox.guis.gui.game;
 import me.nikl.gamebox.ClickAction;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.PluginManager;
+import me.nikl.gamebox.game.GameContainer;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.gui.AGui;
 import me.nikl.gamebox.util.ItemStackUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -28,6 +30,9 @@ public class GameGui extends AGui {
      * @param plugin     plugin instance
      * @param guiManager GUIManager instance
      * @param slots      number of slots in the inventory
+     * @param gameID ID of the game
+     * @param key GUI key
+     * @param title proposed title of the GUI
      */
     public GameGui(GameBox plugin, GUIManager guiManager, int slots, String gameID, String key, String title) {
         super(plugin, guiManager, slots, new String[]{gameID, key}, title);
@@ -53,6 +58,21 @@ public class GameGui extends AGui {
             main.setAction(ClickAction.OPEN_MAIN_GUI);
             setLowerButton(main, PluginManager.toMain);
         }
+    }
+
+    /**
+     * Only to be used for the main GUI of a game
+     * 
+     * The title is automatically set to the game-title
+     * set in the GameBox language file
+     * @param plugin GameBox instance
+     * @param guiManager plugin manager 
+     * @param slots slots of the GUI
+     * @param gameID ID of the game
+     * @param key GUI key
+     */
+    public GameGui(GameBox plugin, GUIManager guiManager, int slots, String gameID, String key){
+        this(plugin, guiManager, slots, gameID, key, plugin.lang.TITLE_GAME_GUI);
     }
 
     /**
