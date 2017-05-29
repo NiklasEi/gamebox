@@ -1,6 +1,5 @@
 package me.nikl.gamebox;
 
-import me.clip.placeholderapi.PlaceholderAPI;
 import me.nikl.gamebox.commands.AdminCommand;
 import me.nikl.gamebox.commands.MainCommand;
 import me.nikl.gamebox.data.PlaceholderAPIHook;
@@ -36,6 +35,7 @@ public class GameBox extends JavaPlugin{
 	// toggle to stop inventory contents to be restored when a new gui is opened and automatically closes the old one
 	public static boolean openingNewGUI = false;
 
+	// these are returned from GameManagers when a new game is started/failed to start
 	public static final int GAME_STARTED = 1, GAME_NOT_STARTED_ERROR = 0, GAME_NOT_ENOUGH_MONEY = 2, GAME_NOT_ENOUGH_MONEY_1 = 3, GAME_NOT_ENOUGH_MONEY_2 = 4;
 	
 	// plugin configuration
@@ -64,9 +64,8 @@ public class GameBox extends JavaPlugin{
 	private Statistics statistics;
 
 	@Deprecated
-	public static boolean playSounds = true;
+	public static boolean playSounds = GameBoxSettings.playSounds;
 
-	public boolean delayedInventoryUpdate = false;
 
 
 	@Override
@@ -97,6 +96,11 @@ public class GameBox extends JavaPlugin{
 			return;
 		}
 
+		if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
+			new PlaceholderAPIHook(this, "gamebox");
+			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Hooked into PlaceholderAPI");
+		}
+
 		// check for registered games
 		new BukkitRunnable(){
 			@Override
@@ -113,11 +117,6 @@ public class GameBox extends JavaPlugin{
 				}
 			}
 		}.runTaskLaterAsynchronously(this, 100);
-
-		if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
-			new PlaceholderAPIHook(this, "gamebox");
-			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Hooked into PlaceholderAPI");
-		}
 	}
 	
 	/***
@@ -133,9 +132,6 @@ public class GameBox extends JavaPlugin{
 
 		// load all settings from config
 		GameBoxSettings.loadSettings(this);
-
-		// ToDo: remove when removing all deprecated stuff
-		playSounds = GameBoxSettings.playSounds;
 
 		// disable mysql
 		GameBoxSettings.useMysql = false;
@@ -227,17 +223,17 @@ public class GameBox extends JavaPlugin{
 				break;
 			case "v1_8_R3":
 				nms = new NMSUtil_1_8_R3();
-				delayedInventoryUpdate = true;
+				GameBoxSettings.delayedInventoryUpdate = true;
 
 				break;
 			case "v1_8_R2":
 				nms = new NMSUtil_1_8_R2();
-				delayedInventoryUpdate = true;
+				GameBoxSettings.delayedInventoryUpdate = true;
 
 				break;
 			case "v1_8_R1":
 				nms = new NMSUtil_1_8_R1();
-				delayedInventoryUpdate = true;
+				GameBoxSettings.delayedInventoryUpdate = true;
 
 				break;
 			case "v1_11_R1":
@@ -264,18 +260,6 @@ public class GameBox extends JavaPlugin{
 
 	public PluginManager getPluginManager() {
 		return pManager;
-	}
-
-
-	/**
-	 * Will be removed
-	 *
-	 * as of @version 1.3.0 this should be retrieved from GameBoxSettings directly
-	 * @return
-	 */
-	@Deprecated
-	public boolean getEconEnabled() {
-		return GameBoxSettings.econEnabled;
 	}
 
 
@@ -316,30 +300,6 @@ public class GameBox extends JavaPlugin{
 	public boolean wonTokens(UUID player, int tokens, String gameID){
 		if(!GameBoxSettings.tokensEnabled) return false;
 		return this.pManager.wonTokens(player, tokens, gameID);
-	}
-
-
-	/**
-	 * Will be removed
-	 *
-	 * as of @version 1.3.0 this should be retrieved from GameBoxSettings directly
-	 * @return
-	 */
-	@Deprecated
-	public boolean isTokensEnabled() {
-		return GameBoxSettings.tokensEnabled;
-	}
-
-
-	/**
-	 * Will be removed
-	 *
-	 * as of @version 1.3.0 this should be done with GameBoxSettings directly
-	 * @return
-	 */
-	@Deprecated
-	public void setTokensEnabled(boolean tokensEnabled){
-		GameBoxSettings.tokensEnabled = tokensEnabled;
 	}
 
 
