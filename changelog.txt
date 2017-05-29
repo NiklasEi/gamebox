@@ -1,4 +1,8 @@
 
+- add help message for admin commands listing all the commands
+- cleaned up shop system
+- clean up GUI system
+- cleaned up Settings system and main class
 
 
 --------------------------------------------------
