@@ -243,7 +243,7 @@ public class PluginManager implements Listener {
 		GameBox.debug("restoring inventory contents...");
 		player.getInventory().setContents(savedContents.get(player.getUniqueId()));
         player.getInventory().setHeldItemSlot(hotBarSlot.get(player.getUniqueId()));
-        if(plugin.delayedInventoryUpdate) {
+        if(GameBoxSettings.delayedInventoryUpdate) {
             new BukkitRunnable() {
                 @Override
                 public void run() {
