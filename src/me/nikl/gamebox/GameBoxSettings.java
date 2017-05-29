@@ -15,6 +15,9 @@ public class GameBoxSettings {
 
     public static boolean useMysql = false;
 
+    // is changed in main class
+    public static boolean delayedInventoryUpdate = false;
+
     // time in seconds for inputs and invitations
     public static int timeForPlayerInput = 30;
     public static int timeForInvitations = 30;
