@@ -21,13 +21,11 @@ import org.bukkit.command.CommandSender;
  */
 public class AdminCommand implements CommandExecutor {
     private GameBox plugin;
-    private PluginManager pManager;
     private Language lang;
 
 
     public AdminCommand(GameBox plugin){
         this.plugin = plugin;
-        this.pManager = plugin.getPluginManager();
         this.lang = plugin.lang;
     }
 
@@ -40,7 +38,7 @@ public class AdminCommand implements CommandExecutor {
         if(args.length > 0){
             if(args[0].equalsIgnoreCase("givetoken") || args[0].equalsIgnoreCase("taketoken") || args[0].equalsIgnoreCase("settoken")){
                 if(args.length != 3){
-                    sender.sendMessage(lang.PREFIX + " /gba [givetoken:taketoekn:settoken] [player name] [count (integer)]");
+                    sender.sendMessage(lang.PREFIX + " /gba [givetoken:taketoken:settoken] [player name] [count (integer)]");
                     return true;
                 }
                 OfflinePlayer player = Bukkit.getOfflinePlayer(args[1]);
@@ -170,7 +168,10 @@ public class AdminCommand implements CommandExecutor {
                 return true;
             }
         }
-        sender.sendMessage(lang.PREFIX + ChatColor.RED + " no such command found");
+        sender.sendMessage(lang.PREFIX + ChatColor.BOLD + ChatColor.GOLD + " Change the number of tokens for online/offline players");
+        sender.sendMessage(lang.PREFIX + ChatColor.DARK_GREEN + " /gba [givetoken:taketoken:settoken] [player name] [count (integer)]");
+        sender.sendMessage(lang.PREFIX + ChatColor.BOLD + ChatColor.GOLD + " Get the number of tokens an online/offline player has");
+        sender.sendMessage(lang.PREFIX + ChatColor.DARK_GREEN + " /gba [token] [player name]");
         return true;
     }
 }
