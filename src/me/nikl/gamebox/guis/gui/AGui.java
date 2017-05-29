@@ -28,42 +28,23 @@ import java.util.logging.Level;
  *
  */
 public abstract class AGui {
+
 	protected Inventory inventory;
 	protected Map<UUID, Inventory> openInventories = new HashMap<>();
-	private ArrayList<String> permissions = new ArrayList<>();
-	protected GUIManager guiManager;
 	protected Set<UUID> inGui;
+
+	protected GUIManager guiManager;
 	protected GameBox plugin;
 	protected PluginManager pluginManager;
 
-	protected float volume= 0.5f, pitch = 10f;
-
-	protected final String MAIN = "main";
+	protected float volume = 0.5f, pitch = 10f;
 
 	protected AButton[] grid;
 	protected AButton[] lowerGrid = new AButton[36];
 
 	protected String[] args;
 
-	/**
-	 * Constructor for a AGui
-	 *
-	 * @param plugin plugin instance
-	 * @param guiManager GUIManager instance
-	 * @param slots number of slots in the inventory
-	 */
-	@Deprecated
-	public AGui(GameBox plugin, GUIManager guiManager, int slots){
-		this.plugin = plugin;
-		this.guiManager = guiManager;
-		this.pluginManager = plugin.getPluginManager();
-		this.grid = new AButton[slots];
-		inGui = new HashSet<>();
-		permissions.add(Permissions.ADMIN.getPermission());
-
-		this.inventory = Bukkit.createInventory(null, slots, "This title should not show!");
-	}
-
+	protected String title;
 
 	/**
 	 * Constructor for an AGui
@@ -72,16 +53,17 @@ public abstract class AGui {
 	 * @param slots number of slots in the gui
 	 * @param args keys for the gui
 	 */
-	public AGui(GameBox plugin, GUIManager guiManager, int slots, String[] args){
+	public AGui(GameBox plugin, GUIManager guiManager, int slots, String[] args, String title){
 		this.plugin = plugin;
 		this.args = args;
 		this.guiManager = guiManager;
 		this.pluginManager = plugin.getPluginManager();
 		this.grid = new AButton[slots];
 		inGui = new HashSet<>();
-		permissions.add(Permissions.ADMIN.getPermission());
 
-		this.inventory = Bukkit.createInventory(null, slots, "This title should not show!");
+		this.title = title;
+
+		this.inventory = Bukkit.createInventory(null, slots, title);
 	}
 	
 	public boolean open(Player player){
@@ -107,14 +89,11 @@ public abstract class AGui {
 		if(GameBox.debug) Bukkit.getConsoleSender().sendMessage("action called: " + action.toString() + " with the args: " + (args == null?"": Arrays.asList(args)));
 		switch (action){
 			case OPEN_GAME_GUI:
-				if(this instanceof GameGui){
-					GameGui gui = (GameGui) this;
-					if(gui.getGameID().equalsIgnoreCase(args[0]) && gui.getKey().equalsIgnoreCase(GUIManager.MAIN_GAME_GUI)){
-						GameBox.debug("Already in said game gui");
-						return false;
-					}
+				if(args.length != 2){
+					Bukkit.getConsoleSender().sendMessage("wrong number of arguments to open a game gui: " + args.length);
 				}
-				if(guiManager.openGameGui((Player)event.getWhoClicked(), args[0], GUIManager.MAIN_GAME_GUI)){
+
+				if(guiManager.openGameGui((Player)event.getWhoClicked(), args[0], args[1])){
 					inGui.remove(event.getWhoClicked().getUniqueId());
 					return true;
 				}
@@ -239,16 +218,8 @@ public abstract class AGui {
 			
 			case OPEN_MAIN_GUI:
 				if(this instanceof MainGui) return false;
-				GameBox.debug("guimanager = null? " + String.valueOf(guiManager == null));
+
 				if(guiManager.openMainGui((Player)event.getWhoClicked())){
-					inGui.remove(event.getWhoClicked().getUniqueId());
-					return true;
-				}
-				return false;
-
-
-			case CHANGE_GAME_GUI:
-				if(guiManager.openGameGui((Player)event.getWhoClicked(), args)){
 					inGui.remove(event.getWhoClicked().getUniqueId());
 					return true;
 				}
@@ -349,7 +320,7 @@ public abstract class AGui {
 					}
 				}
 				if(money > 0){
-					if(!plugin.getEconEnabled() || GameBox.econ.getBalance((OfflinePlayer) event.getWhoClicked()) < money){
+					if(!GameBoxSettings.econEnabled || GameBox.econ.getBalance((OfflinePlayer) event.getWhoClicked()) < money){
 						guiManager.sentInventoryTitleMessage((Player)event.getWhoClicked(), plugin.lang.SHOP_TITLE_NOT_ENOUGH_MONEY, null);
 						return false;
 					}
@@ -498,10 +469,6 @@ public abstract class AGui {
 		setLowerButton(button, i);
 	}
 
-	private String color(String message){
-		return ChatColor.translateAlternateColorCodes('&', message);
-	}
-
 	public void onBottomInvClick(InventoryClickEvent event) {
 		if(lowerGrid != null && lowerGrid[event.getSlot()] != null){
 			if(action(event, lowerGrid[event.getSlot()].getAction(), lowerGrid[event.getSlot()].getArgs())){
@@ -512,22 +479,6 @@ public abstract class AGui {
 				((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sounds.VILLAGER_NO.bukkitSound(), volume, pitch);
 			}
 		}
-	}
-
-	public void addPermission(String perm){
-		this.permissions.add(perm);
-	}
-
-	public void removePermission(String perm){
-		this.permissions.remove(perm);
-	}
-
-	public AButton[] getLowerGrid(){
-		return this.lowerGrid;
-	}
-
-	public AButton getButton(int slot){
-		return grid[slot];
 	}
 
 	/**
@@ -541,12 +492,11 @@ public abstract class AGui {
 		openInventories.remove(uuid);
 	}
 
-	@Deprecated
-	public void setArgs(String[] args){
-		this.args = args;
-	}
-
 	public String[] getArgs(){
 		return this.args;
+	}
+
+	public String getTitle(){
+		return title;
 	}
 }

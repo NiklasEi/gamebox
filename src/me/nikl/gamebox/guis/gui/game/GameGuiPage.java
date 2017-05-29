@@ -16,11 +16,9 @@ import java.util.Map;
  *
  */
 public class GameGuiPage extends GameGui{
-    private String title;
 
     public GameGuiPage(GameBox plugin, GUIManager guiManager, int slots, String gameID, String key, String title) {
-        super(plugin, guiManager, slots, gameID, key);
-        this.title = title;
+        super(plugin, guiManager, slots, gameID, key, title);
 
         Map<Integer, ItemStack> hotBarButtons = plugin.getPluginManager().getHotBarButtons();
 
@@ -33,9 +31,5 @@ public class GameGuiPage extends GameGui{
             gameGUI.setArgs(gameID, GUIManager.MAIN_GAME_GUI);
             setLowerButton(gameGUI, PluginManager.toGame);
         }
-    }
-
-    public String getTitle() {
-        return title;
     }
 }

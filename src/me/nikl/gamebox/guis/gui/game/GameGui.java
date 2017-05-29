@@ -6,6 +6,7 @@ import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.gui.AGui;
+import me.nikl.gamebox.util.ItemStackUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -28,8 +29,8 @@ public class GameGui extends AGui {
      * @param guiManager GUIManager instance
      * @param slots      number of slots in the inventory
      */
-    public GameGui(GameBox plugin, GUIManager guiManager, int slots, String gameID, String key) {
-        super(plugin, guiManager, slots, new String[]{gameID, key});
+    public GameGui(GameBox plugin, GUIManager guiManager, int slots, String gameID, String key, String title) {
+        super(plugin, guiManager, slots, new String[]{gameID, key}, title);
 
 
         Map<Integer, ItemStack> hotBarButtons = plugin.getPluginManager().getHotBarButtons();
@@ -54,33 +55,16 @@ public class GameGui extends AGui {
         }
     }
 
-    @Deprecated
-    public String getGameID(){
-        return this.args[0];
-    }
-
-    @Deprecated
-    public String getKey(){
-        return this.args[1];
-    }
-
+    /**
+     * Place a help button with the given text in the
+     * lower right corner of the GUI
+     *
+     * @param list text that will be displayed on the button
+     */
     public void setHelpButton(List<String> list){
-
-        ItemStack helpItem = new ItemStack(Material.BOOK_AND_QUILL, 1);
-        // test glow on buttons
-        helpItem = plugin.getNMS().addGlow(helpItem);
-        AButton help = new AButton(helpItem);
-        ItemMeta meta = help.getItemMeta();
-        if(list != null) {
-            if(list.size() > 0)meta.setDisplayName(list.get(0));
-            if(list.size() > 1){
-                ArrayList<String> lore = new ArrayList<>(list);
-                lore.remove(0);
-                meta.setLore(lore);
-            }
-        }
-        help.setItemMeta(meta);
+        AButton help = new AButton(plugin.getNMS().addGlow(ItemStackUtil.createBookWithText(list)));
         help.setAction(ClickAction.NOTHING);
+
         setButton(help, inventory.getSize()-1);
     }
 }

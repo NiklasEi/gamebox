@@ -2,12 +2,14 @@ package me.nikl.gamebox.guis.gui;
 
 import me.nikl.gamebox.ClickAction;
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.button.ToggleButton;
 import me.nikl.gamebox.guis.shop.Shop;
 import me.nikl.gamebox.players.GBPlayer;
+import me.nikl.gamebox.util.ItemStackUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -34,89 +36,18 @@ public class MainGui extends AGui{
 	private int tokenButtonSlot = 45;
 	private int shopSlot = 46;
 
-	public MainGui(GameBox plugin, GUIManager guiManager, String gameID){
-		super(plugin, guiManager, 54, new String[]{gameID, GUIManager.MAIN_GAME_GUI});
-		this.inventory = Bukkit.createInventory(null, 54, "GameBox gui");
-		ItemStack helpItem = new ItemStack(Material.BOOK_AND_QUILL, 1);
-		// test glow on buttons
-		helpItem = plugin.getNMS().addGlow(helpItem);
-		AButton help = new AButton(helpItem);
-		ItemMeta meta = help.getItemMeta();
-		if(plugin.lang.BUTTON_MAIN_MENU_INFO != null) {
-			if(plugin.lang.BUTTON_MAIN_MENU_INFO.size() > 0)meta.setDisplayName(plugin.lang.BUTTON_MAIN_MENU_INFO.get(0));
-			if(plugin.lang.BUTTON_MAIN_MENU_INFO.size() > 1){
-				ArrayList<String> lore = new ArrayList<>(plugin.lang.BUTTON_MAIN_MENU_INFO);
-				lore.remove(0);
-				meta.setLore(lore);
-			}
-		}
-		help.setItemMeta(meta);
-		help.setAction(ClickAction.NOTHING);
-		setButton(help, 53);
-
-
-		AButton soundToggle = new AButton(new MaterialData(Material.RECORD_6), 1);
-		meta = soundToggle.getItemMeta();
-		meta.addItemFlags(ItemFlag.values());
-		meta.setDisplayName(ChatColor.BLUE+"Sound on");
-		meta.setLore(Arrays.asList(" ", ChatColor.BLUE+"Click to turn sounds off"));
-		soundToggle.setItemMeta(meta);
-		soundToggle.setAction(ClickAction.TOGGLE);
-		soundToggle.setArgs("sound");
-		setButton(soundToggle, soundToggleSlot);
-
-
-		if(plugin.isTokensEnabled()) {
-			// set a placeholder in the general main gui
-			ItemStack tokensItem = new AButton(new MaterialData(Material.GOLD_NUGGET), 1);
-			tokensItem = plugin.getNMS().addGlow(tokensItem);
-			AButton tokens = new AButton(tokensItem);
-			meta = tokens.getItemMeta();
-			meta.setDisplayName("Placeholder");
-			tokens.setItemMeta(meta);
-			tokens.setAction(ClickAction.NOTHING);
-			setButton(tokens, tokenButtonSlot);
-		}
-
-
-
-
-		Map<Integer, ItemStack> hotBarButtons = plugin.getPluginManager().getHotBarButtons();
-
-		// set lower grid
-		if(hotBarButtons.containsKey(PluginManager.exit)) {
-			AButton exit = new AButton(hotBarButtons.get(PluginManager.exit).getData(), 1);
-			meta = hotBarButtons.get(PluginManager.exit).getItemMeta();
-			exit.setItemMeta(meta);
-			exit.setAction(ClickAction.CLOSE);
-			setLowerButton(exit, PluginManager.exit);
-		}
-	}
-
-	@Deprecated
 	public MainGui(GameBox plugin, GUIManager guiManager){
-		super(plugin, guiManager, 54);
-		this.inventory = Bukkit.createInventory(null, 54, "GameBox gui");
-		ItemStack helpItem = new ItemStack(Material.BOOK_AND_QUILL, 1);
-		// test glow on buttons
-		helpItem = plugin.getNMS().addGlow(helpItem);
-		AButton help = new AButton(helpItem);
-		ItemMeta meta = help.getItemMeta();
-		if(plugin.lang.BUTTON_MAIN_MENU_INFO != null) {
-			if(plugin.lang.BUTTON_MAIN_MENU_INFO.size() > 0)meta.setDisplayName(plugin.lang.BUTTON_MAIN_MENU_INFO.get(0));
-			if(plugin.lang.BUTTON_MAIN_MENU_INFO.size() > 1){
-				ArrayList<String> lore = new ArrayList<>(plugin.lang.BUTTON_MAIN_MENU_INFO);
-				lore.remove(0);
-				meta.setLore(lore);
-			}
-		}
-		help.setItemMeta(meta);
+		super(plugin, guiManager, 54, new String[]{}, plugin.lang.TITLE_MAIN_GUI);
+
+
+
+		AButton help = new AButton(plugin.getNMS().addGlow(ItemStackUtil.createBookWithText(plugin.lang.BUTTON_MAIN_MENU_INFO)));
 		help.setAction(ClickAction.NOTHING);
 		setButton(help, 53);
 
 
 		AButton soundToggle = new AButton(new MaterialData(Material.RECORD_6), 1);
-		meta = soundToggle.getItemMeta();
+		ItemMeta meta = soundToggle.getItemMeta();
 		meta.addItemFlags(ItemFlag.values());
 		meta.setDisplayName(ChatColor.BLUE+"Sound on");
 		meta.setLore(Arrays.asList(" ", ChatColor.BLUE+"Click to turn sounds off"));
@@ -126,7 +57,7 @@ public class MainGui extends AGui{
 		setButton(soundToggle, soundToggleSlot);
 
 
-		if(plugin.isTokensEnabled()) {
+		if(GameBoxSettings.tokensEnabled) {
 			// set a placeholder in the general main gui
 			ItemStack tokensItem = new AButton(new MaterialData(Material.GOLD_NUGGET), 1);
 			tokensItem = plugin.getNMS().addGlow(tokensItem);
@@ -137,8 +68,6 @@ public class MainGui extends AGui{
 			tokens.setAction(ClickAction.NOTHING);
 			setButton(tokens, tokenButtonSlot);
 		}
-
-
 
 
 		Map<Integer, ItemStack> hotBarButtons = plugin.getPluginManager().getHotBarButtons();
@@ -164,7 +93,6 @@ public class MainGui extends AGui{
 			loadMainGui(pluginManager.getPlayer(player.getUniqueId()));
 		}
 		if(super.open(player)){
-			plugin.getNMS().updateInventoryTitle(player, plugin.lang.TITLE_MAIN_GUI.replace("%player%", player.getName()));
 			if(pluginManager.getGames().isEmpty()){
 				plugin.getNMS().updateInventoryTitle(player, ChatColor.translateAlternateColorCodes('&', "&c&l %player% you should get some games on Spigot ;)".replace("%player%", player.getName())));
 			}
@@ -190,7 +118,7 @@ public class MainGui extends AGui{
 		soundToggle.setArgs("sound");
 		soundButtons.put(player.getUuid(), soundToggle);
 
-		if(plugin.isTokensEnabled()) {
+		if(GameBoxSettings.tokensEnabled) {
 			ItemStack tokensItem = new AButton(new MaterialData(Material.GOLD_NUGGET), 1);
 			tokensItem = plugin.getNMS().addGlow(tokensItem);
 			AButton tokens = new AButton(tokensItem);
@@ -198,7 +126,8 @@ public class MainGui extends AGui{
 			tokenButtons.put(player.getUuid(), tokens);
 		}
 
-		Inventory inventory = Bukkit.createInventory(null, this.inventory.getSize(), "GameBox gui");
+		Inventory inventory = Bukkit.createInventory(null, this.inventory.getSize(), title.replace("%player%", Bukkit.getPlayer(player.getUuid()).getName()));
+
 		inventory.setContents(this.inventory.getContents().clone());
 
 		openInventories.putIfAbsent(player.getUuid(),inventory);
@@ -214,7 +143,7 @@ public class MainGui extends AGui{
 	}
 
 	public void updateTokens(GBPlayer player) {
-		if(!plugin.isTokensEnabled()) return;
+		if(!GameBoxSettings.tokensEnabled) return;
 		if(!tokenButtons.keySet().contains(player.getUuid())) return;
 
 		ItemMeta meta = tokenButtons.get(player.getUuid()).getItemMeta();
