@@ -271,6 +271,28 @@ public class GUIManager implements Listener {
 		plugin.getMainCommand().registerSubCommands(args[0], subCommand);
 	}
 
+	@Deprecated
+	public void registerGameGUI(String gameID, String key, GameGui gui, ItemStack button, String... subCommand){
+		Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Your version of " + plugin.getPluginManager().getGame(gameID).getName() + " is outdated!");
+		if(key.equals(MAIN_GAME_GUI)){
+			registerMainGameGUI(gui, button, subCommand);
+		} else {
+			registerGameGUI(gui);
+		}
+	}
+
+	@Deprecated
+	public void registerGameGUI(String gameID, String key, GameGui gui){
+		Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Your version of " + plugin.getPluginManager().getGame(gameID).getName() + " is outdated!");
+		registerGameGUI(gui);
+	}
+
+	@Deprecated
+	public void registerTopList(String gameID, String key, TopListPage gui){
+		Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Your version of " + plugin.getPluginManager().getGame(gameID).getName() + " is outdated!");
+		registerGameGUI(gui);
+	}
+
 	public AGui getCurrentGui(UUID uuid){
 		if(mainGui.isInGui(uuid)){
 			return mainGui;
