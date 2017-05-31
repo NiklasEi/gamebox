@@ -3,6 +3,7 @@
 - cleaned up shop system
 - clean up GUI system
 - cleaned up Settings system and main class
+- removed one click action and simplified action processing
 
 
 --------------------------------------------------
