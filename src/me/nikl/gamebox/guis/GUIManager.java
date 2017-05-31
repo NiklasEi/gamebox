@@ -266,7 +266,7 @@ public class GUIManager implements Listener {
 		AButton gameButton = new AButton(button.getData(), 1);
 		gameButton.setItemMeta(button.getItemMeta());
 		gameButton.setAction(ClickAction.OPEN_GAME_GUI);
-		gameButton.setArgs(args[0]);
+		gameButton.setArgs(args[0], args[1]);
 		mainGui.setButton(gameButton);
 		plugin.getMainCommand().registerSubCommands(args[0], subCommand);
 	}
