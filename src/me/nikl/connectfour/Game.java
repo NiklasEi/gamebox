@@ -386,13 +386,13 @@ public class Game extends BukkitRunnable{
         // clicked slot is empty!
         UUID uuid = inventoryClickEvent.getWhoClicked().getUniqueId();
         if(uuid.equals(firstUUID) && state == GameState.FIRST_TURN){
-            inv.setItem(inventoryClickEvent.getSlot(), firstChip);
-            fallingChip = inventoryClickEvent.getSlot();
+            inv.setItem(inventoryClickEvent.getSlot() % 9, firstChip);
+            fallingChip = inventoryClickEvent.getSlot() % 9;
             state = GameState.FALLING_FIRST;
             if(playSounds) first.playSound(first.getLocation(), insert, volume, pitch);
         } else if(uuid.equals(secondUUID) && state == GameState.SECOND_TURN){
-            inv.setItem(inventoryClickEvent.getSlot(), secondChip);
-            fallingChip = inventoryClickEvent.getSlot();
+            inv.setItem(inventoryClickEvent.getSlot() % 9, secondChip);
+            fallingChip = inventoryClickEvent.getSlot() % 9;
             state = GameState.FALLING_SECOND;
             if(playSounds) second.playSound(second.getLocation(), insert, volume, pitch);
         }
