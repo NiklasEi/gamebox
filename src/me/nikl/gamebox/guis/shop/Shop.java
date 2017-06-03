@@ -109,11 +109,18 @@ public class Shop extends AGui{
     void updateTokens(GBPlayer player) {
         if(!GameBoxSettings.tokensEnabled) return;
         if(!tokenButtons.keySet().contains(player.getUuid())) return;
+        if(!openInventories.keySet().contains(player.getUuid())) return;
 
         ItemMeta meta = tokenButtons.get(player.getUuid()).getItemMeta();
         meta.setDisplayName(plugin.lang.BUTTON_TOKENS.replace("%tokens%", String.valueOf(player.getTokens())));
         tokenButtons.get(player.getUuid()).setItemMeta(meta);
 
         openInventories.get(player.getUuid()).setItem(tokenButtonSlot, tokenButtons.get(player.getUuid()));
+    }
+
+    @Override
+    public void removePlayer(UUID uuid) {
+        tokenButtons.remove(uuid);
+        super.removePlayer(uuid);
     }
 }

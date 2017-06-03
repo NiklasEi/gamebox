@@ -7,7 +7,6 @@ import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.button.ToggleButton;
-import me.nikl.gamebox.guis.shop.Shop;
 import me.nikl.gamebox.players.GBPlayer;
 import me.nikl.gamebox.util.ItemStackUtil;
 import org.bukkit.Bukkit;
@@ -20,7 +19,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by niklas on 2/5/17.
@@ -145,6 +147,7 @@ public class MainGui extends AGui{
 	public void updateTokens(GBPlayer player) {
 		if(!GameBoxSettings.tokensEnabled) return;
 		if(!tokenButtons.keySet().contains(player.getUuid())) return;
+		if(!openInventories.keySet().contains(player.getUuid())) return;
 
 		ItemMeta meta = tokenButtons.get(player.getUuid()).getItemMeta();
 		meta.setDisplayName(plugin.lang.BUTTON_TOKENS.replace("%tokens%", String.valueOf(player.getTokens())));
@@ -156,6 +159,7 @@ public class MainGui extends AGui{
 	@Override
 	public void removePlayer(UUID uuid) {
 		soundButtons.remove(uuid);
+		tokenButtons.remove(uuid);
 		super.removePlayer(uuid);
 	}
 }
