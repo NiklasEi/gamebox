@@ -5,7 +5,7 @@ Give access to several inventory games through one clean GUI.
 ## Features
 
 * Customize the GUI, messages, titles and game modes.
-* A growing number of single and multiplayer games. For a complete list of games please refer to the [plugins page on my website][GameBox-games].
+* A growing number of single and multiplayer games. For a complete list of games please refer to the [list of all GameBox games][GameBox-games].
 * Gives access to a token system with configurable shop (see [shop](#shop))
 
 GameBox uses language files for messages and inventory titles. You can add your own file or use one of the default files (german, english, spanish and mandarin) that are included in the plugin. The name of the used language file is specified in the configuration file of GameBox.
@@ -49,6 +49,6 @@ Please refer to the plugins page for a detailed list of commands and permissions
 
 [Permissions list][GameBox-perms]
 
-[GameBox-games]: www.nikl.me/projects/gamebox/#games
-[GameBox-cmds]: www.nikl.me/projects/gamebox/#commands
-[GameBox-perms]: www.nikl.me/projects/gamebox/#permissions
+[GameBox-games]: https://www.nikl.me/projects/gamebox/#games
+[GameBox-cmds]: https://www.nikl.me/projects/gamebox/#commands
+[GameBox-perms]: https://www.nikl.me/projects/gamebox/#permissions
