@@ -1,4 +1,8 @@
 
+
+
+--------------------------------------------------
+v 1.5.0
 - add help message for admin commands listing all the commands
 - cleaned up shop system
 - clean up GUI system
@@ -8,7 +12,7 @@
 - improved handling of world changes
 - add reload command and loading/unloading of registered games on reload
 
---------------------------------------------------
+
 v 1.4.0:
 - add option in config to keep items in certain slots in the hot bar
 --- solves compatibility issues with plugins that require specific items in the players inventory
