@@ -166,6 +166,15 @@ public class AdminCommand implements CommandExecutor {
                 sender.sendMessage(lang.PREFIX + lang.CMD_TOKEN.replace("%player%", player.getName()).replace("%token%"
                         , String.valueOf(plugin.getStatistics().getInt(player.getUniqueId(), Statistics.TOKEN_PATH, 0))));
                 return true;
+            } else if(args[0].equalsIgnoreCase("reload")){
+                if(plugin.reload()){
+                    sender.sendMessage(lang.PREFIX + lang.RELOAD_SUCCESS);
+                    return true;
+                } else {
+                    sender.sendMessage(lang.PREFIX + lang.RELOAD_FAIL);
+                    Bukkit.getPluginManager().disablePlugin(plugin);
+                    return true;
+                }
             }
         }
         sender.sendMessage(lang.PREFIX + ChatColor.BOLD + ChatColor.GOLD + " Change the number of tokens for online/offline players");
