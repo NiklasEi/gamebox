@@ -4,7 +4,9 @@
 - clean up GUI system
 - cleaned up Settings system and main class
 - removed one click action and simplified action processing
-
+- fix NPE when player comes from disabled world and changes his token count
+- improved handling of world changes
+- add reload command and loading/unloading of registered games on reload
 
 --------------------------------------------------
 v 1.4.0:
