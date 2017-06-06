@@ -181,6 +181,8 @@ public class AdminCommand implements CommandExecutor {
         sender.sendMessage(lang.PREFIX + ChatColor.DARK_GREEN + " /gba [givetoken:taketoken:settoken] [player name] [count (integer)]");
         sender.sendMessage(lang.PREFIX + ChatColor.BOLD + ChatColor.GOLD + " Get the number of tokens an online/offline player has");
         sender.sendMessage(lang.PREFIX + ChatColor.DARK_GREEN + " /gba [token] [player name]");
+        sender.sendMessage(lang.PREFIX + ChatColor.BOLD + ChatColor.GOLD + " Reload Gamebox and all registered games");
+        sender.sendMessage(lang.PREFIX + ChatColor.DARK_GREEN + " /gba reload");
         return true;
     }
 }
