@@ -1,6 +1,10 @@
 package me.nikl.gamebox.guis;
 
-import me.nikl.gamebox.*;
+import me.nikl.gamebox.ClickAction;
+import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.GameBoxSettings;
+import me.nikl.gamebox.Language;
+import me.nikl.gamebox.Permissions;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.gui.AGui;
 import me.nikl.gamebox.guis.gui.MainGui;
@@ -14,7 +18,6 @@ import me.nikl.gamebox.players.GBPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
@@ -22,7 +25,6 @@ import org.bukkit.inventory.ItemStack;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.logging.Level;
 
 /**
  * Created by niklas on 2/4/17.
@@ -31,7 +33,7 @@ import java.util.logging.Level;
  * listen for events called in the game's guis and pages
  * (not mainGUI and not game)
  */
-public class GUIManager implements Listener {
+public class GUIManager {
 	public static final String TOP_LIST_KEY_ADDON = "topList";
 	private GameBox plugin;
 	private Map<String, Map<String, GameGui>> gameGuis;
