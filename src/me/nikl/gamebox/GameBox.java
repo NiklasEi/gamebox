@@ -5,6 +5,7 @@ import me.nikl.gamebox.commands.MainCommand;
 import me.nikl.gamebox.data.PlaceholderAPIHook;
 import me.nikl.gamebox.data.Statistics;
 import me.nikl.gamebox.data.StatisticsFile;
+import me.nikl.gamebox.game.GameContainer;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.nms.*;
 import me.nikl.gamebox.players.HandleInvitations;
@@ -14,11 +15,18 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.HandlerList;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.HashSet;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -82,13 +90,6 @@ public class GameBox extends JavaPlugin{
 			return;
 		}
 
-		if(!reloadConfiguration()){
-			getLogger().severe(" Failed to load config file!");
-
-			Bukkit.getPluginManager().disablePlugin(this);
-			return;
-		}
-
 		if (!reload()) {
 			getLogger().severe(" Error while loading the plugin! Plugin was disabled!");
 
@@ -126,6 +127,14 @@ public class GameBox extends JavaPlugin{
 	 * set up economy if enabled
 	 */
 	public boolean reload(){
+
+		if(!reloadConfiguration()){
+			getLogger().severe(" Failed to load config file!");
+
+			Bukkit.getPluginManager().disablePlugin(this);
+			return false;
+		}
+
 		this.lang = new Language(this);
 
 		this.api = new GameBoxAPI(this);
@@ -136,10 +145,38 @@ public class GameBox extends JavaPlugin{
 		// disable mysql
 		GameBoxSettings.useMysql = false;
 
+
+		HashSet<Plugin> games = new HashSet<>();
+
+		// if it's not null disable first then get a new manager
+		int gameNum = 0;
+		if(pManager != null){
+			gameNum = PluginManager.gamesRegistered;
+			pManager.shutDown();
+
+			HandlerList.unregisterAll(pManager);
+
+			for(GameContainer gameContainer : pManager.getGames().values()){
+				if (gameContainer.getGamePlugin() != null){
+					games.add(gameContainer.getGamePlugin());
+				}
+			}
+
+			pManager = null;
+		}
+
+
+
+
 		// here try connecting to database when option set in config (for later)
 
 		// if connecting to the database failed useMysql will be set to false and the plugin should fall back to file storage
 		if(!GameBoxSettings.useMysql) {
+
+			// on reload the old statistics have to be saved before loading the new one
+			if(statistics != null) statistics.save();
+
+			// get and load a new statistic
 			this.statistics = new StatisticsFile(this);
 			if (!statistics.load()) {
 				Bukkit.getLogger().log(Level.SEVERE, " Something went wrong with the data file");
@@ -154,10 +191,12 @@ public class GameBox extends JavaPlugin{
 			}
 		}
 
-		// if it's not null disable first then get a new manager
-		if(pManager != null){
-			pManager.shutDown();
-			pManager = null;
+		// disable all registered games
+		if(!games.isEmpty()){
+			for(Plugin game : games){
+				//Bukkit.getPluginManager().disablePlugin(game);
+				game.onDisable();
+			}
 		}
 
 		// get a new plugin manager and set the other managers and handlers
@@ -174,7 +213,24 @@ public class GameBox extends JavaPlugin{
 		mainCommand = new MainCommand(this);
 		this.getCommand("gamebox").setExecutor(mainCommand);
 		this.getCommand("gameboxadmin").setExecutor(new AdminCommand(this));
-		
+
+		if(!games.isEmpty()){
+			for(Plugin game : games){
+				//Bukkit.getPluginManager().enablePlugin(game);
+				game.onEnable();
+
+				Bukkit.getConsoleSender().sendMessage(lang.PREFIX + "    reloading " + ChatColor.DARK_AQUA + game.getName() + ChatColor.RESET + " version " + ChatColor.GREEN + game.getDescription().getVersion());
+			}
+
+			// print possible problems at the end of the reload process
+			if(gameNum != games.size()){
+				Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED + " Some registered games seem to be not compatible");
+				Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED + "    with the reload command!");
+				Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED + " Those games ("+ (gameNum-games.size()) +") will be missing after reloading!");
+				Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.GOLD + "    Please keep your games up to date");
+			}
+		}
+
 		return true;
 	}
 
