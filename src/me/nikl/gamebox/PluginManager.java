@@ -22,15 +22,30 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 
 /**
@@ -262,7 +277,6 @@ public class PluginManager implements Listener {
 	}
 	
 	@EventHandler
-    @SuppressWarnings("deprecation")
 	public void onInvClick(InventoryClickEvent event) {
 		if(event.getSlot() < 0 || event.getInventory() == null || event.getWhoClicked() == null){
             return;
@@ -327,7 +341,6 @@ public class PluginManager implements Listener {
 	}
 	
 	@EventHandler
-    @SuppressWarnings("deprecation")
 	public void onInvClose(InventoryCloseEvent event) {
 		if(!(event.getPlayer() instanceof Player)) return;
 		removeTitleTimer(event.getPlayer().getUniqueId());
@@ -355,13 +368,19 @@ public class PluginManager implements Listener {
 	@EventHandler
     public void onWorldChange(PlayerChangedWorldEvent event){
         if(!disabledWorlds.contains(event.getPlayer().getLocation().getWorld().getName())){
-            gbPlayers.putIfAbsent(event.getPlayer().getUniqueId(), new GBPlayer(plugin, event.getPlayer().getUniqueId()));
+            if(!gbPlayers.containsKey(event.getPlayer().getUniqueId())){
+                gbPlayers.put(event.getPlayer().getUniqueId(), new GBPlayer(plugin, event.getPlayer().getUniqueId()));
+            }
+
+            // hub stuff
+            if(hub && hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName()) && setOnWorldJoin){
+                GameBox.debug("in the hub world!");
+                giveHubItem(event.getPlayer());
+            }
         } else {
-            if(gbPlayers.get(event.getPlayer().getUniqueId()) != null)removePlayer(event.getPlayer().getUniqueId());
-        }
-	    if(hub && hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName()) && setOnWorldJoin){
-            GameBox.debug("in the hub world!");
-            giveHubItem(event.getPlayer());
+            if(gbPlayers.containsKey(event.getPlayer().getUniqueId())){
+                removePlayer(event.getPlayer().getUniqueId());
+            }
         }
     }
 
