@@ -51,6 +51,9 @@ commandMessages:
     footer:
     - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
   tokenInfo: ' &2%player% has %token% token'
+  reload:
+    fail: " &4Fehler beim reload von GameBox!"
+    success: " &aGameBox und alle Spiele wurden neu geladen!"
 
 
 mainButtons:

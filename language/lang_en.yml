@@ -52,6 +52,9 @@ commandMessages:
     footer:
     - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
   tokenInfo: ' &2%player% has %token% token'
+  reload:
+    fail: " &4Reloading of the plugin and all games failed!"
+    success: " &aGameBox and all games have been reloaded!"
 
 
 mainButtons:
