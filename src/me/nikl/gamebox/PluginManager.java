@@ -31,6 +31,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
@@ -503,8 +504,10 @@ public class PluginManager implements Listener {
                 player.closeInventory();
                 restoreInventory(player);
             }
-            gamesRegistered = 0;
         }
+
+        gamesRegistered = 0;
+
 
         logging:
         if(savedContents.size() > 0){
@@ -551,6 +554,7 @@ public class PluginManager implements Listener {
             }
             Bukkit.getLogger().log(Level.SEVERE, "-------------------------------------------------------------------");
         }
+
 		for(GBPlayer player : gbPlayers.values()){
             player.remove();
         }
@@ -565,21 +569,53 @@ public class PluginManager implements Listener {
 		return ChatColor.translateAlternateColorCodes('&', message);
 	}
 
-
+    @Deprecated
     public void registerGame(IGameManager gameManager, String gameID, String gameName, int playerNum){
 	    registerGame(gameManager, gameID, gameName, playerNum, false);
     }
 
+    @Deprecated
 	public void registerGame(IGameManager gameManager, String gameID, String gameName, int playerNum, boolean handleClicksOnHotbar){
-        GameContainer game = new GameContainer(gameID, gameManager);
+        Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Your version of " + gameName + " is outdated!");
+        registerGame(null, gameManager, gameID, gameName, playerNum, handleClicksOnHotbar);
+	}
+
+
+    /**
+     * Register a new game with GameBox
+     *
+     * Store the plugin name to allow reloads
+     * @param plugin the games plugin instance
+     * @param gameManager the games manager instance
+     * @param gameID game ID
+     * @param gameName the games name for messages
+     * @param playerNum single player / multi player
+     */
+    public void registerGame(Plugin plugin, IGameManager gameManager, String gameID, String gameName, int playerNum){
+        registerGame(plugin, gameManager, gameID, gameName, playerNum, false);
+    }
+
+    /**
+     * Register a new game with GameBox
+     *
+     * Store the plugin name to allow reloads
+     * @param plugin the games plugin instance
+     * @param gameManager the games manager instance
+     * @param gameID game ID
+     * @param gameName the games name for messages
+     * @param playerNum single player / multi player
+     * @param handleClicksOnHotbar if true the clicks on the hotbar are not handled in GameBox, but send to the game
+     */
+    public void registerGame(Plugin plugin, IGameManager gameManager, String gameID, String gameName, int playerNum, boolean handleClicksOnHotbar){
+        GameContainer game = new GameContainer(plugin, gameID, gameManager);
         game.setHandleClicksOnHotbar(handleClicksOnHotbar);
         game.setName(gameName);
         game.setPlainName(ChatColor.stripColor(gameName));
         game.setPlayerNum(playerNum);
-		games.put(gameID, game);
-		Permissions.addGameID(gameID);
+        games.put(gameID, game);
+        Permissions.addGameID(gameID);
         gamesRegistered ++;
-	}
+    }
 
 	public IGameManager getGameManager(String gameID){
 		return games.get(gameID).getGameManager();
