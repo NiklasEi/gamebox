@@ -1,5 +1,7 @@
 package me.nikl.gamebox.game;
 
+import org.bukkit.plugin.Plugin;
+
 /**
  * Created by Niklas on 14.02.2017.
  *
@@ -11,11 +13,13 @@ public class GameContainer {
     private String gameID;
     private String plainName, name;
     private int playerNum;
+    private Plugin gamePlugin;
 
 
-    public GameContainer(String gameID, IGameManager gameManager){
+    public GameContainer(Plugin plugin, String gameID, IGameManager gameManager){
         this.gameManager = gameManager;
         this.gameID = gameID;
+        this.gamePlugin = plugin;
     }
 
     public String getPlainName() {
@@ -56,5 +60,13 @@ public class GameContainer {
 
     public void setPlayerNum(int playerNum) {
         this.playerNum = playerNum;
+    }
+
+    public Plugin getGamePlugin() {
+        return gamePlugin;
+    }
+
+    public void setGamePlugin(Plugin gamePlugin) {
+        this.gamePlugin = gamePlugin;
     }
 }
