@@ -1,6 +1,17 @@
 package me.nikl.gamebox.nms;
 
-import net.minecraft.server.v1_8_R1.*;
+import net.minecraft.server.v1_8_R1.ChatMessage;
+import net.minecraft.server.v1_8_R1.ChatSerializer;
+import net.minecraft.server.v1_8_R1.EntityPlayer;
+import net.minecraft.server.v1_8_R1.EnumTitleAction;
+import net.minecraft.server.v1_8_R1.IChatBaseComponent;
+import net.minecraft.server.v1_8_R1.ItemStack;
+import net.minecraft.server.v1_8_R1.NBTTagCompound;
+import net.minecraft.server.v1_8_R1.NBTTagList;
+import net.minecraft.server.v1_8_R1.PacketPlayOutChat;
+import net.minecraft.server.v1_8_R1.PacketPlayOutOpenWindow;
+import net.minecraft.server.v1_8_R1.PacketPlayOutPlayerListHeaderFooter;
+import net.minecraft.server.v1_8_R1.PacketPlayOutTitle;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
