@@ -2,6 +2,10 @@
 
 
 --------------------------------------------------
+v 1.5.1
+- add nms for 1.12
+- compatible with minecraft 1.12 now
+
 v 1.5.0
 - add help message for admin commands listing all the commands
 - cleaned up shop system
