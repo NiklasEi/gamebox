@@ -296,6 +296,11 @@ public class GameBox extends JavaPlugin{
 				nms = new NMSUtil_1_11_R1();
 				
 				break;
+
+			case "v1_12_R1":
+				nms = new NMSUtil_1_12_R1();
+
+				break;
 		}
 		return nms != null;
 	}
