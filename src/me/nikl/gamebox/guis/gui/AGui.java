@@ -1,6 +1,7 @@
 package me.nikl.gamebox.guis.gui;
 
 import me.nikl.gamebox.*;
+import me.nikl.gamebox.events.EnterGameBoxEvent;
 import me.nikl.gamebox.game.IGameManager;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
@@ -149,59 +150,85 @@ public abstract class AGui {
 							guiManager.sentInventoryTitleMessage(player[0], plugin.lang.TITLE_ALREADY_IN_ANOTHER_GAME, gameID);
 							return false;
 						}
-						if(!guiManager.isInGUI(player[1].getUniqueId())){
-							pluginManager.saveInventory(player[1]);
+
+						if(!guiManager.isInGUI(player[1].getUniqueId()) && !guiManager.getShopManager().inShop(player[1].getUniqueId())){
+
+							// call enter gamebox event for the second player
+							EnterGameBoxEvent enterEvent = new EnterGameBoxEvent(player[1], args[0], args[1]);
+							if(!enterEvent.isCancelled()){
+								pluginManager.saveInventory(player[1]);
+							} else {
+								for(Player playerObj: player) {
+									if(guiManager.isInGUI(playerObj.getUniqueId()) || guiManager.getShopManager().inShop(playerObj.getUniqueId())) {
+										guiManager.sentInventoryTitleMessage(playerObj, enterEvent.getCancelMessage(), gameID);
+									} else {
+										playerObj.sendMessage("A game was canceled with the reason: " + enterEvent.getCancelMessage());
+									}
+								}
+							}
 						}
 					}
 
 
 					int returnedCode = manager.startGame(player, (GameBoxSettings.playSounds && pluginManager.getPlayer(player[0].getUniqueId()).isPlaySounds()), args[1]);
-					if(returnedCode == GameBox.GAME_STARTED){
-						GameBox.debug("started game "+ args[0]+" for player " + player[0].getName() + (player.length==2?" and " + player[1].getName():"") + " with the arguments: " + Arrays.asList(args));
-						AGui gui;
-						for(Player playerObj : player) {
-							gui = guiManager.getCurrentGui(playerObj.getUniqueId());
-							if(gui != null){
-								gui.removePlayer(playerObj.getUniqueId());
+					switch (returnedCode){
+						case GameBox.GAME_STARTED:
+							GameBox.debug("started game "+ args[0]+" for player " + player[0].getName() + (player.length==2?" and " + player[1].getName():"") + " with the arguments: " + Arrays.asList(args));
+							AGui gui;
+							for(Player playerObj : player) {
+								gui = guiManager.getCurrentGui(playerObj.getUniqueId());
+								if(gui != null){
+									gui.removePlayer(playerObj.getUniqueId());
+								}
+								for (int slot : pluginManager.getHotBarButtons().keySet()) {
+									playerObj.getInventory().setItem(slot, pluginManager.getHotBarButtons().get(slot));
+								}
 							}
-							for (int slot : pluginManager.getHotBarButtons().keySet()) {
-								playerObj.getInventory().setItem(slot, pluginManager.getHotBarButtons().get(slot));
-							}
-						}
-						// remove flag
-						GameBox.openingNewGUI = false;
-						return true;
-					} else if(returnedCode == GameBox.GAME_NOT_ENOUGH_MONEY){
-						guiManager.sentInventoryTitleMessage(player[0], plugin.lang.TITLE_NOT_ENOUGH_MONEY, gameID);
-					} else if(returnedCode == GameBox.GAME_NOT_ENOUGH_MONEY_1){
-						guiManager.sentInventoryTitleMessage(player[0], plugin.lang.TITLE_NOT_ENOUGH_MONEY, gameID);
+							// remove flag
+							GameBox.openingNewGUI = false;
+							return true;
 
-						if(args.length == 3){
-							if(guiManager.isInGUI(player[1].getUniqueId())) {
-								guiManager.sentInventoryTitleMessage(player[1], plugin.lang.TITLE_OTHER_PLAYER_NOT_ENOUGH_MONEY, gameID);
-							} else {
-								//ToDo
-								player[1].sendMessage(player[0].getName()+" Does not have enough money to start the game!");
+						case  GameBox.GAME_NOT_ENOUGH_MONEY:
+							guiManager.sentInventoryTitleMessage(player[0], plugin.lang.TITLE_NOT_ENOUGH_MONEY, gameID);
+							break;
+
+						case GameBox.GAME_NOT_ENOUGH_MONEY_1:
+							guiManager.sentInventoryTitleMessage(player[0], plugin.lang.TITLE_NOT_ENOUGH_MONEY, gameID);
+
+							if(args.length == 3){
+								if(guiManager.isInGUI(player[1].getUniqueId())) {
+									guiManager.sentInventoryTitleMessage(player[1], plugin.lang.TITLE_OTHER_PLAYER_NOT_ENOUGH_MONEY, gameID);
+								} else {
+									//ToDo
+									player[1].sendMessage(player[0].getName()+" Does not have enough money to start the game!");
+								}
 							}
-						}
-					} else if(returnedCode == GameBox.GAME_NOT_ENOUGH_MONEY_2){
-						if(args.length == 3){
-							if(guiManager.isInGUI(player[1].getUniqueId())) {
-								guiManager.sentInventoryTitleMessage(player[1], plugin.lang.TITLE_NOT_ENOUGH_MONEY, gameID);
-							} else {
-								//ToDo
-								player[1].sendMessage(player[0].getName()+" tried starting a game with you. But you do not have enough money!");
+							break;
+
+						case GameBox.GAME_NOT_ENOUGH_MONEY_2:
+							if(args.length == 3){
+								if(guiManager.isInGUI(player[1].getUniqueId())) {
+									guiManager.sentInventoryTitleMessage(player[1], plugin.lang.TITLE_NOT_ENOUGH_MONEY, gameID);
+								} else {
+									//ToDo
+									player[1].sendMessage(player[0].getName()+" tried starting a game with you. But you do not have enough money!");
+								}
 							}
-						}
-						guiManager.sentInventoryTitleMessage(player[0], plugin.lang.TITLE_OTHER_PLAYER_NOT_ENOUGH_MONEY, gameID);
-					} else if(returnedCode == GameBox.GAME_NOT_STARTED_ERROR){
-						for(Player playerObj: player) {
-							if(player.length > 1 && guiManager.isInGUI(player[1].getUniqueId())) {
-								guiManager.sentInventoryTitleMessage(playerObj, plugin.lang.TITLE_ERROR, gameID);
-							} else {
-								playerObj.sendMessage("A game failed to start");
+							guiManager.sentInventoryTitleMessage(player[0], plugin.lang.TITLE_OTHER_PLAYER_NOT_ENOUGH_MONEY, gameID);
+							break;
+
+						case GameBox.GAME_NOT_STARTED_ERROR:
+							for(Player playerObj: player) {
+								if(guiManager.isInGUI(playerObj.getUniqueId()) || guiManager.getShopManager().inShop(playerObj.getUniqueId())) {
+									guiManager.sentInventoryTitleMessage(playerObj, plugin.lang.TITLE_ERROR, gameID);
+								} else {
+									playerObj.sendMessage("A game failed to start");
+								}
 							}
-						}
+							break;
+
+						default:
+							plugin.getLogger().info(" unknown return code with args: " + Arrays.asList(args));
 					}
 
 					// remove flag
