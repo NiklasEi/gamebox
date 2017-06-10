@@ -1,10 +1,14 @@
 
 TODO: timers!
+
+------------------------------------
+v 1.2.0
 - push GB dep to 1.5.0
 --- now compatible with /gba reload
 - all ships will start falling from the top row
 - correct lang_en
-------------------------------------
+
+
 v 1.1.0
 - centralised more code to GameBox
 --- use static main-key from GUIManager (GameBox) for guis
