@@ -1,10 +1,12 @@
 package me.nikl.gamebox.guis.shop;
 
 import me.nikl.gamebox.*;
+import me.nikl.gamebox.events.EnterGameBoxEvent;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.gui.AGui;
 import me.nikl.gamebox.players.GBPlayer;
+import me.nikl.gamebox.util.ItemStackUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -63,7 +65,7 @@ public class ShopManager {
         this.closed = !shop.getBoolean("open");
 
         List<String> lore;
-        ItemStack mainItem = getItemStack(shop.getString("shop.button.materialData", Material.STORAGE_MINECART.toString()));
+        ItemStack mainItem = ItemStackUtil.getItemStack(shop.getString("shop.button.materialData", Material.STORAGE_MINECART.toString()));
         if (shop.getBoolean("shop.button.glow")) mainItem = plugin.getNMS().addGlow(mainItem);
         mainButton = new AButton(mainItem);
         ItemMeta meta = mainItem.getItemMeta();
@@ -101,51 +103,22 @@ public class ShopManager {
         }
     }
 
-
-
-    protected ItemStack getItemStack(String matDataString){
-        Material mat; short data;
-        String[] obj = matDataString.split(":");
-
-        if (obj.length == 2) {
-            try {
-                mat = Material.matchMaterial(obj[0]);
-            } catch (Exception e) {
-                return null; // material name doesn't exist
-            }
-
-            try {
-                data = Short.valueOf(obj[1]);
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-                return null; // data not a number
-            }
-
-            //noinspection deprecation
-            if(mat == null) return null;
-            ItemStack stack = new ItemStack(mat, 1);
-            stack.setDurability(data);
-            return stack;
-        } else {
-            try {
-                mat = Material.matchMaterial(obj[0]);
-            } catch (Exception e) {
-                return null; // material name doesn't exist
-            }
-            //noinspection deprecation
-            return (mat == null ? null : new ItemStack(mat, 1));
-        }
-    }
-
     public AButton getMainButton() {
         return mainButton;
     }
 
     public boolean openShopPage(Player whoClicked, String[] args) {
         boolean saved = false;
+
         if(!plugin.getPluginManager().hasSavedContents(whoClicked.getUniqueId())){
-            plugin.getPluginManager().saveInventory(whoClicked);
-            saved = true;
+            EnterGameBoxEvent enterEvent = new EnterGameBoxEvent(whoClicked, args[0], args[1]);
+            if(!enterEvent.isCancelled()){
+                plugin.getPluginManager().saveInventory(whoClicked);
+                saved = true;
+            } else {
+                whoClicked.sendMessage(lang.PREFIX + " A game was canceled with the reason: " + enterEvent.getCancelMessage());
+                return false;
+            }
         }
 
         if(whoClicked.hasPermission(Permissions.OPEN_SHOP.getPermission())){

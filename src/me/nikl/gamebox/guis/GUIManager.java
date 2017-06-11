@@ -5,6 +5,7 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.Language;
 import me.nikl.gamebox.Permissions;
+import me.nikl.gamebox.events.EnterGameBoxEvent;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.gui.AGui;
 import me.nikl.gamebox.guis.gui.MainGui;
@@ -153,7 +154,12 @@ public class GUIManager {
 	
 	public boolean openGameGui(Player whoClicked, String... args) {
 		if(!plugin.getPluginManager().hasSavedContents(whoClicked.getUniqueId())){
-			plugin.getPluginManager().saveInventory(whoClicked);
+			EnterGameBoxEvent enterEvent = new EnterGameBoxEvent(whoClicked, args[0], args[1]);
+			if(!enterEvent.isCancelled()){
+				plugin.getPluginManager().saveInventory(whoClicked);
+			} else {
+				whoClicked.sendMessage("A game was canceled with the reason: " + enterEvent.getCancelMessage());
+			}
 		}
 
 		if(args.length != 2) {
@@ -205,7 +211,13 @@ public class GUIManager {
 		}
 
 		if(!plugin.getPluginManager().hasSavedContents(whoClicked.getUniqueId())){
-			plugin.getPluginManager().saveInventory(whoClicked);
+			EnterGameBoxEvent enterEvent = new EnterGameBoxEvent(whoClicked, "main");
+			if(!enterEvent.isCancelled()){
+				plugin.getPluginManager().saveInventory(whoClicked);
+			} else {
+				whoClicked.sendMessage("A game was canceled with the reason: " + enterEvent.getCancelMessage());
+				return false;
+			}
 		}
 
 		GameBox.openingNewGUI = true;
