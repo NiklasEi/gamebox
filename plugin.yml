@@ -1,7 +1,7 @@
 name: GameBox
 author: Nikl
 main: me.nikl.gamebox.GameBox
-version: 1.5.1
+version: 1.5.2
 website: nikl.me
 softdepend: [Vault, PlaceholderAPI]
 
