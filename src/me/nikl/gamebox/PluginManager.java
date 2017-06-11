@@ -449,10 +449,8 @@ public class PluginManager implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerDeath(PlayerDeathEvent event){
-        // close inv on death. This will trigger a restore of the inventory contents
-        // drops can then be handled by later listeners and option 'keepInventory'
         if(isInGame(event.getEntity().getUniqueId()) || guiManager.isInGUI(event.getEntity().getUniqueId()) || guiManager.getShopManager().inShop(event.getEntity().getUniqueId())){
-            event.getEntity().closeInventory();
+            plugin.getLogger().log(Level.SEVERE, " Player in-game in death event!");
         }
     }
 
