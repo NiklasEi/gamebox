@@ -1,5 +1,6 @@
 package me.nikl.gamebox;
 
+import me.nikl.gamebox.events.LeftGameBoxEvent;
 import me.nikl.gamebox.game.GameContainer;
 import me.nikl.gamebox.game.IGameManager;
 import me.nikl.gamebox.guis.GUIManager;
@@ -271,6 +272,7 @@ public class PluginManager implements Listener {
         }
 		savedContents.remove(player.getUniqueId());
         hotBarSlot.remove(player.getUniqueId());
+        new LeftGameBoxEvent(player);
 	}
 
 	public boolean hasSavedContents(UUID uuid){
@@ -435,7 +437,7 @@ public class PluginManager implements Listener {
      */
     @EventHandler
     public void onPickUp(PlayerPickupItemEvent playerPickupItemEvent){
-        if(!isInGame(playerPickupItemEvent.getPlayer().getUniqueId()) && !guiManager.isInGUI(playerPickupItemEvent.getPlayer().getUniqueId())) return;
+        if(!isInGame(playerPickupItemEvent.getPlayer().getUniqueId()) && !guiManager.isInGUI(playerPickupItemEvent.getPlayer().getUniqueId()) && !guiManager.getShopManager().inShop(playerPickupItemEvent.getPlayer().getUniqueId())) return;
 
         // ToDo: change #addItem() and this method to allow for partial pick up
         if(addItem(playerPickupItemEvent.getPlayer().getUniqueId(), playerPickupItemEvent.getItem().getItemStack())){
@@ -449,9 +451,8 @@ public class PluginManager implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event){
         // close inv on death. This will trigger a restore of the inventory contents
         // drops can then be handled by later listeners and option 'keepInventory'
-        if(isInGame(event.getEntity().getUniqueId()) || guiManager.isInGUI(event.getEntity().getUniqueId())){
-            Bukkit.getConsoleSender().sendMessage("Player in game on death! should not happen!");
-            Bukkit.getConsoleSender().sendMessage("  Please tell Nikl about this on Spigot");
+        if(isInGame(event.getEntity().getUniqueId()) || guiManager.isInGUI(event.getEntity().getUniqueId()) || guiManager.getShopManager().inShop(event.getEntity().getUniqueId())){
+            event.getEntity().closeInventory();
         }
     }
 
@@ -460,7 +461,7 @@ public class PluginManager implements Listener {
         if(!(event.getEntity() instanceof  Player)) return;
         // if player is in gui or in game close the inventory
         // this should fire before death event and thus will fix problems with drops on death
-        if(isInGame(event.getEntity().getUniqueId()) || guiManager.isInGUI(event.getEntity().getUniqueId())){
+        if((GameBoxSettings.closeInventoryOnDamage || event.getFinalDamage() >= ((Player) event.getEntity()).getHealth()) && (isInGame(event.getEntity().getUniqueId()) || guiManager.isInGUI(event.getEntity().getUniqueId()) || guiManager.getShopManager().inShop(event.getEntity().getUniqueId()))){
             ((Player)event.getEntity()).closeInventory();
         }
     }
