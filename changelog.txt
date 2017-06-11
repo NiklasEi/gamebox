@@ -1,7 +1,18 @@
 
 
 
+
 --------------------------------------------------
+
+v1.5.2
+- Add plugin metrics by bStats
+--- possible opt out in the config
+- fix picking up of items when in shop
+- fix wrong player drops on death when in shop!
+- add option to not close the inventory on damage
+- add events called when player opens the GameBox and another event for players who just left the GameBox
+--- the config provides the possibility to run commands on these events
+
 v 1.5.1
 - add nms for 1.12
 - compatible with minecraft 1.12 now
