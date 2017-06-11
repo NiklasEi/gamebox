@@ -27,6 +27,11 @@ public class GameBoxSettings {
 
     public static boolean sendInviteClickMessage = true;
 
+    public static boolean bStats = true;
+
+    // what to do on player damage
+    public static boolean closeInventoryOnDamage = true;
+
 
     public static void loadSettings(GameBox plugin){
         FileConfiguration config = plugin.getConfig();
@@ -39,5 +44,7 @@ public class GameBoxSettings {
         timeForPlayerInput = config.getInt("timeForPlayerInput", 30);
         useMysql = config.getBoolean("mysql.enabled", false);
         exceptInvitesWithoutPlayPermission = config.getBoolean("settings.exceptInvitesWithoutPlayPermission", false);
+        bStats = config.getBoolean("settings.bStats", true);
+        closeInventoryOnDamage = config.getBoolean("settings.closeInventoryOnDamage", true);
     }
 }
