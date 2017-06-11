@@ -77,6 +77,9 @@ public class GameBox extends JavaPlugin{
 
 	private Metrics metrics;
 
+	private LeftGameBoxListener leftGameBoxListener;
+	private EnterGameBoxListener enterGameBoxListener;
+
 	@Deprecated
 	public static boolean playSounds = GameBoxSettings.playSounds;
 
@@ -231,6 +234,19 @@ public class GameBox extends JavaPlugin{
 				game.onDisable();
 			}
 		}
+
+		// renew the GameBox listeners
+		if(leftGameBoxListener != null){
+			HandlerList.unregisterAll(leftGameBoxListener);
+			leftGameBoxListener = null;
+		}
+		leftGameBoxListener = new LeftGameBoxListener(this);
+
+		if(enterGameBoxListener != null){
+			HandlerList.unregisterAll(enterGameBoxListener);
+			enterGameBoxListener = null;
+		}
+		enterGameBoxListener = new EnterGameBoxListener(this);
 
 
 		// get a new plugin manager and set the other managers and handlers
