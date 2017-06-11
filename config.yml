@@ -99,3 +99,22 @@ settings:
     clickMessage:
       # whether players can click to get to the invite
       enabled: true
+  # all data is anonymous and helps me figuring out what games on what versions are played most
+  #   you can take a look at all the data that is send here: https://bstats.org/plugin/bukkit/GameBox
+  #   please consider leaving this on 'true'
+  bstats: true
+  # when a player is in GameBox and gets damaged the inventory will be closed
+  #   players should be in a save place when playing...
+  # if false the player can stay in game as long as he doesn't die
+  closeInventoryOnDamage: true
+
+
+# the plugin includes events on specific occasions
+#   for example: when entering GameBox and after leaving GameBox
+listeners:
+  enteringGameBox:
+    commands:
+    #- "tell %player% Have fun!"
+  leftGameBox:
+    commands:
+    #- "tell %player% Come back!"
