@@ -7,10 +7,13 @@ import me.nikl.gamebox.data.Statistics;
 import me.nikl.gamebox.data.StatisticsFile;
 import me.nikl.gamebox.game.GameContainer;
 import me.nikl.gamebox.guis.GUIManager;
+import me.nikl.gamebox.listeners.EnterGameBoxListener;
+import me.nikl.gamebox.listeners.LeftGameBoxListener;
 import me.nikl.gamebox.nms.*;
 import me.nikl.gamebox.players.HandleInvitations;
 import me.nikl.gamebox.players.HandleInviteInput;
 import net.milkbowl.vault.economy.Economy;
+import org.bstats.nikl.gamebox.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -26,6 +29,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -71,6 +75,8 @@ public class GameBox extends JavaPlugin{
 
 	private Statistics statistics;
 
+	private Metrics metrics;
+
 	@Deprecated
 	public static boolean playSounds = GameBoxSettings.playSounds;
 
@@ -101,6 +107,33 @@ public class GameBox extends JavaPlugin{
 			new PlaceholderAPIHook(this, "gamebox");
 			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Hooked into PlaceholderAPI");
 		}
+
+		// send data with bStats if not opt out
+		if(GameBoxSettings.bStats) {
+			metrics = new Metrics(getPluginManager().getPlugin());
+
+			metrics.addCustomChart(new Metrics.SimpleBarChart("gamebox_games") {
+
+				@Override
+				public HashMap<String, Integer> getValues(HashMap<String, Integer> valueMap) {
+					for(String gameID : getPluginManager().getGames().keySet()){
+						valueMap.put(getOriginalGameName(gameID), 1);
+					}
+					return valueMap;
+				}
+			});
+
+			metrics.addCustomChart(new Metrics.SimplePie("number_of_gamebox_games") {
+
+				@Override
+				public String getValue() {
+					return String.valueOf(PluginManager.gamesRegistered);
+				}
+			});
+		} else {
+			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " You have opt out bStats");
+		}
+
 
 		// check for registered games
 		new BukkitRunnable(){
@@ -198,6 +231,7 @@ public class GameBox extends JavaPlugin{
 				game.onDisable();
 			}
 		}
+
 
 		// get a new plugin manager and set the other managers and handlers
 		pManager = new PluginManager(this);
@@ -371,5 +405,28 @@ public class GameBox extends JavaPlugin{
 
 	public static String chatColor(String message){
 		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+
+	/**
+	 * Get the original game name from the ID
+	 *
+	 * This is to make the statistics on bStats nicer.
+	 * Since the game names can be changed, the statistics would be messed up,
+	 * when using the customized game names.
+	 * @param gameID Id of the game
+	 * @return the original name if given, otherwise the ID itself
+	 */
+	private String getOriginalGameName(String gameID){
+		if(gameID == null) return "null";
+		switch (gameID){
+			case "minesweeper": return "Minesweeper";
+			case "battleship": return "Battleship";
+			case "whacamole": return "WhacAMole";
+			case "2048": return "2048";
+			case "gemcrush": return "GemCrush";
+			case "sudoku": return "Sudoku";
+			case "connect4": return "ConnectFour";
+		}
+		return gameID;
 	}
 }
