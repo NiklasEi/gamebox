@@ -1,5 +1,6 @@
 package me.nikl.gamebox.events;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -17,6 +18,8 @@ public class LeftGameBoxEvent extends Event {
 
     public LeftGameBoxEvent(Player player){
         this.player = player;
+
+        Bukkit.getPluginManager().callEvent(this);
     }
 
     @Override
@@ -26,5 +29,10 @@ public class LeftGameBoxEvent extends Event {
 
     public Player getPlayer() {
         return player;
+    }
+
+    @SuppressWarnings("unused")
+    public static HandlerList getHandlerList(){
+        return handlers;
     }
 }

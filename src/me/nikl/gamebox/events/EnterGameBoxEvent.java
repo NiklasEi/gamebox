@@ -1,5 +1,6 @@
 package me.nikl.gamebox.events;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -23,6 +24,9 @@ public class EnterGameBoxEvent extends Event implements Cancellable{
     public EnterGameBoxEvent(Player player, String... args){
         this.player = player;
         this.args = args;
+
+
+        Bukkit.getPluginManager().callEvent(this);
     }
 
 
@@ -55,5 +59,10 @@ public class EnterGameBoxEvent extends Event implements Cancellable{
 
     public String[] getArgs() {
         return args;
+    }
+
+    @SuppressWarnings("unused")
+    public static HandlerList getHandlerList(){
+        return handlers;
     }
 }
