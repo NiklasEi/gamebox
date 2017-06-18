@@ -3,7 +3,6 @@ package me.nikl.gamebox.guis.timer;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.nms.NMSUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 

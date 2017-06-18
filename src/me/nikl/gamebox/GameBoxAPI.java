@@ -2,7 +2,6 @@ package me.nikl.gamebox;
 
 import me.nikl.gamebox.data.Statistics;
 import me.nikl.gamebox.players.GBPlayer;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 /**

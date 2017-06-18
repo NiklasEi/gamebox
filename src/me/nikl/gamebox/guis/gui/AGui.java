@@ -1,6 +1,11 @@
 package me.nikl.gamebox.guis.gui;
 
-import me.nikl.gamebox.*;
+import me.nikl.gamebox.ClickAction;
+import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.GameBoxSettings;
+import me.nikl.gamebox.Permissions;
+import me.nikl.gamebox.PluginManager;
+import me.nikl.gamebox.Sounds;
 import me.nikl.gamebox.events.EnterGameBoxEvent;
 import me.nikl.gamebox.game.IGameManager;
 import me.nikl.gamebox.guis.GUIManager;
@@ -10,17 +15,20 @@ import me.nikl.gamebox.guis.gui.game.StartMultiplayerGamePage;
 import me.nikl.gamebox.guis.shop.Shop;
 import me.nikl.gamebox.guis.shop.ShopItem;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import java.util.logging.Level;
 
 /**

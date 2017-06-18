@@ -1,6 +1,5 @@
 package me.nikl.gamebox.players;
 
-import jdk.nashorn.internal.ir.debug.JSONWriter;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.Language;
@@ -8,11 +7,14 @@ import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.commands.MainCommand;
 import me.nikl.gamebox.guis.gui.game.StartMultiplayerGamePage;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Created by Niklas on 22.02.2017.

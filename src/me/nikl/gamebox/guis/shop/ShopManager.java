@@ -1,6 +1,10 @@
 package me.nikl.gamebox.guis.shop;
 
-import me.nikl.gamebox.*;
+import me.nikl.gamebox.ClickAction;
+import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.GameBoxSettings;
+import me.nikl.gamebox.Language;
+import me.nikl.gamebox.Permissions;
 import me.nikl.gamebox.events.EnterGameBoxEvent;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
@@ -17,8 +21,17 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 
 /**

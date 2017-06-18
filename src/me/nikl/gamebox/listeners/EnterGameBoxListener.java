@@ -2,7 +2,6 @@ package me.nikl.gamebox.listeners;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.events.EnterGameBoxEvent;
-import net.minecraft.server.v1_11_R1.EntityVex;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.EventHandler;

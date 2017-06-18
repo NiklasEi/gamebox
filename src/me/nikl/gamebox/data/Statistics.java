@@ -1,13 +1,9 @@
 package me.nikl.gamebox.data;
 
 import me.nikl.gamebox.GameBox;
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.*;
-import java.util.*;
-import java.util.logging.Level;
+import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Created by Niklas on 19.02.2017.

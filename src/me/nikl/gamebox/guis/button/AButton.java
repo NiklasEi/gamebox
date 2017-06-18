@@ -2,7 +2,6 @@ package me.nikl.gamebox.guis.button;
 
 import me.nikl.gamebox.ClickAction;
 import me.nikl.gamebox.guis.gui.AGui;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
 
