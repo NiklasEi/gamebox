@@ -1,8 +1,13 @@
 
-- more documentation in the default config for the left/entering GameBox listeners
+
 
 
 --------------------------------------------------
+
+v 1.5.3
+- thread safety for invites over chat
+- more documentation in the default config for the left/entering GameBox listeners
+- cleaned all imports
 
 v1.5.2
 - Add plugin metrics by bStats
