@@ -55,36 +55,49 @@ public class HandleInviteInput extends BukkitRunnable{
 
         event.setCancelled(true);
 
-        if(message.contains("%")){
-            event.getPlayer().sendMessage(plugin.lang.PREFIX + plugin.lang.INPUT_CLOSED);
-            waitings.remove(event.getPlayer().getUniqueId());
-            return;
-        }
+        Player player = event.getPlayer();
 
-        if(message.split(" ").length > 1){
-            event.getPlayer().sendMessage(plugin.lang.INVITATION_NOT_VALID_PLAYER_NAME.replace("%player%", message));
-            return;
-        }
+        // go back on main thread from the async event
+        new BukkitRunnable(){
+            @Override
+            public void run() {
+                if(message == null || player == null || !player.isOnline()) return;
 
-        Player player = Bukkit.getPlayer(ChatColor.stripColor(message));
+                if(message.contains("%")){
+                    player.sendMessage(plugin.lang.PREFIX + plugin.lang.INPUT_CLOSED);
+                    waitings.remove(player.getUniqueId());
+                    return;
+                }
 
-        if(player == null){
-            event.getPlayer().sendMessage(plugin.lang.INVITATION_NOT_ONLINE.replace("%player%", message));
-            return;
-        }
+                if(message.split(" ").length > 1){
+                    player.sendMessage(plugin.lang.INVITATION_NOT_VALID_PLAYER_NAME.replace("%player%", message));
+                    return;
+                }
 
-        UUID uuid = event.getPlayer().getUniqueId();
-        if(player.getUniqueId().equals(uuid)){
-            event.getPlayer().sendMessage(plugin.lang.INVITATION_NOT_YOURSELF);
-            return;
-        }
+                Player player2 = Bukkit.getPlayer(ChatColor.stripColor(message));
 
-        Waiting waiting = waitings.get(uuid);
-        // invite successfull
-        if(plugin.getPluginManager().getHandleInvitations().addInvite(uuid, player.getUniqueId(), System.currentTimeMillis() + 15*1000, waiting.args)){
-            event.getPlayer().sendMessage(plugin.lang.PREFIX + plugin.lang.INVITATION_SUCCESSFUL.replace("%player%", player.getName()));
-            waitings.remove(uuid);
-        }
+                if(player2 == null){
+                    player.sendMessage(plugin.lang.INVITATION_NOT_ONLINE.replace("%player%", message));
+                    return;
+                }
+
+                UUID uuid = player.getUniqueId();
+                if(player2.getUniqueId().equals(uuid)){
+                    player.sendMessage(plugin.lang.INVITATION_NOT_YOURSELF);
+                    return;
+                }
+
+                if(!waitings.containsKey(uuid)) return;
+
+                Waiting waiting = waitings.get(uuid);
+                // invite successful
+                if(plugin.getPluginManager().getHandleInvitations().addInvite(uuid, player2.getUniqueId(), System.currentTimeMillis() + 15*1000, waiting.args)){
+                    player.sendMessage(plugin.lang.PREFIX + plugin.lang.INVITATION_SUCCESSFUL.replace("%player%", player2.getName()));
+                    waitings.remove(uuid);
+                }
+
+            }
+        }.runTask(plugin);
     }
 
     public boolean addWaiting(UUID uuid, long timeStamp, String... args){
