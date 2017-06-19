@@ -112,13 +112,13 @@ settings:
 # the plugin includes events on specific occasions
 #   for example: when entering GameBox and after leaving GameBox
 #
-# Plugin intern listeners are able to run some basic code for with the settings below
+# Plugin intern listeners are able to run commands for you
 listeners:
   # event called before the player enters GameBox
   enteringGameBox:
     commands:
     #- "tell %player% Have fun!
-  # event called directly after he left GameBox
+  # event called directly after the player left GameBox
   leftGameBox:
     commands:
     #- "tell %player% Come back!"
