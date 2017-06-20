@@ -155,7 +155,7 @@ public class Main extends JavaPlugin {
         if (config.isConfigurationSection("gameBox.gameButtons")) {
             ConfigurationSection gameButtons = config.getConfigurationSection("gameBox.gameButtons");
             ConfigurationSection buttonSec;
-            int tokens, timePerMove;
+            int tokens, timePerMove, minNumberOfPlayedChips;
             double cost, reward;
             boolean saveStats;
 
@@ -216,9 +216,10 @@ public class Main extends JavaPlugin {
                 if(timePerMove < 1){
                     timePerMove = 30;
                 }
+                minNumberOfPlayedChips = buttonSec.getInt("minNumberOfPlayedChips", 7);
 
 
-                rules = new GameRules(buttonID, timePerMove, cost, reward, tokens, saveStats);
+                rules = new GameRules(buttonID, timePerMove, minNumberOfPlayedChips, cost, reward, tokens, saveStats);
 
                 setTheButton:
                 if (buttonSec.isInt("slot")) {

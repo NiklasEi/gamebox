@@ -47,6 +47,8 @@ public class Game extends BukkitRunnable{
 
     private int fallingChip;
 
+    private int playedChips = 0;
+
 
     Game(GameRules rule, Main plugin, boolean playSounds, Player[] players, Map<Integer, ItemStack> chips){
         this.plugin = plugin;
@@ -426,6 +428,7 @@ public class Game extends BukkitRunnable{
             plugin.getNms().updateInventoryTitle(first, plugin.lang.TITLE_IN_GAME_YOUR_TURN.replace("%player%", first.getName()).replace("%time%", ""));
             plugin.getNms().updateInventoryTitle(second, plugin.lang.TITLE_IN_GAME_OTHERS_TURN.replace("%player%", first.getName()).replace("%time%", ""));
             if(playSounds) first.playSound(first.getLocation(), insert, volume, pitch);
+            playedChips++;
         } else if(uuid.equals(secondUUID) && state == GameState.SECOND_TURN){
             inv.setItem(inventoryClickEvent.getSlot() % 9, secondChip);
             fallingChip = inventoryClickEvent.getSlot() % 9;
@@ -433,6 +436,7 @@ public class Game extends BukkitRunnable{
             plugin.getNms().updateInventoryTitle(first, plugin.lang.TITLE_IN_GAME_OTHERS_TURN.replace("%player%", first.getName()).replace("%time%", ""));
             plugin.getNms().updateInventoryTitle(second, plugin.lang.TITLE_IN_GAME_YOUR_TURN.replace("%player%", first.getName()).replace("%time%", ""));
             if(playSounds) second.playSound(second.getLocation(), insert, volume, pitch);
+            playedChips++;
         }
     }
 
@@ -491,5 +495,9 @@ public class Game extends BukkitRunnable{
 
     GameRules getRule() {
         return rule;
+    }
+
+    public int getPlayedChips() {
+        return playedChips;
     }
 }

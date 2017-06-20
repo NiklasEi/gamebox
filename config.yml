@@ -31,6 +31,10 @@ gameBox:
       reward: 7
       # optional custom time per move in seconds (default is 30)
       timePerMove: 20
+      # optional custom min number of chips before any winnings are payed (default: 7)
+      #     if the game is quited earlier by closing it, the player left int he game will not get payed the winnings, but will get back any money he payed to play the game.
+      # set it to a negative number to turn this off
+      minNumberOfPlayedChips: 7
       inviteGuiTitle: "  Start &3ConnectFour &rTraining"
     saveStats:
       materialData: "gold_block"

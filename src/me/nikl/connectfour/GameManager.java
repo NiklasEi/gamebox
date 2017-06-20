@@ -148,33 +148,33 @@ public class GameManager implements IGameManager {
 
         if(game.getState() != GameState.FINISHED) {
             game.cancel();
-            if(game.getState() == GameState.FIRST_TURN || game.getState() == GameState.SECOND_TURN ){
 
-                if(plugin.isEconEnabled()){
-                    if(!winner.hasPermission(Permissions.BYPASS_ALL.getPermission()) && !winner.hasPermission(Permissions.BYPASS_GAME.getPermission(Main.gameID))){
-                        Main.econ.depositPlayer(winner, game.getRule().getReward());
-                        winner.sendMessage(chatColor(lang.PREFIX + lang.GAME_WON_MONEY_GAVE_UP.replaceAll("%reward%", game.getRule().getReward()+"").replaceAll("%loser%", loser.getName())));
-                    } else {
-                        winner.sendMessage(chatColor(lang.PREFIX + lang.GAME_OTHER_GAVE_UP.replaceAll("%loser%", loser.getName())));
-                    }
+            if(plugin.isEconEnabled() && game.getPlayedChips() >= game.getRule().getMinNumberOfPlayedChips()){
+                if(!winner.hasPermission(Permissions.BYPASS_ALL.getPermission()) && !winner.hasPermission(Permissions.BYPASS_GAME.getPermission(Main.gameID))){
+                    Main.econ.depositPlayer(winner, game.getRule().getReward());
+                    winner.sendMessage(chatColor(lang.PREFIX + lang.GAME_WON_MONEY_GAVE_UP.replaceAll("%reward%", game.getRule().getReward()+"").replaceAll("%loser%", loser.getName())));
                 } else {
                     winner.sendMessage(chatColor(lang.PREFIX + lang.GAME_OTHER_GAVE_UP.replaceAll("%loser%", loser.getName())));
                 }
-                loser.sendMessage(chatColor(lang.PREFIX + lang.GAME_GAVE_UP));
-
-
+            } else if(plugin.isEconEnabled()){
+                if(!winner.hasPermission(Permissions.BYPASS_ALL.getPermission()) && !winner.hasPermission(Permissions.BYPASS_GAME.getPermission(Main.gameID))){
+                    Main.econ.depositPlayer(winner, game.getRule().getCost());
+                    winner.sendMessage(chatColor(lang.PREFIX + lang.GAME_WON_MONEY_GAVE_UP.replaceAll("%reward%", game.getRule().getCost()+"").replaceAll("%loser%", loser.getName())));
+                } else {
+                    winner.sendMessage(chatColor(lang.PREFIX + lang.GAME_OTHER_GAVE_UP.replaceAll("%loser%", loser.getName())));
+                }
+            } else {
+                winner.sendMessage(chatColor(lang.PREFIX + lang.GAME_OTHER_GAVE_UP.replaceAll("%loser%", loser.getName())));
             }
+
+            loser.sendMessage(chatColor(lang.PREFIX + lang.GAME_GAVE_UP));
+
+
             plugin.getNms().updateInventoryTitle(winner, lang.TITLE_WON);
             game.setState(GameState.FINISHED);
 
-
-
-            if(game.getRule().getTokens() > 0){
-                plugin.gameBox.wonTokens(winner.getUniqueId(), game.getRule().getTokens(), Main.gameID);
-            }
-
-            // this would also save stats when someone gives up... not want this
-            //onGameEnd(winner, loser, game.getRule().getKey());
+            // pay out token and save stats in enabled
+            onGameEnd(winner, loser, game.getRule().getKey(), game.getPlayedChips());
         }
     }
 
@@ -283,14 +283,14 @@ public class GameManager implements IGameManager {
         return ChatColor.translateAlternateColorCodes('&', string);
     }
 
-    public void onGameEnd(Player winner, Player loser, String key) {
+    public void onGameEnd(Player winner, Player loser, String key, int chipsPlayed) {
 
         GameRules rule = gameTypes.get(key);
 
         if(rule.isSaveStats()){
             addWin(winner.getUniqueId(), rule.getKey());
         }
-        if(rule.getTokens() > 0){
+        if(rule.getTokens() > 0 && chipsPlayed >= rule.getMinNumberOfPlayedChips()){
             plugin.gameBox.wonTokens(winner.getUniqueId(), rule.getTokens(), Main.gameID);
         }
     }
