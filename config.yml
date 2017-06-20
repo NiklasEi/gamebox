@@ -29,6 +29,8 @@ gameBox:
       slot: 20
       cost: 5
       reward: 7
+      # optional custom time per move in seconds (default is 30)
+      timePerMove: 20
       inviteGuiTitle: "  Start &3ConnectFour &rTraining"
     saveStats:
       materialData: "gold_block"

@@ -40,6 +40,9 @@ public class Game extends BukkitRunnable{
 
     private float volume = 0.5f, pitch= 1f;
 
+    private double time;
+    private String timeStr = "";
+
     private GameState state;
 
     private int fallingChip;
@@ -49,6 +52,9 @@ public class Game extends BukkitRunnable{
         this.plugin = plugin;
         this.rule = rule;
         this.playSounds = playSounds;
+
+        this.time = rule.getTimePerMove();
+        this.timeStr = String.valueOf((int) time);
 
         this.first = players[0];
         this.second = players[1];
@@ -92,24 +98,48 @@ public class Game extends BukkitRunnable{
         switch (this.state){
             case FIRST_TURN:
                 if(first!=null && second!=null){
-                    plugin.getNms().updateInventoryTitle(first, plugin.lang.TITLE_IN_GAME.replace("%player%", first.getName()));
-                    plugin.getNms().updateInventoryTitle(second, plugin.lang.TITLE_IN_GAME.replace("%player%", first.getName()));
+                    plugin.getNms().updateInventoryTitle(first, plugin.lang.TITLE_IN_GAME_YOUR_TURN.replace("%player%", first.getName()).replace("%time%", timeStr));
+                    plugin.getNms().updateInventoryTitle(second, plugin.lang.TITLE_IN_GAME_OTHERS_TURN.replace("%player%", first.getName()).replace("%time%", timeStr));
                 }
                 break;
             case SECOND_TURN:
                 if(first!=null && second!=null){
-                    plugin.getNms().updateInventoryTitle(first, plugin.lang.TITLE_IN_GAME.replace("%player%", second.getName()));
-                    plugin.getNms().updateInventoryTitle(second, plugin.lang.TITLE_IN_GAME.replace("%player%", second.getName()));
+                    plugin.getNms().updateInventoryTitle(first, plugin.lang.TITLE_IN_GAME_OTHERS_TURN.replace("%player%", second.getName()).replace("%time%", timeStr));
+                    plugin.getNms().updateInventoryTitle(second, plugin.lang.TITLE_IN_GAME_YOUR_TURN.replace("%player%", second.getName()).replace("%time%", timeStr));
                 }
                 break;
             case FINISHED:
-                Bukkit.getConsoleSender().sendMessage("ToDo! (updateStatus)");
+                // title is updated in onGameEnd
                 break;
         }
     }
 
     @Override
     public void run() {
+
+        if(state == GameState.FIRST_TURN || state == GameState.SECOND_TURN) {
+            int oldTime = (int) Math.ceil(time);
+            // for the wanted 20 ticks per second:
+            //   this is not very accurate but sufficient in this case (imho)
+            time -= 0.25;
+            if (time < 0.25) {
+                // timer has run out!
+
+                state = state == GameState.SECOND_TURN ? GameState.FIRST_TURN : GameState.SECOND_TURN;
+                if(state == GameState.FIRST_TURN){
+                    if(playSounds) first.playSound(first.getLocation(), turn, volume, pitch);
+                } else {
+                    if(playSounds) second.playSound(second.getLocation(), turn, volume, pitch);
+                }
+                time = rule.getTimePerMove();
+            }
+
+            if ((int) Math.ceil(time) != oldTime) {
+                timeStr = String.valueOf((int) Math.ceil(time));
+                updateStatus();
+            }
+        }
+
         switch (state){
             case FINISHED:
             case SECOND_TURN:
@@ -148,6 +178,8 @@ public class Game extends BukkitRunnable{
                         return;
                     } else {
                         state = GameState.SECOND_TURN;
+                        time = rule.getTimePerMove();
+                        timeStr = String.valueOf((int) time);
                         updateStatus();
                         if(playSounds) second.playSound(second.getLocation(), turn, volume, pitch);
                         return;
@@ -188,6 +220,8 @@ public class Game extends BukkitRunnable{
                         return;
                     } else {
                         state = GameState.FIRST_TURN;
+                        time = rule.getTimePerMove();
+                        timeStr = String.valueOf((int) time);
                         updateStatus();
                         if(playSounds) first.playSound(first.getLocation(), turn, volume, pitch);
                         return;
@@ -389,11 +423,15 @@ public class Game extends BukkitRunnable{
             inv.setItem(inventoryClickEvent.getSlot() % 9, firstChip);
             fallingChip = inventoryClickEvent.getSlot() % 9;
             state = GameState.FALLING_FIRST;
+            plugin.getNms().updateInventoryTitle(first, plugin.lang.TITLE_IN_GAME_YOUR_TURN.replace("%player%", first.getName()).replace("%time%", ""));
+            plugin.getNms().updateInventoryTitle(second, plugin.lang.TITLE_IN_GAME_OTHERS_TURN.replace("%player%", first.getName()).replace("%time%", ""));
             if(playSounds) first.playSound(first.getLocation(), insert, volume, pitch);
         } else if(uuid.equals(secondUUID) && state == GameState.SECOND_TURN){
             inv.setItem(inventoryClickEvent.getSlot() % 9, secondChip);
             fallingChip = inventoryClickEvent.getSlot() % 9;
             state = GameState.FALLING_SECOND;
+            plugin.getNms().updateInventoryTitle(first, plugin.lang.TITLE_IN_GAME_OTHERS_TURN.replace("%player%", first.getName()).replace("%time%", ""));
+            plugin.getNms().updateInventoryTitle(second, plugin.lang.TITLE_IN_GAME_YOUR_TURN.replace("%player%", first.getName()).replace("%time%", ""));
             if(playSounds) second.playSound(second.getLocation(), insert, volume, pitch);
         }
     }
