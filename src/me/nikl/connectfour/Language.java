@@ -29,7 +29,7 @@ public class Language {
 
 	public String GAME_NOT_ENOUGH_MONEY, GAME_PAYED, GAME_WON_MONEY, GAME_WON_MONEY_GAVE_UP
 			, GAME_WON, GAME_LOSE, GAME_GAVE_UP, GAME_OTHER_GAVE_UP, TITLE_DRAW;
-	public String TITLE_IN_GAME, TITLE_WON, TITLE_LOST;
+	public String TITLE_IN_GAME_YOUR_TURN, TITLE_IN_GAME_OTHERS_TURN, TITLE_WON, TITLE_LOST;
 	
 	public Language(Main plugin){
 		this.plugin = plugin;
@@ -54,7 +54,8 @@ public class Language {
 		this.GAME_GAVE_UP = getString("game.gaveUp");
 		this.GAME_OTHER_GAVE_UP = getString("game.otherGaveUp");
 
-		this.TITLE_IN_GAME = getString("game.inventoryTitles.ingame");
+		this.TITLE_IN_GAME_YOUR_TURN = getString("game.inventoryTitles.ingame1");
+		this.TITLE_IN_GAME_OTHERS_TURN = getString("game.inventoryTitles.ingame2");
 		this.TITLE_WON = getString("game.inventoryTitles.won");
 		this.TITLE_LOST = getString("game.inventoryTitles.lost");
 		this.TITLE_DRAW = getString("game.inventoryTitles.draw");

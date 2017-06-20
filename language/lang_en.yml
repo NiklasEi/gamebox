@@ -12,8 +12,13 @@ game:
     # use %reward% for the amount the player won and %loser% for the player that gave up
     wonMoneyGaveUp: " &2You won &1%reward%&2! %loser% gave up."
   inventoryTitles:
-    # %player% will be replaced by the name of the player whos turn it is to play
-    ingame: "&3Connect4   It's &1%player%'s&3 turn"
+    # %player% will be replaced by the name of the player whose turn it is to play
+    # %time will be replaced by the time left for the current move%
+
+    # title for your turn
+    ingame1: "&3Connect4     &rYour turn    &4%time%"
+    # title for the other player's turn
+    ingame2: "&3Connect4    &rNot your turn  &a%time%"
     won: "&3Connect4           &2You won"
     lost: "&3Connect4           &4You lost"
     draw: "&3Connect4           &3Draw!"
