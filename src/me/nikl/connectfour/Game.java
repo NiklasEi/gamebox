@@ -265,7 +265,7 @@ public class Game extends BukkitRunnable{
             plugin.getNms().updateInventoryTitle(loser, plugin.lang.TITLE_LOST);
 
 
-            plugin.getGameManager().onGameEnd(winner, loser, rule.getKey());
+            plugin.getGameManager().onGameEnd(winner, loser, rule.getKey(), playedChips);
         }
     }
 
