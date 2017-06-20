@@ -1,7 +1,12 @@
 
-TODO: timers!
+
 
 ------------------------------------
+v 1.2.1
+- add minimum number of chips that have to played before rewards are payed
+- add timer for each turn with configurable time
+
+
 v 1.2.0
 - push GB dep to 1.5.0
 --- now compatible with /gba reload
