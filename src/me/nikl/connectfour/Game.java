@@ -242,8 +242,8 @@ public class Game extends BukkitRunnable{
             return;
         }
 
-        Player winner = state==GameState.FALLING_SECOND?second:first;
-        Player loser = state==GameState.FALLING_SECOND?first:second;
+        Player winner = state == GameState.FALLING_SECOND?second:first;
+        Player loser = state == GameState.FALLING_SECOND?first:second;
 
         Language lang = plugin.lang;
 
@@ -265,7 +265,8 @@ public class Game extends BukkitRunnable{
             plugin.getNms().updateInventoryTitle(loser, plugin.lang.TITLE_LOST);
 
 
-            plugin.getGameManager().onGameEnd(winner, loser, rule.getKey(), playedChips);
+            // if the game is ended regularly ignore the played chips
+            plugin.getGameManager().onGameEnd(winner, loser, rule.getKey(), 999);
         }
     }
 
