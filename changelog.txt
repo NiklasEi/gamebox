@@ -1,5 +1,5 @@
 
-
+- updated spanish lang file (thank altrisi)
 
 ------------------------------------
 v 1.2.1

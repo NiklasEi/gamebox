@@ -13,7 +13,12 @@ game:
     wonMoneyGaveUp: " &2¡Has ganado &1%reward%&2! %loser% abandó."
   inventoryTitles:
     # %player% will be replaced by the name of the player whos turn it is to play
-    ingame: "&3Connecta4   Turno de &1%player%'s"
+    # %time will be replaced by the time left for the current move%
+
+    # title for your turn
+    ingame1: "&3Connecta4     &rTu turno    &4%time%"
+    # title for the other player's turn
+    ingame2: "&3Connecta4    &rNo es tu turno  &a%time%"
     won: "&3Connecta4       &2Has ganado"
     lost: "&3Connecta4       &4Has perdido"
     draw: "&3Connecta4       &3¡Empate!"
