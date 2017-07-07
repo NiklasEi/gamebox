@@ -83,6 +83,8 @@ public class GameBox extends JavaPlugin{
 	@Deprecated
 	public static boolean playSounds = GameBoxSettings.playSounds;
 
+	private static HashMap<String, String> knownGames;
+
 
 
 	@Override
@@ -442,6 +444,18 @@ public class GameBox extends JavaPlugin{
 			case "gemcrush": return "GemCrush";
 			case "sudoku": return "Sudoku";
 			case "connect4": return "ConnectFour";
+
+			// prevent chaos on bstats...
+
+			case "cookieclicker": return "Cookie Clicker";
+			case "tictactoe": return "Tic-tac-toe";
+			case "rockpaperscissors": return "Rock–paper–scissors";
+			case "fruitninja": return "Fruit Ninja";
+			case "solitaire": return "Solitaire";
+			case "headsortails": return "Heads or Tails";
+			case "mastermind": return "Mastermind";
+			case "tetris": return "Tetris";
+			case "chess": return "Chess";
 		}
 		return gameID;
 	}
