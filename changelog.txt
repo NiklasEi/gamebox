@@ -1,6 +1,6 @@
 
-
-
+- precautionary added gameIDs and names to come for bStats
+- updated spanish lang file (thank altrisi)
 
 --------------------------------------------------
 
