@@ -1,8 +1,12 @@
 
-- precautionary added gameIDs and names to come for bStats
-- updated spanish lang file (thank altrisi)
 
 --------------------------------------------------
+
+v 1.5.4
+- precautionary added gameIDs and names to come for bStats
+- updated spanish lang file (thank altrisi)
+- Sounds for GUI configurable in config
+- some internal restructuring (moved metrics class)
 
 v 1.5.3
 - thread safety for invites over chat
