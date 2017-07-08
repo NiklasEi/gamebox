@@ -13,7 +13,7 @@ import me.nikl.gamebox.nms.*;
 import me.nikl.gamebox.players.HandleInvitations;
 import me.nikl.gamebox.players.HandleInviteInput;
 import net.milkbowl.vault.economy.Economy;
-import org.bstats.nikl.gamebox.Metrics;
+import me.nikl.gamebox.org.bstats.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
