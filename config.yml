@@ -45,6 +45,13 @@ guiSettings:
   # you should keep this on
   #   the players can decide to turn sounds off in the gui
   playSounds: true
+  # here you can customize the standard sounds in the main GUI
+  #   for all sounds take a look at the github repo:
+  #     https://github.com/NiklasEi/GameBox/blob/master/src/me/nikl/gamebox/Sounds.java
+  standardSounds:
+    successfulClick: "CLICK"
+    unsuccessfulClick: "VILLAGER_NO"
+
   # you can disable navigation buttons by giving them a negative slot
   #   valid slots are only from 0 to 8
   hotBarNavigation:
