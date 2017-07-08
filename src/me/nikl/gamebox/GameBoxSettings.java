@@ -13,6 +13,8 @@ public class GameBoxSettings {
     //toggle for playing sounds
     public static boolean playSounds = true;
 
+    public static Sounds successfulClick, unsuccessfulClick;
+
     public static boolean useMysql = false;
 
     // is changed in main class
@@ -46,5 +48,16 @@ public class GameBoxSettings {
         exceptInvitesWithoutPlayPermission = config.getBoolean("settings.exceptInvitesWithoutPlayPermission", false);
         bStats = config.getBoolean("settings.bStats", true);
         closeInventoryOnDamage = config.getBoolean("settings.closeInventoryOnDamage", true);
+
+        try{
+            successfulClick = Sounds.valueOf(config.getString("guiSettings.standardSounds.successfulClick", "CLICK"));
+        } catch (IllegalArgumentException exception) {
+            successfulClick = Sounds.CLICK;
+        }
+        try{
+            unsuccessfulClick = Sounds.valueOf(config.getString("guiSettings.standardSounds.unsuccessfulClick", "VILLAGER_NO"));
+        } catch (IllegalArgumentException exception) {
+            unsuccessfulClick = Sounds.VILLAGER_NO;
+        }
     }
 }
