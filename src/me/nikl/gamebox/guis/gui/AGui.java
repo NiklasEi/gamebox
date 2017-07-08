@@ -17,6 +17,7 @@ import me.nikl.gamebox.guis.shop.ShopItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -54,6 +55,7 @@ public abstract class AGui {
 	protected String[] args;
 
 	protected String title;
+	private Sound successfulClick, unsuccessfulClick;
 
 	/**
 	 * Constructor for an AGui
@@ -69,6 +71,9 @@ public abstract class AGui {
 		this.pluginManager = plugin.getPluginManager();
 		this.grid = new AButton[slots];
 		inGui = new HashSet<>();
+
+		this.successfulClick = GameBoxSettings.successfulClick.bukkitSound();
+		this.unsuccessfulClick = GameBoxSettings.unsuccessfulClick.bukkitSound();
 
 		this.title = title;
 
@@ -460,14 +465,14 @@ public abstract class AGui {
 
 		if(action(event, button.getAction(), button.getArgs())){
 			if(GameBoxSettings.playSounds && pluginManager.getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds() && button.getAction() != ClickAction.NOTHING) {
-				((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sounds.CLICK.bukkitSound(), volume, pitch);
+				((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), successfulClick, volume, pitch);
 			}
 			if(perInvitation){
 				mpGui.removeInvite( UUID.fromString(button.getArgs()[2]), event.getWhoClicked().getUniqueId());
 			}
 		} else {
 			if(GameBoxSettings.playSounds && pluginManager.getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds() && button.getAction() != ClickAction.NOTHING) {
-				((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sounds.VILLAGER_NO.bukkitSound(), volume, pitch);
+				((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), unsuccessfulClick, volume, pitch);
 			}
 		}
 	}
@@ -513,10 +518,10 @@ public abstract class AGui {
 		if(lowerGrid != null && lowerGrid[event.getSlot()] != null){
 			if(action(event, lowerGrid[event.getSlot()].getAction(), lowerGrid[event.getSlot()].getArgs())){
 				if(GameBoxSettings.playSounds && pluginManager.getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
-					((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sounds.CLICK.bukkitSound(), volume, pitch);
+					((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), successfulClick, volume, pitch);
 				}
 			} else {
-				((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sounds.VILLAGER_NO.bukkitSound(), volume, pitch);
+				((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), unsuccessfulClick, volume, pitch);
 			}
 		}
 	}
