@@ -205,13 +205,13 @@ public enum Sounds {
 	VILLAGER_NO("VILLAGER_NO", "ENTITY_VILLAGER_NO"),
 	VILLAGER_YES("VILLAGER_YES", "ENTITY_VILLAGER_YES");
 	
-	private String pre19sound;
-	private String post19sound;
+	private String preSound;
+	private String postSound;
 	private Sound cached = null;
 	
-	Sounds(String pre19sound, String post19sound) {
-		this.pre19sound = pre19sound;
-		this.post19sound = post19sound;
+	Sounds(String preSound, String postSound) {
+		this.preSound = preSound;
+		this.postSound = postSound;
 	}
 
 	/**
@@ -226,18 +226,10 @@ public enum Sounds {
 
 		// cache the sound
 		try {
-			return cached = Sound.valueOf(post19sound);
+			return cached = Sound.valueOf(postSound);
 		} catch (IllegalArgumentException e) {
 			//1.8 sound
-			return cached = Sound.valueOf(pre19sound);
+			return cached = Sound.valueOf(preSound);
 		}
-	}
-	
-	public static Sound getByName(String name){
-		for(Sounds sounds : Sounds.values()){
-			if(Sound.valueOf(name) != null) return Sound.valueOf(name);
-			if(sounds.post19sound.equalsIgnoreCase(name) || sounds.pre19sound.equalsIgnoreCase(name)) return sounds.bukkitSound();
-		}
-		return null;
 	}
 }
