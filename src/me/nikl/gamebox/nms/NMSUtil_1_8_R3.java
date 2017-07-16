@@ -26,7 +26,8 @@ public class NMSUtil_1_8_R3 implements NMSUtil {
 	@Override
 	public void updateInventoryTitle(Player player, String newTitle) {
 		EntityPlayer ep = ((CraftPlayer)player).getHandle();
-		PacketPlayOutOpenWindow packet = new PacketPlayOutOpenWindow(ep.activeContainer.windowId, "minecraft:chest", new ChatMessage(ChatColor.translateAlternateColorCodes('&',newTitle)), player.getOpenInventory().getTopInventory().getSize());
+		newTitle = ChatColor.translateAlternateColorCodes('&',newTitle);
+		PacketPlayOutOpenWindow packet = new PacketPlayOutOpenWindow(ep.activeContainer.windowId, "minecraft:chest", new ChatMessage(newTitle.length() > 32 ? "Title is too long!" : newTitle), player.getOpenInventory().getTopInventory().getSize());
 		ep.playerConnection.sendPacket(packet);
 		ep.updateInventory(ep.activeContainer);
 	}
