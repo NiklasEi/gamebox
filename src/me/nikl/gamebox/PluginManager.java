@@ -457,9 +457,19 @@ public class PluginManager implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerDeath(EntityDamageEvent event){
         if(!(event.getEntity() instanceof  Player)) return;
+
+        if(guiManager == null ) {
+            Bukkit.getConsoleSender().sendMessage(" The plugin dit not start correctly. Please check for previous errors!");
+            return;
+        }
+
         // if player is in gui or in game close the inventory
         // this should fire before death event and thus will fix problems with drops on death
-        if((GameBoxSettings.closeInventoryOnDamage || event.getFinalDamage() >= ((Player) event.getEntity()).getHealth()) && (isInGame(event.getEntity().getUniqueId()) || guiManager.isInGUI(event.getEntity().getUniqueId()) || guiManager.getShopManager().inShop(event.getEntity().getUniqueId()))){
+        if((GameBoxSettings.closeInventoryOnDamage
+                || event.getFinalDamage() >= ((Player) event.getEntity()).getHealth())
+                && (isInGame(event.getEntity().getUniqueId())
+                || guiManager.isInGUI(event.getEntity().getUniqueId())
+                || guiManager.getShopManager().inShop(event.getEntity().getUniqueId()))){
             ((Player)event.getEntity()).closeInventory();
         }
     }
