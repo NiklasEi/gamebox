@@ -4,6 +4,7 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.data.SaveType;
 import me.nikl.gamebox.data.Statistics;
 import me.nikl.gamebox.guis.GUIManager;
+import me.nikl.gamebox.util.NumberUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -78,6 +79,11 @@ public class TopListPage  extends GameGuiPage{
                 case SCORE:
                     for(int i = 0; i < skullLore.size(); i++){
                         skullLore.set(i, skullLore.get(i).replace("%score%", String.format("%.0f", stat.getValue())));
+                    }
+                    break;
+                case HIGH_NUMBER_SCORE:
+                    for(int i = 0; i < skullLore.size(); i++){
+                        skullLore.set(i, skullLore.get(i).replace("%score%", NumberUtil.convertHugeNumber(stat.getValue())));
                     }
                     break;
                 case WINS:
