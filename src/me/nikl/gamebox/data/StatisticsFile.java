@@ -90,6 +90,7 @@ public class StatisticsFile extends Statistics {
         switch (saveType){
             case SCORE:
             case TIME_HIGH:
+            case HIGH_NUMBER_SCORE:
                 oldScore = data.getDouble(uuid.toString() + "."+ GAMES_STATISTICS_NODE+"." + gameID +"."+gameTypeID + "." + saveType.toString().toLowerCase(), 0.);
                 if(oldScore >= value) return;
                 data.set(uuid.toString() + "."+ GAMES_STATISTICS_NODE+"." + gameID +"."+gameTypeID + "." + saveType.toString().toLowerCase(), value);
@@ -135,6 +136,7 @@ public class StatisticsFile extends Statistics {
             case WINS:
             case TIME_HIGH:
             case SCORE:
+            case HIGH_NUMBER_SCORE:
                 higher = true;
                 break;
 
