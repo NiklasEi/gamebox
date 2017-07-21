@@ -77,7 +77,7 @@ public class TopListPage  extends GameGuiPage{
                     break;
                 case SCORE:
                     for(int i = 0; i < skullLore.size(); i++){
-                        skullLore.set(i, skullLore.get(i).replace("%score%", String.valueOf((int)stat.getValue())));
+                        skullLore.set(i, skullLore.get(i).replace("%score%", String.format("%.0f", stat.getValue())));
                     }
                     break;
                 case WINS:
