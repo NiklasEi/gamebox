@@ -2,6 +2,12 @@
 
 --------------------------------------------------
 
+v 1.5.5
+- added title length checks in AGui and in 1.8 nms utils
+- fix top list score cut-off at highest integer
+- new score type for number formatting "xxx.xxx million/billion..."
+- moved NumberUtil to GameBox from CookieClicker
+
 v 1.5.4
 - precautionary added gameIDs and names to come for bStats
 - updated spanish lang file (thank altrisi)
