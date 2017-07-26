@@ -5,6 +5,12 @@ version: 1.5.5
 website: nikl.me
 softdepend: [Vault, PlaceholderAPI]
 
+name: ${name}
+version: ${version}
+description: ${description}
+author: ${author}
+website: ${url}
+
 commands:
   gamebox:
     description: show the main gui
