@@ -1,4 +1,6 @@
 
+- remove '.' from huge number formatting when three zeros follow it
+- upgrade bstats to 1.2
 
 --------------------------------------------------
 
