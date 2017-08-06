@@ -47,7 +47,7 @@ public class NumberUtil {
 
             if (numb > 0) {
                 if (numb == 3) {
-                    numberStr = numberStr.replace("000", "");
+                    numberStr = numberStr.replace(".000", "");
                 } else if (numb == 2) {
                     numberStr = numberStr.substring(0, numberStr.length() - 2);
                 } else {
