@@ -29,12 +29,11 @@
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
             <version>1.8.8-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
-            <version>1.8.8-R0.1-SNAPSHOT</version>
+            <groupId>me.nikl.gamebox</groupId>
+            <artifactId>GameBox-nms</artifactId>
+            <version>1.5.5</version>
         </dependency>
     </dependencies>
 

@@ -20,7 +20,7 @@
 
     <repositories>
         <repository>
-            <id>spigot-repo</id>
+            <id>bukkit-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
     </repositories>
@@ -30,6 +30,11 @@
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
             <version>1.8.3-R0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>me.nikl.gamebox</groupId>
+            <artifactId>GameBox-nms</artifactId>
+            <version>1.5.5</version>
         </dependency>
     </dependencies>
 </project>

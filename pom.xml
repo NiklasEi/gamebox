@@ -11,6 +11,7 @@
 
 
     <modules>
+        <module>GameBox-nms</module>
         <module>GameBox-v1_8_R1</module>
         <module>GameBox-v1_8_R2</module>
         <module>GameBox-v1_8_R3</module>
