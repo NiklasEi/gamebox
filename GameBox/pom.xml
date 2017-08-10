@@ -106,7 +106,7 @@
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
-            <version>LATEST</version>
+            <version>1.2</version>
         </dependency>
         <!-- vault -->
         <dependency>
@@ -119,47 +119,47 @@
         <dependency>
             <groupId>me.nikl.gamebox</groupId>
             <artifactId>GameBox-nms</artifactId>
-            <version>LATEST</version>
+            <version>1.5.5</version>
         </dependency>
         <dependency>
             <groupId>me.nikl.gamebox</groupId>
             <artifactId>GameBox-v1_8_R1</artifactId>
-            <version>LATEST</version>
+            <version>1.5.5</version>
         </dependency>
         <dependency>
             <groupId>me.nikl.gamebox</groupId>
             <artifactId>GameBox-v1_8_R2</artifactId>
-            <version>LATEST</version>
+            <version>1.5.5</version>
         </dependency>
         <dependency>
             <groupId>me.nikl.gamebox</groupId>
             <artifactId>GameBox-v1_8_R3</artifactId>
-            <version>LATEST</version>
+            <version>1.5.5</version>
         </dependency>
         <dependency>
             <groupId>me.nikl.gamebox</groupId>
             <artifactId>GameBox-v1_9_R1</artifactId>
-            <version>LATEST</version>
+            <version>1.5.5</version>
         </dependency>
         <dependency>
             <groupId>me.nikl.gamebox</groupId>
             <artifactId>GameBox-v1_9_R2</artifactId>
-            <version>LATEST</version>
+            <version>1.5.5</version>
         </dependency>
         <dependency>
             <groupId>me.nikl.gamebox</groupId>
             <artifactId>GameBox-v1_10_R1</artifactId>
-            <version>LATEST</version>
+            <version>1.5.5</version>
         </dependency>
         <dependency>
             <groupId>me.nikl.gamebox</groupId>
             <artifactId>GameBox-v1_11_R1</artifactId>
-            <version>LATEST</version>
+            <version>1.5.5</version>
         </dependency>
         <dependency>
             <groupId>me.nikl.gamebox</groupId>
             <artifactId>GameBox-v1_12_R1</artifactId>
-            <version>LATEST</version>
+            <version>1.5.5</version>
         </dependency>
     </dependencies>
 
