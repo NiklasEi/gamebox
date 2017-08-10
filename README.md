@@ -39,7 +39,7 @@ Currently implemented features in the API:
 * Give/take/set token for online and offline players.
 * Get the amount of token a (offline-) player has.
 
-[API source](src/me/nikl/gamebox/GameBoxAPI.java)
+[API source](GameBox/src/me/nikl/gamebox/GameBoxAPI.java)
 
 ## Commands and permissions
 
