@@ -12,6 +12,7 @@ import me.nikl.gamebox.listeners.LeftGameBoxListener;
 import me.nikl.gamebox.players.HandleInvitations;
 import me.nikl.gamebox.players.HandleInviteInput;
 import net.milkbowl.vault.economy.Economy;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -29,7 +30,9 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 import java.util.logging.Level;
 
 /**
@@ -112,27 +115,23 @@ public class GameBox extends JavaPlugin{
 		}
 
 		// send data with bStats if not opt out
+		// send data with bStats if not opt out
 		if(GameBoxSettings.bStats) {
 			metrics = new Metrics(getPluginManager().getPlugin());
 
-			metrics.addCustomChart(new Metrics.SimpleBarChart("gamebox_games") {
 
+			metrics.addCustomChart(new Metrics.SimpleBarChart("gamebox_games", new Callable<Map<String, Integer>>(){
 				@Override
-				public HashMap<String, Integer> getValues(HashMap<String, Integer> valueMap) {
+				public HashMap<String, Integer> call() throws Exception {
+					HashMap<String, Integer> valueMap = new HashMap<>();
 					for(String gameID : getPluginManager().getGames().keySet()){
 						valueMap.put(getOriginalGameName(gameID), 1);
 					}
 					return valueMap;
 				}
-			});
+			}));
 
-			metrics.addCustomChart(new Metrics.SimplePie("number_of_gamebox_games") {
-
-				@Override
-				public String getValue() {
-					return String.valueOf(PluginManager.gamesRegistered);
-				}
-			});
+			metrics.addCustomChart(new Metrics.SimplePie("number_of_gamebox_games", () -> String.valueOf(PluginManager.gamesRegistered)));
 		} else {
 			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " You have opt out bStats");
 		}
