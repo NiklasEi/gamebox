@@ -7,27 +7,28 @@
     <parent>
         <groupId>me.nikl.gamebox</groupId>
         <artifactId>GameBox-parent</artifactId>
-        <version>${project.version}</version>
+        <version>1.5.5</version>
     </parent>
 
     <groupId>me.nikl.gamebox</groupId>
     <artifactId>GameBox</artifactId>
     <name>GameBox</name>
-    <packaging>pom</packaging>
-    <version>${project.version}</version>
+    <packaging>jar</packaging>
+    <version>1.5.5</version>
     <description>One GUI for several inventory games</description>
 
     <build>
         <defaultGoal>clean package</defaultGoal>
         <finalName>${project.name}</finalName>
-        <sourceDirectory>GameBox/src</sourceDirectory>
+        <sourceDirectory>src</sourceDirectory>
+        <directory>target</directory>
         <resources>
             <resource>
                 <targetPath>.</targetPath>
                 <filtering>true</filtering>
-                <directory>${basedir}</directory>
+                <directory>${basedir}/src/main/resources</directory>
                 <includes>
-                    <include>*.yml</include>
+                    <include>**/*.yml</include>
                 </includes>
             </resource>
         </resources>
@@ -48,12 +49,17 @@
                     <artifactSet>
                         <includes>
                             <include>org.bstats:*</include>
+                            <include>me.nikl.gamebox:*</include>
                         </includes>
                     </artifactSet>
                     <relocations>
                         <relocation>
                             <pattern>org.bstats</pattern>
-                            <shadedPattern>me.nikl</shadedPattern>
+                            <shadedPattern>me.nikl.bstats</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>me.nikl.gamebox</pattern>
+                            <shadedPattern>me.nikl.gamebox</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
