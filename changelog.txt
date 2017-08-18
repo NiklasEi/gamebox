@@ -1,8 +1,15 @@
 
+
+
+
+
+--------------------------------------------------
+v 1.5.6
 - remove '.' from huge number formatting when three zeros follow it
 - upgrade bstats to 1.2
 - mavenized
---------------------------------------------------
+- fix cut of number formating at 9.223 quintillion (due to max value of long)
+--- use CookieClicker 1.0.0 + to use the corrected method only
 
 v 1.5.5
 - added title length checks in AGui and in 1.8 nms utils
