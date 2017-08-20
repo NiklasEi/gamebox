@@ -80,7 +80,7 @@ public abstract class AGui {
 			title = title.replace("%game%", pluginManager.getGame(args[0]).getName());
 		}
 
-		if(GameBoxSettings.delayedInventoryUpdate && title.length() > 32){
+		if(GameBoxSettings.checkInventoryLength && title.length() > 32){
 			title = "Title is too long!";
 		}
 
