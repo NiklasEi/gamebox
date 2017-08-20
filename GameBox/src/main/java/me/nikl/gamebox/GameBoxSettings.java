@@ -15,6 +15,8 @@ public class GameBoxSettings {
 
     public static Sounds successfulClick, unsuccessfulClick;
 
+    public static boolean checkInventoryLength = false;
+
     public static boolean useMysql = false;
 
     // is changed in main class
