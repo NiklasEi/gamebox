@@ -128,7 +128,13 @@ public class MainGui extends AGui{
 			tokenButtons.put(player.getUuid(), tokens);
 		}
 
-		Inventory inventory = Bukkit.createInventory(null, this.inventory.getSize(), title.replace("%player%", Bukkit.getPlayer(player.getUuid()).getName()));
+		String title = this.title.replace("%player%", Bukkit.getPlayer(player.getUuid()).getName());
+
+		if(GameBoxSettings.checkInventoryLength && title.length() > 32){
+			title = "Title is too long!";
+		}
+
+		Inventory inventory = Bukkit.createInventory(null, this.inventory.getSize(), title);
 
 		inventory.setContents(this.inventory.getContents().clone());
 

@@ -337,16 +337,19 @@ public class GameBox extends JavaPlugin{
 			case "v1_8_R3":
 				nms = new NMSUtil_1_8_R3();
 				GameBoxSettings.delayedInventoryUpdate = true;
+				GameBoxSettings.checkInventoryLength = true;
 
 				break;
 			case "v1_8_R2":
 				nms = new NMSUtil_1_8_R2();
 				GameBoxSettings.delayedInventoryUpdate = true;
+				GameBoxSettings.checkInventoryLength = true;
 
 				break;
 			case "v1_8_R1":
 				nms = new NMSUtil_1_8_R1();
 				GameBoxSettings.delayedInventoryUpdate = true;
+				GameBoxSettings.checkInventoryLength = true;
 
 				break;
 			case "v1_11_R1":
