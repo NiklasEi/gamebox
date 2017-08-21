@@ -2,8 +2,10 @@
 
 
 
-
 --------------------------------------------------
+v 1.5.7
+- added flag and checks for too long inventory titles in 1.8
+
 v 1.5.6
 - remove '.' from huge number formatting when three zeros follow it
 - upgrade bstats to 1.2
