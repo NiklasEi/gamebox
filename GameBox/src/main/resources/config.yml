@@ -101,6 +101,8 @@ settings:
   # this enables players to accept game invitations without having the play permission.
   #   The permission is still needed to send the invitation though.
   exceptInvitesWithoutPlayPermission: false
+  # If set players will keep their armor on when in a GUI or game
+  keepArmor: false
   # invitation settings
   invitations:
     clickMessage:

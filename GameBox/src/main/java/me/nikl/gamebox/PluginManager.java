@@ -241,12 +241,30 @@ public class PluginManager implements Listener {
         setOnWorldJoin = hubSec.getBoolean("giveItemOnWorldJoin", false);
     }
 
+    @SuppressWarnings("deprecation")
     public void saveInventory(Player player){
 		GameBox.debug("saving inventory contents...");
         hotBarSlot.putIfAbsent(player.getUniqueId(), player.getInventory().getHeldItemSlot());
 		savedContents.putIfAbsent(player.getUniqueId(), player.getInventory().getContents().clone());
 
-		player.getInventory().clear();
+        if(GameBoxSettings.keepArmor){
+            ItemStack[] content = savedContents.get(player.getUniqueId()).clone();
+
+            for (int i = 0; i < 36; i++){
+                content[i] = null;
+            }
+            for(int i = 0; i < content.length;i++){
+                if(content[i] != null){
+                    Bukkit.getConsoleSender().sendMessage(content[i].toString());
+                }
+            }
+            player.getInventory().setContents(content);
+
+
+        } else {
+            player.getInventory().clear();
+        }
+
 		player.getInventory().setHeldItemSlot(toHold);
 	}
 

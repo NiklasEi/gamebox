@@ -97,8 +97,9 @@ public abstract class AGui {
 			player.openInventory(inventory);
 		}
 
-		player.getOpenInventory().getBottomInventory().setContents(lowerGrid);
-
+		for(int slot = 0; slot < lowerGrid.length; slot++){
+			player.getOpenInventory().getBottomInventory().setItem(slot, lowerGrid[slot]);
+		}
 		pluginManager.setItemsToKeep(player);
 
 		inGui.add(player.getUniqueId());

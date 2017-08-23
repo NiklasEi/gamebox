@@ -29,6 +29,8 @@ public class GameBoxSettings {
     public static boolean econEnabled = false;
     public static boolean tokensEnabled = false;
 
+    public static boolean keepArmor = false;
+
     public static boolean sendInviteClickMessage = true;
 
     public static boolean bStats = true;
@@ -50,6 +52,8 @@ public class GameBoxSettings {
         exceptInvitesWithoutPlayPermission = config.getBoolean("settings.exceptInvitesWithoutPlayPermission", false);
         bStats = config.getBoolean("settings.bStats", true);
         closeInventoryOnDamage = config.getBoolean("settings.closeInventoryOnDamage", true);
+
+        keepArmor = config.getBoolean("settings.keepArmor", false);
 
         try{
             successfulClick = Sounds.valueOf(config.getString("guiSettings.standardSounds.successfulClick", "CLICK"));
