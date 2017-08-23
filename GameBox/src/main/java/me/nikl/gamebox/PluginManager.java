@@ -253,11 +253,7 @@ public class PluginManager implements Listener {
             for (int i = 0; i < 36; i++){
                 content[i] = null;
             }
-            for(int i = 0; i < content.length;i++){
-                if(content[i] != null){
-                    Bukkit.getConsoleSender().sendMessage(content[i].toString());
-                }
-            }
+            
             player.getInventory().setContents(content);
 
 
