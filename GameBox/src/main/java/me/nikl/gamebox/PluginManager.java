@@ -244,23 +244,28 @@ public class PluginManager implements Listener {
     @SuppressWarnings("deprecation")
     public void saveInventory(Player player){
 		GameBox.debug("saving inventory contents...");
+
+		// save currently hold item slot
         hotBarSlot.putIfAbsent(player.getUniqueId(), player.getInventory().getHeldItemSlot());
+
+        // save inventory contents
 		savedContents.putIfAbsent(player.getUniqueId(), player.getInventory().getContents().clone());
 
         if(GameBoxSettings.keepArmor){
             ItemStack[] content = savedContents.get(player.getUniqueId()).clone();
 
+            // remove all non armor items from array. This works for newer versions (with shields) and old ones
             for (int i = 0; i < 36; i++){
                 content[i] = null;
             }
-            
+
+            // overwrite all non armor items
             player.getInventory().setContents(content);
-
-
         } else {
             player.getInventory().clear();
         }
 
+        // player will hold an empty slot, which removes the annoying animation when clicking in an inventory with an item in your hand
 		player.getInventory().setHeldItemSlot(toHold);
 	}
 
