@@ -441,7 +441,17 @@ public class PluginManager implements Listener {
 
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event){
-        if(gbPlayers.keySet().contains(event.getPlayer().getUniqueId())) {
+        Player player = event.getPlayer();
+
+        // close inventory when in a game or GUI. This should trigger InventoryCloseEvent
+        if(isInGame(player.getUniqueId()) || guiManager.isInGUI(player.getUniqueId())
+                || guiManager.getShopManager().inShop(player.getUniqueId())){
+            player.closeInventory();
+            restoreInventory(player);
+        }
+
+        // remove the player and all the personal GUIs. This also saves the GB options of that player.
+        if(gbPlayers.keySet().contains(player.getUniqueId())) {
             removePlayer(event.getPlayer().getUniqueId());
         }
     }
