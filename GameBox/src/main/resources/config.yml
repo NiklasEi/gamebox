@@ -58,6 +58,9 @@ guiSettings:
     exitSlot: 4
     mainMenuSlot: 0
     gameMenuSlot: 8
+    exitMaterial: "BARRIER"
+    mainMenuMaterial: "DARK_OAK_DOOR_ITEM"
+    gameMenuMaterial: "BIRCH_DOOR_ITEM"
 
   # you will keep the items that are in these slots while you are in a GUI/Game
   #   This should only be used to guaranty compatibility for plugins which only function

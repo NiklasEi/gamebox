@@ -9,6 +9,7 @@ import me.nikl.gamebox.nms.NMSUtil;
 import me.nikl.gamebox.players.GBPlayer;
 import me.nikl.gamebox.players.HandleInvitations;
 import me.nikl.gamebox.players.HandleInviteInput;
+import me.nikl.gamebox.util.ItemStackUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -156,11 +157,31 @@ public class PluginManager implements Listener {
             toGame = -999;
         }
 
+        ItemStack toMainItem = ItemStackUtil.getItemStack(config.getString("guiSettings.hotBarNavigation.mainMenuMaterial"))
+                , toGameItem = ItemStackUtil.getItemStack(config.getString("guiSettings.hotBarNavigation.gameMenuMaterial"))
+                , exitItem = ItemStackUtil.getItemStack(config.getString("guiSettings.hotBarNavigation.exitMaterial"));
 
-        ItemStack toMainItem = new ItemStack(Material.DARK_OAK_DOOR_ITEM), toGameItem = new ItemStack(Material.BIRCH_DOOR_ITEM), exitItem = new ItemStack(Material.BARRIER);
+        if(toMainItem == null) {
+            toMainItem = new ItemStack(Material.DARK_OAK_DOOR_ITEM);
+            plugin.getLogger().log(Level.WARNING, " guiSettings.hotBarNavigation.mainMenuMaterial is not a valid material");
+        }
+        if(toGameItem == null) {
+            toGameItem = new ItemStack(Material.BIRCH_DOOR_ITEM);
+            plugin.getLogger().log(Level.WARNING, " guiSettings.hotBarNavigation.gameMenuMaterial is not a valid material");
+        }
+        if(exitItem == null) {
+            exitItem = new ItemStack(Material.BARRIER);
+            plugin.getLogger().log(Level.WARNING, " guiSettings.hotBarNavigation.exitMaterial is not a valid material");
+        }
+
+        // set count
+        toGameItem.setAmount(1); toMainItem.setAmount(1); exitItem.setAmount(1);
+
+        // set display name
         ItemMeta meta = toMainItem.getItemMeta(); meta.setDisplayName(chatColor(lang.BUTTON_TO_MAIN_MENU)); toMainItem.setItemMeta(meta);
         meta = toGameItem.getItemMeta(); meta.setDisplayName(chatColor(lang.BUTTON_TO_GAME_MENU)); toGameItem.setItemMeta(meta);
         meta = exitItem.getItemMeta(); meta.setDisplayName(chatColor(lang.BUTTON_EXIT)); exitItem.setItemMeta(meta);
+
         if(toMain >= 0)hotbarButtons.put(toMain, toMainItem);
         if(exit >= 0)hotbarButtons.put(exit, exitItem);
         if(toGame >= 0)hotbarButtons.put(toGame, toGameItem);
