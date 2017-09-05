@@ -7,14 +7,14 @@
     <parent>
         <groupId>me.nikl.gamebox</groupId>
         <artifactId>GameBox-parent</artifactId>
-        <version>1.5.6</version>
+        <version>1.5.8</version>
     </parent>
 
     <groupId>me.nikl.gamebox</groupId>
     <artifactId>GameBox</artifactId>
     <name>GameBox</name>
     <packaging>jar</packaging>
-    <version>1.5.6</version>
+    <version>1.5.8</version>
     <description>One GUI for several inventory games</description>
 
     <build>
@@ -125,47 +125,47 @@
         <dependency>
             <groupId>me.nikl.gamebox</groupId>
             <artifactId>GameBox-nms</artifactId>
-            <version>1.5.6</version>
+            <version>1.5.8</version>
         </dependency>
         <dependency>
             <groupId>me.nikl.gamebox</groupId>
             <artifactId>GameBox-v1_8_R1</artifactId>
-            <version>1.5.6</version>
+            <version>1.5.8</version>
         </dependency>
         <dependency>
             <groupId>me.nikl.gamebox</groupId>
             <artifactId>GameBox-v1_8_R2</artifactId>
-            <version>1.5.6</version>
+            <version>1.5.8</version>
         </dependency>
         <dependency>
             <groupId>me.nikl.gamebox</groupId>
             <artifactId>GameBox-v1_8_R3</artifactId>
-            <version>1.5.6</version>
+            <version>1.5.8</version>
         </dependency>
         <dependency>
             <groupId>me.nikl.gamebox</groupId>
             <artifactId>GameBox-v1_9_R1</artifactId>
-            <version>1.5.6</version>
+            <version>1.5.8</version>
         </dependency>
         <dependency>
             <groupId>me.nikl.gamebox</groupId>
             <artifactId>GameBox-v1_9_R2</artifactId>
-            <version>1.5.6</version>
+            <version>1.5.8</version>
         </dependency>
         <dependency>
             <groupId>me.nikl.gamebox</groupId>
             <artifactId>GameBox-v1_10_R1</artifactId>
-            <version>1.5.6</version>
+            <version>1.5.8</version>
         </dependency>
         <dependency>
             <groupId>me.nikl.gamebox</groupId>
             <artifactId>GameBox-v1_11_R1</artifactId>
-            <version>1.5.6</version>
+            <version>1.5.8</version>
         </dependency>
         <dependency>
             <groupId>me.nikl.gamebox</groupId>
             <artifactId>GameBox-v1_12_R1</artifactId>
-            <version>1.5.6</version>
+            <version>1.5.8</version>
         </dependency>
     </dependencies>
 

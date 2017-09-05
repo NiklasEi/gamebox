@@ -1,10 +1,11 @@
 
 
+--------------------------------------------------
+v 1.5.8
 - merged #11 (update lang_zh-cn)
 - configurable items as hotbar buttons (#13)
 - handle players who are still in GUI or game on PlayerQuitEvent (#12)
 
---------------------------------------------------
 v 1.5.7
 - added flag and checks for too long inventory titles in 1.8
 - add option to keep armor on when in GUI or a game #5
