@@ -20,7 +20,7 @@
     <build>
         <defaultGoal>clean package</defaultGoal>
         <finalName>${project.name}</finalName>
-        <sourceDirectory>src</sourceDirectory>
+        <sourceDirectory>src/main/java</sourceDirectory>
         <directory>target</directory>
         <resources>
             <resource>
