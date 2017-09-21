@@ -1,6 +1,9 @@
 
 
 --------------------------------------------------
+v 1.5.9
+- test whether server can handle long inventory titles instead of simply assuming it for all versions 1.9+
+
 v 1.5.8
 - merged #11 (update lang_zh-cn)
 - configurable items as hotbar buttons (#13)
