@@ -10,10 +10,12 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
 import net.minecraft.server.v1_8_R3.PacketPlayOutOpenWindow;
 import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerListHeaderFooter;
 import net.minecraft.server.v1_8_R3.PacketPlayOutTitle;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 import java.lang.reflect.Field;
 
@@ -23,14 +25,30 @@ import java.lang.reflect.Field;
  * nms util for 1.8.R3
  */
 public class NMSUtil_1_8_R3 implements NMSUtil {
+
+
+	private boolean checkInventoryTitleLength = false;
+
+	public NMSUtil_1_8_R3(){
+		try {
+			Inventory inventory = Bukkit.createInventory(null, 27, "This title is longer then 32 characters!");
+		} catch (Exception e){
+			checkInventoryTitleLength = true;
+		}
+	}
+
 	@Override
 	public void updateInventoryTitle(Player player, String newTitle) {
 		EntityPlayer ep = ((CraftPlayer)player).getHandle();
 		newTitle = ChatColor.translateAlternateColorCodes('&',newTitle);
+
+		if(checkInventoryTitleLength){
+			newTitle = "Title is too long (> 32)";
+		}
+
 		PacketPlayOutOpenWindow packet = new PacketPlayOutOpenWindow(ep.activeContainer.windowId
-				, "minecraft:chest", new ChatMessage(newTitle.length() > 32 ? "Title is too long!" : newTitle)
-				, player.getOpenInventory().getTopInventory().getSize());
-		ep.playerConnection.sendPacket(packet);
+				, "minecraft:chest", new ChatMessage(newTitle)
+				, player.getOpenInventory().getTopInventory().getSize());		ep.playerConnection.sendPacket(packet);
 		ep.updateInventory(ep.activeContainer);
 	}
 	

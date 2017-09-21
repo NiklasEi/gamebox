@@ -27,6 +27,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.HandlerList;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -125,7 +126,7 @@ public class GameBox extends JavaPlugin{
 
 		// send data with bStats if not opt out
 		if(GameBoxSettings.bStats) {
-			metrics = new Metrics(getPluginManager().getPlugin());
+			metrics = new Metrics(this);
 
 
 			metrics.addCustomChart(new Metrics.SimpleBarChart("gamebox_games", new Callable<Map<String, Integer>>(){
@@ -184,6 +185,8 @@ public class GameBox extends JavaPlugin{
 
 		// load all settings from config
 		GameBoxSettings.loadSettings(this);
+
+		checkInventoryTitleLength();
 
 		// disable mysql
 		GameBoxSettings.useMysql = false;
@@ -291,6 +294,16 @@ public class GameBox extends JavaPlugin{
 		return true;
 	}
 
+	private void checkInventoryTitleLength() {
+		try {
+			Inventory inventory = Bukkit.createInventory(null, 27, "This title is longer then 32 characters!");
+		} catch (Exception e){
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " Your server version can't handle more then 32 characters in inventory titles!");
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " GameBox will replace too long titles. You should shorten them in your language file.");
+			GameBoxSettings.checkInventoryLength = true;
+		}
+	}
+
 
 	public Statistics getStatistics(){
 		return this.statistics;
@@ -337,19 +350,16 @@ public class GameBox extends JavaPlugin{
 			case "v1_8_R3":
 				nms = new NMSUtil_1_8_R3();
 				GameBoxSettings.delayedInventoryUpdate = true;
-				GameBoxSettings.checkInventoryLength = true;
 
 				break;
 			case "v1_8_R2":
 				nms = new NMSUtil_1_8_R2();
 				GameBoxSettings.delayedInventoryUpdate = true;
-				GameBoxSettings.checkInventoryLength = true;
 
 				break;
 			case "v1_8_R1":
 				nms = new NMSUtil_1_8_R1();
 				GameBoxSettings.delayedInventoryUpdate = true;
-				GameBoxSettings.checkInventoryLength = true;
 
 				break;
 			case "v1_11_R1":
