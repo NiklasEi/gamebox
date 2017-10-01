@@ -19,7 +19,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -48,12 +47,14 @@ public class MainGui extends AGui{
 		setButton(help, 53);
 
 
-		AButton soundToggle = new AButton(new MaterialData(Material.RECORD_6), 1);
+		ToggleButton soundToggle = new ToggleButton(new MaterialData(Material.RECORD_6), 1, new MaterialData(Material.RECORD_4));
 		ItemMeta meta = soundToggle.getItemMeta();
 		meta.addItemFlags(ItemFlag.values());
-		meta.setDisplayName(ChatColor.BLUE+"Sound on");
-		meta.setLore(Arrays.asList(" ", ChatColor.BLUE+"Click to turn sounds off"));
+		meta.setDisplayName(plugin.lang.BUTTON_SOUND_ON_NAME);
+		meta.setLore(plugin.lang.BUTTON_SOUND_ON_LORE);
 		soundToggle.setItemMeta(meta);
+		soundToggle.setToggleDisplayName(plugin.lang.BUTTON_SOUND_OFF_NAME);
+		soundToggle.setToggleLore(plugin.lang.BUTTON_SOUND_OFF_LORE);
 		soundToggle.setAction(ClickAction.TOGGLE);
 		soundToggle.setArgs("sound");
 		setButton(soundToggle, soundToggleSlot);
