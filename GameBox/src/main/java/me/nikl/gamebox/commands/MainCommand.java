@@ -67,12 +67,26 @@ public class MainCommand implements CommandExecutor{
 			return true;
 
 
-		} if (args[0].equalsIgnoreCase(inviteClickCommand) && sender instanceof Player){
+		}
+
+		/*
+				At least one argument
+		 */
+
+		// click command
+		if (args[0].equalsIgnoreCase(inviteClickCommand) && sender instanceof Player){
 			// handle click commands from clickable invite messages
-			return inviteClickCommand((Player) sender, args);
+			if(inviteClickCommand((Player) sender, args)){
+				// gui has been successfully opened
+			} else {
+				// either faulty arguments or missing permissions
+				// error messages are send in GUIManager#openGameGui(Player whoClicked, String... args)
+			}
+			return true;
+		}
 
-
-		} else if(args.length == 1){
+		// sub commands
+		if(args.length == 1){
 			// check whether the given argument is a listed sub command
 			for(String id : subCommands.keySet()){
 				if(subCommands.get(id) == null) continue;
@@ -154,7 +168,6 @@ public class MainCommand implements CommandExecutor{
 				return true;
 			}
 			// not a listed sub command
-			// TodO: reload and other plugin commands
 		}
 		// wrong usage message
 		for(String message : lang.CMD_WRONG_USAGE){
@@ -174,8 +187,7 @@ public class MainCommand implements CommandExecutor{
 		for(int i = 1; i < argsOld.length; i++){
 			args[i-1] = argsOld[i];
 		}
-		guiManager.openGameGui(sender, args);
-		return true;
+		return guiManager.openGameGui(sender, args);
 	}
 
 	public void registerSubCommands(String gameID, String... subCommands){
