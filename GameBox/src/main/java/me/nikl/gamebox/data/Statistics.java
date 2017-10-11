@@ -17,7 +17,7 @@ public abstract class Statistics {
     public static final String GAMES_STATISTICS_NODE = "gameStatistics";
     public static final String TOKEN_PATH = "tokens";
 
-    private GameBox plugin;
+    protected GameBox plugin;
 
 
     // ToDo: this whole class is chaotic
