@@ -1,6 +1,7 @@
 package me.nikl.gamebox.players;
 
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.data.Statistics;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -24,10 +25,12 @@ public class GBPlayer {
         this.plugin = plugin;
         this.statistics = plugin.getStatistics();
 
-        // save current name of player for easier management
-        Player player = Bukkit.getPlayer(uuid);
-        if(Bukkit.getPlayer(uuid) != null){
-            statistics.set(uuid.toString(), "name", player.getName());
+        // save current name of player for easier management (only in file!)
+        if(!GameBoxSettings.useMysql) {
+            Player player = Bukkit.getPlayer(uuid);
+            if (Bukkit.getPlayer(uuid) != null) {
+                statistics.set(uuid.toString(), "name", player.getName());
+            }
         }
 
         loadData();
