@@ -5,6 +5,7 @@ import me.nikl.gamebox.commands.MainCommand;
 import me.nikl.gamebox.data.PlaceholderAPIHook;
 import me.nikl.gamebox.data.Statistics;
 import me.nikl.gamebox.data.StatisticsFile;
+import me.nikl.gamebox.data.StatisticsMysql;
 import me.nikl.gamebox.game.GameContainer;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.listeners.EnterGameBoxListener;
@@ -188,9 +189,6 @@ public class GameBox extends JavaPlugin{
 
 		checkInventoryTitleLength();
 
-		// disable mysql
-		GameBoxSettings.useMysql = false;
-
 
 		HashSet<Plugin> games = new HashSet<>();
 
@@ -215,6 +213,18 @@ public class GameBox extends JavaPlugin{
 
 
 		// here try connecting to database when option set in config (for later)
+		if(GameBoxSettings.useMysql){
+			// on reload the old statistics have to be saved before loading the new one
+			if(statistics != null) statistics.save();
+
+			// get and load a new statistic
+			this.statistics = new StatisticsMysql(this);
+			if (!statistics.load()) {
+				Bukkit.getLogger().log(Level.SEVERE, " Falling back to file storage...");
+				GameBoxSettings.useMysql = false;
+				statistics = null;
+			}
+		}
 
 		// if connecting to the database failed useMysql will be set to false and the plugin should fall back to file storage
 		if(!GameBoxSettings.useMysql) {
