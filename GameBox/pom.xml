@@ -92,6 +92,10 @@
             <id>vault-repo</id>
             <url>http://nexus.hc.to/content/repositories/pub_releases</url>
         </repository>
+        <repository>
+            <id>hikari-repo</id>
+            <url>https://mvnrepository.com/artifact/com.zaxxer/HikariCP</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -119,6 +123,13 @@
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>VaultAPI</artifactId>
             <version>1.6</version>
+        </dependency>
+        <!-- HikariCP -->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>LATEST</version>
+            <scope>compile</scope>
         </dependency>
 
         <!-- nms modules -->
