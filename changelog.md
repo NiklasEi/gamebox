@@ -1,3 +1,5 @@
+- fixed wrong language on sound toggle
+- shade HikariCP and slf4j for MySQL data storage
 
 
 --------------------------------------------------
