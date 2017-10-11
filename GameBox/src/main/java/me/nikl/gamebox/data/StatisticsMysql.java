@@ -1,24 +1,32 @@
 package me.nikl.gamebox.data;
 
 import java.sql.Connection;
+
+import com.zaxxer.hikari.HikariDataSource;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.UUID;
-import java.util.logging.Level;
 
 /**
- * Created by Niklas on 03.03.2017.
+ * Created by Niklas
  */
 public class StatisticsMysql extends Statistics {
-    private Connection connection;
+
+
+    private static final String INSERT = "INSERT INTO GBPlayers VALUES(?,?,?,?) ON DUPLICATE KEY UPDATE UUID=?";
+    private static final String SELECT = "SELECT token FROM GBPlayers WHERE uuid=?";
+    private static final String SAVE = "UPDATE GBPlayers SET token=? WHERE uuid=?";
+
     private String host, database, username, password;
     private int port;
+
+
+    private HikariDataSource hikari;
 
 
     public StatisticsMysql(GameBox plugin) {
@@ -26,28 +34,32 @@ public class StatisticsMysql extends Statistics {
 
         FileConfiguration config = plugin.getConfig();
         host = config.getString("mysql.host");
+        port = config.getInt("mysql.port");
         database = config.getString("mysql.database");
         username = config.getString("mysql.username");
         password = config.getString("mysql.password");
-
-        port = config.getInt("mysql.port");
-
-
-        try {
-            openConnection();
-            Statement statement = connection.createStatement();
-        } catch (ClassNotFoundException | SQLException e) {
-            GameBoxSettings.useMysql = false;
-            plugin.getLogger().log(Level.SEVERE, " Failed to establish a connection to the MySql database!");
-            plugin.getLogger().log(Level.SEVERE, " Falling back to file storage...");
-            e.printStackTrace();
-            return;
-        }
     }
 
     @Override
     public boolean load() {
-        return false;
+        hikari = new HikariDataSource();
+        hikari.setDataSourceClassName("com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
+        hikari.addDataSourceProperty("serverName", host);
+        hikari.addDataSourceProperty("port", port);
+        hikari.addDataSourceProperty("databaseName", database);
+        hikari.addDataSourceProperty("user", username);
+        hikari.addDataSourceProperty("password", password);
+
+        try(Connection connection = hikari.getConnection()){
+            Statement statement = connection.createStatement();
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS GBPlayers(UUID varchar(36), name VARCHAR(16), TOKEN int, playSounds BOOL)");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            GameBoxSettings.useMysql = false;
+            return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -90,17 +102,4 @@ public class StatisticsMysql extends Statistics {
         return false;
     }
 
-    public void openConnection() throws SQLException, ClassNotFoundException {
-        if (connection != null && !connection.isClosed()) {
-            return;
-        }
-
-        synchronized (this) {
-            if (connection != null && !connection.isClosed()) {
-                return;
-            }
-            Class.forName("com.mysql.jdbc.Driver");
-            connection = DriverManager.getConnection("jdbc:mysql://" + this.host+ ":" + this.port + "/" + this.database, this.username, this.password);
-        }
-    }
 }
