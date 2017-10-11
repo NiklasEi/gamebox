@@ -50,6 +50,8 @@
                         <includes>
                             <include>org.bstats:*</include>
                             <include>me.nikl.gamebox:*</include>
+                            <include>com.zaxxer:*</include>
+                            <include>org.slf4j:*</include>
                         </includes>
                     </artifactSet>
                     <relocations>
@@ -60,6 +62,14 @@
                         <relocation>
                             <pattern>me.nikl.gamebox</pattern>
                             <shadedPattern>me.nikl.gamebox</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.zaxxer</pattern>
+                            <shadedPattern>me.nikl.gamebox.com.zaxxer</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.slf4j</pattern>
+                            <shadedPattern>me.nikl.gamebox.org.slf4j</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -129,6 +139,13 @@
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
             <version>LATEST</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- SLF4J -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.5</version>
             <scope>compile</scope>
         </dependency>
 
