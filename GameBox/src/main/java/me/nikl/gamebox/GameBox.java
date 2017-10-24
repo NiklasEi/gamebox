@@ -10,15 +10,7 @@ import me.nikl.gamebox.game.GameContainer;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.listeners.EnterGameBoxListener;
 import me.nikl.gamebox.listeners.LeftGameBoxListener;
-import me.nikl.gamebox.nms.NMSUtil;
-import me.nikl.gamebox.nms.NMSUtil_1_10_R1;
-import me.nikl.gamebox.nms.NMSUtil_1_11_R1;
-import me.nikl.gamebox.nms.NMSUtil_1_12_R1;
-import me.nikl.gamebox.nms.NMSUtil_1_8_R1;
-import me.nikl.gamebox.nms.NMSUtil_1_8_R2;
-import me.nikl.gamebox.nms.NMSUtil_1_8_R3;
-import me.nikl.gamebox.nms.NMSUtil_1_9_R1;
-import me.nikl.gamebox.nms.NMSUtil_1_9_R2;
+import me.nikl.gamebox.nms.*;
 import me.nikl.gamebox.players.HandleInvitations;
 import me.nikl.gamebox.players.HandleInviteInput;
 import me.nikl.gamebox.util.LanguageUtil;
@@ -96,8 +88,6 @@ public class GameBox extends JavaPlugin{
 	@Deprecated
 	public static boolean playSounds = GameBoxSettings.playSounds;
 
-	private static HashMap<String, String> knownGames;
-
 
 
 	@Override
@@ -130,7 +120,7 @@ public class GameBox extends JavaPlugin{
 		if(GameBoxSettings.bStats) {
 			metrics = new Metrics(this);
 
-
+			// Bar chart of all installed games
 			metrics.addCustomChart(new Metrics.SimpleBarChart("gamebox_games", new Callable<Map<String, Integer>>(){
 				@Override
 				public HashMap<String, Integer> call() throws Exception {
@@ -142,6 +132,21 @@ public class GameBox extends JavaPlugin{
 				}
 			}));
 
+			// Drill down pie with number of games and further breakdown of proportions of the games
+			metrics.addCustomChart(new Metrics.DrilldownPie("games_drill_down", () -> {
+				Map<String, Map<String, Integer>> map = new HashMap<>();
+
+				Map<String, Integer> entry = new HashMap<>();
+
+				for(String gameID : getPluginManager().getGames().keySet()){
+					entry.put(getOriginalGameName(gameID), 1);
+				}
+
+				map.put(String.valueOf(getPluginManager().getGames().size()), entry);
+				return map;
+			}));
+
+			// Pie chart with number of games
 			metrics.addCustomChart(new Metrics.SimplePie("number_of_gamebox_games", () -> String.valueOf(PluginManager.gamesRegistered)));
 		} else {
 			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " You have opt out bStats");
@@ -252,7 +257,6 @@ public class GameBox extends JavaPlugin{
 		// disable all registered games
 		if(!games.isEmpty()){
 			for(Plugin game : games){
-				//Bukkit.getPluginManager().disablePlugin(game);
 				game.onDisable();
 			}
 		}
