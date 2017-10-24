@@ -1,5 +1,6 @@
 package me.nikl.gamebox;
 
+import me.nikl.gamebox.util.LanguageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -72,9 +73,9 @@ public class Language {
 		this.plugin = plugin;
 		getLangFile();
 
-		PREFIX = getString("prefix");
+		PREFIX = LanguageUtil.getString("gamebox", "prefix");
 		PLAIN_PREFIX = ChatColor.stripColor(PREFIX);
-		NAME = getString("name");
+		NAME = LanguageUtil.getString("gamebox", "name");
 
 		getCommandMessages();
 		getInvTitles();
@@ -84,158 +85,115 @@ public class Language {
 
 		// JSON prefix
 
-		this.JSON_PREFIX_PRE_TEXT = getString("jsonPrefix.preText");
-		this.JSON_PREFIX_PRE_COLOR = getString("jsonPrefix.preColor");
-		this.JSON_PREFIX_TEXT = getString("jsonPrefix.text");
-		this.JSON_PREFIX_COLOR = getString("jsonPrefix.color");
-		this.JSON_PREFIX_AFTER_TEXT = getString("jsonPrefix.afterText");
-		this.JSON_PREFIX_AFTER_COLOR = getString("jsonPrefix.afterColor");
+		this.JSON_PREFIX_PRE_TEXT = LanguageUtil.getString("gamebox", "jsonPrefix.preText");
+		this.JSON_PREFIX_PRE_COLOR = LanguageUtil.getString("gamebox", "jsonPrefix.preColor");
+		this.JSON_PREFIX_TEXT = LanguageUtil.getString("gamebox", "jsonPrefix.text");
+		this.JSON_PREFIX_COLOR = LanguageUtil.getString("gamebox", "jsonPrefix.color");
+		this.JSON_PREFIX_AFTER_TEXT = LanguageUtil.getString("gamebox", "jsonPrefix.afterText");
+		this.JSON_PREFIX_AFTER_COLOR = LanguageUtil.getString("gamebox", "jsonPrefix.afterColor");
 	}
 
 	private void getOthers() {
 		// clickable invite message
-		this.INVITATION_PRE_TEXT = getString("others.invitationClickMessage.preText");
-		this.INVITATION_PRE_COLOR = getString("others.invitationClickMessage.preColor");
-		this.INVITATION_CLICK_TEXT = getString("others.invitationClickMessage.clickText");
-		this.INVITATION_CLICK_COLOR = getString("others.invitationClickMessage.clickColor");
-		this.INVITATION_HOVER_TEXT = getString("others.invitationClickMessage.hoverText");
-		this.INVITATION_HOVER_COLOR = getString("others.invitationClickMessage.hoverColor");
-		this.INVITATION_AFTER_TEXT = getString("others.invitationClickMessage.afterText");
-		this.INVITATION_AFTER_COLOR = getString("others.invitationClickMessage.afterColor");
+		this.INVITATION_PRE_TEXT = LanguageUtil.getString("gamebox", "others.invitationClickMessage.preText");
+		this.INVITATION_PRE_COLOR = LanguageUtil.getString("gamebox", "others.invitationClickMessage.preColor");
+		this.INVITATION_CLICK_TEXT = LanguageUtil.getString("gamebox", "others.invitationClickMessage.clickText");
+		this.INVITATION_CLICK_COLOR = LanguageUtil.getString("gamebox", "others.invitationClickMessage.clickColor");
+		this.INVITATION_HOVER_TEXT = LanguageUtil.getString("gamebox", "others.invitationClickMessage.hoverText");
+		this.INVITATION_HOVER_COLOR = LanguageUtil.getString("gamebox", "others.invitationClickMessage.hoverColor");
+		this.INVITATION_AFTER_TEXT = LanguageUtil.getString("gamebox", "others.invitationClickMessage.afterText");
+		this.INVITATION_AFTER_COLOR = LanguageUtil.getString("gamebox", "others.invitationClickMessage.afterColor");
 
 
 
 
-		this.INPUT_START_MESSAGE = getString("others.playerInput.openingMessage");
-		this.INPUT_TIME_RAN_OUT = getString("others.playerInput.timeRanOut");
-		this.INPUT_HELP_MESSAGE = getStringList("others.playerInput.helpMessage");
-		this.INVITATION_SUCCESSFUL = getString("others.playerInput.inputSuccessful");
-		this.INVITATION_ALREADY_THERE = getString("others.playerInput.sameInvitation");
-		this.INVITATION_NOT_VALID_PLAYER_NAME = getString("others.playerInput.notValidPlayerName");
-		this.INVITATION_NOT_ONLINE = getString("others.playerInput.notOnline");
-		this.INPUT_CLOSED = getString("others.playerInput.inputClosed");
-		this.INVITATION_NOT_YOURSELF = getString("others.playerInput.notInviteYourself");
+		this.INPUT_START_MESSAGE = LanguageUtil.getString("gamebox", "others.playerInput.openingMessage");
+		this.INPUT_TIME_RAN_OUT = LanguageUtil.getString("gamebox", "others.playerInput.timeRanOut");
+		this.INPUT_HELP_MESSAGE = LanguageUtil.getStringList("gamebox", "others.playerInput.helpMessage");
+		this.INVITATION_SUCCESSFUL = LanguageUtil.getString("gamebox", "others.playerInput.inputSuccessful");
+		this.INVITATION_ALREADY_THERE = LanguageUtil.getString("gamebox", "others.playerInput.sameInvitation");
+		this.INVITATION_NOT_VALID_PLAYER_NAME = LanguageUtil.getString("gamebox", "others.playerInput.notValidPlayerName");
+		this.INVITATION_NOT_ONLINE = LanguageUtil.getString("gamebox", "others.playerInput.notOnline");
+		this.INPUT_CLOSED = LanguageUtil.getString("gamebox", "others.playerInput.inputClosed");
+		this.INVITATION_NOT_YOURSELF = LanguageUtil.getString("gamebox", "others.playerInput.notInviteYourself");
 
-		this.WON_TOKEN = getString("others.wonToken");
+		this.WON_TOKEN = LanguageUtil.getString("gamebox", "others.wonToken");
 
-		INVITE_MESSAGE = getStringList("others.invitation");
+		INVITE_MESSAGE = LanguageUtil.getStringList("gamebox", "others.invitation");
 	}
 
 	private void getButtons() {
-		this.BUTTON_EXIT = getString("mainButtons.exitButton");
-		this.BUTTON_TO_MAIN_MENU = getString("mainButtons.toMainGUIButton");
-		this.BUTTON_TO_GAME_MENU = getString("mainButtons.toGameGUIButton");
-		this.BUTTON_TOKENS = getString("mainButtons.tokensButton");
+		this.BUTTON_EXIT = LanguageUtil.getString("gamebox", "mainButtons.exitButton");
+		this.BUTTON_TO_MAIN_MENU = LanguageUtil.getString("gamebox", "mainButtons.toMainGUIButton");
+		this.BUTTON_TO_GAME_MENU = LanguageUtil.getString("gamebox", "mainButtons.toGameGUIButton");
+		this.BUTTON_TOKENS = LanguageUtil.getString("gamebox", "mainButtons.tokensButton");
 
-		this.BUTTON_FORWARD = getString("mainButtons.forwardButton");
-		this.BUTTON_BACK = getString("mainButtons.backwardButton");
+		this.BUTTON_FORWARD = LanguageUtil.getString("gamebox", "mainButtons.forwardButton");
+		this.BUTTON_BACK = LanguageUtil.getString("gamebox", "mainButtons.backwardButton");
 
-		this.BUTTON_MAIN_MENU_INFO = getStringList("mainButtons.infoMainMenu");
+		this.BUTTON_MAIN_MENU_INFO = LanguageUtil.getStringList("gamebox", "mainButtons.infoMainMenu");
 
-		BUTTON_SOUND_ON_NAME = getString("mainButtons.soundToggle.onDisplayName");
-		BUTTON_SOUND_OFF_NAME = getString("mainButtons.soundToggle.offDisplayName");
-		BUTTON_SOUND_ON_LORE = getStringList("mainButtons.soundToggle.onLore");
-		BUTTON_SOUND_OFF_LORE = getStringList("mainButtons.soundToggle.offLore");
+		BUTTON_SOUND_ON_NAME = LanguageUtil.getString("gamebox", "mainButtons.soundToggle.onDisplayName");
+		BUTTON_SOUND_OFF_NAME = LanguageUtil.getString("gamebox", "mainButtons.soundToggle.offDisplayName");
+		BUTTON_SOUND_ON_LORE = LanguageUtil.getStringList("gamebox", "mainButtons.soundToggle.onLore");
+		BUTTON_SOUND_OFF_LORE = LanguageUtil.getStringList("gamebox", "mainButtons.soundToggle.offLore");
 
-		BUTTON_INVITE_BUTTON_NAME = getString("mainButtons.inviteButton.displayName");
-		BUTTON_INVITE_BUTTON_LORE = getStringList("mainButtons.inviteButton.lore");
+		BUTTON_INVITE_BUTTON_NAME = LanguageUtil.getString("gamebox", "mainButtons.inviteButton.displayName");
+		BUTTON_INVITE_BUTTON_LORE = LanguageUtil.getStringList("gamebox", "mainButtons.inviteButton.lore");
 
-		BUTTON_INVITE_SKULL_NAME = getString("mainButtons.invitationSkull.displayName");
-		BUTTON_INVITE_SKULL_LORE = getStringList("mainButtons.invitationSkull.lore");
+		BUTTON_INVITE_SKULL_NAME = LanguageUtil.getString("gamebox", "mainButtons.invitationSkull.displayName");
+		BUTTON_INVITE_SKULL_LORE = LanguageUtil.getStringList("gamebox", "mainButtons.invitationSkull.lore");
 	}
 
 	private void getInvTitles() {
 		// main GUI
-		this.TITLE_MAIN_GUI = getString("inventoryTitles.mainGUI");
+		this.TITLE_MAIN_GUI = LanguageUtil.getString("gamebox", "inventoryTitles.mainGUI");
 
-		this.TITLE_GAME_GUI = getString("inventoryTitles.gameGUIs");
-		this.TITLE_NO_PERM = getString("inventoryTitles.noPermMessage");
-		this.TITLE_NOT_ENOUGH_MONEY = getString("inventoryTitles.notEnoughMoney");
-		this.TITLE_NOT_ENOUGH_TOKEN = getString("inventoryTitles.notEnoughTokens");
-		this.TITLE_ALREADY_IN_ANOTHER_GAME = getString("inventoryTitles.alreadyInAnotherGame");
-		this.TITLE_OTHER_PLAYER_NOT_ENOUGH_MONEY = getString("inventoryTitles.otherPlayerNotEnoughMoney");
+		this.TITLE_GAME_GUI = LanguageUtil.getString("gamebox", "inventoryTitles.gameGUIs");
+		this.TITLE_NO_PERM = LanguageUtil.getString("gamebox", "inventoryTitles.noPermMessage");
+		this.TITLE_NOT_ENOUGH_MONEY = LanguageUtil.getString("gamebox", "inventoryTitles.notEnoughMoney");
+		this.TITLE_NOT_ENOUGH_TOKEN = LanguageUtil.getString("gamebox", "inventoryTitles.notEnoughTokens");
+		this.TITLE_ALREADY_IN_ANOTHER_GAME = LanguageUtil.getString("gamebox", "inventoryTitles.alreadyInAnotherGame");
+		this.TITLE_OTHER_PLAYER_NOT_ENOUGH_MONEY = LanguageUtil.getString("gamebox", "inventoryTitles.otherPlayerNotEnoughMoney");
 
 	}
 	
 	private void getCommandMessages() {
 
-		this.CMD_NO_PERM = getString("commandMessages.noPermission");
-		this.CMD_DISABLED_WORLD = getString("commandMessages.inDisabledWorld");
-		this.CMD_ONLY_PLAYER = getString("commandMessages.onlyAsPlayer");
-		this.CMD_RELOADED = getString("commandMessages.pluginReloaded");
+		this.CMD_NO_PERM = LanguageUtil.getString("gamebox", "commandMessages.noPermission");
+		this.CMD_DISABLED_WORLD = LanguageUtil.getString("gamebox", "commandMessages.inDisabledWorld");
+		this.CMD_ONLY_PLAYER = LanguageUtil.getString("gamebox", "commandMessages.onlyAsPlayer");
+		this.CMD_RELOADED = LanguageUtil.getString("gamebox", "commandMessages.pluginReloaded");
 
-		this.RELOAD_FAIL = getString("commandMessages.reload.fail");
-		this.RELOAD_SUCCESS = getString("commandMessages.reload.success");
+		this.RELOAD_FAIL = LanguageUtil.getString("gamebox", "commandMessages.reload.fail");
+		this.RELOAD_SUCCESS = LanguageUtil.getString("gamebox", "commandMessages.reload.success");
 
 
-		this.CMD_TOKEN = getString("commandMessages.tokenInfo");
+		this.CMD_TOKEN = LanguageUtil.getString("gamebox", "commandMessages.tokenInfo");
 		
 		
-		this.CMD_HELP = getStringList("commandMessages.help");
-		this.CMD_WRONG_USAGE = getStringList("commandMessages.wrongUsage");
+		this.CMD_HELP = LanguageUtil.getStringList("gamebox", "commandMessages.help");
+		this.CMD_WRONG_USAGE = LanguageUtil.getStringList("gamebox", "commandMessages.wrongUsage");
 
-		this.CMD_INFO_HEADER = getStringList("commandMessages.info.header");
-		this.CMD_INFO_PER_GAME = getStringList("commandMessages.info.perGame");
-		this.CMD_INFO_FOOTER = getStringList("commandMessages.info.footer");
+		this.CMD_INFO_HEADER = LanguageUtil.getStringList("gamebox", "commandMessages.info.header");
+		this.CMD_INFO_PER_GAME = LanguageUtil.getStringList("gamebox", "commandMessages.info.perGame");
+		this.CMD_INFO_FOOTER = LanguageUtil.getStringList("gamebox", "commandMessages.info.footer");
 	}
 
 	private void getShop(){
-		this.SHOP_TITLE_MAIN_SHOP = getString("shop.mainShop");
-		this.SHOP_TITLE_PAGE_SHOP = getString("shop.pageShop");
+		this.SHOP_TITLE_MAIN_SHOP = LanguageUtil.getString("gamebox", "shop.mainShop");
+		this.SHOP_TITLE_PAGE_SHOP = LanguageUtil.getString("gamebox", "shop.pageShop");
 
-		this.SHOP_TITLE_INVENTORY_FULL = getString("shop.inventoryIsFull");
-		this.SHOP_TITLE_REQUIREMENT_NOT_FULFILLED = getString("shop.requirementNotFulfilled");
-		this.SHOP_TITLE_BOUGHT_SUCCESSFULLY = getString("shop.boughtSuccessful");
-		this.SHOP_TITLE_NOT_ENOUGH_TOKEN = getString("shop.notEnoughTokens");
-		this.SHOP_TITLE_NOT_ENOUGH_MONEY = getString("shop.notEnoughMoney");
-		this.SHOP_IS_CLOSED = getString("shop.shopIsClosed");
+		this.SHOP_TITLE_INVENTORY_FULL = LanguageUtil.getString("gamebox", "shop.inventoryIsFull");
+		this.SHOP_TITLE_REQUIREMENT_NOT_FULFILLED = LanguageUtil.getString("gamebox", "shop.requirementNotFulfilled");
+		this.SHOP_TITLE_BOUGHT_SUCCESSFULLY = LanguageUtil.getString("gamebox", "shop.boughtSuccessful");
+		this.SHOP_TITLE_NOT_ENOUGH_TOKEN = LanguageUtil.getString("gamebox", "shop.notEnoughTokens");
+		this.SHOP_TITLE_NOT_ENOUGH_MONEY = LanguageUtil.getString("gamebox", "shop.notEnoughMoney");
+		this.SHOP_IS_CLOSED = LanguageUtil.getString("gamebox", "shop.shopIsClosed");
 
-		this.SHOP_FREE = getString("shop.freeItem");
-		this.SHOP_MONEY = getString("shop.moneyItem");
-		this.SHOP_TOKEN = getString("shop.tokenItem");
-	}
-
-	/**
-	 * Load list messages from the language file
-	 *
-	 * If the requested path is not valid for the chosen
-	 * language file the corresponding list from the default
-	 * file is returned.
-	 * ChatColor is translated here.
-	 * @param path path to the message
-	 * @return message
-	 */
-	private List<String> getStringList(String path) {
-		List<String> toReturn;
-		if(!langFile.isList(path)){
-			toReturn = defaultLang.getStringList(path);
-			for(int i = 0; i<toReturn.size(); i++){
-				toReturn.set(i, ChatColor.translateAlternateColorCodes('&',toReturn.get(i)));
-			}
-			return toReturn;
-		}
-		toReturn = langFile.getStringList(path);
-		for(int i = 0; i<toReturn.size(); i++){
-			toReturn.set(i, ChatColor.translateAlternateColorCodes('&',toReturn.get(i)));
-		}
-		return toReturn;
-	}
-
-	/**
-	 * Get a message from the language file
-	 *
-	 * If the requested path is not valid for the
-	 * configured language file the corresponding
-	 * message from the default file is returned.
-	 * ChatColor is translated when reading the message.
-	 * @param path path to the message
-	 * @return message
-	 */
-	private String getString(String path) {
-		if(!langFile.isString(path)){
-			return ChatColor.translateAlternateColorCodes('&',defaultLang.getString(path));
-		}
-		return ChatColor.translateAlternateColorCodes('&',langFile.getString(path));
+		this.SHOP_FREE = LanguageUtil.getString("gamebox", "shop.freeItem");
+		this.SHOP_MONEY = LanguageUtil.getString("gamebox", "shop.moneyItem");
+		this.SHOP_TOKEN = LanguageUtil.getString("gamebox", "shop.tokenItem");
 	}
 	
 	private void getLangFile() {
@@ -349,7 +307,6 @@ public class Language {
 			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " &4*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"));
 		}
 		return;
-		
 	}
 
 }
