@@ -21,6 +21,7 @@ import me.nikl.gamebox.nms.NMSUtil_1_9_R1;
 import me.nikl.gamebox.nms.NMSUtil_1_9_R2;
 import me.nikl.gamebox.players.HandleInvitations;
 import me.nikl.gamebox.players.HandleInviteInput;
+import me.nikl.gamebox.util.LanguageUtil;
 import net.milkbowl.vault.economy.Economy;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -75,7 +76,7 @@ public class GameBox extends JavaPlugin{
 	public static Economy econ = null;
 
 	// language file
-	public Language lang;
+	public GameBoxLanguage lang;
 
 	/*
 	 * Plugin manager that manages all game managers
@@ -180,7 +181,8 @@ public class GameBox extends JavaPlugin{
 			return false;
 		}
 
-		this.lang = new Language(this);
+		LanguageUtil.copyDefaultFiles();
+		this.lang = new GameBoxLanguage(this);
 
 		this.api = new GameBoxAPI(this);
 
