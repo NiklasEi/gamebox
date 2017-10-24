@@ -4,10 +4,13 @@ import me.nikl.gamebox.GameBox;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.util.Enumeration;
@@ -19,6 +22,8 @@ import java.util.jar.JarFile;
 
 /**
  * Created by nikl on 23.10.17.
+ *
+ * Utility class for language related stuff
  */
 public class LanguageUtil {
 
@@ -26,9 +31,32 @@ public class LanguageUtil {
 
     private static Map<String, FileConfiguration> defaultLanguageFiles = new HashMap<>();
 
-    public static void registerMessageNamespace(String namespace, FileConfiguration defaultLanguage, FileConfiguration language){
-        languageFiles.put(namespace, language);
-        defaultLanguageFiles.put(namespace, defaultLanguage);
+    /**
+     * Register a language file with a namespace.
+     *
+     * Each namespace needs a default language file
+     * at 'language/namespace/lang_en.yml' which will
+     * be loaded from inside the jar.
+     * @param namespace
+     * @param language
+     */
+    public static void registerLanguageNamespace(String namespace, FileConfiguration language){
+        try {
+            String fileName = namespace.equals("gamebox") ? "language/lang_en.yml" : "language/" + namespace + "/lang_en.yml";
+            defaultLanguageFiles.put(namespace, YamlConfiguration.loadConfiguration(new InputStreamReader(GameBox.class.getResourceAsStream(fileName), "UTF-8")));
+        } catch (UnsupportedEncodingException e2) {
+            Bukkit.getLogger().warning("Failed to load default language file for namespace: " + namespace);
+            e2.printStackTrace();
+        }
+        if(language != null) {
+            languageFiles.put(namespace, language);
+        } else {
+            languageFiles.put(namespace, defaultLanguageFiles.get(namespace));
+        }
+    }
+
+    public static void registerLanguageNamespace(Namespace namespace, FileConfiguration language){
+        registerLanguageNamespace(namespace.namespace(), language);
     }
 
     /**
@@ -71,6 +99,17 @@ public class LanguageUtil {
         return getStringList(namespace, path, true);
     }
 
+    public static List<String> getStringList(String namespacePath, boolean color){
+        String[] split = namespacePath.split(":");
+        if(split.length != 2) return null;
+
+        return getStringList(split[0], split[1], color);
+    }
+
+    public static List<String> getStringList(String namespacePath){
+        return getStringList(namespacePath, true);
+    }
+
     /**
      * Get a message from the language file
      *
@@ -94,6 +133,17 @@ public class LanguageUtil {
 
     public static String getString(String namespace, String path){
         return getString(namespace, path, true);
+    }
+
+    public static String getString(String namespacePath, boolean color){
+        String[] split = namespacePath.split(":");
+        if(split.length != 2) return null;
+
+        return getString(split[0], split[1], color);
+    }
+
+    public static String getString(String namespacePath){
+        return getString(namespacePath, true);
     }
 
     /**
@@ -136,6 +186,28 @@ public class LanguageUtil {
             jar.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public static FileConfiguration getLanguage(Namespace namespace){
+        return languageFiles.get(namespace.namespace());
+    }
+
+    public static FileConfiguration getDefaultLanguage(Namespace namespace){
+        return defaultLanguageFiles.get(namespace.namespace());
+    }
+
+    public enum Namespace{
+        GAMEBOX("gamebox");
+
+        private String namespace;
+
+        Namespace(String namespace){
+            this.namespace = namespace;
+        }
+
+        public String namespace(){
+            return this.namespace;
         }
     }
 }
