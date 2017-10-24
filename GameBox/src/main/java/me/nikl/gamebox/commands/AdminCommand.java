@@ -1,7 +1,7 @@
 package me.nikl.gamebox.commands;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.Language;
+import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.Permissions;
 import me.nikl.gamebox.data.Statistics;
 import me.nikl.gamebox.players.GBPlayer;
@@ -20,7 +20,7 @@ import org.bukkit.command.CommandSender;
  */
 public class AdminCommand implements CommandExecutor {
     private GameBox plugin;
-    private Language lang;
+    private GameBoxLanguage lang;
 
 
     public AdminCommand(GameBox plugin){

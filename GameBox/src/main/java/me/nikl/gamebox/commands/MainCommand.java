@@ -1,7 +1,7 @@
 package me.nikl.gamebox.commands;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.Language;
+import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.Permissions;
 import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.game.GameContainer;
@@ -28,7 +28,7 @@ public class MainCommand implements CommandExecutor{
 	private FileConfiguration config;
 	private PluginManager pManager;
 	private GUIManager guiManager;
-	private Language lang;
+	private GameBoxLanguage lang;
 
 	public static String inviteClickCommand = "clickableMessageWasClicked";
 

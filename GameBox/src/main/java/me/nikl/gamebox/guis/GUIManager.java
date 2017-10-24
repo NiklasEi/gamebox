@@ -1,10 +1,7 @@
 package me.nikl.gamebox.guis;
 
-import me.nikl.gamebox.ClickAction;
-import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.GameBoxSettings;
-import me.nikl.gamebox.Language;
-import me.nikl.gamebox.Permissions;
+import me.nikl.gamebox.*;
+import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.events.EnterGameBoxEvent;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.gui.AGui;
@@ -39,7 +36,7 @@ public class GUIManager {
 	private GameBox plugin;
 	private Map<String, Map<String, GameGui>> gameGuis;
 	private NMSUtil nms;
-	private Language lang;
+	private GameBoxLanguage lang;
 	
 	private MainGui mainGui;
 

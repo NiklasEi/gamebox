@@ -66,8 +66,8 @@ public class PluginManager implements Listener {
 	// GameBox instance
 	private GameBox plugin;
 
-	// Language
-	private Language lang;
+	// GameBoxLanguage
+	private GameBoxLanguage lang;
 
 	// plugin configuration
 	private FileConfiguration config;
