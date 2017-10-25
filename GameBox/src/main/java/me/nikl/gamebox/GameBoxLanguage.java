@@ -17,13 +17,7 @@ import java.util.List;
  * Get all messages on enable
  * save not saved default lang files
  */
-public class GameBoxLanguage {
-	private GameBox plugin;
-
-
-	public String PREFIX = "["+ChatColor.DARK_AQUA+"GameBox"+ChatColor.RESET+"]";
-	public String NAME = ChatColor.DARK_AQUA+"GameBox"+ChatColor.RESET;
-	public String PLAIN_PREFIX = "[GameBox]";
+public class GameBoxLanguage extends Language{
 
 	// commands
 	public String CMD_NO_PERM, CMD_ONLY_PLAYER, CMD_RELOADED, CMD_DISABLED_WORLD, CMD_TOKEN, RELOAD_SUCCESS, RELOAD_FAIL;
@@ -63,8 +57,7 @@ public class GameBoxLanguage {
 
 	
 	GameBoxLanguage(GameBox plugin){
-		this.plugin = plugin;
-		getLangFile();
+		super(plugin, LanguageUtil.Namespace.GAMEBOX);
 
 		PREFIX = LanguageUtil.getString("gamebox", "prefix");
 		PLAIN_PREFIX = ChatColor.stripColor(PREFIX);
@@ -188,80 +181,5 @@ public class GameBoxLanguage {
 		this.SHOP_MONEY = LanguageUtil.getString("gamebox", "shop.moneyItem");
 		this.SHOP_TOKEN = LanguageUtil.getString("gamebox", "shop.tokenItem");
 	}
-	
-	private void getLangFile() {
-		FileConfiguration langFile = null;
-		
-		if(!plugin.getConfig().isString("langFile")){
-			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&4*******************************************************"));
-			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " &4Language file is missing in the config!"));
-			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " Add the following to your config:"));
-			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " langFile: 'default.yml'"));
-			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&4*******************************************************"));
-			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " &4Using default language file"));
-		} else {
-			String fileName = plugin.getConfig().getString("langFile");
-			if(fileName.equalsIgnoreCase("default") || fileName.equalsIgnoreCase("default.yml")){
-				LanguageUtil.registerLanguageNamespace(LanguageUtil.Namespace.GAMEBOX, null);
-				return;
-			}
-			File languageFile = new File(plugin.getDataFolder().toString() + File.separatorChar + "language" + File.separatorChar + plugin.getConfig().getString("langFile"));
-			if(!languageFile.exists()){
-				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&4*******************************************************"));
-				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " &4Language file not found!"));
-				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&4*******************************************************"));
-				Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " &4Using default language file"));
-			} else {
-				try {
-					langFile = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(languageFile), "UTF-8"));
-				} catch (UnsupportedEncodingException | FileNotFoundException e) {
-					e.printStackTrace();
-					Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&4*******************************************************"));
-					Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " &4Error while loading language file!"));
-					Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&4*******************************************************"));
-					Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " &4Using default language file"));
-				}
-			}
-		}
-		LanguageUtil.registerLanguageNamespace(LanguageUtil.Namespace.GAMEBOX, langFile);
-
-		/*
-		 * get missing keys and print them
-		 */
-		FileConfiguration defaultLang = LanguageUtil.getDefaultLanguage(LanguageUtil.Namespace.GAMEBOX);
-		if(langFile == null) langFile = LanguageUtil.getLanguage(LanguageUtil.Namespace.GAMEBOX);
-		int count = 0;
-		for(String key : defaultLang.getKeys(true)){
-			if(defaultLang.isString(key)){
-				if(!langFile.isString(key)){// there is a message missing
-					if(count == 0){
-						Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " &4*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"));
-						Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " &4Missing message(s) in your language file!"));
-					}
-					Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " " + key));
-					count++;
-				}
-			} else if (defaultLang.isList(key)){
-				if(!langFile.isList(key)){// there is a message missing
-					if(count == 0){
-						Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " &4*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"));
-						Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " &4Missing message(s) in your language file!"));
-					}
-					Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " " + key + "     (StringList!)"));
-					count++;
-				}
-			}
-		}
-		if(count > 0){
-			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + ""));
-			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " &4Game will use default messages for these paths"));
-			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + ""));
-			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " &4Please get an up to date language file"));
-			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " &4Or add the listed paths to your file"));
-			Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', PREFIX + " &4*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*"));
-		}
-		return;
-	}
-
 }
 
