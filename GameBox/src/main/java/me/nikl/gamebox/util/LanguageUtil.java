@@ -75,7 +75,7 @@ public class LanguageUtil {
         // load from default file if path is not valid
         if(!languageFiles.get(namespace).isList(path)){
             toReturn = defaultLanguageFiles.get(namespace).getStringList(path);
-            if(color){
+            if(color && toReturn != null){
                 for(int i = 0; i<toReturn.size(); i++){
                     toReturn.set(i, ChatColor.translateAlternateColorCodes('&',toReturn.get(i)));
                 }
@@ -85,7 +85,7 @@ public class LanguageUtil {
 
         // load from language file
         toReturn = languageFiles.get(namespace).getStringList(path);
-        if(color) {
+        if(color && toReturn != null) {
             for (int i = 0; i < toReturn.size(); i++) {
                 toReturn.set(i, ChatColor.translateAlternateColorCodes('&', toReturn.get(i)));
             }
@@ -122,8 +122,11 @@ public class LanguageUtil {
      */
     public static String getString(String namespace, String path, boolean color) {
         if(!languageFiles.get(namespace).isString(path)){
-            if(!color) return defaultLanguageFiles.get(namespace).getString(path);
-            return ChatColor.translateAlternateColorCodes('&',defaultLanguageFiles.get(namespace).getString(path));
+            String toReturn = defaultLanguageFiles.get(namespace).getString(path);
+            if(color && toReturn != null){
+                return ChatColor.translateAlternateColorCodes('&',defaultLanguageFiles.get(namespace).getString(path));
+            }
+            return defaultLanguageFiles.get(namespace).getString(path);
         }
         if(!color) return languageFiles.get(namespace).getString(path);
         return ChatColor.translateAlternateColorCodes('&',languageFiles.get(namespace).getString(path));
