@@ -2,7 +2,7 @@ package me.nikl.gamebox.commands;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
-import me.nikl.gamebox.Permissions;
+import me.nikl.gamebox.util.Permissions;
 import me.nikl.gamebox.data.Statistics;
 import me.nikl.gamebox.players.GBPlayer;
 import org.bukkit.Bukkit;

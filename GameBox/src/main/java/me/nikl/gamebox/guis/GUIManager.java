@@ -13,6 +13,8 @@ import me.nikl.gamebox.guis.shop.Page;
 import me.nikl.gamebox.guis.shop.ShopManager;
 import me.nikl.gamebox.nms.NMSUtil;
 import me.nikl.gamebox.players.GBPlayer;
+import me.nikl.gamebox.util.ClickAction;
+import me.nikl.gamebox.util.Permissions;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

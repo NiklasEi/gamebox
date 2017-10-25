@@ -10,6 +10,8 @@ import me.nikl.gamebox.players.GBPlayer;
 import me.nikl.gamebox.players.HandleInvitations;
 import me.nikl.gamebox.players.HandleInviteInput;
 import me.nikl.gamebox.util.ItemStackUtil;
+import me.nikl.gamebox.util.Permissions;
+import me.nikl.gamebox.util.Sounds;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

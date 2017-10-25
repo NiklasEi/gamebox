@@ -1,4 +1,4 @@
-package me.nikl.gamebox;
+package me.nikl.gamebox.util;
 
 /**
  * Created by niklas on 2/5/17.

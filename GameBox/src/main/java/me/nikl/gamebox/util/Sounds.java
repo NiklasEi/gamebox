@@ -1,4 +1,4 @@
-package me.nikl.gamebox;
+package me.nikl.gamebox.util;
 
 
 import org.bukkit.Sound;

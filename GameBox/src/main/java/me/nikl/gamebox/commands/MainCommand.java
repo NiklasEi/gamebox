@@ -2,7 +2,7 @@ package me.nikl.gamebox.commands;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
-import me.nikl.gamebox.Permissions;
+import me.nikl.gamebox.util.Permissions;
 import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.game.GameContainer;
 import me.nikl.gamebox.guis.GUIManager;

@@ -1,6 +1,6 @@
 package me.nikl.gamebox.guis.gui.game;
 
-import me.nikl.gamebox.ClickAction;
+import me.nikl.gamebox.util.ClickAction;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;

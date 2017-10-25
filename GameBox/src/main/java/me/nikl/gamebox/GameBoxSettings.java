@@ -1,5 +1,6 @@
 package me.nikl.gamebox;
 
+import me.nikl.gamebox.util.Sounds;
 import org.bukkit.configuration.file.FileConfiguration;
 
 /**

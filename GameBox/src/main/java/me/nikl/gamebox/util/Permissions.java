@@ -1,5 +1,6 @@
-package me.nikl.gamebox;
+package me.nikl.gamebox.util;
 
+import me.nikl.gamebox.GameBox;
 import org.bukkit.Bukkit;
 
 import java.util.ArrayList;

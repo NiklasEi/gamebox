@@ -1,9 +1,9 @@
 package me.nikl.gamebox.guis.gui;
 
-import me.nikl.gamebox.ClickAction;
+import me.nikl.gamebox.util.ClickAction;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
-import me.nikl.gamebox.Permissions;
+import me.nikl.gamebox.util.Permissions;
 import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.events.EnterGameBoxEvent;
 import me.nikl.gamebox.game.IGameManager;
