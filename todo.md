@@ -12,4 +12,9 @@
 * Settings menu
   * sort the games in the main GUI
 * new and up to date example game
+* abstract game class
+  * get data folder
+  * reload game
+  * settings and config
+  * game manager
 
