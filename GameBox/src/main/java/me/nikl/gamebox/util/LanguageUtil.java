@@ -13,10 +13,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.JarURLConnection;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -37,8 +34,9 @@ public class LanguageUtil {
      * Each namespace needs a default language file
      * at 'language/namespace/lang_en.yml' which will
      * be loaded from inside the jar.
-     * @param namespace
-     * @param language
+     * @param namespace namespace of the language
+     * @param language file configuration containing the messages.
+     *                 if null: default file is used
      */
     public static void registerLanguageNamespace(String namespace, FileConfiguration language){
         try {
@@ -189,12 +187,37 @@ public class LanguageUtil {
         }
     }
 
-    public static FileConfiguration getLanguage(Namespace namespace){
-        return languageFiles.get(namespace.namespace());
-    }
+    /**
+     * Find all messages that are missing in the language file.
+     *
+     * This method compares all message keys from the default english file
+     * with all set keys in the used language file. All missing keys are
+     * collected and returned.
+     * @param namespace to check
+     * @return list of all missing keys
+     */
+    public static List<String> findMissingMessages(Namespace namespace){
+        FileConfiguration defaultLang = defaultLanguageFiles.get(namespace);
+        FileConfiguration langFile = languageFiles.get(namespace);
 
-    public static FileConfiguration getDefaultLanguage(Namespace namespace){
-        return defaultLanguageFiles.get(namespace.namespace());
+        List<String> toReturn = new ArrayList<>();
+
+        if(defaultLang.equals(langFile)) return toReturn;
+
+        for(String key : defaultLang.getKeys(true)){
+            if(defaultLang.isString(key)){
+                if(!langFile.isString(key)){
+                    // there is a message missing
+                    toReturn.add(key);
+                }
+            } else if (defaultLang.isList(key)){
+                if(!langFile.isList(key)){
+                    // there is a list missing
+                    toReturn.add(key + "    (List)");
+                }
+            }
+        }
+        return toReturn;
     }
 
     public enum Namespace{
