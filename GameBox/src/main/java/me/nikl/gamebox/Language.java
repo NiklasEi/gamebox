@@ -1,11 +1,14 @@
 package me.nikl.gamebox;
 
 import me.nikl.gamebox.util.LanguageUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by nikl on 24.10.17.
@@ -14,6 +17,9 @@ public abstract class Language {
 
     protected GameBox plugin;
     protected LanguageUtil.Namespace namespace;
+
+    protected FileConfiguration defaultLanguage;
+    protected FileConfiguration language;
 
     public String PREFIX = "["+ChatColor.DARK_AQUA+"GameBox"+ChatColor.RESET+"]";
     public String NAME = ChatColor.DARK_AQUA+"GameBox"+ChatColor.RESET;
@@ -28,7 +34,7 @@ public abstract class Language {
     /**
      * Load all messages from the language file
      */
-    public abstract void loadMessages();
+    protected abstract void loadMessages();
 
     /**
      * Try loading the language file specified in the
@@ -43,34 +49,154 @@ public abstract class Language {
      * @throws UnsupportedEncodingException
      * @throws IllegalArgumentException if file name is not set or invalid
      */
-    private void getLangFile(FileConfiguration config)
+    protected void getLangFile(FileConfiguration config)
             throws FileNotFoundException, UnsupportedEncodingException,
             IllegalArgumentException {
 
-        FileConfiguration langFile = null;
+        // load default language
+        try {
+            String defaultLangName = namespace == LanguageUtil.Namespace.GAMEBOX ? "language/lang_en.yml" : "language/" + namespace.namespace() + "/lang_en.yml";
+            defaultLanguage = YamlConfiguration.loadConfiguration(new InputStreamReader(GameBox.class.getResourceAsStream(defaultLangName), "UTF-8"));
+        } catch (UnsupportedEncodingException e2) {
+            Bukkit.getLogger().warning("Failed to load default language file for namespace: " + namespace.namespace());
+            e2.printStackTrace();
+        }
 
         String fileName = config.getString("langFile");
 
         if(fileName != null && (fileName.equalsIgnoreCase("default") || fileName.equalsIgnoreCase("default.yml"))) {
-            LanguageUtil.registerLanguageNamespace(namespace, null);
+            language = defaultLanguage;
             return;
         }
 
         if(fileName == null || !fileName.endsWith(".yml")){
             String path = namespace == LanguageUtil.Namespace.GAMEBOX ? "'config.yml'" : "'games" + "/" + namespace.namespace() + "/config.yml'";
-            throw new IllegalArgumentException("Filename is not specified or not valid.\n" +
-                    "Should be set in " + path + " as 'langFile:'");
+            Bukkit.getLogger().warning("Language file for " + namespace.namespace() + " is not specified or not valid.");
+            Bukkit.getLogger().warning("Should be set in " + path + " as 'langFile:'");
+            Bukkit.getLogger().warning("Falling back to the default file...");
+            language = defaultLanguage;
+            return;
         }
 
         File languageFile = namespace == LanguageUtil.Namespace.GAMEBOX ?
-                new File(plugin.getDataFolder().toString() + File.separatorChar + "language" + File.separatorChar + config.getString("langFile"))
+                new File(plugin.getDataFolder().toString() + File.separatorChar + "language" + File.separatorChar
+                        + fileName)
                 :
-                new File(plugin.getDataFolder().toString() + File.separatorChar + "language" + File.separatorChar + namespace.namespace() + File.separatorChar + config.getString("langFile"));
+                new File(plugin.getDataFolder().toString() + File.separatorChar + "language" + File.separatorChar
+                        + namespace.namespace() + File.separatorChar + fileName);
 
-        if(languageFile.exists()){
-            langFile = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(languageFile), "UTF-8"));
+        if(!languageFile.exists()){
+            String path = namespace == LanguageUtil.Namespace.GAMEBOX ? "'config.yml'"
+                    : "'games" + "/" + namespace.namespace() + "/config.yml'";
+            Bukkit.getLogger().warning("The in '" + path + "' as 'langFile' configured file does not exist!");
+            Bukkit.getLogger().warning("Falling back to the default file...");
+            language = defaultLanguage;
+            return;
         }
-        LanguageUtil.registerLanguageNamespace(namespace, langFile);
+
+        language = YamlConfiguration.loadConfiguration
+                (new InputStreamReader(new FileInputStream(languageFile), "UTF-8"));
+
         return;
+    }
+
+    /**
+     * Find all messages that are missing in the language file.
+     *
+     * This method compares all message keys from the default english file
+     * with all set keys in the used language file. All missing keys are
+     * collected and returned.
+     * @param namespace to check
+     * @return list of all missing keys
+     */
+    public List<String> findMissingMessages(){
+
+        List<String> toReturn = new ArrayList<>();
+
+        if(defaultLanguage.equals(language)) return toReturn;
+
+        for(String key : defaultLanguage.getKeys(true)){
+            if(defaultLanguage.isString(key)){
+                if(!language.isString(key)){
+                    // there is a message missing
+                    toReturn.add(key);
+                }
+            } else if (defaultLanguage.isList(key)){
+                if(!language.isList(key)){
+                    // there is a list missing
+                    toReturn.add(key + "    (List)");
+                }
+            }
+        }
+        return toReturn;
+    }
+
+
+    /**
+     * Load list messages from the language file
+     *
+     * If the requested path is not valid for the chosen
+     * language file the corresponding list from the default
+     * file is returned.
+     * ChatColor can be translated here.
+     * @param namespace namespace of the message to load
+     * @param path path to the message
+     * @param color if set, color the loaded message
+     * @return message
+     */
+    protected List<String> getStringList(String path, boolean color) {
+        List<String> toReturn;
+
+        // load from default file if path is not valid
+        if(!language.isList(path)){
+            toReturn = defaultLanguage.getStringList(path);
+            if(color && toReturn != null){
+                for(int i = 0; i<toReturn.size(); i++){
+                    toReturn.set(i, ChatColor.translateAlternateColorCodes('&',toReturn.get(i)));
+                }
+            }
+            return toReturn;
+        }
+
+        // load from language file
+        toReturn = language.getStringList(path);
+        if(color && toReturn != null) {
+            for (int i = 0; i < toReturn.size(); i++) {
+                toReturn.set(i, ChatColor.translateAlternateColorCodes('&', toReturn.get(i)));
+            }
+        }
+        return toReturn;
+    }
+
+    protected List<String> getStringList(String path){
+        return getStringList(path, true);
+    }
+
+    /**
+     * Get a message from the language file
+     *
+     * If the requested path is not valid for the
+     * configured language file the corresponding
+     * message from the default file is returned.
+     * ChatColor is translated when reading the message.
+     * @param namespace namespace of the message to load
+     * @param path path to the message
+     * @param color if set, color the loaded message
+     * @return message
+     */
+    protected String getString(String path, boolean color) {
+        if(!language.isString(path)){
+            String toReturn = defaultLanguage.getString(path);
+            if(color && toReturn != null){
+                return ChatColor.translateAlternateColorCodes('&', defaultLanguage.getString(path));
+            }
+            return defaultLanguage.getString(path);
+        }
+        if(!color) return language.getString(path);
+        return ChatColor.translateAlternateColorCodes('&',language.getString(path));
+    }
+
+    protected String getString(String path){
+        return getString(path, true);
     }
 }

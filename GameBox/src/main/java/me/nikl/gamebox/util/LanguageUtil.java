@@ -24,129 +24,6 @@ import java.util.jar.JarFile;
  */
 public class LanguageUtil {
 
-    private static Map<String, FileConfiguration> languageFiles = new HashMap<>();
-
-    private static Map<String, FileConfiguration> defaultLanguageFiles = new HashMap<>();
-
-    /**
-     * Register a language file with a namespace.
-     *
-     * Each namespace needs a default language file
-     * at 'language/namespace/lang_en.yml' which will
-     * be loaded from inside the jar.
-     * @param namespace namespace of the language
-     * @param language file configuration containing the messages.
-     *                 if null: default file is used
-     */
-    public static void registerLanguageNamespace(String namespace, FileConfiguration language){
-        try {
-            String fileName = namespace.equals("gamebox") ? "language/lang_en.yml" : "language/" + namespace + "/lang_en.yml";
-            defaultLanguageFiles.put(namespace, YamlConfiguration.loadConfiguration(new InputStreamReader(GameBox.class.getResourceAsStream(fileName), "UTF-8")));
-        } catch (UnsupportedEncodingException e2) {
-            Bukkit.getLogger().warning("Failed to load default language file for namespace: " + namespace);
-            e2.printStackTrace();
-        }
-        if(language != null) {
-            languageFiles.put(namespace, language);
-        } else {
-            languageFiles.put(namespace, defaultLanguageFiles.get(namespace));
-        }
-    }
-
-    public static void registerLanguageNamespace(Namespace namespace, FileConfiguration language){
-        registerLanguageNamespace(namespace.namespace(), language);
-    }
-
-    /**
-     * Load list messages from the language file
-     *
-     * If the requested path is not valid for the chosen
-     * language file the corresponding list from the default
-     * file is returned.
-     * ChatColor can be translated here.
-     * @param namespace namespace of the message to load
-     * @param path path to the message
-     * @param color if set, color the loaded message
-     * @return message
-     */
-    public static List<String> getStringList(String namespace, String path, boolean color) {
-        List<String> toReturn;
-
-        // load from default file if path is not valid
-        if(!languageFiles.get(namespace).isList(path)){
-            toReturn = defaultLanguageFiles.get(namespace).getStringList(path);
-            if(color && toReturn != null){
-                for(int i = 0; i<toReturn.size(); i++){
-                    toReturn.set(i, ChatColor.translateAlternateColorCodes('&',toReturn.get(i)));
-                }
-            }
-            return toReturn;
-        }
-
-        // load from language file
-        toReturn = languageFiles.get(namespace).getStringList(path);
-        if(color && toReturn != null) {
-            for (int i = 0; i < toReturn.size(); i++) {
-                toReturn.set(i, ChatColor.translateAlternateColorCodes('&', toReturn.get(i)));
-            }
-        }
-        return toReturn;
-    }
-
-    public static List<String> getStringList(String namespace, String path){
-        return getStringList(namespace, path, true);
-    }
-
-    public static List<String> getStringList(String namespacePath, boolean color){
-        String[] split = namespacePath.split(":");
-        if(split.length != 2) return null;
-
-        return getStringList(split[0], split[1], color);
-    }
-
-    public static List<String> getStringList(String namespacePath){
-        return getStringList(namespacePath, true);
-    }
-
-    /**
-     * Get a message from the language file
-     *
-     * If the requested path is not valid for the
-     * configured language file the corresponding
-     * message from the default file is returned.
-     * ChatColor is translated when reading the message.
-     * @param namespace namespace of the message to load
-     * @param path path to the message
-     * @param color if set, color the loaded message
-     * @return message
-     */
-    public static String getString(String namespace, String path, boolean color) {
-        if(!languageFiles.get(namespace).isString(path)){
-            String toReturn = defaultLanguageFiles.get(namespace).getString(path);
-            if(color && toReturn != null){
-                return ChatColor.translateAlternateColorCodes('&',defaultLanguageFiles.get(namespace).getString(path));
-            }
-            return defaultLanguageFiles.get(namespace).getString(path);
-        }
-        if(!color) return languageFiles.get(namespace).getString(path);
-        return ChatColor.translateAlternateColorCodes('&',languageFiles.get(namespace).getString(path));
-    }
-
-    public static String getString(String namespace, String path){
-        return getString(namespace, path, true);
-    }
-
-    public static String getString(String namespacePath, boolean color){
-        String[] split = namespacePath.split(":");
-        if(split.length != 2) return null;
-
-        return getString(split[0], split[1], color);
-    }
-
-    public static String getString(String namespacePath){
-        return getString(namespacePath, true);
-    }
-
     /**
      * Copy all default language files to the plugin folder
      *
@@ -156,6 +33,7 @@ public class LanguageUtil {
      */
     public static void copyDefaultFiles(){
         URL main = GameBox.class.getResource("GameBox.class");
+
         try {
             JarURLConnection connection = (JarURLConnection) main.openConnection();
 
@@ -188,39 +66,6 @@ public class LanguageUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Find all messages that are missing in the language file.
-     *
-     * This method compares all message keys from the default english file
-     * with all set keys in the used language file. All missing keys are
-     * collected and returned.
-     * @param namespace to check
-     * @return list of all missing keys
-     */
-    public static List<String> findMissingMessages(Namespace namespace){
-        FileConfiguration defaultLang = defaultLanguageFiles.get(namespace);
-        FileConfiguration langFile = languageFiles.get(namespace);
-
-        List<String> toReturn = new ArrayList<>();
-
-        if(defaultLang.equals(langFile)) return toReturn;
-
-        for(String key : defaultLang.getKeys(true)){
-            if(defaultLang.isString(key)){
-                if(!langFile.isString(key)){
-                    // there is a message missing
-                    toReturn.add(key);
-                }
-            } else if (defaultLang.isList(key)){
-                if(!langFile.isList(key)){
-                    // there is a list missing
-                    toReturn.add(key + "    (List)");
-                }
-            }
-        }
-        return toReturn;
     }
 
     public enum Namespace{
