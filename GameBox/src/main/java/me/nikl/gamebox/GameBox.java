@@ -206,11 +206,12 @@ public class GameBox extends JavaPlugin{
 
 			HandlerList.unregisterAll(pManager);
 
+			/*
 			for(GameContainer gameContainer : pManager.getGames().values()){
 				if (gameContainer.getGamePlugin() != null){
 					games.add(gameContainer.getGamePlugin());
 				}
-			}
+			}*/
 
 			pManager = null;
 		}
