@@ -6,7 +6,7 @@ import me.nikl.gamebox.data.PlaceholderAPIHook;
 import me.nikl.gamebox.data.Statistics;
 import me.nikl.gamebox.data.StatisticsFile;
 import me.nikl.gamebox.data.StatisticsMysql;
-import me.nikl.gamebox.game.GameContainer;
+import me.nikl.gamebox.games.GameContainer;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.listeners.EnterGameBoxListener;
 import me.nikl.gamebox.listeners.LeftGameBoxListener;

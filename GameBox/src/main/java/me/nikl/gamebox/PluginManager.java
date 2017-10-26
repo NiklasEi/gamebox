@@ -1,8 +1,8 @@
 package me.nikl.gamebox;
 
 import me.nikl.gamebox.events.LeftGameBoxEvent;
-import me.nikl.gamebox.game.GameContainer;
-import me.nikl.gamebox.game.IGameManager;
+import me.nikl.gamebox.games.GameContainer;
+import me.nikl.gamebox.games.IGameManager;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.timer.TitleTimer;
 import me.nikl.gamebox.nms.NMSUtil;

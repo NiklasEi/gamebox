@@ -6,7 +6,7 @@ import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.util.Permissions;
 import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.events.EnterGameBoxEvent;
-import me.nikl.gamebox.game.IGameManager;
+import me.nikl.gamebox.games.IGameManager;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.gui.game.GameGui;
