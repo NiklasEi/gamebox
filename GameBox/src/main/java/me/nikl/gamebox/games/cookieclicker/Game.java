@@ -1,26 +1,27 @@
 package me.nikl.gamebox.games.cookieclicker;
 
-import me.nikl.cookieclicker.buildings.*;
-import me.nikl.cookieclicker.upgrades.Upgrade;
-import me.nikl.cookieclicker.upgrades.alchemylab.*;
-import me.nikl.cookieclicker.upgrades.antimattercondenser.*;
-import me.nikl.cookieclicker.upgrades.bank.*;
-import me.nikl.cookieclicker.upgrades.clicking.*;
-import me.nikl.cookieclicker.upgrades.curser.*;
-import me.nikl.cookieclicker.upgrades.factory.*;
-import me.nikl.cookieclicker.upgrades.farm.*;
-import me.nikl.cookieclicker.upgrades.grandma.*;
-import me.nikl.cookieclicker.upgrades.mine.*;
-import me.nikl.cookieclicker.upgrades.portal.*;
-import me.nikl.cookieclicker.upgrades.prism.*;
-import me.nikl.cookieclicker.upgrades.shipment.*;
-import me.nikl.cookieclicker.upgrades.temple.*;
-import me.nikl.cookieclicker.upgrades.timemachine.*;
-import me.nikl.cookieclicker.upgrades.wizardtower.*;
 import me.nikl.gamebox.GameBoxSettings;
-import me.nikl.gamebox.Sounds;
+import me.nikl.gamebox.games.cookieclicker.buildings.*;
+import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
+import me.nikl.gamebox.games.cookieclicker.upgrades.alchemylab.*;
+import me.nikl.gamebox.games.cookieclicker.upgrades.antimattercondenser.*;
+import me.nikl.gamebox.games.cookieclicker.upgrades.bank.*;
+import me.nikl.gamebox.games.cookieclicker.upgrades.clicking.*;
+import me.nikl.gamebox.games.cookieclicker.upgrades.curser.*;
+import me.nikl.gamebox.games.cookieclicker.upgrades.factory.*;
+import me.nikl.gamebox.games.cookieclicker.upgrades.farm.*;
+import me.nikl.gamebox.games.cookieclicker.upgrades.grandma.*;
+import me.nikl.gamebox.games.cookieclicker.upgrades.mine.*;
+import me.nikl.gamebox.games.cookieclicker.upgrades.mine.*;
+import me.nikl.gamebox.games.cookieclicker.upgrades.portal.*;
+import me.nikl.gamebox.games.cookieclicker.upgrades.prism.*;
+import me.nikl.gamebox.games.cookieclicker.upgrades.shipment.*;
+import me.nikl.gamebox.games.cookieclicker.upgrades.temple.*;
+import me.nikl.gamebox.games.cookieclicker.upgrades.timemachine.*;
+import me.nikl.gamebox.games.cookieclicker.upgrades.wizardtower.*;
 import me.nikl.gamebox.nms.NMSUtil;
 import me.nikl.gamebox.util.NumberUtil;
+import me.nikl.gamebox.util.Sounds;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -335,7 +336,7 @@ public class Game extends BukkitRunnable {
 
         player.openInventory(inventory);
 
-        this.runTaskTimer(plugin, 0, 10);
+        this.runTaskTimer(plugin.getGameBox(), 0, 10);
     }
 
     private void buildInv() {

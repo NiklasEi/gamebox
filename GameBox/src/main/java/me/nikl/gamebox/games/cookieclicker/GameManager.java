@@ -1,10 +1,10 @@
 package me.nikl.gamebox.games.cookieclicker;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.Permissions;
+import me.nikl.gamebox.util.Permissions;
 import me.nikl.gamebox.data.SaveType;
 import me.nikl.gamebox.data.Statistics;
-import me.nikl.gamebox.game.IGameManager;
+import me.nikl.gamebox.games.IGameManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -38,7 +38,7 @@ public class GameManager implements IGameManager {
 
     public GameManager(Main plugin){
         this.plugin = plugin;
-        this.statistics = plugin.gameBox.getStatistics();
+        this.statistics = plugin.getGameBox().getStatistics();
         this.lang = plugin.lang;
 
         savesFile = new File(plugin.getDataFolder().toString() + File.separatorChar + "saves.yml");
