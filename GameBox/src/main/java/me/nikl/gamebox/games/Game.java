@@ -11,37 +11,44 @@ import java.io.*;
  * Created by nikl on 26.10.17.
  */
 public abstract class Game {
-    private GameBox plugin;
+    private GameBox gameBox;
     private FileConfiguration config;
     private String gameID;
     private String name;
     private LanguageUtil.Namespace namespace;
+    private File dataFolder;
 
     private GameSettings gameSettings;
 
-    public Game(String gameID, String name){
+    public Game(GameBox gameBox, String gameID, String name){
         this.gameID = gameID;
         this.name = name;
+        this.gameBox = gameBox;
 
         this.gameSettings = new GameSettings();
     }
 
 
     public boolean onEnable(){
-        File configFile = new File(plugin.getDataFolder()
+        File configFile = new File(gameBox.getDataFolder()
                 + File.separator + "games"
                 + File.separator + name
                 + File.separator + "config.yml");
         if(!configFile.exists()){
             configFile.mkdirs();
-            plugin.saveResource("games"
+            gameBox.saveResource("games"
                     + File.separator + name
                     + File.separator + "config.yml", false);
         }
 
+        this.dataFolder = new File(gameBox.getDataFolder()
+                + File.separator + "games"
+                + File.separator + name
+                + File.separator);
+
         // reload config
         try {
-            this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(con), "UTF-8"));
+            this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(configFile), "UTF-8"));
         } catch (UnsupportedEncodingException | FileNotFoundException e) {
             e.printStackTrace();
             return false;
@@ -70,5 +77,13 @@ public abstract class Game {
 
     public GameSettings getGameSettings() {
         return gameSettings;
+    }
+
+    public GameBox getGameBox(){
+        return this.gameBox;
+    }
+
+    public File getDataFolder(){
+        return this.dataFolder;
     }
 }
