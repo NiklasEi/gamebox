@@ -17,9 +17,13 @@ public abstract class Game {
     private String name;
     private LanguageUtil.Namespace namespace;
 
+    private GameSettings gameSettings;
+
     public Game(String gameID, String name){
         this.gameID = gameID;
         this.name = name;
+
+        this.gameSettings = new GameSettings();
     }
 
 
@@ -62,5 +66,9 @@ public abstract class Game {
 
     public String getName(){
         return name;
+    }
+
+    public GameSettings getGameSettings() {
+        return gameSettings;
     }
 }
