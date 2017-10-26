@@ -224,7 +224,9 @@ public class LanguageUtil {
     }
 
     public enum Namespace{
-        GAMEBOX("gamebox");
+        GAMEBOX("gamebox"),
+        MINESWEEPER("minesweeper"),
+        COOKIECLICKER("cookieclicker");
 
         private String namespace;
 
