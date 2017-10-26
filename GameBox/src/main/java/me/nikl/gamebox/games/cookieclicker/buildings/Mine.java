@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.buildings;
 
-import me.nikl.cookieclicker.Main;
+import me.nikl.gamebox.games.cookieclicker.Main;
 import me.nikl.gamebox.GameBoxSettings;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;

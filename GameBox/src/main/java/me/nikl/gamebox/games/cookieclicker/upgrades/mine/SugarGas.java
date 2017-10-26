@@ -1,9 +1,9 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.mine;
 
-import me.nikl.cookieclicker.Game;
-import me.nikl.cookieclicker.buildings.Buildings;
-import me.nikl.cookieclicker.upgrades.Upgrade;
-import me.nikl.cookieclicker.upgrades.UpgradeType;
+import me.nikl.gamebox.games.cookieclicker.Game;
+import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
+import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
+import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
 import org.bukkit.Material;
 import org.bukkit.material.MaterialData;
 
