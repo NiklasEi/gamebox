@@ -5,12 +5,8 @@ import me.nikl.gamebox.Language;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
 import me.nikl.gamebox.util.LanguageUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,14 +57,12 @@ public class CookieClickerLanguage extends Language {
 		this.GAME_UPGRADE_LORE = getStringList("upgrades.upgradeLore");
 		this.GAME_UPGRADE_NAME = getString("upgrades.upgradeDisplayName");
 
-		FileConfiguration langFile = LanguageUtil.lan
-
 		UpgradeType upgradeType;
 		List<String> lore = new ArrayList<>();
 
 		// load middle lore
-		if(langFile.isConfigurationSection("upgrades.types")) {
-			for (String key : langFile.getConfigurationSection("upgrades.types").getKeys(false)) {
+		if(language.isConfigurationSection("upgrades.types")) {
+			for (String key : language.getConfigurationSection("upgrades.types").getKeys(false)) {
 				try {
 					upgradeType = UpgradeType.valueOf(key.toUpperCase());
 				} catch (IllegalArgumentException exception) {
@@ -82,7 +76,7 @@ public class CookieClickerLanguage extends Language {
 			}
 		}
 		// check for missing middle lore
-		for (String key : defaultLang.getConfigurationSection("upgrades.types").getKeys(false)) {
+		for (String key : defaultLanguage.getConfigurationSection("upgrades.types").getKeys(false)) {
 			try {
 				upgradeType = UpgradeType.valueOf(key.toUpperCase());
 			} catch (IllegalArgumentException exception) {
@@ -99,8 +93,8 @@ public class CookieClickerLanguage extends Language {
 
 		int id;
 		// load description and names
-		if(langFile.isConfigurationSection("upgrades.upgrades")) {
-			for (String key : langFile.getConfigurationSection("upgrades.upgrades").getKeys(false)) {
+		if(language.isConfigurationSection("upgrades.upgrades")) {
+			for (String key : language.getConfigurationSection("upgrades.upgrades").getKeys(false)) {
 				try {
 					id = Integer.valueOf(key);
 				} catch (NumberFormatException exception) {
@@ -112,8 +106,8 @@ public class CookieClickerLanguage extends Language {
 			}
 		}
 		// check for missing description and names
-		if(langFile.isConfigurationSection("upgrades.upgrades")) {
-			for (String key : defaultLang.getConfigurationSection("upgrades.upgrades").getKeys(false)) {
+		if(language.isConfigurationSection("upgrades.upgrades")) {
+			for (String key : defaultLanguage.getConfigurationSection("upgrades.upgrades").getKeys(false)) {
 				try {
 					id = Integer.valueOf(key);
 				} catch (NumberFormatException exception) {
@@ -133,8 +127,8 @@ public class CookieClickerLanguage extends Language {
 		Buildings building;
 		List<String> lore = new ArrayList<>();
 
-		if(langFile.isConfigurationSection("buildings")) {
-			for (String key : langFile.getConfigurationSection("buildings").getKeys(false)) {
+		if(language.isConfigurationSection("buildings")) {
+			for (String key : language.getConfigurationSection("buildings").getKeys(false)) {
 				try {
 					building = Buildings.valueOf(key.toUpperCase());
 				} catch (IllegalArgumentException exception) {
@@ -150,7 +144,7 @@ public class CookieClickerLanguage extends Language {
 		}
 
 		// check for missing language in default file
-		for(String key : defaultLang.getConfigurationSection("buildings").getKeys(false)){
+		for(String key : defaultLanguage.getConfigurationSection("buildings").getKeys(false)){
 			try{
 				building = Buildings.valueOf(key.toUpperCase());
 			} catch (IllegalArgumentException exception){
