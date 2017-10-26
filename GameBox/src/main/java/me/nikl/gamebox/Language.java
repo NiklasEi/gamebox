@@ -1,7 +1,6 @@
 package me.nikl.gamebox;
 
 import me.nikl.gamebox.util.LanguageUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -25,6 +24,11 @@ public abstract class Language {
         this.plugin = plugin;
         this.namespace = namespace;
     }
+
+    /**
+     * Load all messages from the language file
+     */
+    public abstract void loadMessages();
 
     /**
      * Try loading the language file specified in the
