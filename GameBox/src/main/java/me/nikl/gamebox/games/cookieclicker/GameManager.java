@@ -26,7 +26,7 @@ public class GameManager implements IGameManager {
     private Main plugin;
 
     private Map<UUID, Game> games = new HashMap<>();
-    private Language lang;
+    private CookieClickerLanguage lang;
 
     private Map<String,GameRules> gameTypes;
     private File savesFile;

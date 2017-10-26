@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker;
 
-import me.nikl.gamebox.ClickAction;
+import me.nikl.gamebox.util.ClickAction;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.data.SaveType;
@@ -20,7 +20,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ import java.util.logging.Level;
  *
  * Main class of the GameBox game Cookie Clicker
  */
-public class Main extends JavaPlugin {
+public class Main extends me.nikl.gamebox.games.Game {
 
     public static boolean debug = false;
     public static String gameID = "cookieclicker";
@@ -42,7 +41,7 @@ public class Main extends JavaPlugin {
     public static Economy econ = null;
     private boolean econEnabled;
 
-    public Language lang;
+    public CookieClickerLanguage lang;
 
     private final String[][] depends = new String[][]{
             new String[]{"Vault", "1.5"},
@@ -53,24 +52,22 @@ public class Main extends JavaPlugin {
     private final SaveType topListSaveType = SaveType.HIGH_NUMBER_SCORE;
     private final int playerNum = 1;
 
-    GameBox gameBox;
-    private FileConfiguration config;
-    private File con;
     private boolean disabled, playSounds;
     private NMSUtil nms;
     private GameManager gameManager;
 
     @Override
-    public void onEnable() {
-
-
-        this.con = new File(this.getDataFolder().toString() + File.separatorChar + "config.yml");
+    public boolean onEnable() {
+        if(!super.onEnable()){
+            return false;
+        }
 
         reload();
-        if (disabled) return;
+        if (disabled) return false;
 
         hook();
-        if (disabled) return;
+        if (disabled) return false;
+        return true;
     }
 
 
@@ -370,7 +367,7 @@ public class Main extends JavaPlugin {
         }
         reloadConfig();
 
-        this.lang = new Language(this);
+        this.lang = new CookieClickerLanguage(this);
 
 
         playSounds = config.getBoolean("rules.playSounds", true);

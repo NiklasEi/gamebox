@@ -45,7 +45,7 @@ public class Game extends BukkitRunnable {
 
     private Random rand;
 
-    private Language lang;
+    private CookieClickerLanguage lang;
 
     private NMSUtil nms;
 
@@ -696,7 +696,7 @@ public class Game extends BukkitRunnable {
         return this.player;
     }
 
-    public Language getLang(){
+    public CookieClickerLanguage getLang(){
         return this.lang;
     }
 }
