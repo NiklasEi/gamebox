@@ -17,4 +17,5 @@
   * reload game
   * settings and config
   * game manager
+  * load config and lang? in predefined onEnable
 
