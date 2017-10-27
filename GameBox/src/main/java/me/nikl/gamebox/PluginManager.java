@@ -110,7 +110,7 @@ public class PluginManager implements Listener {
 
     //sounds
     private float volume = 0.5f, pitch= 10f;
-	
+
 	public PluginManager(GameBox plugin){
 		this.plugin = plugin;
 		this.lang = plugin.lang;

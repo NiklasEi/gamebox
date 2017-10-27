@@ -1,6 +1,7 @@
 package me.nikl.gamebox;
 
 import me.nikl.gamebox.util.LanguageUtil;
+import me.nikl.gamebox.util.Module;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -16,7 +17,7 @@ import java.util.List;
 public abstract class Language {
 
     protected GameBox plugin;
-    protected LanguageUtil.Namespace namespace;
+    protected Module module;
 
     protected FileConfiguration defaultLanguage;
     protected FileConfiguration language;
@@ -26,9 +27,9 @@ public abstract class Language {
     public String PLAIN_PREFIX = ChatColor.stripColor(PREFIX);
     public String PLAIN_NAME = ChatColor.stripColor(NAME);
 
-    public Language(GameBox plugin, LanguageUtil.Namespace namespace){
+    public Language(GameBox plugin, Module module){
         this.plugin = plugin;
-        this.namespace = namespace;
+        this.module = module;
     }
 
     /**
@@ -55,10 +56,10 @@ public abstract class Language {
 
         // load default language
         try {
-            String defaultLangName = namespace == LanguageUtil.Namespace.GAMEBOX ? "language/lang_en.yml" : "language/" + namespace.namespace() + "/lang_en.yml";
+            String defaultLangName = module == Module.GAMEBOX ? "language/lang_en.yml" : "language/" + module.moduleID() + "/lang_en.yml";
             defaultLanguage = YamlConfiguration.loadConfiguration(new InputStreamReader(GameBox.class.getResourceAsStream(defaultLangName), "UTF-8"));
         } catch (UnsupportedEncodingException e2) {
-            Bukkit.getLogger().warning("Failed to load default language file for namespace: " + namespace.namespace());
+            Bukkit.getLogger().warning("Failed to load default language file for namespace: " + module.moduleID());
             e2.printStackTrace();
         }
 
@@ -70,24 +71,24 @@ public abstract class Language {
         }
 
         if(fileName == null || !fileName.endsWith(".yml")){
-            String path = namespace == LanguageUtil.Namespace.GAMEBOX ? "'config.yml'" : "'games" + "/" + namespace.namespace() + "/config.yml'";
-            Bukkit.getLogger().warning("Language file for " + namespace.namespace() + " is not specified or not valid.");
+            String path = module == Module.GAMEBOX ? "'config.yml'" : "'games" + "/" + module.moduleID() + "/config.yml'";
+            Bukkit.getLogger().warning("Language file for " + module.moduleID() + " is not specified or not valid.");
             Bukkit.getLogger().warning("Should be set in " + path + " as 'langFile:'");
             Bukkit.getLogger().warning("Falling back to the default file...");
             language = defaultLanguage;
             return;
         }
 
-        File languageFile = namespace == LanguageUtil.Namespace.GAMEBOX ?
+        File languageFile = module == Module.GAMEBOX ?
                 new File(plugin.getDataFolder().toString() + File.separatorChar + "language" + File.separatorChar
                         + fileName)
                 :
                 new File(plugin.getDataFolder().toString() + File.separatorChar + "language" + File.separatorChar
-                        + namespace.namespace() + File.separatorChar + fileName);
+                        + module.moduleID() + File.separatorChar + fileName);
 
         if(!languageFile.exists()){
-            String path = namespace == LanguageUtil.Namespace.GAMEBOX ? "'config.yml'"
-                    : "'games" + "/" + namespace.namespace() + "/config.yml'";
+            String path = module == Module.GAMEBOX ? "'config.yml'"
+                    : "'games" + "/" + module.moduleID() + "/config.yml'";
             Bukkit.getLogger().warning("The in '" + path + "' as 'langFile' configured file does not exist!");
             Bukkit.getLogger().warning("Falling back to the default file...");
             language = defaultLanguage;
@@ -106,7 +107,7 @@ public abstract class Language {
      * This method compares all message keys from the default english file
      * with all set keys in the used language file. All missing keys are
      * collected and returned.
-     * @param namespace to check
+     *
      * @return list of all missing keys
      */
     public List<String> findMissingMessages(){
@@ -139,7 +140,6 @@ public abstract class Language {
      * language file the corresponding list from the default
      * file is returned.
      * ChatColor can be translated here.
-     * @param namespace namespace of the message to load
      * @param path path to the message
      * @param color if set, color the loaded message
      * @return message
@@ -179,7 +179,6 @@ public abstract class Language {
      * configured language file the corresponding
      * message from the default file is returned.
      * ChatColor is translated when reading the message.
-     * @param namespace namespace of the message to load
      * @param path path to the message
      * @param color if set, color the loaded message
      * @return message

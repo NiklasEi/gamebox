@@ -67,20 +67,4 @@ public class LanguageUtil {
             e.printStackTrace();
         }
     }
-
-    public enum Namespace{
-        GAMEBOX("gamebox"),
-        MINESWEEPER("minesweeper"),
-        COOKIECLICKER("cookieclicker");
-
-        private String namespace;
-
-        Namespace(String namespace){
-            this.namespace = namespace;
-        }
-
-        public String namespace(){
-            return this.namespace;
-        }
-    }
 }
