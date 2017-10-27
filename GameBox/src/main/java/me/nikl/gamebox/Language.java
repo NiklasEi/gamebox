@@ -1,6 +1,5 @@
 package me.nikl.gamebox;
 
-import me.nikl.gamebox.util.LanguageUtil;
 import me.nikl.gamebox.util.Module;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

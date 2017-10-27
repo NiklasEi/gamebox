@@ -1,7 +1,8 @@
 package me.nikl.gamebox.games;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.util.LanguageUtil;
+import me.nikl.gamebox.util.FileUtil;
+import me.nikl.gamebox.util.Module;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -15,7 +16,7 @@ public abstract class Game {
     private FileConfiguration config;
     private String gameID;
     private String name;
-    private LanguageUtil.Namespace namespace;
+    private Module module;
     private File dataFolder;
 
     private GameSettings gameSettings;
@@ -54,7 +55,7 @@ public abstract class Game {
             return false;
         }
 
-        this.namespace = LanguageUtil.Namespace.valueOf(name.toUpperCase());
+        this.module = Module.valueOf(name.toUpperCase());
 
         return true;
     }
@@ -63,8 +64,8 @@ public abstract class Game {
         return config;
     }
 
-    public LanguageUtil.Namespace getNamespace() {
-        return namespace;
+    public Module getModule() {
+        return module;
     }
 
     public String getGameID() {
