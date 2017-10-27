@@ -18,4 +18,13 @@
   * settings and config
   * game manager
   * load config and lang? in predefined onEnable
+* new options on events. Also fire events, so that other plugins can listen for them. 
+  * on invite:
+    * possible action bar message
+    * possible title/subtitle message
+    * keep clickable message in chat to get to the invite
+  * on game win:
+    * fireworks?
+    * sound effects
+    
 
