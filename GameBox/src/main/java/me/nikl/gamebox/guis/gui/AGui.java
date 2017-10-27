@@ -3,7 +3,7 @@ package me.nikl.gamebox.guis.gui;
 import me.nikl.gamebox.util.ClickAction;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
-import me.nikl.gamebox.util.Permissions;
+import me.nikl.gamebox.util.Permission;
 import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.events.EnterGameBoxEvent;
 import me.nikl.gamebox.games.IGameManager;
@@ -136,7 +136,7 @@ public abstract class AGui {
 					player[0] = (Player) event.getWhoClicked();
 
 					checkPerms:
-					if(!event.getWhoClicked().hasPermission(Permissions.PLAY_ALL_GAMES.getPermission()) && !event.getWhoClicked().hasPermission(Permissions.PLAY_SPECIFIC_GAME.getPermission(gameID))){
+					if(!event.getWhoClicked().hasPermission(Permission.PLAY_ALL_GAMES.getPermission()) && !event.getWhoClicked().hasPermission(Permission.PLAY_SPECIFIC_GAME.getPermission(gameID))){
 
 						// special case for multiplayer games and option 'ExceptInvitesWithoutPlayPermission'
 						if(player.length > 1 && GameBoxSettings.exceptInvitesWithoutPlayPermission){
@@ -289,8 +289,8 @@ public abstract class AGui {
 				if(this instanceof StartMultiplayerGamePage){
 					// if this gets called from a StartMultiplayerGamePage it is the beginning of an invite!
 					// check for perm in this case and stop invite if necessary
-					if(!event.getWhoClicked().hasPermission(Permissions.PLAY_ALL_GAMES.getPermission())
-							&& !event.getWhoClicked().hasPermission(Permissions.PLAY_SPECIFIC_GAME.getPermission(args[0]))){
+					if(!event.getWhoClicked().hasPermission(Permission.PLAY_ALL_GAMES.getPermission())
+							&& !event.getWhoClicked().hasPermission(Permission.PLAY_SPECIFIC_GAME.getPermission(args[0]))){
 						guiManager.sentInventoryTitleMessage((Player)event.getWhoClicked(), plugin.lang.TITLE_NO_PERM, args[0]);
 						return false;
 					}

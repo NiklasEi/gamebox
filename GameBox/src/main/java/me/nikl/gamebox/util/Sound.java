@@ -1,15 +1,13 @@
 package me.nikl.gamebox.util;
 
 
-import org.bukkit.Sound;
-
 /**
  * Version independent spigot sounds.
  *
  * One Enum for each sound containing
  * the pre 1.9 and post 1.9 name
  */
-public enum Sounds {
+public enum Sound {
 	AMBIENCE_CAVE("AMBIENCE_CAVE", "AMBIENT_CAVE"),
 	AMBIENCE_RAIN("AMBIENCE_RAIN", "WEATHER_RAIN"),
 	AMBIENCE_THUNDER("AMBIENCE_THUNDER", "ENTITY_LIGHTNING_THUNDER"),
@@ -207,9 +205,9 @@ public enum Sounds {
 	
 	private String preSound;
 	private String postSound;
-	private Sound cached = null;
+	private org.bukkit.Sound cached = null;
 	
-	Sounds(String preSound, String postSound) {
+	Sound(String preSound, String postSound) {
 		this.preSound = preSound;
 		this.postSound = postSound;
 	}
@@ -220,16 +218,16 @@ public enum Sounds {
 	 * caches sound on first use
 	 * @return corresponding org.bukkit.Sound
 	 */
-	public Sound bukkitSound() {
+	public org.bukkit.Sound bukkitSound() {
 		// check for already cached sound
 		if (cached != null) return cached;
 
 		// cache the sound
 		try {
-			return cached = Sound.valueOf(postSound);
+			return cached = org.bukkit.Sound.valueOf(postSound);
 		} catch (IllegalArgumentException e) {
 			//1.8 sound
-			return cached = Sound.valueOf(preSound);
+			return cached = org.bukkit.Sound.valueOf(preSound);
 		}
 	}
 }

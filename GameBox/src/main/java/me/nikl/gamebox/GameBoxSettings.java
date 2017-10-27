@@ -1,6 +1,6 @@
 package me.nikl.gamebox;
 
-import me.nikl.gamebox.util.Sounds;
+import me.nikl.gamebox.util.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 
 /**
@@ -14,7 +14,7 @@ public class GameBoxSettings {
     //toggle for playing sounds
     public static boolean playSounds = true;
 
-    public static Sounds successfulClick, unsuccessfulClick;
+    public static Sound successfulClick, unsuccessfulClick;
 
     public static boolean checkInventoryLength = false;
 
@@ -57,14 +57,14 @@ public class GameBoxSettings {
         keepArmor = config.getBoolean("settings.keepArmor", false);
 
         try{
-            successfulClick = Sounds.valueOf(config.getString("guiSettings.standardSounds.successfulClick", "CLICK"));
+            successfulClick = Sound.valueOf(config.getString("guiSettings.standardSounds.successfulClick", "CLICK"));
         } catch (IllegalArgumentException exception) {
-            successfulClick = Sounds.CLICK;
+            successfulClick = Sound.CLICK;
         }
         try{
-            unsuccessfulClick = Sounds.valueOf(config.getString("guiSettings.standardSounds.unsuccessfulClick", "VILLAGER_NO"));
+            unsuccessfulClick = Sound.valueOf(config.getString("guiSettings.standardSounds.unsuccessfulClick", "VILLAGER_NO"));
         } catch (IllegalArgumentException exception) {
-            unsuccessfulClick = Sounds.VILLAGER_NO;
+            unsuccessfulClick = Sound.VILLAGER_NO;
         }
     }
 }

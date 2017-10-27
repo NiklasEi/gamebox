@@ -9,8 +9,8 @@ import me.nikl.gamebox.players.GBPlayer;
 import me.nikl.gamebox.players.HandleInvitations;
 import me.nikl.gamebox.players.HandleInviteInput;
 import me.nikl.gamebox.util.ItemStackUtil;
-import me.nikl.gamebox.util.Permissions;
-import me.nikl.gamebox.util.Sounds;
+import me.nikl.gamebox.util.Permission;
+import me.nikl.gamebox.util.Sound;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -355,20 +355,20 @@ public class PluginManager implements Listener {
                             gameManager.removeFromGame(event.getWhoClicked().getUniqueId());
                             guiManager.openGameGui((Player) event.getWhoClicked(), gameID, GUIManager.MAIN_GAME_GUI);
                             if(GameBoxSettings.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
-                                ((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sounds.CLICK.bukkitSound(), volume, pitch);
+                                ((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.CLICK.bukkitSound(), volume, pitch);
                             }
                             return;
                         } else if(event.getSlot() == toMain){
                             gameManager.removeFromGame(event.getWhoClicked().getUniqueId());
                             guiManager.openMainGui((Player) event.getWhoClicked());
                             if(GameBoxSettings.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
-                                ((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sounds.CLICK.bukkitSound(), volume, pitch);
+                                ((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.CLICK.bukkitSound(), volume, pitch);
                             }
                         } else if(event.getSlot() == exit){
                             event.getWhoClicked().closeInventory();
                             ((Player)event.getWhoClicked()).updateInventory();
                             if(GameBoxSettings.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
-                                ((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sounds.CLICK.bukkitSound(), volume, pitch);
+                                ((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.CLICK.bukkitSound(), volume, pitch);
                             }
                             return;
                         }
@@ -537,7 +537,7 @@ public class PluginManager implements Listener {
         if(event.getItem().getItemMeta().getDisplayName().equals(hubItem.getItemMeta().getDisplayName())){
             event.setCancelled(true);
             if(hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName())) {
-                if(event.getPlayer().hasPermission(Permissions.USE.getPermission())) {
+                if(event.getPlayer().hasPermission(Permission.USE.getPermission())) {
                     guiManager.openMainGui(event.getPlayer());
                 } else {
                     event.getPlayer().sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
@@ -673,7 +673,7 @@ public class PluginManager implements Listener {
         game.setPlainName(ChatColor.stripColor(gameName));
         game.setPlayerNum(playerNum);
         games.put(gameID, game);
-        Permissions.addGameID(gameID);
+        Permission.addGameID(gameID);
         gamesRegistered ++;
     }
 

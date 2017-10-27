@@ -2,7 +2,7 @@ package me.nikl.gamebox.commands;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
-import me.nikl.gamebox.util.Permissions;
+import me.nikl.gamebox.util.Permission;
 import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.guis.GUIManager;
 import org.bukkit.ChatColor;
@@ -43,7 +43,7 @@ public class MainCommand implements CommandExecutor{
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if(!sender.hasPermission(Permissions.USE.getPermission())){
+		if(!sender.hasPermission(Permission.USE.getPermission())){
 			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', lang.PREFIX + lang.CMD_NO_PERM));
 			return true;
 		}
@@ -97,7 +97,7 @@ public class MainCommand implements CommandExecutor{
 
 					// this will be checked again when opening the gui but checking it here
 					//   removes the necessity to save and later restore the inventory of the player
-					if(!sender.hasPermission(Permissions.OPEN_ALL_GAME_GUI.getPermission()) && !sender.hasPermission(Permissions.OPEN_GAME_GUI.getPermission(id))){
+					if(!sender.hasPermission(Permission.OPEN_ALL_GAME_GUI.getPermission()) && !sender.hasPermission(Permission.OPEN_GAME_GUI.getPermission(id))){
 						sender.sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
 						return true;
 					}
@@ -111,7 +111,7 @@ public class MainCommand implements CommandExecutor{
 			}
 			// help command
 			if(args[0].equalsIgnoreCase("help") || args[0].equals("?")){
-				if(!sender.hasPermission(Permissions.CMD_HELP.getPermission())){
+				if(!sender.hasPermission(Permission.CMD_HELP.getPermission())){
 					sender.sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
 					return true;
 				}
@@ -122,7 +122,7 @@ public class MainCommand implements CommandExecutor{
 			}
 			// info command
 			if(args[0].equalsIgnoreCase("info")){
-				if(!sender.hasPermission(Permissions.CMD_INFO.getPermission())){
+				if(!sender.hasPermission(Permission.CMD_INFO.getPermission())){
 					sender.sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
 					return true;
 				}

@@ -2,7 +2,7 @@ package me.nikl.gamebox.commands;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
-import me.nikl.gamebox.util.Permissions;
+import me.nikl.gamebox.util.Permission;
 import me.nikl.gamebox.data.Statistics;
 import me.nikl.gamebox.players.GBPlayer;
 import org.bukkit.Bukkit;
@@ -30,7 +30,7 @@ public class AdminCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if(!sender.hasPermission(Permissions.ADMIN.getPermission())){
+        if(!sender.hasPermission(Permission.ADMIN.getPermission())){
             sender.sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
             return true;
         }

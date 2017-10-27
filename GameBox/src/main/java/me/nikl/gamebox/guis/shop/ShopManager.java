@@ -9,7 +9,7 @@ import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.gui.AGui;
 import me.nikl.gamebox.players.GBPlayer;
 import me.nikl.gamebox.util.ItemStackUtil;
-import me.nikl.gamebox.util.Permissions;
+import me.nikl.gamebox.util.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -133,7 +133,7 @@ public class ShopManager {
             }
         }
 
-        if(whoClicked.hasPermission(Permissions.OPEN_SHOP.getPermission())){
+        if(whoClicked.hasPermission(Permission.OPEN_SHOP.getPermission())){
             if(args[0].equals(ShopManager.MAIN) && args[1].equals("0")) {
                 GameBox.openingNewGUI = true;
                 mainShop.open(whoClicked);

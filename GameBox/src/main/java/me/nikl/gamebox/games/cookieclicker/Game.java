@@ -12,7 +12,6 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.factory.*;
 import me.nikl.gamebox.games.cookieclicker.upgrades.farm.*;
 import me.nikl.gamebox.games.cookieclicker.upgrades.grandma.*;
 import me.nikl.gamebox.games.cookieclicker.upgrades.mine.*;
-import me.nikl.gamebox.games.cookieclicker.upgrades.mine.*;
 import me.nikl.gamebox.games.cookieclicker.upgrades.portal.*;
 import me.nikl.gamebox.games.cookieclicker.upgrades.prism.*;
 import me.nikl.gamebox.games.cookieclicker.upgrades.shipment.*;
@@ -21,10 +20,9 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.timemachine.*;
 import me.nikl.gamebox.games.cookieclicker.upgrades.wizardtower.*;
 import me.nikl.gamebox.nms.NMSUtil;
 import me.nikl.gamebox.util.NumberUtil;
-import me.nikl.gamebox.util.Sounds;
+import me.nikl.gamebox.util.Sound;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryAction;
@@ -93,10 +91,10 @@ public class Game extends BukkitRunnable {
     private Map<Integer, Upgrade> futureUpgrades = new HashMap<>();
     private Map<Integer, Upgrade> shownUpgrades = new HashMap<>();
 
-    private Sound click = Sounds.CLICK.bukkitSound();
-    private Sound clickCookie = Sounds.WOOD_CLICK.bukkitSound();
-    private Sound upgrade = Sounds.LEVEL_UP.bukkitSound();
-    private Sound no = Sounds.VILLAGER_NO.bukkitSound();
+    private org.bukkit.Sound click = Sound.CLICK.bukkitSound();
+    private org.bukkit.Sound clickCookie = Sound.WOOD_CLICK.bukkitSound();
+    private org.bukkit.Sound upgrade = Sound.LEVEL_UP.bukkitSound();
+    private org.bukkit.Sound no = Sound.VILLAGER_NO.bukkitSound();
     private float volume = 0.5f;
     private float pitch = 10f;
 

@@ -1,7 +1,7 @@
 package me.nikl.gamebox.games.cookieclicker;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.util.Permissions;
+import me.nikl.gamebox.util.Permission;
 import me.nikl.gamebox.data.SaveType;
 import me.nikl.gamebox.data.Statistics;
 import me.nikl.gamebox.games.IGameManager;
@@ -134,7 +134,7 @@ public class GameManager implements IGameManager {
 
 
     private boolean pay(Player[] player, double cost) {
-        if (plugin.isEconEnabled() && !player[0].hasPermission(Permissions.BYPASS_ALL.getPermission()) && !player[0].hasPermission(Permissions.BYPASS_GAME.getPermission(Main.gameID)) && cost > 0.0) {
+        if (plugin.isEconEnabled() && !player[0].hasPermission(Permission.BYPASS_ALL.getPermission()) && !player[0].hasPermission(Permission.BYPASS_GAME.getPermission(Main.gameID)) && cost > 0.0) {
             if (Main.econ.getBalance(player[0]) >= cost) {
                 Main.econ.withdrawPlayer(player[0], cost);
                 player[0].sendMessage(GameBox.chatColor(lang.PREFIX + plugin.lang.GAME_PAYED.replaceAll("%cost%", String.valueOf(cost))));
