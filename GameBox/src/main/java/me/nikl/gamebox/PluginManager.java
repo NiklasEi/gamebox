@@ -1,6 +1,7 @@
 package me.nikl.gamebox;
 
 import me.nikl.gamebox.events.LeftGameBoxEvent;
+import me.nikl.gamebox.games.Game;
 import me.nikl.gamebox.games.IGameManager;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.timer.TitleTimer;
@@ -9,6 +10,7 @@ import me.nikl.gamebox.players.GBPlayer;
 import me.nikl.gamebox.players.HandleInvitations;
 import me.nikl.gamebox.players.HandleInviteInput;
 import me.nikl.gamebox.util.ItemStackUtil;
+import me.nikl.gamebox.util.Module;
 import me.nikl.gamebox.util.Permission;
 import me.nikl.gamebox.util.Sound;
 import org.bukkit.Bukkit;
@@ -82,7 +84,7 @@ public class PluginManager implements Listener {
 	// save and handle invitations
     private HandleInvitations handleInvitations;
 
-	private Map<String, GameContainer> games = new HashMap<>();
+	private Map<Module, Game> games = new HashMap<>();
 
 	// save the players inventory contents
 	private Map<UUID, ItemStack[]> savedContents  = new HashMap<>();
@@ -334,8 +336,8 @@ public class PluginManager implements Listener {
 
 		GameBox.debug("checking gameManagers     clicked inv has " + event.getInventory().getSize() + " slots");
 
-		for(String gameID: games.keySet()){
-            IGameManager gameManager = games.get(gameID).getGameManager();
+		for(Module module: games.keySet()){
+            IGameManager gameManager = games.get(module).getGameManager();
 			if(gameManager.isInGame(uuid)){
 				event.setCancelled(true);
 				if((event.getRawSlot() - event.getSlot()) < event.getView().getTopInventory().getSize()){
@@ -344,7 +346,7 @@ public class PluginManager implements Listener {
                     GameBox.debug("click in top or middle inventory");
 				    gameManager.onInventoryClick(event);
                 } else {
-				    if(games.get(gameID).handleClicksOnHotbar()){
+				    if(games.get(module).getSettings().isHandleClicksOnHotbar()){
                         gameManager.onInventoryClick(event);
                     } else {
 				        if(event.getView().getBottomInventory().getItem(event.getSlot()) == null){
@@ -353,7 +355,7 @@ public class PluginManager implements Listener {
                         }
                         if(event.getSlot() == toGame){
                             gameManager.removeFromGame(event.getWhoClicked().getUniqueId());
-                            guiManager.openGameGui((Player) event.getWhoClicked(), gameID, GUIManager.MAIN_GAME_GUI);
+                            guiManager.openGameGui((Player) event.getWhoClicked(), module.moduleID(), GUIManager.MAIN_GAME_GUI);
                             if(GameBoxSettings.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
                                 ((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.CLICK.bukkitSound(), volume, pitch);
                             }
@@ -395,7 +397,7 @@ public class PluginManager implements Listener {
 		UUID uuid = event.getPlayer().getUniqueId();
 
 
-		for(GameContainer game: games.values()){
+		for(Game game: games.values()){
 		    IGameManager manager = game.getGameManager();
 			if(manager.isInGame(uuid)){
 				if(manager.onInventoryClose(event) && !manager.isInGame(uuid)){

@@ -19,6 +19,8 @@ public abstract class Game {
     private Module module;
     private File dataFolder;
 
+    private IGameManager gameManager;
+
     private GameSettings gameSettings;
 
     public Game(GameBox gameBox, String gameID, String name){
@@ -76,7 +78,7 @@ public abstract class Game {
         return name;
     }
 
-    public GameSettings getGameSettings() {
+    public GameSettings getSettings() {
         return gameSettings;
     }
 
@@ -86,5 +88,9 @@ public abstract class Game {
 
     public File getDataFolder(){
         return this.dataFolder;
+    }
+
+    public IGameManager getGameManager() {
+        return gameManager;
     }
 }
