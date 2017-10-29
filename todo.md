@@ -26,5 +26,11 @@
   * on game win:
     * fireworks?
     * sound effects
+* commands
+  * open game GUIS
+  * start games
+  * open shop
+* option to white/blacklist (all)players in regard to invitations
+* option for "invitation radius"
     
 
