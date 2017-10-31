@@ -631,51 +631,14 @@ public class PluginManager implements Listener {
 		return ChatColor.translateAlternateColorCodes('&', message);
 	}
 
-    @Deprecated
-    public void registerGame(IGameManager gameManager, String gameID, String gameName, int playerNum){
-	    registerGame(gameManager, gameID, gameName, playerNum, false);
-    }
-
-    @Deprecated
-	public void registerGame(IGameManager gameManager, String gameID, String gameName, int playerNum, boolean handleClicksOnHotbar){
-        Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Your version of " + gameName + " is outdated!");
-        registerGame(null, gameManager, gameID, gameName, playerNum, handleClicksOnHotbar);
-	}
-
-
     /**
      * Register a new game with GameBox
      *
-     * Store the plugin name to allow reloads
-     * @param plugin the games plugin instance
-     * @param gameManager the games manager instance
-     * @param gameID game ID
-     * @param gameName the games name for messages
-     * @param playerNum single player / multi player
+     * @param game Game instance to register
      */
-    public void registerGame(Plugin plugin, IGameManager gameManager, String gameID, String gameName, int playerNum){
-        registerGame(plugin, gameManager, gameID, gameName, playerNum, false);
-    }
-
-    /**
-     * Register a new game with GameBox
-     *
-     * Store the plugin name to allow reloads
-     * @param plugin the games plugin instance
-     * @param gameManager the games manager instance
-     * @param gameID game ID
-     * @param gameName the games name for messages
-     * @param playerNum single player / multi player
-     * @param handleClicksOnHotbar if true the clicks on the hotbar are not handled in GameBox, but send to the game
-     */
-    public void registerGame(Plugin plugin, IGameManager gameManager, String gameID, String gameName, int playerNum, boolean handleClicksOnHotbar){
-        GameContainer game = new GameContainer(plugin, gameID, gameManager);
-        game.setHandleClicksOnHotbar(handleClicksOnHotbar);
-        game.setName(gameName);
-        game.setPlainName(ChatColor.stripColor(gameName));
-        game.setPlayerNum(playerNum);
-        games.put(gameID, game);
-        Permission.addGameID(gameID);
+    public void registerGame(Game game){
+        games.put(game.getModule(), game);
+        Permission.addGameID(game.getGameID());
         gamesRegistered ++;
     }
 
@@ -695,18 +658,6 @@ public class PluginManager implements Listener {
         this.guiManager = guiManager;
     }
 
-    public GameContainer getGame(String gameID){
-	    return games.get(gameID);
-    }
-
-    public GameContainer getGame(UUID uuid){
-        for(String gameID : games.keySet()){
-            if(games.get(gameID).getGameManager().isInGame(uuid)) return games.get(gameID);
-        }
-        return null;
-    }
-
-
     public void startTitleTimer(Player player, String title, int seconds){
         UUID uuid = player.getUniqueId();
         if(titleTimers.keySet().contains(uuid)){
@@ -724,8 +675,8 @@ public class PluginManager implements Listener {
 
 
     private IGameManager getGameManager(UUID uuid){
-        for(String gameID : games.keySet()){
-            if(games.get(gameID).getGameManager().isInGame(uuid)) return games.get(gameID).getGameManager();
+        for(Module module : games.keySet()){
+            if(games.get(module).getGameManager().isInGame(uuid)) return games.get(module).getGameManager();
         }
         return null;
     }
@@ -735,8 +686,8 @@ public class PluginManager implements Listener {
     }
 
     public boolean isInGame(UUID uuid){
-        for(String gameID : games.keySet()){
-            if(games.get(gameID).getGameManager().isInGame(uuid)) return true;
+        for(Module module : games.keySet()){
+            if(games.get(module).getGameManager().isInGame(uuid)) return true;
         }
         return false;
     }
@@ -817,12 +768,8 @@ public class PluginManager implements Listener {
         if(gbPlayer == null) return false;
 
         gbPlayer.setTokens(gbPlayer.getTokens() + tokens);
-        Bukkit.getPlayer(player).sendMessage(lang.PREFIX + lang.WON_TOKEN.replace("%tokens%", String.valueOf(tokens)).replace("%game%", games.get(gameID).getPlainName()));
+        Bukkit.getPlayer(player).sendMessage(lang.PREFIX + lang.WON_TOKEN.replace("%tokens%", String.valueOf(tokens)).replace("%game%", games.get(gameID).getGameLang().PLAIN_NAME));
         return true;
-    }
-
-    public Map<String, GameContainer> getGames(){
-        return this.games;
     }
 
     public void setItemsToKeep(Player player) {
