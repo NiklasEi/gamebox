@@ -10,22 +10,26 @@ import java.io.*;
 
 /**
  * Created by nikl on 26.10.17.
+ *
+ * Abstract Game class to be extended by every GB game
  */
 public abstract class Game {
-    private GameBox gameBox;
-    private FileConfiguration config;
-    private String gameID;
-    private String name;
-    private Module module;
-    private File dataFolder;
 
-    private IGameManager gameManager;
+    protected GameBox gameBox;
 
-    private GameSettings gameSettings;
+    protected FileConfiguration config;
 
-    public Game(GameBox gameBox, String gameID, String name){
-        this.gameID = gameID;
-        this.name = name;
+    protected Module module;
+
+    protected File dataFolder;
+
+    protected IGameManager gameManager;
+
+    protected GameSettings gameSettings;
+
+    public Game(GameBox gameBox, Module module){
+        this.module = module;
+
         this.gameBox = gameBox;
 
         this.gameSettings = new GameSettings();
@@ -35,18 +39,18 @@ public abstract class Game {
     public boolean onEnable(){
         File configFile = new File(gameBox.getDataFolder()
                 + File.separator + "games"
-                + File.separator + name
+                + File.separator + getGameID()
                 + File.separator + "config.yml");
         if(!configFile.exists()){
             configFile.mkdirs();
             gameBox.saveResource("games"
-                    + File.separator + name
+                    + File.separator + getGameID()
                     + File.separator + "config.yml", false);
         }
 
         this.dataFolder = new File(gameBox.getDataFolder()
                 + File.separator + "games"
-                + File.separator + name
+                + File.separator + getGameID()
                 + File.separator);
 
         // reload config
@@ -56,8 +60,6 @@ public abstract class Game {
             e.printStackTrace();
             return false;
         }
-
-        this.module = Module.valueOf(name.toUpperCase());
 
         return true;
     }
@@ -71,11 +73,7 @@ public abstract class Game {
     }
 
     public String getGameID() {
-        return gameID;
-    }
-
-    public String getName(){
-        return name;
+        return module.moduleID();
     }
 
     public GameSettings getSettings() {
