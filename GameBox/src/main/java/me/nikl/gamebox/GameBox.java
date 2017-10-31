@@ -31,10 +31,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 
@@ -454,6 +451,13 @@ public class GameBox extends JavaPlugin{
 		return this.api;
 	}
 
+	public static ArrayList<String> chatColor(List<String> list){
+		ArrayList<String> toReturn = new ArrayList(list);
+		for(int i = 0; i < list.size(); i++){
+			toReturn.set(i, chatColor(toReturn.get(i)));
+		}
+		return toReturn;
+	}
 
 	public static String chatColor(String message){
 		return ChatColor.translateAlternateColorCodes('&', message);
