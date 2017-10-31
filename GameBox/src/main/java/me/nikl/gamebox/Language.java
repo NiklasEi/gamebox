@@ -72,7 +72,7 @@ public abstract class Language {
         if(fileName == null || !fileName.endsWith(".yml")){
             String path = module == Module.GAMEBOX ? "'config.yml'" : "'games" + "/" + module.moduleID() + "/config.yml'";
             Bukkit.getLogger().warning("Language file for " + module.moduleID() + " is not specified or not valid.");
-            Bukkit.getLogger().warning("Should be set in " + path + " as 'langFile:'");
+            Bukkit.getLogger().warning("Should be set in " + path + " as value of 'langFile'");
             Bukkit.getLogger().warning("Falling back to the default file...");
             language = defaultLanguage;
             return;
