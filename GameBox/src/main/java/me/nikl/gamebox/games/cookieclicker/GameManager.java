@@ -6,6 +6,7 @@ import me.nikl.gamebox.data.SaveType;
 import me.nikl.gamebox.data.Statistics;
 import me.nikl.gamebox.games.IGameManager;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -127,11 +128,16 @@ public class GameManager implements IGameManager {
         games.remove(uuid);
     }
 
+    @Override
+    public void loadGameRules(ConfigurationSection buttonSec, String buttonID) {
+        int moveCookieAfterClicks = buttonSec.getInt("moveCookieAfterClicks", 0);
+        if(moveCookieAfterClicks < 1) moveCookieAfterClicks = 0;
 
-    public void setGameTypes(Map<String, GameRules> gameTypes) {
-        this.gameTypes = gameTypes;
+        double cost = buttonSec.getDouble("cost", 0.);
+        boolean saveStats = buttonSec.getBoolean("saveStats", false);
+
+        gameTypes.put(buttonID, new GameRules(buttonID, cost, moveCookieAfterClicks, saveStats));
     }
-
 
     private boolean pay(Player[] player, double cost) {
         if (main.isEconEnabled() && !player[0].hasPermission(Permission.BYPASS_ALL.getPermission()) && !player[0].hasPermission(Permission.BYPASS_GAME.getPermission(Main.gameID)) && cost > 0.0) {

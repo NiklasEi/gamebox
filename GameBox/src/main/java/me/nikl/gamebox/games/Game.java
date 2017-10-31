@@ -125,10 +125,6 @@ public abstract class Game {
         return true;
     }
 
-    private void loadButtons(){
-
-    }
-
     private void hook() {
         GUIManager guiManager = gameBox.getPluginManager().getGuiManager();
 
@@ -144,15 +140,9 @@ public abstract class Game {
         if (config.isConfigurationSection("gameBox.gameButtons")) {
             ConfigurationSection gameButtons = config.getConfigurationSection("gameBox.gameButtons");
             ConfigurationSection buttonSec;
-            double cost;
-            boolean saveStats;
-
-            int moveCookieAfterClicks;
 
             String displayName;
             ArrayList<String> lore;
-
-            GameRules rules;
 
             for (String buttonID : gameButtons.getKeys(false)) {
                 buttonSec = gameButtons.getConfigurationSection(buttonID);
@@ -184,42 +174,29 @@ public abstract class Game {
                     meta.setLore(lore);
                 }
 
+                // Todo: two player game case
                 button.setAction(ClickAction.START_GAME);
 
                 button.setItemMeta(meta);
                 button.setArgs(module.moduleID(), buttonID);
 
-                moveCookieAfterClicks = buttonSec.getInt("moveCookieAfterClicks", 0);
-                if(moveCookieAfterClicks < 1) moveCookieAfterClicks = 0;
+                // from here it is game specific info
+                gameManager.loadGameRules(buttonSec, buttonID);
 
-                cost = buttonSec.getDouble("cost", 0.);
-                saveStats = buttonSec.getBoolean("saveStats", false);
-
-
-                rules = new GameRules(buttonID, cost, moveCookieAfterClicks, saveStats);
-
-
-
-                setTheButton:
                 if (buttonSec.isInt("slot")) {
                     int slot = buttonSec.getInt("slot");
                     if (slot < 0 || slot >= gameGuiSlots) {
-                        Bukkit.getLogger().log(Level.WARNING, "the slot of gameBox.gameButtons." + buttonID + " is out of the inventory range (0 - 53)");
+                        Bukkit.getLogger().log(Level.WARNING, "the slot of gameBox.gameButtons." + buttonID
+                                + " is out of the inventory range (0 - " + gameGuiSlots + ")");
                         gameGui.setButton(button);
-                        break setTheButton;
+                    } else {
+                        gameGui.setButton(button, slot);
                     }
-                    gameGui.setButton(button, slot);
                 } else {
                     gameGui.setButton(button);
                 }
-
-                gameTypes.put(buttonID, rules);
             }
         }
-
-
-        this.gameManager.setGameTypes(gameTypes);
-
 
         getMainButton:
         if (config.isConfigurationSection("gameBox.mainButton")) {
@@ -359,7 +336,7 @@ public abstract class Game {
     public GameLanguage getGameLang(){
         return this.gameLang;
     }
-    
+
     public void debug(String debugMessage){
         if(debug) Bukkit.getLogger().info(gameLang.PREFIX + " " + debugMessage);
     }

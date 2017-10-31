@@ -1,5 +1,6 @@
 package me.nikl.gamebox.games;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -58,6 +59,14 @@ public interface IGameManager {
 	 * @param uuid player to remove
 	 */
 	void removeFromGame(UUID uuid);
+
+	/**
+	 * Load game rules from the given ConfigurationSection
+	 *
+	 * @param buttonSec Configuration section with the rules
+	 * @param buttonID ID of the rules
+	 */
+    void loadGameRules(ConfigurationSection buttonSec, String buttonID);
 
 /*
 	/**
