@@ -3,7 +3,7 @@ package me.nikl.gamebox.games.cookieclicker;
 /**
  * Created by Niklas
  *
- * Game rules container for Whac a mole
+ * Game rules container for Cookie Clicker
  */
 public class GameRules {
 
@@ -12,7 +12,7 @@ public class GameRules {
     private String key;
     private int moveCookieAfterClicks;
 
-    public GameRules(Main plugin, String key, double cost, int moveCookieAfterClicks, boolean saveStats){
+    public GameRules(String key, double cost, int moveCookieAfterClicks, boolean saveStats){
         this.cost = cost;
         this.saveStats = saveStats;
         this.key = key;

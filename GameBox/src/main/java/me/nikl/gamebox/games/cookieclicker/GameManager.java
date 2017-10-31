@@ -23,7 +23,7 @@ import java.util.logging.Level;
  */
 
 public class GameManager implements IGameManager {
-    private Main plugin;
+    private Main main;
 
     private Map<UUID, Game> games = new HashMap<>();
     private CookieClickerLanguage lang;
@@ -36,12 +36,12 @@ public class GameManager implements IGameManager {
 
 
 
-    public GameManager(Main plugin){
-        this.plugin = plugin;
-        this.statistics = plugin.getGameBox().getStatistics();
-        this.lang = plugin.lang;
+    public GameManager(Main main){
+        this.main = main;
+        this.statistics = main.getGameBox().getStatistics();
+        this.lang = main.lang;
 
-        savesFile = new File(plugin.getDataFolder().toString() + File.separatorChar + "saves.yml");
+        savesFile = new File(main.getDataFolder().toString() + File.separatorChar + "saves.yml");
         if(!savesFile.exists()){
             try {
                 savesFile.createNewFile();
@@ -105,9 +105,9 @@ public class GameManager implements IGameManager {
         }
 
         if(saves.isConfigurationSection(rule.getKey() + "." + players[0].getUniqueId())) {
-            games.put(players[0].getUniqueId(), new Game(rule, plugin, players[0], playSounds, saves.getConfigurationSection(rule.getKey() + "." + players[0].getUniqueId())));
+            games.put(players[0].getUniqueId(), new Game(rule, main, players[0], playSounds, saves.getConfigurationSection(rule.getKey() + "." + players[0].getUniqueId())));
         } else {
-            games.put(players[0].getUniqueId(), new Game(rule, plugin, players[0], playSounds, null));
+            games.put(players[0].getUniqueId(), new Game(rule, main, players[0], playSounds, null));
         }
 
         return GameBox.GAME_STARTED;
@@ -134,13 +134,13 @@ public class GameManager implements IGameManager {
 
 
     private boolean pay(Player[] player, double cost) {
-        if (plugin.isEconEnabled() && !player[0].hasPermission(Permission.BYPASS_ALL.getPermission()) && !player[0].hasPermission(Permission.BYPASS_GAME.getPermission(Main.gameID)) && cost > 0.0) {
+        if (main.isEconEnabled() && !player[0].hasPermission(Permission.BYPASS_ALL.getPermission()) && !player[0].hasPermission(Permission.BYPASS_GAME.getPermission(Main.gameID)) && cost > 0.0) {
             if (Main.econ.getBalance(player[0]) >= cost) {
                 Main.econ.withdrawPlayer(player[0], cost);
-                player[0].sendMessage(GameBox.chatColor(lang.PREFIX + plugin.lang.GAME_PAYED.replaceAll("%cost%", String.valueOf(cost))));
+                player[0].sendMessage(GameBox.chatColor(lang.PREFIX + main.lang.GAME_PAYED.replaceAll("%cost%", String.valueOf(cost))));
                 return true;
             } else {
-                player[0].sendMessage(GameBox.chatColor(lang.PREFIX + plugin.lang.GAME_NOT_ENOUGH_MONEY));
+                player[0].sendMessage(GameBox.chatColor(lang.PREFIX + main.lang.GAME_NOT_ENOUGH_MONEY));
                 return false;
             }
         } else {
