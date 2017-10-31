@@ -1,7 +1,7 @@
 package me.nikl.gamebox.games.cookieclicker;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.Language;
+import me.nikl.gamebox.games.GameLanguage;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
 import me.nikl.gamebox.util.Module;
@@ -12,9 +12,9 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class CookieClickerLanguage extends Language {
+public class CookieClickerLanguage extends GameLanguage {
 
-	public List<String> GAME_HELP, GAME_OVEN_LORE, GAME_BUILDING_LORE;
+	public List<String> GAME_OVEN_LORE, GAME_BUILDING_LORE;
 
 	public String GAME_TITLE, GAME_CLOSED
 			, GAME_COOKIE_NAME, GAME_OVEN_NAME, GAME_BUILDING_NAME;
