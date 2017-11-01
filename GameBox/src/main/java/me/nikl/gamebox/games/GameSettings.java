@@ -40,6 +40,16 @@ public class GameSettings {
     }
 
     public enum GameType{
-        SINGLE_PLAYER, TWO_PLAYER
+        SINGLE_PLAYER(1), TWO_PLAYER(2);
+
+        int playerNumber;
+
+        GameType(int playerNumber){
+            this.playerNumber = playerNumber;
+        }
+
+        public int getPlayerNumber(){
+            return this.playerNumber;
+        }
     }
 }
