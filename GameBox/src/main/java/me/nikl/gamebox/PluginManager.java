@@ -787,4 +787,14 @@ public class PluginManager implements Listener {
     public Game getGame(Module module) {
         return this.games.get(module);
     }
+
+    public Game getGame(String gameID){
+        Module module;
+        try {
+            module = Module.valueOf(gameID.toUpperCase().replace(" ", "_"));
+        } catch (IllegalArgumentException e){
+            return null;
+        }
+        return getGame(module);
+    }
 }
