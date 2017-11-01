@@ -2,6 +2,7 @@ package me.nikl.gamebox.data;
 
 import me.clip.placeholderapi.external.EZPlaceholderHook;
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.games.Game;
 import org.bukkit.entity.Player;
 
 /**
@@ -34,9 +35,9 @@ public class PlaceholderAPIHook extends EZPlaceholderHook{
             // return the name of the game that the player is currently playing
             case "game_name":
                 if(player == null) return null;
-                GameContainer game = plugin.getPluginManager().getGame(player.getUniqueId());
+                Game game = plugin.getPluginManager().getGame(player.getUniqueId());
                 if(game == null) return null;
-                return game.getName();
+                return game.getGameLang().PLAIN_NAME;
 
 
 

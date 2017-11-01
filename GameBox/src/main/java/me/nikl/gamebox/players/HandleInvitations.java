@@ -70,7 +70,7 @@ public class HandleInvitations extends BukkitRunnable{
 
         if(first != null && second != null){
             for(String message : plugin.lang.INVITE_MESSAGE) {
-                second.sendMessage(plugin.lang.PREFIX + message.replace("%player%", first.getName()).replace("%game%", pluginManager.getGame(args[0]).getName()));
+                second.sendMessage(plugin.lang.PREFIX + message.replace("%player%", first.getName()).replace("%game%", pluginManager.getGame(args[0]).getGameLang().PLAIN_NAME));
             }
 
             boolean boldClick = false;

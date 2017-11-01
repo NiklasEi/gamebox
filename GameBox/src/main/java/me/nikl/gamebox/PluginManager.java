@@ -797,4 +797,12 @@ public class PluginManager implements Listener {
         }
         return getGame(module);
     }
+
+    public Game getGame(UUID uuid){
+        for(Game game : games.values()){
+            if(game.getGameManager().isInGame(uuid))
+                return game;
+        }
+        return null;
+    }
 }

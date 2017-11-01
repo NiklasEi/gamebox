@@ -2,6 +2,7 @@ package me.nikl.gamebox.commands;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
+import me.nikl.gamebox.games.Game;
 import me.nikl.gamebox.util.Permission;
 import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.guis.GUIManager;
@@ -9,7 +10,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -24,7 +24,6 @@ import java.util.Map;
  */
 public class MainCommand implements CommandExecutor{
 	private GameBox plugin;
-	private FileConfiguration config;
 	private PluginManager pManager;
 	private GUIManager guiManager;
 	private GameBoxLanguage lang;
@@ -37,7 +36,6 @@ public class MainCommand implements CommandExecutor{
 		this.plugin = plugin;
 		this.pManager = plugin.getPluginManager();
 		this.guiManager = pManager.getGuiManager();
-		this.config = plugin.getConfig();
 		this.lang = plugin.lang;
 	}
 	
@@ -135,11 +133,11 @@ public class MainCommand implements CommandExecutor{
 				}
 
 				String allSubCommands;
-				GameContainer gameContainer;
+				Game game;
 				for(String gameID : subCommands.keySet()) {
 
-					gameContainer = plugin.getPluginManager().getGame(gameID);
-					if (gameContainer == null) continue;
+					game = plugin.getPluginManager().getGame(gameID);
+					if (game == null) continue;
 
 					// get subcommands
 					if(subCommands.get(gameID) != null && !subCommands.get(gameID).isEmpty()){
@@ -155,9 +153,9 @@ public class MainCommand implements CommandExecutor{
 					// send per game info
 					for (String message : lang.CMD_INFO_PER_GAME) {
 						sender.sendMessage(lang.PREFIX + message
-								.replace("%name%", ChatColor.stripColor(gameContainer.getName()))
+								.replace("%name%", ChatColor.stripColor(game.getGameLang().PLAIN_NAME))
 								.replace("%shorts%", allSubCommands)
-								.replace("%playerNum%", String.valueOf(gameContainer.getPlayerNum())));
+								.replace("%playerNum%", String.valueOf(game.getSettings().getGameType().getPlayerNumber())));
 					}
 				}
 				// send info footer
