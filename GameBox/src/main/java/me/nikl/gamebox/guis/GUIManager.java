@@ -174,7 +174,7 @@ public class GUIManager {
 			boolean opened = gui.open(whoClicked);
 			GameBox.openingNewGUI = false;
 			if(opened){
-				nms.updateInventoryTitle(whoClicked, gui.getTitle().replace("%game%", plugin.getPluginManager().getGame(gameID).getName()).replace("%player%", whoClicked.getName()));
+				nms.updateInventoryTitle(whoClicked, gui.getTitle().replace("%game%", plugin.getPluginManager().getGame(gameID).getGameLang().PLAIN_NAME).replace("%player%", whoClicked.getName()));
 			} else {
 				if(whoClicked.getOpenInventory() != null){
 					whoClicked.closeInventory();
@@ -286,7 +286,7 @@ public class GUIManager {
 
 	@Deprecated
 	public void registerGameGUI(String gameID, String key, GameGui gui, ItemStack button, String... subCommand){
-		Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Your version of " + plugin.getPluginManager().getGame(gameID).getName() + " is outdated!");
+		Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Your version of " + plugin.getPluginManager().getGame(gameID).getGameLang().PLAIN_NAME + " is outdated!");
 		if(key.equals(MAIN_GAME_GUI)){
 			registerMainGameGUI(gui, button, subCommand);
 		} else {
@@ -296,13 +296,13 @@ public class GUIManager {
 
 	@Deprecated
 	public void registerGameGUI(String gameID, String key, GameGui gui){
-		Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Your version of " + plugin.getPluginManager().getGame(gameID).getName() + " is outdated!");
+		Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Your version of " + plugin.getPluginManager().getGame(gameID).getGameLang().PLAIN_NAME + " is outdated!");
 		registerGameGUI(gui);
 	}
 
 	@Deprecated
 	public void registerTopList(String gameID, String key, TopListPage gui){
-		Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Your version of " + plugin.getPluginManager().getGame(gameID).getName() + " is outdated!");
+		Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Your version of " + plugin.getPluginManager().getGame(gameID).getGameLang().PLAIN_NAME + " is outdated!");
 		registerGameGUI(gui);
 	}
 
@@ -348,7 +348,7 @@ public class GUIManager {
 			if (gui instanceof GameGuiPage) {
 				currentTitle = ((GameGuiPage) gui).getTitle().replace("%player%", player.getName());
 			} else if (gui instanceof GameGui) {
-				currentTitle = plugin.lang.TITLE_GAME_GUI.replace("%game%", plugin.getPluginManager().getGame(gameID).getName()).replace("%player%", player.getName());
+				currentTitle = plugin.lang.TITLE_GAME_GUI.replace("%game%", plugin.getPluginManager().getGame(gameID).getGameLang().PLAIN_NAME).replace("%player%", player.getName());
 			} else if (gui instanceof Page){
 				currentTitle = plugin.lang.SHOP_TITLE_PAGE_SHOP.replace("%page%", String.valueOf(((Page)gui).getPage() + 1));
 			}
