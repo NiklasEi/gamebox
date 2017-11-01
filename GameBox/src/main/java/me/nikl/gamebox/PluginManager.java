@@ -779,4 +779,12 @@ public class PluginManager implements Listener {
             player.getInventory().setItem(slot, savedContents.get(player.getUniqueId())[slot]);
         }
     }
+
+    public Map<Module, Game> getGames(){
+        return this.games;
+    }
+
+    public Game getGame(Module module) {
+        return this.games.get(module);
+    }
 }
