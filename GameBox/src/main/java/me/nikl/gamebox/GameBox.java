@@ -6,6 +6,7 @@ import me.nikl.gamebox.data.PlaceholderAPIHook;
 import me.nikl.gamebox.data.Statistics;
 import me.nikl.gamebox.data.StatisticsFile;
 import me.nikl.gamebox.data.StatisticsMysql;
+import me.nikl.gamebox.games.GameLanguage;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.listeners.EnterGameBoxListener;
 import me.nikl.gamebox.listeners.LeftGameBoxListener;
@@ -13,6 +14,7 @@ import me.nikl.gamebox.nms.*;
 import me.nikl.gamebox.players.HandleInvitations;
 import me.nikl.gamebox.players.HandleInviteInput;
 import me.nikl.gamebox.util.FileUtil;
+import me.nikl.gamebox.util.Module;
 import net.milkbowl.vault.economy.Economy;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -121,8 +123,8 @@ public class GameBox extends JavaPlugin{
 				@Override
 				public HashMap<String, Integer> call() throws Exception {
 					HashMap<String, Integer> valueMap = new HashMap<>();
-					for(String gameID : getPluginManager().getGames().keySet()){
-						valueMap.put(getOriginalGameName(gameID), 1);
+					for(Module module : getPluginManager().getGames().keySet()){
+						valueMap.put(getOriginalGameName(module), 1);
 					}
 					return valueMap;
 				}
@@ -134,8 +136,8 @@ public class GameBox extends JavaPlugin{
 
 				Map<String, Integer> entry = new HashMap<>();
 
-				for(String gameID : getPluginManager().getGames().keySet()){
-					entry.put(getOriginalGameName(gameID), 1);
+				for(Module module : getPluginManager().getGames().keySet()){
+					entry.put(getOriginalGameName(module), 1);
 				}
 
 				map.put(String.valueOf(getPluginManager().getGames().size()), entry);
@@ -143,7 +145,8 @@ public class GameBox extends JavaPlugin{
 			}));
 
 			// Pie chart with number of games
-			metrics.addCustomChart(new Metrics.SimplePie("number_of_gamebox_games", () -> String.valueOf(PluginManager.gamesRegistered)));
+			metrics.addCustomChart(new Metrics.SimplePie("number_of_gamebox_games"
+					, () -> String.valueOf(PluginManager.gamesRegistered)));
 		} else {
 			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " You have opt out bStats");
 		}
@@ -464,16 +467,23 @@ public class GameBox extends JavaPlugin{
 	}
 
 	/**
-	 * Get the original game name from the ID
+	 * Get the original game name from the module enum
 	 *
 	 * This is to make the statistics on bStats nicer.
 	 * Since the game names can be changed, the statistics would be messed up,
 	 * when using the customized game names.
-	 * @param gameID Id of the game
+	 * Try to get the default name from the default
+	 * language files, then fall back on hardcoded names.
+	 * @param module Id of the game
 	 * @return the original name if given, otherwise the ID itself
 	 */
-	private String getOriginalGameName(String gameID){
-		if(gameID == null) return "null";
+	private String getOriginalGameName(Module module){
+		if(module == null) return "null";
+
+		GameLanguage gameLang = getPluginManager().getGame(module).getGameLang();
+		if(gameLang != null) return gameLang.PLAIN_NAME;
+
+		String gameID = module.moduleID();
 		switch (gameID){
 			case "minesweeper": return "Minesweeper";
 			case "battleship": return "Battleship";
