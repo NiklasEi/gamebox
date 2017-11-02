@@ -2,7 +2,7 @@ package me.nikl.gamebox;
 
 import me.nikl.gamebox.events.LeftGameBoxEvent;
 import me.nikl.gamebox.games.Game;
-import me.nikl.gamebox.games.IGameManager;
+import me.nikl.gamebox.games.GameManager;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.timer.TitleTimer;
 import me.nikl.gamebox.nms.NMSUtil;
@@ -36,7 +36,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
@@ -337,7 +336,7 @@ public class PluginManager implements Listener {
 		GameBox.debug("checking gameManagers     clicked inv has " + event.getInventory().getSize() + " slots");
 
 		for(Module module: games.keySet()){
-            IGameManager gameManager = games.get(module).getGameManager();
+            GameManager gameManager = games.get(module).getGameManager();
 			if(gameManager.isInGame(uuid)){
 				event.setCancelled(true);
 				if((event.getRawSlot() - event.getSlot()) < event.getView().getTopInventory().getSize()){
@@ -398,7 +397,7 @@ public class PluginManager implements Listener {
 
 
 		for(Game game: games.values()){
-		    IGameManager manager = game.getGameManager();
+		    GameManager manager = game.getGameManager();
 			if(manager.isInGame(uuid)){
 				if(manager.onInventoryClose(event) && !manager.isInGame(uuid)){
 					restoreInventory((Player) event.getPlayer());
@@ -642,7 +641,7 @@ public class PluginManager implements Listener {
         gamesRegistered ++;
     }
 
-	public IGameManager getGameManager(String gameID){
+	public GameManager getGameManager(String gameID){
 		return games.get(gameID).getGameManager();
 	}
 
@@ -674,7 +673,7 @@ public class PluginManager implements Listener {
     }
 
 
-    private IGameManager getGameManager(UUID uuid){
+    private GameManager getGameManager(UUID uuid){
         for(Module module : games.keySet()){
             if(games.get(module).getGameManager().isInGame(uuid)) return games.get(module).getGameManager();
         }

@@ -6,7 +6,7 @@ import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.util.Permission;
 import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.events.EnterGameBoxEvent;
-import me.nikl.gamebox.games.IGameManager;
+import me.nikl.gamebox.games.GameManager;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.gui.game.GameGui;
@@ -128,7 +128,7 @@ public abstract class AGui {
 					return false;
 				}
 				String gameID = args[0];
-				IGameManager manager;
+				GameManager manager;
 				if((manager = pluginManager.getGameManager(gameID)) != null){
 					// set flag
 					GameBox.openingNewGUI = true;

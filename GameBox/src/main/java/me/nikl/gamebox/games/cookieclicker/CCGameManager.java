@@ -3,8 +3,7 @@ package me.nikl.gamebox.games.cookieclicker;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.util.Permission;
 import me.nikl.gamebox.data.SaveType;
-import me.nikl.gamebox.data.Statistics;
-import me.nikl.gamebox.games.IGameManager;
+import me.nikl.gamebox.games.GameManager;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -23,21 +22,19 @@ import java.util.logging.Level;
  * GameManager
  */
 
-public class CCGameManager implements IGameManager {
+public class CCGameManager extends GameManager {
     private CCGame main;
 
     private Map<UUID, CookieClicker> games = new HashMap<>();
     private CCLanguage lang;
 
-    private Map<String,CCGameRules> gameTypes;
     private File savesFile;
     private FileConfiguration saves;
-
-    private Statistics statistics;
 
 
 
     public CCGameManager(CCGame main){
+        this.gameRules = new HashMap<>();
         this.main = main;
         this.statistics = main.getGameBox().getStatistics();
         this.lang = main.lang;
@@ -60,7 +57,6 @@ public class CCGameManager implements IGameManager {
     }
 
 
-    @Override
     public boolean onInventoryClick(InventoryClickEvent inventoryClickEvent) {
         if(!games.keySet().contains(inventoryClickEvent.getWhoClicked().getUniqueId())) return false;
 
@@ -71,7 +67,6 @@ public class CCGameManager implements IGameManager {
     }
 
 
-    @Override
     public boolean onInventoryClose(InventoryCloseEvent inventoryCloseEvent) {
         if(!games.keySet().contains(inventoryCloseEvent.getPlayer().getUniqueId())) return false;
 
@@ -81,20 +76,18 @@ public class CCGameManager implements IGameManager {
     }
 
 
-    @Override
     public boolean isInGame(UUID uuid) {
         return games.containsKey(uuid);
     }
 
 
-    @Override
     public int startGame(Player[] players, boolean playSounds, String... strings) {
         if (strings.length != 1) {
             Bukkit.getLogger().log(Level.WARNING, " unknown number of arguments to start a game: " + Arrays.asList(strings));
             return GameBox.GAME_NOT_STARTED_ERROR;
         }
 
-        CCGameRules rule = gameTypes.get(strings[0]);
+        CCGameRules rule = (CCGameRules) gameRules.get(strings[0]);
 
         if (rule == null) {
             Bukkit.getLogger().log(Level.WARNING, " unknown gametype: " + Arrays.asList(strings));
@@ -115,7 +108,6 @@ public class CCGameManager implements IGameManager {
     }
 
 
-    @Override
     public void removeFromGame(UUID uuid) {
 
         CookieClicker game = games.get(uuid);
@@ -128,7 +120,6 @@ public class CCGameManager implements IGameManager {
         games.remove(uuid);
     }
 
-    @Override
     public void loadGameRules(ConfigurationSection buttonSec, String buttonID) {
         int moveCookieAfterClicks = buttonSec.getInt("moveCookieAfterClicks", 0);
         if(moveCookieAfterClicks < 1) moveCookieAfterClicks = 0;
@@ -136,7 +127,7 @@ public class CCGameManager implements IGameManager {
         double cost = buttonSec.getDouble("cost", 0.);
         boolean saveStats = buttonSec.getBoolean("saveStats", false);
 
-        gameTypes.put(buttonID, new CCGameRules(buttonID, cost, moveCookieAfterClicks, saveStats));
+        gameRules.put(buttonID, new CCGameRules(buttonID, cost, moveCookieAfterClicks, saveStats));
     }
 
     private boolean pay(Player[] player, double cost) {
@@ -183,7 +174,7 @@ public class CCGameManager implements IGameManager {
     }
 
     public void restart(String key){
-        CCGameRules rule = gameTypes.get(key);
+        CCGameRules rule = (CCGameRules) gameRules.get(key);
         if(rule == null) return;
 
         Set<Player> players = new HashSet<>();

@@ -42,7 +42,7 @@ public abstract class Game {
 
     protected File dataFolder;
 
-    protected IGameManager gameManager;
+    protected GameManager gameManager;
 
     protected GameSettings gameSettings;
 
@@ -328,7 +328,7 @@ public abstract class Game {
         return this.dataFolder;
     }
 
-    public IGameManager getGameManager() {
+    public GameManager getGameManager() {
         return gameManager;
     }
 
