@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 /**
@@ -67,6 +68,8 @@ public interface IGameManager {
 	 * @param buttonID ID of the rules
 	 */
     void loadGameRules(ConfigurationSection buttonSec, String buttonID);
+
+    HashMap<String, GameRule> getGameRules();
 
 /*
 	/**

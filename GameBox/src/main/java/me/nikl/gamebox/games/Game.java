@@ -4,6 +4,7 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.Language;
+import me.nikl.gamebox.data.SaveType;
 import me.nikl.gamebox.games.cookieclicker.GameManager;
 import me.nikl.gamebox.games.cookieclicker.GameRules;
 import me.nikl.gamebox.guis.GUIManager;
@@ -135,8 +136,6 @@ public abstract class Game {
         gameGui.setHelpButton(gameLang.GAME_HELP);
 
 
-        Map<String, GameRules> gameTypes = new HashMap<>();
-
         if (config.isConfigurationSection("gameBox.gameButtons")) {
             ConfigurationSection gameButtons = config.getConfigurationSection("gameBox.gameButtons");
             ConfigurationSection buttonSec;
@@ -201,27 +200,31 @@ public abstract class Game {
         getMainButton:
         if (config.isConfigurationSection("gameBox.mainButton")) {
             ConfigurationSection mainButtonSec = config.getConfigurationSection("gameBox.mainButton");
-            if (!mainButtonSec.isString("materialData")) break getMainButton;
+            if (!mainButtonSec.isString("materialData")){
+                break getMainButton;
+            }
 
             ItemStack gameButton = ItemStackUtil.getItemStack(mainButtonSec.getString("materialData"));
             if (gameButton == null) {
                 gameButton = (new ItemStack(Material.STAINED_CLAY));
             }
+
             ItemMeta meta = gameButton.getItemMeta();
-            meta.setDisplayName(GameBox.chatColor(mainButtonSec.getString("displayName", gameLang.NAME)));
+
+            meta.setDisplayName(GameBox.chatColor(mainButtonSec.getString("displayName", gameLang.PLAIN_NAME)));
+
             if (mainButtonSec.isList("lore")) {
-                ArrayList<String> lore = new ArrayList<>(mainButtonSec.getStringList("lore"));
-                for (int i = 0; i < lore.size(); i++) {
-                    lore.set(i, GameBox.chatColor(lore.get(i)));
-                }
-                meta.setLore(lore);
+                meta.setLore(GameBox.chatColor(mainButtonSec.getStringList("lore")));
             }
+
             gameButton.setItemMeta(meta);
+
             guiManager.registerMainGameGUI(gameGui, gameButton, this.subCommands);
         } else {
-            Bukkit.getLogger().log(Level.WARNING, " Missing or wrong configured main button in the configuration file!");
+            gameBox.getLogger().log(Level.WARNING, " Missing or wrong configured main button for " + gameLang.PLAIN_NAME + "!");
         }
 
+        HashMap<String, GameRule> gameRules = gameManager.getGameRules();
 
         // get top list buttons
         if (config.isConfigurationSection("gameBox.topListButtons")) {
@@ -234,27 +237,27 @@ public abstract class Game {
             for (String buttonID : topListButtons.getKeys(false)) {
                 buttonSec = topListButtons.getConfigurationSection(buttonID);
 
-                if (!gameTypes.keySet().contains(buttonID)) {
-                    Bukkit.getLogger().log(Level.WARNING, " the top list button 'gameBox.topListButtons." + buttonID + "' does not have a corresponding game button");
+                if (!gameRules.keySet().contains(buttonID)) {
+                    gameBox.getLogger().log(Level.WARNING, " the top list button 'gameBox.topListButtons." + buttonID + "' does not have a corresponding game button");
                     continue;
                 }
 
 
-                if (!gameTypes.get(buttonID).isSaveStats()) {
-                    Bukkit.getLogger().log(Level.WARNING, " the top list buttons 'gameBox.topListButtons." + buttonID + "' corresponding game button has statistics turned off!");
-                    Bukkit.getLogger().log(Level.WARNING, " With these settings there is no toplist to display");
+                if (!gameRules.get(buttonID).isSaveStats()) {
+                    gameBox.getLogger().log(Level.WARNING, " the top list buttons 'gameBox.topListButtons." + buttonID + "' corresponding game button has statistics turned off!");
+                    gameBox.getLogger().log(Level.WARNING, " With these settings there is no toplist to display");
                     continue;
                 }
 
                 if (!buttonSec.isString("materialData")) {
-                    Bukkit.getLogger().log(Level.WARNING, " missing material data under: gameBox.topListButtons." + buttonID + "        can not load the button");
+                    gameBox.getLogger().log(Level.WARNING, " missing material data under: gameBox.topListButtons." + buttonID + "        can not load the button");
                     continue;
                 }
 
                 ItemStack mat = ItemStackUtil.getItemStack(buttonSec.getString("materialData"));
                 if (mat == null) {
-                    Bukkit.getLogger().log(Level.WARNING, " error loading: gameBox.topListButtons." + buttonID);
-                    Bukkit.getLogger().log(Level.WARNING, "     invalid material data");
+                    gameBox.getLogger().log(Level.WARNING, " error loading: gameBox.topListButtons." + buttonID);
+                    gameBox.getLogger().log(Level.WARNING, "     invalid material data");
                     continue;
                 }
 
@@ -297,8 +300,10 @@ public abstract class Game {
                     lore = new ArrayList<>(Arrays.asList("", "No lore specified in the config!"));
                 }
 
+                SaveType saveType = gameRules.get(buttonID).getSaveTypes().iterator().next();
+
                 TopListPage topListPage = new TopListPage(gameBox, guiManager, 54, module.moduleID(), buttonID + GUIManager.TOP_LIST_KEY_ADDON,
-                        GameBox.chatColor(buttonSec.getString("inventoryTitle", "Title missing in config")), this.topListSaveType, lore);
+                        GameBox.chatColor(buttonSec.getString("inventoryTitle", "Title missing in config")), saveType, lore);
 
                 guiManager.registerGameGUI(topListPage);
             }
