@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.buildings;
 
-import me.nikl.gamebox.games.cookieclicker.Main;
+import me.nikl.gamebox.games.cookieclicker.CCGame;
 import me.nikl.gamebox.GameBoxSettings;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
@@ -12,7 +12,7 @@ import org.bukkit.material.MaterialData;
  */
 public class Mine extends Building {
 
-    public Mine(Main plugin, int slot, Buildings building) {
+    public Mine(CCGame plugin, int slot, Buildings building) {
         super(plugin, slot, building);
 
         icon = new MaterialData(Material.DIAMOND_PICKAXE).toItemStack();

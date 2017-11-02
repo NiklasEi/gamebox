@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.antimattercondenser;
 
-import me.nikl.gamebox.games.cookieclicker.Game;
+import me.nikl.gamebox.games.cookieclicker.CookieClicker;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -11,7 +11,7 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
  */
 public class LargeMacaronCollider extends Upgrade{
 
-    public LargeMacaronCollider(Game game) {
+    public LargeMacaronCollider(CookieClicker game) {
         super(game, 101);
         this.cost = 85000000000000000.;
         productionsRequirements.put(Buildings.ANTIMATTER_CONDENSER, 25);

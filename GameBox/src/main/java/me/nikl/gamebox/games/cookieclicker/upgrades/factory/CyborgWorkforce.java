@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.factory;
 
-import me.nikl.gamebox.games.cookieclicker.Game;
+import me.nikl.gamebox.games.cookieclicker.CookieClicker;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -14,7 +14,7 @@ import org.bukkit.material.MaterialData;
  */
 public class CyborgWorkforce extends Upgrade{
 
-    public CyborgWorkforce(Game game) {
+    public CyborgWorkforce(CookieClicker game) {
         super(game, 297);
         this.cost = 65000000000000000.;
         productionsRequirements.put(Buildings.FACTORY, 200);

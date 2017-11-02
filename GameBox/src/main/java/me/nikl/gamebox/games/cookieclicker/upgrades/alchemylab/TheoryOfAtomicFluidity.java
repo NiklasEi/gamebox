@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.alchemylab;
 
-import me.nikl.gamebox.games.cookieclicker.Game;
+import me.nikl.gamebox.games.cookieclicker.CookieClicker;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -11,7 +11,7 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
  */
 public class TheoryOfAtomicFluidity extends Upgrade{
 
-    public TheoryOfAtomicFluidity(Game game) {
+    public TheoryOfAtomicFluidity(CookieClicker game) {
         super(game, 302);
         this.cost = 37500000000000000000000.;
         productionsRequirements.put(Buildings.ALCHEMY_LAB, 200);

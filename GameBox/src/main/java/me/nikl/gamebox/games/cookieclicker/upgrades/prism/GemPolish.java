@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.prism;
 
-import me.nikl.gamebox.games.cookieclicker.Game;
+import me.nikl.gamebox.games.cookieclicker.CookieClicker;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -11,7 +11,7 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
  */
 public class GemPolish extends Upgrade{
 
-    public GemPolish(Game game) {
+    public GemPolish(CookieClicker game) {
         super(game, 175);
         this.cost = 21000000000000000.;
         productionsRequirements.put(Buildings.PRISM, 1);

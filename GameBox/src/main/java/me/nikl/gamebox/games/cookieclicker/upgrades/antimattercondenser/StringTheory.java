@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.antimattercondenser;
 
-import me.nikl.gamebox.games.cookieclicker.Game;
+import me.nikl.gamebox.games.cookieclicker.CookieClicker;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -11,7 +11,7 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
  */
 public class StringTheory extends Upgrade{
 
-    public StringTheory(Game game) {
+    public StringTheory(CookieClicker game) {
         super(game, 100);
         this.cost = 8500000000000000.;
         productionsRequirements.put(Buildings.ANTIMATTER_CONDENSER, 5);

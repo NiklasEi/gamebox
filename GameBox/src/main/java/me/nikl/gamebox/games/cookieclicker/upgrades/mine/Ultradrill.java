@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.mine;
 
-import me.nikl.gamebox.games.cookieclicker.Game;
+import me.nikl.gamebox.games.cookieclicker.CookieClicker;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -13,7 +13,7 @@ import org.bukkit.material.MaterialData;
  */
 public class Ultradrill extends Upgrade{
 
-    public Ultradrill(Game game) {
+    public Ultradrill(CookieClicker game) {
         super(game, 18);
         this.cost = 6000000;
         productionsRequirements.put(Buildings.MINE, 25);

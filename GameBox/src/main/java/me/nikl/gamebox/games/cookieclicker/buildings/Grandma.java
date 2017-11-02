@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.buildings;
 
-import me.nikl.gamebox.games.cookieclicker.Main;
+import me.nikl.gamebox.games.cookieclicker.CCGame;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -10,7 +10,7 @@ import org.bukkit.inventory.meta.SkullMeta;
  */
 public class Grandma extends Building {
 
-    public Grandma(Main plugin, int slot, Buildings building) {
+    public Grandma(CCGame plugin, int slot, Buildings building) {
         super(plugin, slot, building);
 
         icon = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);

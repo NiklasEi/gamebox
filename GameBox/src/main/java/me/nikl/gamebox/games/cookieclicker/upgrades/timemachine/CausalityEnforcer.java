@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.timemachine;
 
-import me.nikl.gamebox.games.cookieclicker.Game;
+import me.nikl.gamebox.games.cookieclicker.CookieClicker;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -13,7 +13,7 @@ import org.bukkit.material.MaterialData;
  */
 public class CausalityEnforcer extends Upgrade{
 
-    public CausalityEnforcer(Game game) {
+    public CausalityEnforcer(CookieClicker game) {
         super(game, 51);
         this.cost = 700000000000000000.;
         productionsRequirements.put(Buildings.TIME_MACHINE, 50);

@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.shipment;
 
-import me.nikl.gamebox.games.cookieclicker.Game;
+import me.nikl.gamebox.games.cookieclicker.CookieClicker;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -13,7 +13,7 @@ import org.bukkit.material.MaterialData;
  */
 public class Wormholes extends Upgrade{
 
-    public Wormholes(Game game) {
+    public Wormholes(CookieClicker game) {
         super(game, 20);
         this.cost = 255000000000.;
         productionsRequirements.put(Buildings.SHIPMENT, 5);

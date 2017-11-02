@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.temple;
 
-import me.nikl.gamebox.games.cookieclicker.Game;
+import me.nikl.gamebox.games.cookieclicker.CookieClicker;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -13,7 +13,7 @@ import org.bukkit.material.MaterialData;
  */
 public class SunFestival extends Upgrade{
 
-    public SunFestival(Game game) {
+    public SunFestival(CookieClicker game) {
         super(game, 241);
         this.cost = 1000000000000.;
         productionsRequirements.put(Buildings.TEMPLE, 50);

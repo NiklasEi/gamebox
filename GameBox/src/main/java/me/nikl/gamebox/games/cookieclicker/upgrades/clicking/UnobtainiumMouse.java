@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.clicking;
 
-import me.nikl.gamebox.games.cookieclicker.Game;
+import me.nikl.gamebox.games.cookieclicker.CookieClicker;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
 import org.bukkit.Material;
@@ -12,7 +12,7 @@ import org.bukkit.material.MaterialData;
  */
 public class UnobtainiumMouse extends Upgrade{
 
-    public UnobtainiumMouse(Game game) {
+    public UnobtainiumMouse(CookieClicker game) {
         super(game, 119);
         this.cost = 5000000000000.;
         setClickCookieReq(100000000000.);

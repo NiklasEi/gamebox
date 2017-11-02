@@ -40,19 +40,19 @@ import java.util.*;
  *
  * Game
  */
-public class Game extends BukkitRunnable {
+public class CookieClicker extends BukkitRunnable {
 
     private Random rand;
 
-    private CookieClickerLanguage lang;
+    private CCLanguage lang;
 
     private NMSUtil nms;
 
-    private Main plugin;
+    private CCGame plugin;
 
     private boolean playSounds;
 
-    private GameRules rule;
+    private CCGameRules rule;
 
     private Player player;
 
@@ -99,7 +99,7 @@ public class Game extends BukkitRunnable {
     private float pitch = 10f;
 
 
-    public Game(GameRules rule, Main plugin, Player player, boolean playSounds, ConfigurationSection save){
+    public CookieClicker(CCGameRules rule, CCGame plugin, Player player, boolean playSounds, ConfigurationSection save){
         this.plugin = plugin;
         nms = plugin.getNms();
         this.lang = plugin.lang;
@@ -687,7 +687,7 @@ public class Game extends BukkitRunnable {
         return inventory;
     }
 
-    public GameRules getRule(){
+    public CCGameRules getRule(){
         return this.rule;
     }
 
@@ -695,7 +695,7 @@ public class Game extends BukkitRunnable {
         return this.player;
     }
 
-    public CookieClickerLanguage getLang(){
+    public CCLanguage getLang(){
         return this.lang;
     }
 }

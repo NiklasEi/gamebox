@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class CookieClickerLanguage extends GameLanguage {
+public class CCLanguage extends GameLanguage {
 
 	public List<String> GAME_OVEN_LORE, GAME_BUILDING_LORE;
 
@@ -29,7 +29,7 @@ public class CookieClickerLanguage extends GameLanguage {
 	public HashMap<Integer, List<String>> upgradeDescriptionLore = new HashMap<>();
 	public HashMap<UpgradeType, List<String>> upgradeLore = new HashMap<>();
 
-	public CookieClickerLanguage(GameBox plugin){
+	public CCLanguage(GameBox plugin){
 		super(plugin, Module.COOKIECLICKER);
 	}
 

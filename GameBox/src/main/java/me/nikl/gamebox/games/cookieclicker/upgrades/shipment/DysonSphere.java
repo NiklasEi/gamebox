@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.shipment;
 
-import me.nikl.gamebox.games.cookieclicker.Game;
+import me.nikl.gamebox.games.cookieclicker.CookieClicker;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -13,7 +13,7 @@ import org.bukkit.material.MaterialData;
  */
 public class DysonSphere extends Upgrade{
 
-    public DysonSphere(Game game) {
+    public DysonSphere(CookieClicker game) {
         super(game, 301);
         this.cost = 2550000000000000000000.;
         productionsRequirements.put(Buildings.SHIPMENT, 200);

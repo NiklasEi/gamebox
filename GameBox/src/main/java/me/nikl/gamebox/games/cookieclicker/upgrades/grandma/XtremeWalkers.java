@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.grandma;
 
-import me.nikl.gamebox.games.cookieclicker.Game;
+import me.nikl.gamebox.games.cookieclicker.CookieClicker;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -13,7 +13,7 @@ import org.bukkit.inventory.meta.SkullMeta;
  */
 public class XtremeWalkers extends Upgrade{
 
-    public XtremeWalkers(Game game) {
+    public XtremeWalkers(CookieClicker game) {
         super(game, 294);
         this.cost = 50000000000000.;
         productionsRequirements.put(Buildings.GRANDMA, 200);

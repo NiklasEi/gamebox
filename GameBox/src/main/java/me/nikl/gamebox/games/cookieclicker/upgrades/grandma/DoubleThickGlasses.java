@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.grandma;
 
-import me.nikl.gamebox.games.cookieclicker.Game;
+import me.nikl.gamebox.games.cookieclicker.CookieClicker;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -13,7 +13,7 @@ import org.bukkit.inventory.meta.SkullMeta;
  */
 public class DoubleThickGlasses extends Upgrade{
 
-    public DoubleThickGlasses(Game game) {
+    public DoubleThickGlasses(CookieClicker game) {
         super(game, 110);
         this.cost = 500000000;
         productionsRequirements.put(Buildings.GRANDMA, 100);

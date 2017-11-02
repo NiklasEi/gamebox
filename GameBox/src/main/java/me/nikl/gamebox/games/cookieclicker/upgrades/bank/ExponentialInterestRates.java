@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.bank;
 
-import me.nikl.gamebox.games.cookieclicker.Game;
+import me.nikl.gamebox.games.cookieclicker.CookieClicker;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -13,7 +13,7 @@ import org.bukkit.material.MaterialData;
  */
 public class ExponentialInterestRates extends Upgrade{
 
-    public ExponentialInterestRates(Game game) {
+    public ExponentialInterestRates(CookieClicker game) {
         super(game, 236);
         this.cost = 7000000000000.;
         productionsRequirements.put(Buildings.BANK, 100);

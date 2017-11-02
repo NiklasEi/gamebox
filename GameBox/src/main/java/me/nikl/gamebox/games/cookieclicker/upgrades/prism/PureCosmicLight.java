@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.prism;
 
-import me.nikl.gamebox.games.cookieclicker.Game;
+import me.nikl.gamebox.games.cookieclicker.CookieClicker;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -11,7 +11,7 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
  */
 public class PureCosmicLight extends Upgrade{
 
-    public PureCosmicLight(Game game) {
+    public PureCosmicLight(CookieClicker game) {
         super(game, 179);
         this.cost = 10500000000000000000000.;
         productionsRequirements.put(Buildings.PRISM, 100);

@@ -5,14 +5,14 @@ package me.nikl.gamebox.games.cookieclicker;
  *
  * Game rules container for Cookie Clicker
  */
-public class GameRules {
+public class CCGameRules {
 
     private double cost;
     private boolean saveStats;
     private String key;
     private int moveCookieAfterClicks;
 
-    public GameRules(String key, double cost, int moveCookieAfterClicks, boolean saveStats){
+    public CCGameRules(String key, double cost, int moveCookieAfterClicks, boolean saveStats){
         this.cost = cost;
         this.saveStats = saveStats;
         this.key = key;

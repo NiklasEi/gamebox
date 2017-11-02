@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.factory;
 
-import me.nikl.gamebox.games.cookieclicker.Game;
+import me.nikl.gamebox.games.cookieclicker.CookieClicker;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -14,7 +14,7 @@ import org.bukkit.material.MaterialData;
  */
 public class Recombobulators extends Upgrade{
 
-    public Recombobulators(Game game) {
+    public Recombobulators(CookieClicker game) {
         super(game, 112);
         this.cost = 650000000000.;
         productionsRequirements.put(Buildings.FACTORY, 100);

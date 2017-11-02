@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.bank;
 
-import me.nikl.gamebox.games.cookieclicker.Game;
+import me.nikl.gamebox.games.cookieclicker.CookieClicker;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -13,7 +13,7 @@ import org.bukkit.material.MaterialData;
  */
 public class FinancialZen extends Upgrade{
 
-    public FinancialZen(Game game) {
+    public FinancialZen(CookieClicker game) {
         super(game, 237);
         this.cost = 700000000000000.;
         productionsRequirements.put(Buildings.BANK, 150);

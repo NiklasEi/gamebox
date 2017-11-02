@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.wizardtower;
 
-import me.nikl.gamebox.games.cookieclicker.Game;
+import me.nikl.gamebox.games.cookieclicker.CookieClicker;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -13,7 +13,7 @@ import org.bukkit.material.MaterialData;
  */
 public class RabbitTrick extends Upgrade{
 
-    public RabbitTrick(Game game) {
+    public RabbitTrick(CookieClicker game) {
         super(game, 313);
         this.cost = 165000000000000000000000.;
         productionsRequirements.put(Buildings.WIZARD_TOWER, 250);

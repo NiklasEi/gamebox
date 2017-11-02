@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.grandma;
 
-import me.nikl.gamebox.games.cookieclicker.Game;
+import me.nikl.gamebox.games.cookieclicker.CookieClicker;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -13,7 +13,7 @@ import org.bukkit.inventory.meta.SkullMeta;
  */
 public class PruneJuice extends Upgrade{
 
-    public PruneJuice(Game game) {
+    public PruneJuice(CookieClicker game) {
         super(game, 44);
         this.cost = 5000000;
         productionsRequirements.put(Buildings.GRANDMA, 50);
