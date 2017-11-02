@@ -2,18 +2,13 @@ package me.nikl.gamebox.games;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
-import me.nikl.gamebox.GameBoxSettings;
-import me.nikl.gamebox.Language;
 import me.nikl.gamebox.data.SaveType;
-import me.nikl.gamebox.games.cookieclicker.GameManager;
-import me.nikl.gamebox.games.cookieclicker.GameRules;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.gui.game.GameGui;
 import me.nikl.gamebox.guis.gui.game.TopListPage;
 import me.nikl.gamebox.nms.NMSUtil;
 import me.nikl.gamebox.util.ClickAction;
-import me.nikl.gamebox.util.FileUtil;
 import me.nikl.gamebox.util.ItemStackUtil;
 import me.nikl.gamebox.util.Module;
 import org.bukkit.Bukkit;
@@ -28,7 +23,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 
 /**
