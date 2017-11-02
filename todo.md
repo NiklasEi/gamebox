@@ -32,5 +32,9 @@
   * open shop
 * option to white/blacklist (all)players in regard to invitations
 * option for "invitation radius"
+
+
+Small stuff:
+* use gamebox logger everywhere
     
 
