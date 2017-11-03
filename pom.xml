@@ -9,6 +9,12 @@
     <packaging>pom</packaging>
     <version>1.5.9</version>
 
+    <distributionManagement>
+        <repository>
+            <id>MyGet</id>
+            <url>https://www.myget.org/F/nikl/maven</url>
+        </repository>
+    </distributionManagement>
 
     <modules>
         <module>GameBox-nms</module>
