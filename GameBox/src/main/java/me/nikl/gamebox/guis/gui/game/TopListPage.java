@@ -59,6 +59,12 @@ public class TopListPage  extends GameGuiPage{
                 Bukkit.getLogger().log(Level.WARNING, " UUID could not be matched to a player while loading a top list");
                 continue;
             }
+
+            // ToDo: check whether second case is not already covered by first case
+            if(!player.hasPlayedBefore() || player.getName() == null){
+                continue;
+            }
+
             // chat color is already handled in the game while loading the lor from config
             for(int i = 0; i < skullLore.size(); i++){
                 skullLore.set(i, skullLore.get(i).replace("%player%", player.getName()).replace("%rank%", String.valueOf(rank)));

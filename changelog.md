@@ -1,6 +1,7 @@
 - fixed wrong language on sound toggle
 - shade HikariCP and slf4j for MySQL data storage
-
+- updated comments in configuration file
+- fix NPE in TopListPage because of unknown name of OfflinePlayer
 
 --------------------------------------------------
 v 1.5.9
