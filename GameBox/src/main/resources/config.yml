@@ -5,94 +5,108 @@
 # ----------------------------------------------------------------------------#
 #
 # Plugin made by Nikl
-#   if you have any problems/suggestions please contact me on Spigot
-#   or write in the plugin discussion directly
+#   if you have any problems/suggestions please pm me on Spigot
+#   or write in the plugin discussion.
 #
-# Thank you for playing! I hope you like the plugin
+# Thank you for playing, I hope you like the plugin!
 #
 # ----------------------------------------------------------------------------
 
 
 
-# define the language file you want to use (find the files in the folder 'language')
-#   to use the default messages just write 'default'
+# define the language file you want to use (find the default files in the folder 'language')
+#   to use the default messages just write 'default' (this option uses a file from inside the jar!)
+#   you cannot customise messages when using 'default', but your messages will always be up to date
 # If you want custom messages please write your own file or use one of the already written 'lang_xx.yml' files
 # If an update added new messages that are not in your defined file the plugin will print a warning and a list
 #   of missing paths and will use the corresponding default messages until you added them in your file
 #   To get an up to date language file just delete one of the included files and reload
 langFile: 'default'
 
-# in these worlds the commands will not work
+
+# in these worlds the commands (and hub item) will not work
 blockedWorlds:
   - "world_nether"
 
 
 # time an invite stays valid (in seconds)
 timeForInvitations: 40
-# time the input stays open (in seconds)
+# time the input to send invitations stays open (in seconds)
 timeForPlayerInput: 20
+
 
 economy:
   # this enables economy for the main plugin and all the games
-  #   you can turn on/off economy for each game in the corresponding game config found in 'games/gameName'
+  #   you can turn on/off economy for each game in the corresponding game config
   # THIS OPTION REQUIRES VAULT AND AN ECONOMY PLUGIN!
-  # THIS IS ONLY ABOUT MONEY-ECONOMY! TOKENS ARE SEPARATE
   enabled: false
+  # the token switch is global (for all games) and does not require any other plugins
   tokens:
     enabled: true
 
+
 guiSettings:
-  # you should keep this on
-  #   the players can decide to turn sounds off in the gui
+  # global sound switch
+  # you should keep this 'true'
+  #   every player can decide to turn sounds off in the gui
   playSounds: true
-  # here you can customize the standard sounds in the main GUI
+  # you can customize the standard sounds in the main GUI
   #   for all sounds take a look at the github repo:
   #     https://github.com/NiklasEi/GameBox/blob/master/src/me/nikl/gamebox/Sounds.java
   standardSounds:
     successfulClick: "CLICK"
     unsuccessfulClick: "VILLAGER_NO"
 
-  # you can disable navigation buttons by giving them a negative slot
-  #   valid slots are only from 0 to 8
+
+  # Here you can customize the navigation buttons in the players hot bar
+  # disable navigation buttons by giving them a negative slot
+  #   valid slots are from 0 to 8
   hotBarNavigation:
     exitSlot: 4
     mainMenuSlot: 0
     gameMenuSlot: 8
+    # button materials
     exitMaterial: "BARRIER"
     mainMenuMaterial: "DARK_OAK_DOOR_ITEM"
     gameMenuMaterial: "BIRCH_DOOR_ITEM"
 
-  # you will keep the items that are in these slots while you are in a GUI/Game
+
+  # Players will keep the items, that are in the defined slots while they are in a GUI/Game
   #   This should only be used to guaranty compatibility for plugins which only function
-  #   when players have certain items in the inventory
+  #   when players have certain items in their inventory
   # Slots from 0 - 8
   # Do not use a slot that is taken by navigation buttons
   keepItemsSlots:
   #- 2
   #- 6
 
+# Optional MySQL settings
+#   if the connection fails, the plugin will fall back to file storage
 mysql:
   enabled: false
   host: "localhost"
   port: 3306
-  database: "TestDatabase"
+  database: "Database"
   username: "user"
-  password: "pass"
+  password: "password"
 
 
-
-
+# hubmode makes GameBox usage easier.
+# It can give players an item they can click with to open the GUI, instead of having to use a command.
 hubMode:
   enabled: false
+  # hubmode will only work in these worlds
   enabledWorlds:
   - "world"
+  # Whenever a player joins one of the enabled worlds, he gets the hubitem (if it is not already in the inventory)
   giveItemOnWorldJoin: true
   # slot in the hot bar the item is set to (if giveItemOnWorldJoin)
+  #   if the slot is taken the plugin will try to find another one
   slot: 0
   item:
      # define the Material and data for the item (format: 'material:data')
      materialData: "CHEST"
-     # display name of the button
+     # display name of the item
      displayName: "&3&lGameBox"
      # lore of the item (optional)
      lore:
@@ -100,23 +114,25 @@ hubMode:
      - "&1Click with this item to open the menu"
 
 
+# general plugin settings
 settings:
   # this enables players to accept game invitations without having the play permission.
-  #   The permission is still needed to send the invitation though.
+  #   The permission is still needed to send the invitation!
   exceptInvitesWithoutPlayPermission: false
-  # If set players will keep their armor on when in a GUI or game
+  # If set to 'true' players will keep their armor on while in a GUI or game
   keepArmor: false
   # invitation settings
   invitations:
     clickMessage:
       # whether players can click to get to the invite
       enabled: true
-  # all data is anonymous and helps me figuring out what games on what versions are played most
+  # Send plugin/server data to bStats
+  # all data is anonymous and helps me figuring out what games and what versions are played most
   #   you can take a look at all the data that is send here: https://bstats.org/plugin/bukkit/GameBox
   #   please consider leaving this on 'true'
   bstats: true
-  # when a player is in GameBox and gets damaged the inventory will be closed
-  #   players should be in a save place when playing...
+  # whether or not to close the menu/game when the player is attacked
+  #   players should be in a save place when playing (imo)...
   # if false the player can stay in game as long as he doesn't die
   closeInventoryOnDamage: true
 
