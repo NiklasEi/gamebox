@@ -50,8 +50,10 @@
                         <includes>
                             <include>org.bstats:*</include>
                             <include>me.nikl.gamebox:*</include>
+                            <!-- not needed for last version 1 release
                             <include>com.zaxxer:*</include>
                             <include>org.slf4j:*</include>
+                            -->
                         </includes>
                     </artifactSet>
                     <relocations>
