@@ -214,6 +214,12 @@ public class GameBox extends JavaPlugin{
 
 		// here try connecting to database when option set in config (for later)
 		if(GameBoxSettings.useMysql){
+			getLogger().log(Level.INFO, "- - - - - - - - - - - - - - - - - - - -");
+			getLogger().log(Level.INFO, "This plugin version does not support MYSQL!");
+			getLogger().log(Level.INFO, "Falling back to file storage!");
+			getLogger().log(Level.INFO, "- - - - - - - - - - - - - - - - - - - -");
+			GameBoxSettings.useMysql = false;
+			/*
 			// on reload the old statistics have to be saved before loading the new one
 			if(statistics != null) statistics.save();
 
@@ -223,7 +229,7 @@ public class GameBox extends JavaPlugin{
 				Bukkit.getLogger().log(Level.SEVERE, " Falling back to file storage...");
 				GameBoxSettings.useMysql = false;
 				statistics = null;
-			}
+			}*/
 		}
 
 		// if connecting to the database failed useMysql will be set to false and the plugin should fall back to file storage
