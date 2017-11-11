@@ -2,6 +2,10 @@
 - shade HikariCP and slf4j for MySQL data storage
 - updated comments in configuration file
 - fix NPE in TopListPage because of unknown name of OfflinePlayer
+- get rid of unnecessary Warnings because of not configured hot bar button materials
+- short term changes for 1.x.x release:
+  - commented out the shading of MySQL libraries
+  - disabled internal MySQL usage and added logging messages to inform used about missing MySQL support 
 
 --------------------------------------------------
 v 1.5.9
