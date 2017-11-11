@@ -1,3 +1,8 @@
+
+
+
+--------------------------------------------------
+v 1.5.10
 - fixed wrong language on sound toggle
 - shade HikariCP and slf4j for MySQL data storage
 - updated comments in configuration file
@@ -7,7 +12,6 @@
   - commented out the shading of MySQL libraries
   - disabled internal MySQL usage and added logging messages to inform used about missing MySQL support 
 
---------------------------------------------------
 v 1.5.9
 - test whether server can handle long inventory titles instead of simply assuming it for all versions 1.9+
 
