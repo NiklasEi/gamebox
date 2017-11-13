@@ -165,15 +165,18 @@ public class PluginManager implements Listener {
 
         if(toMainItem == null) {
             toMainItem = new ItemStack(Material.DARK_OAK_DOOR_ITEM);
-            plugin.getLogger().log(Level.WARNING, " guiSettings.hotBarNavigation.mainMenuMaterial is not a valid material");
+            if(config.isString("guiSettings.hotBarNavigation.mainMenuMaterial"))
+                plugin.getLogger().log(Level.WARNING, " guiSettings.hotBarNavigation.mainMenuMaterial is not a valid material");
         }
         if(toGameItem == null) {
             toGameItem = new ItemStack(Material.BIRCH_DOOR_ITEM);
-            plugin.getLogger().log(Level.WARNING, " guiSettings.hotBarNavigation.gameMenuMaterial is not a valid material");
+            if(config.isString("guiSettings.hotBarNavigation.gameMenuMaterial"))
+                plugin.getLogger().log(Level.WARNING, " guiSettings.hotBarNavigation.gameMenuMaterial is not a valid material");
         }
         if(exitItem == null) {
             exitItem = new ItemStack(Material.BARRIER);
-            plugin.getLogger().log(Level.WARNING, " guiSettings.hotBarNavigation.exitMaterial is not a valid material");
+            if(config.isString("guiSettings.hotBarNavigation.exitMaterial"))
+                plugin.getLogger().log(Level.WARNING, " guiSettings.hotBarNavigation.exitMaterial is not a valid material");
         }
 
         // set count
