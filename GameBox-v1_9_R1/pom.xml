@@ -7,7 +7,7 @@
     <parent>
         <artifactId>GameBox-parent</artifactId>
         <groupId>me.nikl.gamebox</groupId>
-        <version>1.5.9</version>
+        <version>1.5.10</version>
     </parent>
 
     <artifactId>GameBox-v1_9_R1</artifactId>
@@ -34,7 +34,7 @@
         <dependency>
             <groupId>me.nikl.gamebox</groupId>
             <artifactId>GameBox-nms</artifactId>
-            <version>1.5.9</version>
+            <version>1.5.10</version>
         </dependency>
     </dependencies>
 </project>

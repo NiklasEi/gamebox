@@ -7,8 +7,14 @@
     <groupId>me.nikl.gamebox</groupId>
     <artifactId>GameBox-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.5.9</version>
+    <version>1.5.10</version>
 
+    <distributionManagement>
+        <repository>
+            <id>MyGet</id>
+            <url>https://www.myget.org/F/nikl/maven</url>
+        </repository>
+    </distributionManagement>
 
     <modules>
         <module>GameBox-nms</module>

@@ -1,8 +1,17 @@
-- fixed wrong language on sound toggle
-- shade HikariCP and slf4j for MySQL data storage
+
 
 
 --------------------------------------------------
+v 1.5.10
+- fixed wrong language on sound toggle
+- shade HikariCP and slf4j for MySQL data storage
+- updated comments in configuration file
+- fix NPE in TopListPage because of unknown name of OfflinePlayer
+- get rid of unnecessary Warnings because of not configured hot bar button materials
+- short term changes for 1.x.x release:
+  - commented out the shading of MySQL libraries
+  - disabled internal MySQL usage and added logging messages to inform used about missing MySQL support 
+
 v 1.5.9
 - test whether server can handle long inventory titles instead of simply assuming it for all versions 1.9+
 
@@ -20,7 +29,7 @@ v 1.5.6
 - upgrade bstats to 1.2
 - mavenized
 - fix cut of number formating at 9.223 quintillion (due to max value of long)
---- use CookieClicker 1.0.0 + to use the corrected method only
+  - use CookieClicker 1.0.0 + to use the corrected method only
 
 v 1.5.5
 - added title length checks in AGui and in 1.8 nms utils
@@ -41,12 +50,12 @@ v 1.5.3
 
 v1.5.2
 - Add plugin metrics by bStats
---- possible opt out in the config
+  - possible opt out in the config
 - fix picking up of items when in shop
 - fix wrong player drops on death when in shop!
 - add option to not close the inventory on damage
 - add events called when player opens the GameBox and another event for players who just left the GameBox
---- the config provides the possibility to run commands on these events
+  - the config provides the possibility to run commands on these events
 
 v 1.5.1
 - add nms for 1.12
@@ -65,30 +74,30 @@ v 1.5.0
 
 v 1.4.0:
 - add option in config to keep items in certain slots in the hot bar
---- solves compatibility issues with plugins that require specific items in the players inventory
+  - solves compatibility issues with plugins that require specific items in the players inventory
 - add more options for the shop
---- distinguish between an item that is sold and the item that is displayed
---- sold item can now have custom display name/lore/glow
---- add requirements (player has to have permissions and not have other permissions)
---- dispatch commands when player buys
---- better default tokenShop.yml with examples showcasing all the possibilities
---- option for commands that manipulate the inventory (give commands and similar)
------- use with caution... this closes the inventory before executing the command and then reopens it
------- you have to handle a possibly full inventory yourself
------- better is to sell the item without using a command (build it with custom display name and lore)
+  - distinguish between an item that is sold and the item that is displayed
+  - sold item can now have custom display name/lore/glow
+  - add requirements (player has to have permissions and not have other permissions)
+  - dispatch commands when player buys
+  - better default tokenShop.yml with examples showcasing all the possibilities
+  - option for commands that manipulate the inventory (give commands and similar)
+    - use with caution... this closes the inventory before executing the command and then reopens it
+    - you have to handle a possibly full inventory yourself
+    - better is to sell the item without using a command (build it with custom display name and lore)
 - improved gui system
---- you should update games asap since they are using deprecated methods now
+  - you should update games asap since they are using deprecated methods now
 - added hook to PlaceholderAPI
 
 v 1.3.1:
 - added clickable invitation message
---- the message is configurable in the language files (14! new strings...)
---- click message can be opt out in the configuration file
+  - the message is configurable in the language files (14! new strings...)
+  - click message can be opt out in the configuration file
 - doubled the time in default config until an invite runs out
 - added comments in the default config for invite timings
 - corrected german lang file
 - prevent players from picking up items into GUIs or games
---- The items are added to the saved inventory if there is enough space for them.
+  - The items are added to the saved inventory if there is enough space for them.
 
 
 v 1.3.0:
@@ -97,8 +106,8 @@ v 1.3.0:
 - strip color on invite input to be compatible with chat color plugins (e.g. https://dev.bukkit.org/projects/chatcolor-s)
 - Fixed 'gamebox.gamegui.(*/gameID)' perm with shortcut commands
 - Added API
---- give/set/take token with API
---- get Number of tokens with API
+  - give/set/take token with API
+  - get Number of tokens with API
 - fixed wrong calculation in '/gb takeToken' for offline players
 - internal improvements and restructuring of settings (deprecated methods will be removed later and all games have to be updated)
 - fixed a bug where GameBox thought that a player was in the main gui after using the 'back to game' button while playing a game
@@ -116,11 +125,11 @@ v 1.2.0:
 - permission gamebox.info is now a default permission
 - list all installed games and give tha shortcut commands for them on /gb info
 - added /gbadmin oder /gba
---- permission gamebox.admin needed!
+  - permission gamebox.admin needed!
 - saving name for UUIDs in data for easier manual management
 - admin commands
---- /gba givetoken/taketoken/settoken player count
---- works with offline and online players as long as the player has played on the server before!
+  - /gba givetoken/taketoken/settoken player count
+  - works with offline and online players as long as the player has played on the server before!
 
 v 1.1.2:
 - add spanish lang file
