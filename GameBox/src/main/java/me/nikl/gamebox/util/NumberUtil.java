@@ -1,8 +1,5 @@
 package me.nikl.gamebox.util;
 
-
-import java.math.BigInteger;
-
 /**
  * Created by Niklas on 07.07.2017.
  *
@@ -64,11 +61,6 @@ public class NumberUtil {
 
             return numberStr;
         }
-    }
-
-    @Deprecated
-    public static String convertHugeNumber(BigInteger number){
-        return convertHugeNumber(number.doubleValue());
     }
 
     private static final String NAMES[] = new String[]{

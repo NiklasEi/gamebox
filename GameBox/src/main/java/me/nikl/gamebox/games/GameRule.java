@@ -8,7 +8,9 @@ import java.util.HashSet;
  * Created by nikl on 02.11.17.
  */
 public class GameRule {
+
     protected HashSet<SaveType> saveTypes;
+
     protected boolean saveStats;
 
     public GameRule(boolean saveStats, HashSet<SaveType> saveTypes){

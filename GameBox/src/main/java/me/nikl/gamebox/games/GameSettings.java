@@ -5,7 +5,9 @@ package me.nikl.gamebox.games;
  */
 public class GameSettings {
     private boolean handleClicksOnHotbar;
+
     private GameType gameType;
+
     private int gameGuiSize;
 
     public GameSettings(){
