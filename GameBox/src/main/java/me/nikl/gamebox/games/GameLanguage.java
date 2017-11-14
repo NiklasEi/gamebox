@@ -4,14 +4,21 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.Language;
 import me.nikl.gamebox.util.Module;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by nikl on 31.10.17.
+ * Hold some default messages that are needed by any game
+ *
+ * The messages are overwritten in the specific Language files
  */
 public abstract class GameLanguage extends Language {
 
-    public List<String> GAME_HELP;
+    public List<String> GAME_HELP = new ArrayList<>(Arrays.asList("Have fun playing"));
+
+    public String GAME_PAYED = " You payed %cost%"
+            , GAME_NOT_ENOUGH_MONEY = " Not enough money (%cost%)";
 
     public GameLanguage(GameBox plugin, Module module) {
         super(plugin, module);
