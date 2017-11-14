@@ -1,6 +1,10 @@
 package me.nikl.gamebox.games.cookieclicker;
 
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.GameBoxSettings;
+import me.nikl.gamebox.data.Statistics;
+import me.nikl.gamebox.games.Game;
+import me.nikl.gamebox.games.GameRule;
 import me.nikl.gamebox.util.Permission;
 import me.nikl.gamebox.data.SaveType;
 import me.nikl.gamebox.games.GameManager;
@@ -22,24 +26,24 @@ import java.util.logging.Level;
  * GameManager
  */
 
-public class CCGameManager extends GameManager {
-    private CCGame main;
+public class CCGameManager implements GameManager {
+    private CCGame game;
 
     private Map<UUID, CookieClicker> games = new HashMap<>();
+
+    private Map<String, CCGameRules> gameRules = new HashMap<>();
+    private Statistics statistics;
     private CCLanguage lang;
 
     private File savesFile;
     private FileConfiguration saves;
 
+    public CCGameManager(CCGame game){
+        this.game = game;
+        this.statistics = game.getGameBox().getStatistics();
+        this.lang = (CCLanguage) game.getGameLang();
 
-
-    public CCGameManager(CCGame main){
-        this.gameRules = new HashMap<>();
-        this.main = main;
-        this.statistics = main.getGameBox().getStatistics();
-        this.lang = main.lang;
-
-        savesFile = new File(main.getDataFolder().toString() + File.separatorChar + "saves.yml");
+        savesFile = new File(game.getDataFolder().toString() + File.separatorChar + "saves.yml");
         if(!savesFile.exists()){
             try {
                 savesFile.createNewFile();
@@ -47,7 +51,6 @@ public class CCGameManager extends GameManager {
                 e.printStackTrace();
             }
         }
-
 
         try {
             this.saves = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(savesFile), "UTF-8"));
@@ -87,21 +90,21 @@ public class CCGameManager extends GameManager {
             return GameBox.GAME_NOT_STARTED_ERROR;
         }
 
-        CCGameRules rule = (CCGameRules) gameRules.get(strings[0]);
+        CCGameRules rule = gameRules.get(strings[0]);
 
         if (rule == null) {
             Bukkit.getLogger().log(Level.WARNING, " unknown gametype: " + Arrays.asList(strings));
             return GameBox.GAME_NOT_STARTED_ERROR;
         }
 
-        if (!pay(players, rule.getCost())) {
+        if (!game.pay(players[0], rule.getCost())) {
             return GameBox.GAME_NOT_ENOUGH_MONEY;
         }
 
         if(saves.isConfigurationSection(rule.getKey() + "." + players[0].getUniqueId())) {
-            games.put(players[0].getUniqueId(), new CookieClicker(rule, main, players[0], playSounds, saves.getConfigurationSection(rule.getKey() + "." + players[0].getUniqueId())));
+            games.put(players[0].getUniqueId(), new CookieClicker(rule, game, players[0], playSounds, saves.getConfigurationSection(rule.getKey() + "." + players[0].getUniqueId())));
         } else {
-            games.put(players[0].getUniqueId(), new CookieClicker(rule, main, players[0], playSounds, null));
+            games.put(players[0].getUniqueId(), new CookieClicker(rule, game, players[0], playSounds, null));
         }
 
         return GameBox.GAME_STARTED;
@@ -130,19 +133,9 @@ public class CCGameManager extends GameManager {
         gameRules.put(buttonID, new CCGameRules(buttonID, cost, moveCookieAfterClicks, saveStats));
     }
 
-    private boolean pay(Player[] player, double cost) {
-        if (main.isEconEnabled() && !player[0].hasPermission(Permission.BYPASS_ALL.getPermission()) && !player[0].hasPermission(Permission.BYPASS_GAME.getPermission(CCGame.gameID)) && cost > 0.0) {
-            if (CCGame.econ.getBalance(player[0]) >= cost) {
-                CCGame.econ.withdrawPlayer(player[0], cost);
-                player[0].sendMessage(GameBox.chatColor(lang.PREFIX + main.lang.GAME_PAYED.replaceAll("%cost%", String.valueOf(cost))));
-                return true;
-            } else {
-                player[0].sendMessage(GameBox.chatColor(lang.PREFIX + main.lang.GAME_NOT_ENOUGH_MONEY));
-                return false;
-            }
-        } else {
-            return true;
-        }
+    @Override
+    public Map<String, ? extends GameRule> getGameRules() {
+        return gameRules;
     }
 
     public void saveGame(CCGameRules rule, UUID uuid, Map<String, Double> cookies, Map<String, Integer> productions, List<Integer> upgrades) {
@@ -156,7 +149,7 @@ public class CCGameManager extends GameManager {
         }
 
         saves.set(rule.getKey() + "." + uuid.toString() + "." + "upgrades", upgrades);
-        statistics.addStatistics(uuid, CCGame.gameID, rule.getKey(), Math.floor(cookies.get("total")), SaveType.HIGH_NUMBER_SCORE);
+        statistics.addStatistics(uuid, game.getGameID(), rule.getKey(), Math.floor(cookies.get("total")), SaveType.HIGH_NUMBER_SCORE);
     }
 
     public void onShutDown(){
