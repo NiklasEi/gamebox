@@ -6,21 +6,15 @@ import me.nikl.gamebox.data.PlaceholderAPIHook;
 import me.nikl.gamebox.data.Statistics;
 import me.nikl.gamebox.data.StatisticsFile;
 import me.nikl.gamebox.data.StatisticsMysql;
-import me.nikl.gamebox.game.GameContainer;
+import me.nikl.gamebox.games.GameLanguage;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.listeners.EnterGameBoxListener;
 import me.nikl.gamebox.listeners.LeftGameBoxListener;
-import me.nikl.gamebox.nms.NMSUtil;
-import me.nikl.gamebox.nms.NMSUtil_1_10_R1;
-import me.nikl.gamebox.nms.NMSUtil_1_11_R1;
-import me.nikl.gamebox.nms.NMSUtil_1_12_R1;
-import me.nikl.gamebox.nms.NMSUtil_1_8_R1;
-import me.nikl.gamebox.nms.NMSUtil_1_8_R2;
-import me.nikl.gamebox.nms.NMSUtil_1_8_R3;
-import me.nikl.gamebox.nms.NMSUtil_1_9_R1;
-import me.nikl.gamebox.nms.NMSUtil_1_9_R2;
+import me.nikl.gamebox.nms.*;
 import me.nikl.gamebox.players.HandleInvitations;
 import me.nikl.gamebox.players.HandleInviteInput;
+import me.nikl.gamebox.util.FileUtil;
+import me.nikl.gamebox.util.Module;
 import net.milkbowl.vault.economy.Economy;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -39,10 +33,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 
@@ -75,7 +66,7 @@ public class GameBox extends JavaPlugin{
 	public static Economy econ = null;
 
 	// language file
-	public Language lang;
+	public GameBoxLanguage lang;
 
 	/*
 	 * Plugin manager that manages all game managers
@@ -94,8 +85,6 @@ public class GameBox extends JavaPlugin{
 
 	@Deprecated
 	public static boolean playSounds = GameBoxSettings.playSounds;
-
-	private static HashMap<String, String> knownGames;
 
 
 
@@ -129,19 +118,35 @@ public class GameBox extends JavaPlugin{
 		if(GameBoxSettings.bStats) {
 			metrics = new Metrics(this);
 
-
+			// Bar chart of all installed games
 			metrics.addCustomChart(new Metrics.SimpleBarChart("gamebox_games", new Callable<Map<String, Integer>>(){
 				@Override
 				public HashMap<String, Integer> call() throws Exception {
 					HashMap<String, Integer> valueMap = new HashMap<>();
-					for(String gameID : getPluginManager().getGames().keySet()){
-						valueMap.put(getOriginalGameName(gameID), 1);
+					for(Module module : getPluginManager().getGames().keySet()){
+						valueMap.put(getOriginalGameName(module), 1);
 					}
 					return valueMap;
 				}
 			}));
 
-			metrics.addCustomChart(new Metrics.SimplePie("number_of_gamebox_games", () -> String.valueOf(PluginManager.gamesRegistered)));
+			// Drill down pie with number of games and further breakdown of proportions of the games
+			metrics.addCustomChart(new Metrics.DrilldownPie("games_drill_down", () -> {
+				Map<String, Map<String, Integer>> map = new HashMap<>();
+
+				Map<String, Integer> entry = new HashMap<>();
+
+				for(Module module : getPluginManager().getGames().keySet()){
+					entry.put(getOriginalGameName(module), 1);
+				}
+
+				map.put(String.valueOf(getPluginManager().getGames().size()), entry);
+				return map;
+			}));
+
+			// Pie chart with number of games
+			metrics.addCustomChart(new Metrics.SimplePie("number_of_gamebox_games"
+					, () -> String.valueOf(PluginManager.gamesRegistered)));
 		} else {
 			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " You have opt out bStats");
 		}
@@ -180,7 +185,8 @@ public class GameBox extends JavaPlugin{
 			return false;
 		}
 
-		this.lang = new Language(this);
+		FileUtil.copyDefaultLanguageFiles();
+		this.lang = new GameBoxLanguage(this);
 
 		this.api = new GameBoxAPI(this);
 
@@ -200,11 +206,12 @@ public class GameBox extends JavaPlugin{
 
 			HandlerList.unregisterAll(pManager);
 
+			/*
 			for(GameContainer gameContainer : pManager.getGames().values()){
 				if (gameContainer.getGamePlugin() != null){
 					games.add(gameContainer.getGamePlugin());
 				}
-			}
+			}*/
 
 			pManager = null;
 		}
@@ -256,7 +263,6 @@ public class GameBox extends JavaPlugin{
 		// disable all registered games
 		if(!games.isEmpty()){
 			for(Plugin game : games){
-				//Bukkit.getPluginManager().disablePlugin(game);
 				game.onDisable();
 			}
 		}
@@ -454,22 +460,36 @@ public class GameBox extends JavaPlugin{
 		return this.api;
 	}
 
+	public static ArrayList<String> chatColor(List<String> list){
+		ArrayList<String> toReturn = new ArrayList(list);
+		for(int i = 0; i < list.size(); i++){
+			toReturn.set(i, chatColor(toReturn.get(i)));
+		}
+		return toReturn;
+	}
 
 	public static String chatColor(String message){
 		return ChatColor.translateAlternateColorCodes('&', message);
 	}
 
 	/**
-	 * Get the original game name from the ID
+	 * Get the original game name from the module enum
 	 *
 	 * This is to make the statistics on bStats nicer.
 	 * Since the game names can be changed, the statistics would be messed up,
 	 * when using the customized game names.
-	 * @param gameID Id of the game
+	 * Try to get the default name from the default
+	 * language files, then fall back on hardcoded names.
+	 * @param module Id of the game
 	 * @return the original name if given, otherwise the ID itself
 	 */
-	private String getOriginalGameName(String gameID){
-		if(gameID == null) return "null";
+	private String getOriginalGameName(Module module){
+		if(module == null) return "null";
+
+		GameLanguage gameLang = getPluginManager().getGame(module).getGameLang();
+		if(gameLang != null) return gameLang.PLAIN_NAME;
+
+		String gameID = module.moduleID();
 		switch (gameID){
 			case "minesweeper": return "Minesweeper";
 			case "battleship": return "Battleship";

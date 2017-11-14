@@ -1,8 +1,8 @@
 package me.nikl.gamebox.players;
 
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.GameBoxSettings;
-import me.nikl.gamebox.Language;
 import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.commands.MainCommand;
 import me.nikl.gamebox.guis.gui.game.StartMultiplayerGamePage;
@@ -26,7 +26,7 @@ public class HandleInvitations extends BukkitRunnable{
     private PluginManager pluginManager;
     private GameBox plugin;
 
-    private Language lang;
+    private GameBoxLanguage lang;
 
     public HandleInvitations(GameBox plugin){
         pluginManager = plugin.getPluginManager();
@@ -70,7 +70,7 @@ public class HandleInvitations extends BukkitRunnable{
 
         if(first != null && second != null){
             for(String message : plugin.lang.INVITE_MESSAGE) {
-                second.sendMessage(plugin.lang.PREFIX + message.replace("%player%", first.getName()).replace("%game%", pluginManager.getGame(args[0]).getName()));
+                second.sendMessage(plugin.lang.PREFIX + message.replace("%player%", first.getName()).replace("%game%", pluginManager.getGame(args[0]).getGameLang().PLAIN_NAME));
             }
 
             boolean boldClick = false;

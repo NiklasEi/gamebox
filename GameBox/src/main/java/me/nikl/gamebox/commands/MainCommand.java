@@ -1,16 +1,15 @@
 package me.nikl.gamebox.commands;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.Language;
-import me.nikl.gamebox.Permissions;
+import me.nikl.gamebox.GameBoxLanguage;
+import me.nikl.gamebox.games.Game;
+import me.nikl.gamebox.util.Permission;
 import me.nikl.gamebox.PluginManager;
-import me.nikl.gamebox.game.GameContainer;
 import me.nikl.gamebox.guis.GUIManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -25,10 +24,9 @@ import java.util.Map;
  */
 public class MainCommand implements CommandExecutor{
 	private GameBox plugin;
-	private FileConfiguration config;
 	private PluginManager pManager;
 	private GUIManager guiManager;
-	private Language lang;
+	private GameBoxLanguage lang;
 
 	public static String inviteClickCommand = "clickableMessageWasClicked";
 
@@ -38,13 +36,12 @@ public class MainCommand implements CommandExecutor{
 		this.plugin = plugin;
 		this.pManager = plugin.getPluginManager();
 		this.guiManager = pManager.getGuiManager();
-		this.config = plugin.getConfig();
 		this.lang = plugin.lang;
 	}
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if(!sender.hasPermission(Permissions.USE.getPermission())){
+		if(!sender.hasPermission(Permission.USE.getPermission())){
 			sender.sendMessage(ChatColor.translateAlternateColorCodes('&', lang.PREFIX + lang.CMD_NO_PERM));
 			return true;
 		}
@@ -98,7 +95,7 @@ public class MainCommand implements CommandExecutor{
 
 					// this will be checked again when opening the gui but checking it here
 					//   removes the necessity to save and later restore the inventory of the player
-					if(!sender.hasPermission(Permissions.OPEN_ALL_GAME_GUI.getPermission()) && !sender.hasPermission(Permissions.OPEN_GAME_GUI.getPermission(id))){
+					if(!sender.hasPermission(Permission.OPEN_ALL_GAME_GUI.getPermission()) && !sender.hasPermission(Permission.OPEN_GAME_GUI.getPermission(id))){
 						sender.sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
 						return true;
 					}
@@ -112,7 +109,7 @@ public class MainCommand implements CommandExecutor{
 			}
 			// help command
 			if(args[0].equalsIgnoreCase("help") || args[0].equals("?")){
-				if(!sender.hasPermission(Permissions.CMD_HELP.getPermission())){
+				if(!sender.hasPermission(Permission.CMD_HELP.getPermission())){
 					sender.sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
 					return true;
 				}
@@ -123,7 +120,7 @@ public class MainCommand implements CommandExecutor{
 			}
 			// info command
 			if(args[0].equalsIgnoreCase("info")){
-				if(!sender.hasPermission(Permissions.CMD_INFO.getPermission())){
+				if(!sender.hasPermission(Permission.CMD_INFO.getPermission())){
 					sender.sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
 					return true;
 				}
@@ -136,11 +133,11 @@ public class MainCommand implements CommandExecutor{
 				}
 
 				String allSubCommands;
-				GameContainer gameContainer;
+				Game game;
 				for(String gameID : subCommands.keySet()) {
 
-					gameContainer = plugin.getPluginManager().getGame(gameID);
-					if (gameContainer == null) continue;
+					game = plugin.getPluginManager().getGame(gameID);
+					if (game == null) continue;
 
 					// get subcommands
 					if(subCommands.get(gameID) != null && !subCommands.get(gameID).isEmpty()){
@@ -156,9 +153,9 @@ public class MainCommand implements CommandExecutor{
 					// send per game info
 					for (String message : lang.CMD_INFO_PER_GAME) {
 						sender.sendMessage(lang.PREFIX + message
-								.replace("%name%", ChatColor.stripColor(gameContainer.getName()))
+								.replace("%name%", ChatColor.stripColor(game.getGameLang().PLAIN_NAME))
 								.replace("%shorts%", allSubCommands)
-								.replace("%playerNum%", String.valueOf(gameContainer.getPlayerNum())));
+								.replace("%playerNum%", String.valueOf(game.getSettings().getGameType().getPlayerNumber())));
 					}
 				}
 				// send info footer

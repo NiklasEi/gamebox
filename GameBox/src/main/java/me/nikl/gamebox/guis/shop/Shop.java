@@ -1,6 +1,6 @@
 package me.nikl.gamebox.guis.shop;
 
-import me.nikl.gamebox.ClickAction;
+import me.nikl.gamebox.util.ClickAction;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.PluginManager;

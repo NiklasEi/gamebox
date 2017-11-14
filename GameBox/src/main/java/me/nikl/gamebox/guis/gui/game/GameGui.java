@@ -1,6 +1,7 @@
 package me.nikl.gamebox.guis.gui.game;
 
-import me.nikl.gamebox.ClickAction;
+import me.nikl.gamebox.games.Game;
+import me.nikl.gamebox.util.ClickAction;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.guis.GUIManager;
@@ -58,31 +59,15 @@ public class GameGui extends AGui {
 
     /**
      * Only to be used for the main GUI of a game
-     * 
-     * The title is automatically set to the game-title
-     * set in the GameBox language file
-     * @param plugin GameBox instance
-     * @param guiManager plugin manager 
-     * @param slots slots of the GUI
-     * @param gameID ID of the game
-     * @param key GUI key
-     */
-    public GameGui(GameBox plugin, GUIManager guiManager, int slots, String gameID, String key){
-        this(plugin, guiManager, slots, gameID, key, plugin.lang.TITLE_GAME_GUI);
-    }
-
-    /**
-     * Only to be used for the main GUI of a game
      *
      * The title is automatically set to the game-title
      * set in the GameBox language file
      * @param plugin GameBox instance
-     * @param guiManager plugin manager
+     * @param game
      * @param slots slots of the GUI
-     * @param gameID ID of the game
      */
-    public GameGui(GameBox plugin, GUIManager guiManager, int slots, String gameID){
-        this(plugin, guiManager, slots, gameID, GUIManager.MAIN_GAME_GUI, plugin.lang.TITLE_GAME_GUI);
+    public GameGui(GameBox plugin, Game game, int slots){
+        this(plugin, plugin.getPluginManager().getGuiManager(), slots, game.getGameID(), GUIManager.MAIN_GAME_GUI, plugin.lang.TITLE_GAME_GUI);
     }
 
     /**

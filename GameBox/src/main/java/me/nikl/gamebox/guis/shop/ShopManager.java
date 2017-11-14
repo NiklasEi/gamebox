@@ -1,16 +1,15 @@
 package me.nikl.gamebox.guis.shop;
 
-import me.nikl.gamebox.ClickAction;
-import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.GameBoxSettings;
-import me.nikl.gamebox.Language;
-import me.nikl.gamebox.Permissions;
+import me.nikl.gamebox.*;
+import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.events.EnterGameBoxEvent;
+import me.nikl.gamebox.util.ClickAction;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.gui.AGui;
 import me.nikl.gamebox.players.GBPlayer;
 import me.nikl.gamebox.util.ItemStackUtil;
+import me.nikl.gamebox.util.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -56,7 +55,7 @@ public class ShopManager {
     private boolean closed;
 
     private GameBox plugin;
-    private Language lang;
+    private GameBoxLanguage lang;
 
     private int mainSlots = 27, titleMessageSeconds = 3;
 
@@ -134,7 +133,7 @@ public class ShopManager {
             }
         }
 
-        if(whoClicked.hasPermission(Permissions.OPEN_SHOP.getPermission())){
+        if(whoClicked.hasPermission(Permission.OPEN_SHOP.getPermission())){
             if(args[0].equals(ShopManager.MAIN) && args[1].equals("0")) {
                 GameBox.openingNewGUI = true;
                 mainShop.open(whoClicked);

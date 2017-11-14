@@ -56,10 +56,12 @@ public class TopListPage  extends GameGuiPage{
             player = Bukkit.getOfflinePlayer(stat.getUuid());
 
             if(player == null){
-                Bukkit.getLogger().log(Level.WARNING, " UUID could not be matched to a player while loading a top list");
+                GameBox.debug(" UUID could not be matched to a player while loading a top list");
                 continue;
             }
 
+            // without the following check top lists cause NPEs after server owners
+            //   delete their player data
             // ToDo: check whether second case is not already covered by first case
             if(!player.hasPlayedBefore() || player.getName() == null){
                 continue;

@@ -1,10 +1,7 @@
 package me.nikl.gamebox.guis;
 
-import me.nikl.gamebox.ClickAction;
-import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.GameBoxSettings;
-import me.nikl.gamebox.Language;
-import me.nikl.gamebox.Permissions;
+import me.nikl.gamebox.*;
+import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.events.EnterGameBoxEvent;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.gui.AGui;
@@ -16,6 +13,8 @@ import me.nikl.gamebox.guis.shop.Page;
 import me.nikl.gamebox.guis.shop.ShopManager;
 import me.nikl.gamebox.nms.NMSUtil;
 import me.nikl.gamebox.players.GBPlayer;
+import me.nikl.gamebox.util.ClickAction;
+import me.nikl.gamebox.util.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -39,7 +38,7 @@ public class GUIManager {
 	private GameBox plugin;
 	private Map<String, Map<String, GameGui>> gameGuis;
 	private NMSUtil nms;
-	private Language lang;
+	private GameBoxLanguage lang;
 	
 	private MainGui mainGui;
 
@@ -169,13 +168,13 @@ public class GUIManager {
 		}
 
 		String gameID = args[0], key = args[1];
-		if (whoClicked.hasPermission(Permissions.OPEN_ALL_GAME_GUI.getPermission())|| whoClicked.hasPermission(Permissions.OPEN_GAME_GUI.getPermission(gameID))) {
+		if (whoClicked.hasPermission(Permission.OPEN_ALL_GAME_GUI.getPermission())|| whoClicked.hasPermission(Permission.OPEN_GAME_GUI.getPermission(gameID))) {
 			AGui gui = gameGuis.get(gameID).get(key);
 			GameBox.openingNewGUI = true;
 			boolean opened = gui.open(whoClicked);
 			GameBox.openingNewGUI = false;
 			if(opened){
-				nms.updateInventoryTitle(whoClicked, gui.getTitle().replace("%game%", plugin.getPluginManager().getGame(gameID).getName()).replace("%player%", whoClicked.getName()));
+				nms.updateInventoryTitle(whoClicked, gui.getTitle().replace("%game%", plugin.getPluginManager().getGame(gameID).getGameLang().PLAIN_NAME).replace("%player%", whoClicked.getName()));
 			} else {
 				if(whoClicked.getOpenInventory() != null){
 					whoClicked.closeInventory();
@@ -205,7 +204,7 @@ public class GUIManager {
 	 * @return success in opening the gui
 	 */
 	public boolean openMainGui(Player whoClicked) {
-		if(!whoClicked.hasPermission(Permissions.USE.getPermission())) {
+		if(!whoClicked.hasPermission(Permission.USE.getPermission())) {
 			whoClicked.sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
 			return false;
 		}
@@ -287,7 +286,7 @@ public class GUIManager {
 
 	@Deprecated
 	public void registerGameGUI(String gameID, String key, GameGui gui, ItemStack button, String... subCommand){
-		Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Your version of " + plugin.getPluginManager().getGame(gameID).getName() + " is outdated!");
+		Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Your version of " + plugin.getPluginManager().getGame(gameID).getGameLang().PLAIN_NAME + " is outdated!");
 		if(key.equals(MAIN_GAME_GUI)){
 			registerMainGameGUI(gui, button, subCommand);
 		} else {
@@ -297,13 +296,13 @@ public class GUIManager {
 
 	@Deprecated
 	public void registerGameGUI(String gameID, String key, GameGui gui){
-		Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Your version of " + plugin.getPluginManager().getGame(gameID).getName() + " is outdated!");
+		Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Your version of " + plugin.getPluginManager().getGame(gameID).getGameLang().PLAIN_NAME + " is outdated!");
 		registerGameGUI(gui);
 	}
 
 	@Deprecated
 	public void registerTopList(String gameID, String key, TopListPage gui){
-		Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Your version of " + plugin.getPluginManager().getGame(gameID).getName() + " is outdated!");
+		Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Your version of " + plugin.getPluginManager().getGame(gameID).getGameLang().PLAIN_NAME + " is outdated!");
 		registerGameGUI(gui);
 	}
 
@@ -349,7 +348,7 @@ public class GUIManager {
 			if (gui instanceof GameGuiPage) {
 				currentTitle = ((GameGuiPage) gui).getTitle().replace("%player%", player.getName());
 			} else if (gui instanceof GameGui) {
-				currentTitle = plugin.lang.TITLE_GAME_GUI.replace("%game%", plugin.getPluginManager().getGame(gameID).getName()).replace("%player%", player.getName());
+				currentTitle = plugin.lang.TITLE_GAME_GUI.replace("%game%", plugin.getPluginManager().getGame(gameID).getGameLang().PLAIN_NAME).replace("%player%", player.getName());
 			} else if (gui instanceof Page){
 				currentTitle = plugin.lang.SHOP_TITLE_PAGE_SHOP.replace("%page%", String.valueOf(((Page)gui).getPage() + 1));
 			}

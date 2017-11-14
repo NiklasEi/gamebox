@@ -1,8 +1,8 @@
 package me.nikl.gamebox;
 
 import me.nikl.gamebox.events.LeftGameBoxEvent;
-import me.nikl.gamebox.game.GameContainer;
-import me.nikl.gamebox.game.IGameManager;
+import me.nikl.gamebox.games.Game;
+import me.nikl.gamebox.games.GameManager;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.timer.TitleTimer;
 import me.nikl.gamebox.nms.NMSUtil;
@@ -10,6 +10,9 @@ import me.nikl.gamebox.players.GBPlayer;
 import me.nikl.gamebox.players.HandleInvitations;
 import me.nikl.gamebox.players.HandleInviteInput;
 import me.nikl.gamebox.util.ItemStackUtil;
+import me.nikl.gamebox.util.Module;
+import me.nikl.gamebox.util.Permission;
+import me.nikl.gamebox.util.Sound;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -33,7 +36,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
@@ -66,8 +68,8 @@ public class PluginManager implements Listener {
 	// GameBox instance
 	private GameBox plugin;
 
-	// Language
-	private Language lang;
+	// GameBoxLanguage
+	private GameBoxLanguage lang;
 
 	// plugin configuration
 	private FileConfiguration config;
@@ -81,7 +83,7 @@ public class PluginManager implements Listener {
 	// save and handle invitations
     private HandleInvitations handleInvitations;
 
-	private Map<String, GameContainer> games = new HashMap<>();
+	private Map<Module, Game> games = new HashMap<>();
 
 	// save the players inventory contents
 	private Map<UUID, ItemStack[]> savedContents  = new HashMap<>();
@@ -109,7 +111,7 @@ public class PluginManager implements Listener {
 
     //sounds
     private float volume = 0.5f, pitch= 10f;
-	
+
 	public PluginManager(GameBox plugin){
 		this.plugin = plugin;
 		this.lang = plugin.lang;
@@ -336,8 +338,8 @@ public class PluginManager implements Listener {
 
 		GameBox.debug("checking gameManagers     clicked inv has " + event.getInventory().getSize() + " slots");
 
-		for(String gameID: games.keySet()){
-            IGameManager gameManager = games.get(gameID).getGameManager();
+		for(Module module: games.keySet()){
+            GameManager gameManager = games.get(module).getGameManager();
 			if(gameManager.isInGame(uuid)){
 				event.setCancelled(true);
 				if((event.getRawSlot() - event.getSlot()) < event.getView().getTopInventory().getSize()){
@@ -346,7 +348,7 @@ public class PluginManager implements Listener {
                     GameBox.debug("click in top or middle inventory");
 				    gameManager.onInventoryClick(event);
                 } else {
-				    if(games.get(gameID).handleClicksOnHotbar()){
+				    if(games.get(module).getSettings().isHandleClicksOnHotbar()){
                         gameManager.onInventoryClick(event);
                     } else {
 				        if(event.getView().getBottomInventory().getItem(event.getSlot()) == null){
@@ -355,22 +357,22 @@ public class PluginManager implements Listener {
                         }
                         if(event.getSlot() == toGame){
                             gameManager.removeFromGame(event.getWhoClicked().getUniqueId());
-                            guiManager.openGameGui((Player) event.getWhoClicked(), gameID, GUIManager.MAIN_GAME_GUI);
+                            guiManager.openGameGui((Player) event.getWhoClicked(), module.moduleID(), GUIManager.MAIN_GAME_GUI);
                             if(GameBoxSettings.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
-                                ((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sounds.CLICK.bukkitSound(), volume, pitch);
+                                ((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.CLICK.bukkitSound(), volume, pitch);
                             }
                             return;
                         } else if(event.getSlot() == toMain){
                             gameManager.removeFromGame(event.getWhoClicked().getUniqueId());
                             guiManager.openMainGui((Player) event.getWhoClicked());
                             if(GameBoxSettings.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
-                                ((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sounds.CLICK.bukkitSound(), volume, pitch);
+                                ((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.CLICK.bukkitSound(), volume, pitch);
                             }
                         } else if(event.getSlot() == exit){
                             event.getWhoClicked().closeInventory();
                             ((Player)event.getWhoClicked()).updateInventory();
                             if(GameBoxSettings.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
-                                ((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sounds.CLICK.bukkitSound(), volume, pitch);
+                                ((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.CLICK.bukkitSound(), volume, pitch);
                             }
                             return;
                         }
@@ -397,8 +399,8 @@ public class PluginManager implements Listener {
 		UUID uuid = event.getPlayer().getUniqueId();
 
 
-		for(GameContainer game: games.values()){
-		    IGameManager manager = game.getGameManager();
+		for(Game game: games.values()){
+		    GameManager manager = game.getGameManager();
 			if(manager.isInGame(uuid)){
 				if(manager.onInventoryClose(event) && !manager.isInGame(uuid)){
 					restoreInventory((Player) event.getPlayer());
@@ -539,7 +541,7 @@ public class PluginManager implements Listener {
         if(event.getItem().getItemMeta().getDisplayName().equals(hubItem.getItemMeta().getDisplayName())){
             event.setCancelled(true);
             if(hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName())) {
-                if(event.getPlayer().hasPermission(Permissions.USE.getPermission())) {
+                if(event.getPlayer().hasPermission(Permission.USE.getPermission())) {
                     guiManager.openMainGui(event.getPlayer());
                 } else {
                     event.getPlayer().sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
@@ -631,55 +633,18 @@ public class PluginManager implements Listener {
 		return ChatColor.translateAlternateColorCodes('&', message);
 	}
 
-    @Deprecated
-    public void registerGame(IGameManager gameManager, String gameID, String gameName, int playerNum){
-	    registerGame(gameManager, gameID, gameName, playerNum, false);
-    }
-
-    @Deprecated
-	public void registerGame(IGameManager gameManager, String gameID, String gameName, int playerNum, boolean handleClicksOnHotbar){
-        Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Your version of " + gameName + " is outdated!");
-        registerGame(null, gameManager, gameID, gameName, playerNum, handleClicksOnHotbar);
-	}
-
-
     /**
      * Register a new game with GameBox
      *
-     * Store the plugin name to allow reloads
-     * @param plugin the games plugin instance
-     * @param gameManager the games manager instance
-     * @param gameID game ID
-     * @param gameName the games name for messages
-     * @param playerNum single player / multi player
+     * @param game Game instance to register
      */
-    public void registerGame(Plugin plugin, IGameManager gameManager, String gameID, String gameName, int playerNum){
-        registerGame(plugin, gameManager, gameID, gameName, playerNum, false);
-    }
-
-    /**
-     * Register a new game with GameBox
-     *
-     * Store the plugin name to allow reloads
-     * @param plugin the games plugin instance
-     * @param gameManager the games manager instance
-     * @param gameID game ID
-     * @param gameName the games name for messages
-     * @param playerNum single player / multi player
-     * @param handleClicksOnHotbar if true the clicks on the hotbar are not handled in GameBox, but send to the game
-     */
-    public void registerGame(Plugin plugin, IGameManager gameManager, String gameID, String gameName, int playerNum, boolean handleClicksOnHotbar){
-        GameContainer game = new GameContainer(plugin, gameID, gameManager);
-        game.setHandleClicksOnHotbar(handleClicksOnHotbar);
-        game.setName(gameName);
-        game.setPlainName(ChatColor.stripColor(gameName));
-        game.setPlayerNum(playerNum);
-        games.put(gameID, game);
-        Permissions.addGameID(gameID);
+    public void registerGame(Game game){
+        games.put(game.getModule(), game);
+        Permission.addGameID(game.getGameID());
         gamesRegistered ++;
     }
 
-	public IGameManager getGameManager(String gameID){
+	public GameManager getGameManager(String gameID){
 		return games.get(gameID).getGameManager();
 	}
 
@@ -694,18 +659,6 @@ public class PluginManager implements Listener {
     public void setGuiManager(GUIManager guiManager) {
         this.guiManager = guiManager;
     }
-
-    public GameContainer getGame(String gameID){
-	    return games.get(gameID);
-    }
-
-    public GameContainer getGame(UUID uuid){
-        for(String gameID : games.keySet()){
-            if(games.get(gameID).getGameManager().isInGame(uuid)) return games.get(gameID);
-        }
-        return null;
-    }
-
 
     public void startTitleTimer(Player player, String title, int seconds){
         UUID uuid = player.getUniqueId();
@@ -723,9 +676,9 @@ public class PluginManager implements Listener {
     }
 
 
-    private IGameManager getGameManager(UUID uuid){
-        for(String gameID : games.keySet()){
-            if(games.get(gameID).getGameManager().isInGame(uuid)) return games.get(gameID).getGameManager();
+    private GameManager getGameManager(UUID uuid){
+        for(Module module : games.keySet()){
+            if(games.get(module).getGameManager().isInGame(uuid)) return games.get(module).getGameManager();
         }
         return null;
     }
@@ -735,8 +688,8 @@ public class PluginManager implements Listener {
     }
 
     public boolean isInGame(UUID uuid){
-        for(String gameID : games.keySet()){
-            if(games.get(gameID).getGameManager().isInGame(uuid)) return true;
+        for(Module module : games.keySet()){
+            if(games.get(module).getGameManager().isInGame(uuid)) return true;
         }
         return false;
     }
@@ -817,12 +770,8 @@ public class PluginManager implements Listener {
         if(gbPlayer == null) return false;
 
         gbPlayer.setTokens(gbPlayer.getTokens() + tokens);
-        Bukkit.getPlayer(player).sendMessage(lang.PREFIX + lang.WON_TOKEN.replace("%tokens%", String.valueOf(tokens)).replace("%game%", games.get(gameID).getPlainName()));
+        Bukkit.getPlayer(player).sendMessage(lang.PREFIX + lang.WON_TOKEN.replace("%tokens%", String.valueOf(tokens)).replace("%game%", games.get(gameID).getGameLang().PLAIN_NAME));
         return true;
-    }
-
-    public Map<String, GameContainer> getGames(){
-        return this.games;
     }
 
     public void setItemsToKeep(Player player) {
@@ -831,5 +780,31 @@ public class PluginManager implements Listener {
         for(int slot : slotsToKeep) {
             player.getInventory().setItem(slot, savedContents.get(player.getUniqueId())[slot]);
         }
+    }
+
+    public Map<Module, Game> getGames(){
+        return this.games;
+    }
+
+    public Game getGame(Module module) {
+        return this.games.get(module);
+    }
+
+    public Game getGame(String gameID){
+        Module module;
+        try {
+            module = Module.valueOf(gameID.toUpperCase().replace(" ", "_"));
+        } catch (IllegalArgumentException e){
+            return null;
+        }
+        return getGame(module);
+    }
+
+    public Game getGame(UUID uuid){
+        for(Game game : games.values()){
+            if(game.getGameManager().isInGame(uuid))
+                return game;
+        }
+        return null;
     }
 }
