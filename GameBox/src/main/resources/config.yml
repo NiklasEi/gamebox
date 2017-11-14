@@ -36,9 +36,7 @@ timeForPlayerInput: 20
 
 
 economy:
-  # this enables economy for the main plugin and all the games
-  #   you can turn on/off economy for each game in the corresponding game config
-  # THIS OPTION REQUIRES VAULT AND AN ECONOMY PLUGIN!
+  # this enables economy
   enabled: false
   # the token switch is global (for all games) and does not require any other plugins
   tokens:
