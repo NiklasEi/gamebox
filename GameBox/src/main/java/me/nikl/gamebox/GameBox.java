@@ -7,6 +7,7 @@ import me.nikl.gamebox.data.Statistics;
 import me.nikl.gamebox.data.StatisticsFile;
 import me.nikl.gamebox.data.StatisticsMysql;
 import me.nikl.gamebox.games.GameLanguage;
+import me.nikl.gamebox.games.GameSettings;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.listeners.EnterGameBoxListener;
 import me.nikl.gamebox.listeners.LeftGameBoxListener;
@@ -256,6 +257,7 @@ public class GameBox extends JavaPlugin{
 		if(GameBoxSettings.econEnabled){
 			if (!setupEconomy()){
 				Bukkit.getLogger().log(Level.SEVERE, "No economy found!");
+				GameBoxSettings.econEnabled = false;
 				return false;
 			}
 		}
