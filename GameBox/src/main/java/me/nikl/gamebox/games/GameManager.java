@@ -7,6 +7,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -14,9 +15,7 @@ import java.util.UUID;
  *
  *
  */
-public abstract class GameManager {
-	protected HashMap<String, GameRule> gameRules;
-	protected Statistics statistics;
+public interface GameManager {
 
 	/**
 	 * Handle a click in the game
@@ -24,7 +23,7 @@ public abstract class GameManager {
 	 * @param event ClickEvent
 	 * @return successful
 	 */
-	public abstract boolean onInventoryClick(InventoryClickEvent event);
+	boolean onInventoryClick(InventoryClickEvent event);
 
 
 	/**
@@ -34,7 +33,7 @@ public abstract class GameManager {
 	 * @param event CloseEvent
 	 * @return successful
 	 */
-	public abstract boolean onInventoryClose(InventoryCloseEvent event);
+	boolean onInventoryClose(InventoryCloseEvent event);
 	
 	
 	/**
@@ -42,7 +41,7 @@ public abstract class GameManager {
 	 * @param uuid player's uuid
 	 * @return ingame
 	 */
-	public abstract boolean isInGame(UUID uuid);
+	boolean isInGame(UUID uuid);
 	
 	/**
 	 * Start a game for a player or players
@@ -50,7 +49,7 @@ public abstract class GameManager {
 	 * @param args additional arguments
 	 * @return return whether the game was started or not
 	 */
-	public abstract int startGame(Player[] players, boolean playSounds, String... args);
+	int startGame(Player[] players, boolean playSounds, String... args);
 
 
 	/**
@@ -63,7 +62,7 @@ public abstract class GameManager {
 	 *
 	 * @param uuid player to remove
 	 */
-	public abstract void removeFromGame(UUID uuid);
+	void removeFromGame(UUID uuid);
 
 	/**
 	 * Load game rules from the given ConfigurationSection
@@ -71,9 +70,12 @@ public abstract class GameManager {
 	 * @param buttonSec Configuration section with the rules
 	 * @param buttonID ID of the rules
 	 */
-    public abstract void loadGameRules(ConfigurationSection buttonSec, String buttonID);
+	void loadGameRules(ConfigurationSection buttonSec, String buttonID);
 
-    public HashMap<String, GameRule> getGameRules(){
-    	return this.gameRules;
-	}
+	/**
+	 * Getter for game rules
+	 *
+	 * @return game rules
+	 */
+    Map<String, ? extends GameRule> getGameRules();
 }
