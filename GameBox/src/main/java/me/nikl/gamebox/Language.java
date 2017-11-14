@@ -58,7 +58,7 @@ public abstract class Language {
             String defaultLangName = module == Module.GAMEBOX ? "language/lang_en.yml" : "language/" + module.moduleID() + "/lang_en.yml";
             defaultLanguage = YamlConfiguration.loadConfiguration(new InputStreamReader(GameBox.class.getResourceAsStream(defaultLangName), "UTF-8"));
         } catch (UnsupportedEncodingException e2) {
-            Bukkit.getLogger().warning("Failed to load default language file for namespace: " + module.moduleID());
+            plugin.getLogger().warning("Failed to load default language file for namespace: " + module.moduleID());
             e2.printStackTrace();
         }
 
@@ -71,9 +71,10 @@ public abstract class Language {
 
         if(fileName == null || !fileName.endsWith(".yml")){
             String path = module == Module.GAMEBOX ? "'config.yml'" : "'games" + "/" + module.moduleID() + "/config.yml'";
-            Bukkit.getLogger().warning("Language file for " + module.moduleID() + " is not specified or not valid.");
-            Bukkit.getLogger().warning("Should be set in " + path + " as value of 'langFile'");
-            Bukkit.getLogger().warning("Falling back to the default file...");
+            plugin.getLogger().warning("Language file for " + module.moduleID() + " is not specified or not valid.");
+            plugin.getLogger().warning("Did you forget to give the file ending '.yml'?");
+            plugin.getLogger().warning("Should be set in " + path + " as value of 'langFile'");
+            plugin.getLogger().warning("Falling back to the default file...");
             language = defaultLanguage;
             return;
         }
@@ -88,12 +89,13 @@ public abstract class Language {
         if(!languageFile.exists()){
             String path = module == Module.GAMEBOX ? "'config.yml'"
                     : "'games" + "/" + module.moduleID() + "/config.yml'";
-            Bukkit.getLogger().warning("The in '" + path + "' as 'langFile' configured file does not exist!");
-            Bukkit.getLogger().warning("Falling back to the default file...");
+            plugin.getLogger().warning("The in '" + path + "' as 'langFile' configured file '" + fileName + "' does not exist!");
+            plugin.getLogger().warning("Falling back to the default file...");
             language = defaultLanguage;
             return;
         }
 
+        // File exists
         language = YamlConfiguration.loadConfiguration
                 (new InputStreamReader(new FileInputStream(languageFile), "UTF-8"));
 
