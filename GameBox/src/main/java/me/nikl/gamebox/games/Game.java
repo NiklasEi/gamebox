@@ -2,6 +2,7 @@ package me.nikl.gamebox.games;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
+import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.data.SaveType;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
@@ -11,18 +12,20 @@ import me.nikl.gamebox.nms.NMSUtil;
 import me.nikl.gamebox.util.ClickAction;
 import me.nikl.gamebox.util.ItemStackUtil;
 import me.nikl.gamebox.util.Module;
+import me.nikl.gamebox.util.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 
 /**
@@ -63,14 +66,18 @@ public abstract class Game {
         this.nms = gameBox.getNMS();
 
         this.gameSettings = new GameSettings();
+
+        onEnable();
     }
 
     public abstract void onDisable();
 
     public void onEnable(){
         loadConfig();
-        loadSettings();
 
+        // abstract
+        loadSettings();
+        loadLanguage();
         loadGameManager();
 
         hook();
@@ -83,6 +90,14 @@ public abstract class Game {
      * Load all game settings
      */
     public abstract void loadSettings();
+
+    /**
+     * This method will be called on enable,
+     * after the configuration file is loaded.
+     *
+     * Load the game language
+     */
+    public abstract void loadLanguage();
 
     /**
      * Get a new GameManager
@@ -218,7 +233,7 @@ public abstract class Game {
             gameBox.getLogger().log(Level.WARNING, " Missing or wrong configured main button for " + gameLang.PLAIN_NAME + "!");
         }
 
-        HashMap<String, GameRule> gameRules = gameManager.getGameRules();
+        Map<String, ? extends GameRule> gameRules = gameManager.getGameRules();
 
         // get top list buttons
         if (config.isConfigurationSection("gameBox.topListButtons")) {
@@ -226,7 +241,6 @@ public abstract class Game {
             ConfigurationSection buttonSec;
 
             ArrayList<String> lore;
-
 
             for (String buttonID : topListButtons.getKeys(false)) {
                 buttonSec = topListButtons.getConfigurationSection(buttonID);
@@ -238,13 +252,14 @@ public abstract class Game {
 
 
                 if (!gameRules.get(buttonID).isSaveStats()) {
-                    gameBox.getLogger().log(Level.WARNING, " the top list buttons 'gameBox.topListButtons." + buttonID + "' corresponding game button has statistics turned off!");
-                    gameBox.getLogger().log(Level.WARNING, " With these settings there is no toplist to display");
+                    gameBox.getLogger().log(Level.WARNING, " There is a configured top list for '" + buttonID + "', but statistics is turned off!");
+                    gameBox.getLogger().log(Level.WARNING, " With these settings there is no top list to display...");
+                    gameBox.getLogger().log(Level.WARNING, " Set 'gameBox.gameButtons." + buttonID + ".saveStats' to 'true', to enable this top list.");
                     continue;
                 }
 
                 if (!buttonSec.isString("materialData")) {
-                    gameBox.getLogger().log(Level.WARNING, " missing material data under: gameBox.topListButtons." + buttonID + "        can not load the button");
+                    gameBox.getLogger().log(Level.WARNING, " missing material data: 'gameBox.topListButtons." + buttonID + "'. Cannot load the button!");
                     continue;
                 }
 
@@ -262,7 +277,6 @@ public abstract class Game {
                 if (buttonSec.isString("displayName")) {
                     meta.setDisplayName(GameBox.chatColor(buttonSec.getString("displayName")));
                 }
-
 
                 if (buttonSec.isList("lore")) {
                     lore = GameBox.chatColor(buttonSec.getStringList("lore"));
@@ -344,6 +358,34 @@ public abstract class Game {
         if(!debug) return;
         for(String message : debugMessages){
             Bukkit.getLogger().info(gameLang.PREFIX + " " + message);
+        }
+    }
+
+    public boolean pay(Player player, double cost){
+        return pay(player, cost, true);
+    }
+
+    public boolean pay(Player player, double cost, boolean withdraw) {
+        if (GameBoxSettings.econEnabled
+                && !player.hasPermission(Permission.BYPASS_ALL.getPermission())
+                && !player.hasPermission(Permission.BYPASS_GAME.getPermission(getGameID()))
+                && cost > 0.0) {
+            if (GameBox.econ.getBalance(player) >= cost) {
+                if(withdraw) {
+                    GameBox.econ.withdrawPlayer(player, cost);
+                    player.sendMessage(GameBox.chatColor(gameLang.PREFIX
+                            + gameLang.GAME_PAYED
+                            .replaceAll("%cost%", String.valueOf(cost))));
+                }
+                return true;
+            } else {
+                player.sendMessage(GameBox.chatColor(gameLang.PREFIX
+                        + gameLang.GAME_NOT_ENOUGH_MONEY
+                        .replaceAll("%cost%", String.valueOf(cost))));
+                return false;
+            }
+        } else {
+            return true;
         }
     }
 }
