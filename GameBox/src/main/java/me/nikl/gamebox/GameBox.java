@@ -104,7 +104,7 @@ public class GameBox extends JavaPlugin{
 		}
 
 		if (!reload()) {
-			getLogger().severe(" Error while loading the plugin! Plugin was disabled!");
+			getLogger().severe(" Problem while loading the plugin! Plugin was disabled!");
 
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
@@ -149,7 +149,7 @@ public class GameBox extends JavaPlugin{
 			metrics.addCustomChart(new Metrics.SimplePie("number_of_gamebox_games"
 					, () -> String.valueOf(PluginManager.gamesRegistered)));
 		} else {
-			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " You have opt out bStats");
+			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " You have opt out bStats... That's sad!");
 		}
 
 
@@ -171,7 +171,7 @@ public class GameBox extends JavaPlugin{
 		}.runTaskLaterAsynchronously(this, 100);
 	}
 
-	/***
+	/**
 	 * Reload method called onEnable and on the reload command
 	 *
 	 * get the configuration
@@ -181,12 +181,13 @@ public class GameBox extends JavaPlugin{
 
 		if(!reloadConfiguration()){
 			getLogger().severe(" Failed to load config file!");
-
-			Bukkit.getPluginManager().disablePlugin(this);
 			return false;
 		}
 
+		// copy default language file from jar to language folders
 		FileUtil.copyDefaultLanguageFiles();
+
+		// get gamebox language file
 		this.lang = new GameBoxLanguage(this);
 
 		this.api = new GameBoxAPI(this);
@@ -194,31 +195,12 @@ public class GameBox extends JavaPlugin{
 		// load all settings from config
 		GameBoxSettings.loadSettings(this);
 
-		checkInventoryTitleLength();
-
-
-		HashSet<Plugin> games = new HashSet<>();
-
 		// if it's not null disable first then get a new manager
-		int gameNum = 0;
 		if(pManager != null){
-			gameNum = PluginManager.gamesRegistered;
 			pManager.shutDown();
-
 			HandlerList.unregisterAll(pManager);
-
-			/*
-			for(GameContainer gameContainer : pManager.getGames().values()){
-				if (gameContainer.getGamePlugin() != null){
-					games.add(gameContainer.getGamePlugin());
-				}
-			}*/
-
 			pManager = null;
 		}
-
-
-
 
 		// here try connecting to database when option set in config (for later)
 		if(GameBoxSettings.useMysql){
@@ -227,61 +209,44 @@ public class GameBox extends JavaPlugin{
 			getLogger().log(Level.INFO, "Falling back to file storage!");
 			getLogger().log(Level.INFO, "- - - - - - - - - - - - - - - - - - - -");
 			GameBoxSettings.useMysql = false;
-			/*
+
 			// on reload the old statistics have to be saved before loading the new one
 			if(statistics != null) statistics.save();
 
 			// get and load a new statistic
 			this.statistics = new StatisticsMysql(this);
 			if (!statistics.load()) {
-				Bukkit.getLogger().log(Level.SEVERE, " Falling back to file storage...");
+				getLogger().log(Level.SEVERE, " Falling back to file storage...");
 				GameBoxSettings.useMysql = false;
 				statistics = null;
-			}*/
+			}
 		}
 
-		// if connecting to the database failed useMysql will be set to false and the plugin should fall back to file storage
+		// if connecting to the database failed useMysql will be set to false
+		// and the plugin should fall back to file storage
 		if(!GameBoxSettings.useMysql) {
 
 			// on reload the old statistics have to be saved before loading the new one
 			if(statistics != null) statistics.save();
 
-			// get and load a new statistic
+			// get and load a new file statistics
 			this.statistics = new StatisticsFile(this);
 			if (!statistics.load()) {
-				Bukkit.getLogger().log(Level.SEVERE, " Something went wrong with the data file");
+				getLogger().log(Level.SEVERE, " Something went wrong with the data file");
 				return false;
 			}
 		}
 
 		if(GameBoxSettings.econEnabled){
 			if (!setupEconomy()){
-				Bukkit.getLogger().log(Level.SEVERE, "No economy found!");
+				getLogger().log(Level.SEVERE, "No economy found!");
 				GameBoxSettings.econEnabled = false;
 				return false;
 			}
 		}
 
-		// disable all registered games
-		if(!games.isEmpty()){
-			for(Plugin game : games){
-				game.onDisable();
-			}
-		}
-
 		// renew the GameBox listeners
-		if(leftGameBoxListener != null){
-			HandlerList.unregisterAll(leftGameBoxListener);
-			leftGameBoxListener = null;
-		}
-		leftGameBoxListener = new LeftGameBoxListener(this);
-
-		if(enterGameBoxListener != null){
-			HandlerList.unregisterAll(enterGameBoxListener);
-			enterGameBoxListener = null;
-		}
-		enterGameBoxListener = new EnterGameBoxListener(this);
-
+		reloadListeners();
 
 		// get a new plugin manager and set the other managers and handlers
 		pManager = new PluginManager(this);
@@ -298,34 +263,21 @@ public class GameBox extends JavaPlugin{
 		this.getCommand("gamebox").setExecutor(mainCommand);
 		this.getCommand("gameboxadmin").setExecutor(new AdminCommand(this));
 
-		if(!games.isEmpty()){
-			for(Plugin game : games){
-				//Bukkit.getPluginManager().enablePlugin(game);
-				game.onEnable();
-
-				Bukkit.getConsoleSender().sendMessage(lang.PREFIX + "    reloading " + ChatColor.DARK_AQUA + game.getName() + ChatColor.RESET + " version " + ChatColor.GREEN + game.getDescription().getVersion());
-			}
-
-			// print possible problems at the end of the reload process
-			if(gameNum != games.size()){
-				Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED + " Some registered games seem to be not compatible");
-				Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED + "    with the reload command!");
-				Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED + " Those games ("+ (gameNum-games.size()) +") will be missing after reloading!");
-				Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.GOLD + "    Please keep your games up to date");
-			}
-		}
-
 		return true;
 	}
 
-	private void checkInventoryTitleLength() {
-		try {
-			Inventory inventory = Bukkit.createInventory(null, 27, "This title is longer then 32 characters!");
-		} catch (Exception e){
-			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " Your server version can't handle more then 32 characters in inventory titles!");
-			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " GameBox will replace too long titles. You should shorten them in your language file.");
-			GameBoxSettings.checkInventoryLength = true;
+	private void reloadListeners() {
+		if(leftGameBoxListener != null){
+			HandlerList.unregisterAll(leftGameBoxListener);
+			leftGameBoxListener = null;
 		}
+		leftGameBoxListener = new LeftGameBoxListener(this);
+
+		if(enterGameBoxListener != null){
+			HandlerList.unregisterAll(enterGameBoxListener);
+			enterGameBoxListener = null;
+		}
+		enterGameBoxListener = new EnterGameBoxListener(this);
 	}
 
 
@@ -359,41 +311,39 @@ public class GameBox extends JavaPlugin{
 		if(debug) getLogger().info("Your server is running version " + version);
 		
 		switch (version) {
-			case "v1_10_R1":
-				nms = new NMSUtil_1_10_R1();
-				
-				break;
-			case "v1_9_R2":
-				nms = new NMSUtil_1_9_R2();
-				
-				break;
-			case "v1_9_R1":
-				nms = new NMSUtil_1_9_R1();
-				
-				break;
-			case "v1_8_R3":
-				nms = new NMSUtil_1_8_R3();
-				GameBoxSettings.delayedInventoryUpdate = true;
-
-				break;
-			case "v1_8_R2":
-				nms = new NMSUtil_1_8_R2();
-				GameBoxSettings.delayedInventoryUpdate = true;
-
-				break;
 			case "v1_8_R1":
 				nms = new NMSUtil_1_8_R1();
 				GameBoxSettings.delayedInventoryUpdate = true;
-
 				break;
+
+			case "v1_8_R2":
+				nms = new NMSUtil_1_8_R2();
+				GameBoxSettings.delayedInventoryUpdate = true;
+				break;
+
+			case "v1_8_R3":
+				nms = new NMSUtil_1_8_R3();
+				GameBoxSettings.delayedInventoryUpdate = true;
+				break;
+
+			case "v1_9_R1":
+				nms = new NMSUtil_1_9_R1();
+				break;
+
+			case "v1_9_R2":
+				nms = new NMSUtil_1_9_R2();
+				break;
+
+			case "v1_10_R1":
+				nms = new NMSUtil_1_10_R1();
+				break;
+
 			case "v1_11_R1":
 				nms = new NMSUtil_1_11_R1();
-				
 				break;
 
 			case "v1_12_R1":
 				nms = new NMSUtil_1_12_R1();
-
 				break;
 		}
 		return nms != null;
@@ -457,21 +407,8 @@ public class GameBox extends JavaPlugin{
 		return this.pManager.wonTokens(player, tokens, gameID);
 	}
 
-
 	public GameBoxAPI getApi(){
 		return this.api;
-	}
-
-	public static ArrayList<String> chatColor(List<String> list){
-		ArrayList<String> toReturn = new ArrayList(list);
-		for(int i = 0; i < list.size(); i++){
-			toReturn.set(i, chatColor(toReturn.get(i)));
-		}
-		return toReturn;
-	}
-
-	public static String chatColor(String message){
-		return ChatColor.translateAlternateColorCodes('&', message);
 	}
 
 	/**

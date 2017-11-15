@@ -7,6 +7,7 @@ import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.gui.AGui;
 import me.nikl.gamebox.players.GBPlayer;
 import me.nikl.gamebox.util.ItemStackUtil;
+import me.nikl.gamebox.util.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -115,14 +116,14 @@ public class Category {
 
                 meta = itemStack.getItemMeta();
                 if(pageSection.isString(itemKey + ".displayName")){
-                    meta.setDisplayName(GameBox.chatColor(pageSection.getString(itemKey + ".displayName")));
+                    meta.setDisplayName(StringUtil.color(pageSection.getString(itemKey + ".displayName")));
                 }
 
                 if(pageSection.isList(itemKey + ".lore")){
                     lore = new ArrayList<>(pageSection.getStringList(itemKey + ".lore"));
 
                     for (int i = 0; i < lore.size(); i++) {
-                        lore.set(i, GameBox.chatColor(lore.get(i)));
+                        lore.set(i, StringUtil.color(lore.get(i)));
                     }
                     meta.setLore(lore);
                 }
@@ -243,7 +244,7 @@ public class Category {
         ItemMeta meta = presentItem.getItemMeta();
 
         if(pageSection.isString(path + ".displayName")){
-            meta.setDisplayName(GameBox.chatColor(pageSection.getString(path + ".displayName")));
+            meta.setDisplayName(StringUtil.color(pageSection.getString(path + ".displayName")));
         }
 
         if(pageSection.isList(path + ".additionalLore")){
@@ -252,7 +253,7 @@ public class Category {
 
             List<String> addLore = new ArrayList<>(pageSection.getStringList(path + ".additionalLore"));
             for (int i = 0; i < addLore.size(); i++) {
-                addLore.set(i, GameBox.chatColor(addLore.get(i)));
+                addLore.set(i, StringUtil.color(addLore.get(i)));
             }
             lore.addAll(addLore);
             meta.setLore(lore);

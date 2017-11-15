@@ -3,7 +3,6 @@ package me.nikl.gamebox.games.cookieclicker;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.games.Game;
 import me.nikl.gamebox.games.GameSettings;
-import me.nikl.gamebox.guis.gui.game.TopListPage;
 import me.nikl.gamebox.util.Module;
 
 /**

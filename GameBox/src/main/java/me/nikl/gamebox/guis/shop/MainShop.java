@@ -5,6 +5,7 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.util.ItemStackUtil;
+import me.nikl.gamebox.util.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
@@ -48,13 +49,13 @@ class MainShop extends Shop {
             ItemMeta meta = button.getItemMeta();
 
             if(category.isString("displayName")){
-                meta.setDisplayName(GameBox.chatColor(category.getString("displayName")));
+                meta.setDisplayName(StringUtil.color(category.getString("displayName")));
             }
 
             if(category.isList("lore")){
                 lore = new ArrayList<>(category.getStringList("lore"));
                 for(int i = 0; i < lore.size();i++){
-                    lore.set(i, GameBox.chatColor(lore.get(i)));
+                    lore.set(i, StringUtil.color(lore.get(i)));
                 }
                 meta.setLore(lore);
             }

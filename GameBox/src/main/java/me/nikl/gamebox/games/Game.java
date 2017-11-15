@@ -9,10 +9,7 @@ import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.gui.game.GameGui;
 import me.nikl.gamebox.guis.gui.game.TopListPage;
 import me.nikl.gamebox.nms.NMSUtil;
-import me.nikl.gamebox.util.ClickAction;
-import me.nikl.gamebox.util.ItemStackUtil;
-import me.nikl.gamebox.util.Module;
-import me.nikl.gamebox.util.Permission;
+import me.nikl.gamebox.util.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -173,12 +170,12 @@ public abstract class Game {
                 ItemMeta meta = button.getItemMeta();
 
                 if (buttonSec.isString("displayName")) {
-                    displayName = GameBox.chatColor(buttonSec.getString("displayName"));
+                    displayName = StringUtil.color(buttonSec.getString("displayName"));
                     meta.setDisplayName(displayName);
                 }
 
                 if (buttonSec.isList("lore")) {
-                    lore = GameBox.chatColor(buttonSec.getStringList("lore"));
+                    lore = StringUtil.color(buttonSec.getStringList("lore"));
                     meta.setLore(lore);
                 }
 
@@ -220,10 +217,10 @@ public abstract class Game {
 
             ItemMeta meta = gameButton.getItemMeta();
 
-            meta.setDisplayName(GameBox.chatColor(mainButtonSec.getString("displayName", gameLang.PLAIN_NAME)));
+            meta.setDisplayName(StringUtil.color(mainButtonSec.getString("displayName", gameLang.PLAIN_NAME)));
 
             if (mainButtonSec.isList("lore")) {
-                meta.setLore(GameBox.chatColor(mainButtonSec.getStringList("lore")));
+                meta.setLore(StringUtil.color(mainButtonSec.getStringList("lore")));
             }
 
             gameButton.setItemMeta(meta);
@@ -275,11 +272,11 @@ public abstract class Game {
                 ItemMeta meta = button.getItemMeta();
 
                 if (buttonSec.isString("displayName")) {
-                    meta.setDisplayName(GameBox.chatColor(buttonSec.getString("displayName")));
+                    meta.setDisplayName(StringUtil.color(buttonSec.getString("displayName")));
                 }
 
                 if (buttonSec.isList("lore")) {
-                    lore = GameBox.chatColor(buttonSec.getStringList("lore"));
+                    lore = StringUtil.color(buttonSec.getStringList("lore"));
                     meta.setLore(lore);
                 }
 
@@ -303,7 +300,7 @@ public abstract class Game {
 
                 // get skull lore and pass on to the top list page
                 if (buttonSec.isList("skullLore")) {
-                    lore = GameBox.chatColor(buttonSec.getStringList("skullLore"));
+                    lore = StringUtil.color(buttonSec.getStringList("skullLore"));
                 } else {
                     lore = new ArrayList<>(Arrays.asList("", "No lore specified in the config!"));
                 }
@@ -311,7 +308,7 @@ public abstract class Game {
                 SaveType saveType = gameRules.get(buttonID).getSaveTypes().iterator().next();
 
                 TopListPage topListPage = new TopListPage(gameBox, guiManager, 54, module.moduleID(), buttonID + GUIManager.TOP_LIST_KEY_ADDON,
-                        GameBox.chatColor(buttonSec.getString("inventoryTitle", "Title missing in config")), saveType, lore);
+                        StringUtil.color(buttonSec.getString("inventoryTitle", "Title missing in config")), saveType, lore);
 
                 guiManager.registerGameGUI(topListPage);
             }
@@ -373,13 +370,13 @@ public abstract class Game {
             if (GameBox.econ.getBalance(player) >= cost) {
                 if(withdraw) {
                     GameBox.econ.withdrawPlayer(player, cost);
-                    player.sendMessage(GameBox.chatColor(gameLang.PREFIX
+                    player.sendMessage(StringUtil.color(gameLang.PREFIX
                             + gameLang.GAME_PAYED
                             .replaceAll("%cost%", String.valueOf(cost))));
                 }
                 return true;
             } else {
-                player.sendMessage(GameBox.chatColor(gameLang.PREFIX
+                player.sendMessage(StringUtil.color(gameLang.PREFIX
                         + gameLang.GAME_NOT_ENOUGH_MONEY
                         .replaceAll("%cost%", String.valueOf(cost))));
                 return false;
