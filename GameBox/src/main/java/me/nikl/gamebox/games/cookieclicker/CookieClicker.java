@@ -99,10 +99,10 @@ public class CookieClicker extends BukkitRunnable {
     private float pitch = 10f;
 
 
-    public CookieClicker(CCGameRules rule, CCGame plugin, Player player, boolean playSounds, ConfigurationSection save){
-        this.plugin = plugin;
-        nms = plugin.getNms();
-        this.lang = plugin.lang;
+    public CookieClicker(CCGameRules rule, CCGame game, Player player, boolean playSounds, ConfigurationSection save){
+        this.plugin = game;
+        nms = game.getGameBox().getNMS();
+        this.lang = (CCLanguage) game.getGameLang();
         this.rule = rule;
         this.player = player;
 
@@ -119,33 +119,33 @@ public class CookieClicker extends BukkitRunnable {
 
 
         // add all buildings and register them with their slot
-        buildings.put(Buildings.CURSOR, new Cursor(plugin, 2, Buildings.CURSOR));
+        buildings.put(Buildings.CURSOR, new Cursor(game, 2, Buildings.CURSOR));
         buildingsPositions.put(2, Buildings.CURSOR);
-        buildings.put(Buildings.GRANDMA, new Grandma(plugin, 3, Buildings.GRANDMA));
+        buildings.put(Buildings.GRANDMA, new Grandma(game, 3, Buildings.GRANDMA));
         buildingsPositions.put(3, Buildings.GRANDMA);
-        buildings.put(Buildings.FARM, new Farm(plugin, 4, Buildings.FARM));
+        buildings.put(Buildings.FARM, new Farm(game, 4, Buildings.FARM));
         buildingsPositions.put(4, Buildings.FARM);
-        buildings.put(Buildings.MINE, new Mine(plugin, 5, Buildings.MINE));
+        buildings.put(Buildings.MINE, new Mine(game, 5, Buildings.MINE));
         buildingsPositions.put(5, Buildings.MINE);
-        buildings.put(Buildings.FACTORY, new Factory(plugin, 6, Buildings.FACTORY));
+        buildings.put(Buildings.FACTORY, new Factory(game, 6, Buildings.FACTORY));
         buildingsPositions.put(6, Buildings.FACTORY);
-        buildings.put(Buildings.BANK, new Bank(plugin, 7, Buildings.BANK));
+        buildings.put(Buildings.BANK, new Bank(game, 7, Buildings.BANK));
         buildingsPositions.put(7, Buildings.BANK);
-        buildings.put(Buildings.TEMPLE, new Temple(plugin, 8, Buildings.TEMPLE));
+        buildings.put(Buildings.TEMPLE, new Temple(game, 8, Buildings.TEMPLE));
         buildingsPositions.put(8, Buildings.TEMPLE);
-        buildings.put(Buildings.WIZARD_TOWER, new WizardTower(plugin, 11, Buildings.WIZARD_TOWER));
+        buildings.put(Buildings.WIZARD_TOWER, new WizardTower(game, 11, Buildings.WIZARD_TOWER));
         buildingsPositions.put(11, Buildings.WIZARD_TOWER);
-        buildings.put(Buildings.SHIPMENT, new Shipment(plugin, 12, Buildings.SHIPMENT));
+        buildings.put(Buildings.SHIPMENT, new Shipment(game, 12, Buildings.SHIPMENT));
         buildingsPositions.put(12, Buildings.SHIPMENT);
-        buildings.put(Buildings.ALCHEMY_LAB, new AlchemyLab(plugin, 13, Buildings.ALCHEMY_LAB));
+        buildings.put(Buildings.ALCHEMY_LAB, new AlchemyLab(game, 13, Buildings.ALCHEMY_LAB));
         buildingsPositions.put(13, Buildings.ALCHEMY_LAB);
-        buildings.put(Buildings.PORTAL, new Portal(plugin, 14, Buildings.PORTAL));
+        buildings.put(Buildings.PORTAL, new Portal(game, 14, Buildings.PORTAL));
         buildingsPositions.put(14, Buildings.PORTAL);
-        buildings.put(Buildings.TIME_MACHINE, new TimeMachine(plugin, 15, Buildings.TIME_MACHINE));
+        buildings.put(Buildings.TIME_MACHINE, new TimeMachine(game, 15, Buildings.TIME_MACHINE));
         buildingsPositions.put(15, Buildings.TIME_MACHINE);
-        buildings.put(Buildings.ANTIMATTER_CONDENSER, new AntimatterCondenser(plugin, 16, Buildings.ANTIMATTER_CONDENSER));
+        buildings.put(Buildings.ANTIMATTER_CONDENSER, new AntimatterCondenser(game, 16, Buildings.ANTIMATTER_CONDENSER));
         buildingsPositions.put(16, Buildings.ANTIMATTER_CONDENSER);
-        buildings.put(Buildings.PRISM, new Prism(plugin, 17, Buildings.PRISM));
+        buildings.put(Buildings.PRISM, new Prism(game, 17, Buildings.PRISM));
         buildingsPositions.put(17, Buildings.PRISM);
 
 
@@ -316,7 +316,7 @@ public class CookieClicker extends BukkitRunnable {
         }
 
         // only play sounds if the game setting allows to
-        this.playSounds = plugin.getPlaySounds() && playSounds;
+        this.playSounds = game.getSettings().isPlaySounds() && playSounds;
 
         // create inventory
         String title = lang.GAME_TITLE.replace("%score%", String.valueOf((int) cookies));
@@ -334,7 +334,7 @@ public class CookieClicker extends BukkitRunnable {
 
         player.openInventory(inventory);
 
-        this.runTaskTimer(plugin.getGameBox(), 0, 10);
+        this.runTaskTimer(game.getGameBox(), 0, 10);
     }
 
     private void buildInv() {
@@ -572,7 +572,7 @@ public class CookieClicker extends BukkitRunnable {
             upgrades.add(upgrade.getId());
         }
 
-        plugin.getGameManager().saveGame(rule, player.getUniqueId(), cookies, productions, upgrades);
+        ((CCGameManager) plugin.getGameManager()).saveGame(rule, player.getUniqueId(), cookies, productions, upgrades);
     }
 
     private void load(ConfigurationSection save) {

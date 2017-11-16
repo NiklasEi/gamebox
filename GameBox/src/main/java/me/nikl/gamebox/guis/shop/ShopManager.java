@@ -10,6 +10,7 @@ import me.nikl.gamebox.guis.gui.AGui;
 import me.nikl.gamebox.players.GBPlayer;
 import me.nikl.gamebox.util.ItemStackUtil;
 import me.nikl.gamebox.util.Permission;
+import me.nikl.gamebox.util.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -82,16 +83,11 @@ public class ShopManager {
         mainButton = new AButton(mainItem);
         ItemMeta meta = mainItem.getItemMeta();
         if (shop.isString("shop.button.displayName")) {
-            meta.setDisplayName(plugin.chatColor(shop.getString("shop.button.displayName")));
+            meta.setDisplayName(StringUtil.color(shop.getString("shop.button.displayName")));
         }
 
-
         if (shop.isList("shop.button.lore")) {
-            lore = new ArrayList<>(shop.getStringList("shop.button.lore"));
-            for (int i = 0; i < lore.size(); i++) {
-                lore.set(i, plugin.chatColor(lore.get(i)));
-            }
-            meta.setLore(lore);
+            meta.setLore(StringUtil.color(shop.getStringList("shop.button.lore")));
         }
 
         mainButton.setItemMeta(meta);

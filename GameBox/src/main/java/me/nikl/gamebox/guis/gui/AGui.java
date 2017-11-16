@@ -77,7 +77,7 @@ public abstract class AGui {
 		this.title = title;
 
 		if(this instanceof GameGui){
-			title = title.replace("%game%", pluginManager.getGame(args[0]).getName());
+			title = title.replace("%game%", pluginManager.getGame(args[0]).getGameLang().PLAIN_NAME);
 		}
 
 		if(GameBoxSettings.checkInventoryLength && title.length() > 32){

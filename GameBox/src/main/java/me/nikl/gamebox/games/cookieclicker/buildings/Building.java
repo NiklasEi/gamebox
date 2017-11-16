@@ -28,7 +28,7 @@ public class Building {
     protected CCLanguage lang;
 
     public Building(CCGame plugin, int slot, Buildings building){
-        this.lang = plugin.lang;
+        this.lang = (CCLanguage) plugin.getGameLang();
         this.name = lang.buildingName.get(building);
 
         lore = new ArrayList<>();

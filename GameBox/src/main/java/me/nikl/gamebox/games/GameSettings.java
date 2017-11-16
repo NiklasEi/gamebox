@@ -1,10 +1,14 @@
 package me.nikl.gamebox.games;
 
+import me.nikl.gamebox.GameBoxSettings;
+
 /**
  * Created by nikl on 26.10.17.
  */
 public class GameSettings {
     private boolean handleClicksOnHotbar;
+
+    private boolean playSounds;
 
     private GameType gameType;
 
@@ -15,6 +19,7 @@ public class GameSettings {
         this.handleClicksOnHotbar = false;
         this.gameType = GameType.SINGLE_PLAYER;
         this.gameGuiSize = 54;
+        this.playSounds = GameBoxSettings.playSounds;
     }
 
     public boolean isHandleClicksOnHotbar() {
@@ -39,6 +44,14 @@ public class GameSettings {
 
     public void setGameGuiSize(int gameGuiSize) {
         this.gameGuiSize = gameGuiSize;
+    }
+
+    public boolean isPlaySounds() {
+        return playSounds;
+    }
+
+    public void setPlaySounds(boolean playSounds) {
+        this.playSounds = playSounds;
     }
 
     public enum GameType{
