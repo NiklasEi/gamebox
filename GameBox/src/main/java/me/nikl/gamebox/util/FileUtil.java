@@ -38,6 +38,7 @@ public class FileUtil {
             JarURLConnection connection = (JarURLConnection) main.openConnection();
 
             JarFile jar = new JarFile(connection.getJarFileURL().getFile());
+            Plugin gameBox = Bukkit.getPluginManager().getPlugin("GameBox");
             for (Enumeration list = jar.entries(); list.hasMoreElements(); ) {
                 JarEntry entry = (JarEntry) list.nextElement();
                 if(entry.getName().split(File.separator)[0].equals("language")) {
@@ -48,7 +49,6 @@ public class FileUtil {
                         continue;
                     }
 
-                    Plugin gameBox = Bukkit.getPluginManager().getPlugin("gamebox");
                     File file = new File(gameBox.getDataFolder().toString() + File.separatorChar + entry.getName());
                     if (!file.exists()) {
                         file.getParentFile().mkdirs();

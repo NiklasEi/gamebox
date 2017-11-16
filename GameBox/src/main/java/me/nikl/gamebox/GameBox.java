@@ -452,4 +452,12 @@ public class GameBox extends JavaPlugin{
 		}
 		return gameID;
 	}
+
+	public FileConfiguration getConfig(Module module) {
+		if(module == Module.GAMEBOX)
+			return getConfig();
+
+		// ToDo: return configuration file of module
+		return null;
+	}
 }

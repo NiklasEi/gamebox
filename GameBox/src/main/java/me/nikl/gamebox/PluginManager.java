@@ -9,10 +9,7 @@ import me.nikl.gamebox.nms.NMSUtil;
 import me.nikl.gamebox.players.GBPlayer;
 import me.nikl.gamebox.players.HandleInvitations;
 import me.nikl.gamebox.players.HandleInviteInput;
-import me.nikl.gamebox.util.ItemStackUtil;
-import me.nikl.gamebox.util.Module;
-import me.nikl.gamebox.util.Permission;
-import me.nikl.gamebox.util.Sound;
+import me.nikl.gamebox.util.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -183,9 +180,9 @@ public class PluginManager implements Listener {
         toGameItem.setAmount(1); toMainItem.setAmount(1); exitItem.setAmount(1);
 
         // set display name
-        ItemMeta meta = toMainItem.getItemMeta(); meta.setDisplayName(chatColor(lang.BUTTON_TO_MAIN_MENU)); toMainItem.setItemMeta(meta);
-        meta = toGameItem.getItemMeta(); meta.setDisplayName(chatColor(lang.BUTTON_TO_GAME_MENU)); toGameItem.setItemMeta(meta);
-        meta = exitItem.getItemMeta(); meta.setDisplayName(chatColor(lang.BUTTON_EXIT)); exitItem.setItemMeta(meta);
+        ItemMeta meta = toMainItem.getItemMeta(); meta.setDisplayName(StringUtil.color(lang.BUTTON_TO_MAIN_MENU)); toMainItem.setItemMeta(meta);
+        meta = toGameItem.getItemMeta(); meta.setDisplayName(StringUtil.color(lang.BUTTON_TO_GAME_MENU)); toGameItem.setItemMeta(meta);
+        meta = exitItem.getItemMeta(); meta.setDisplayName(StringUtil.color(lang.BUTTON_EXIT)); exitItem.setItemMeta(meta);
 
         if(toMain >= 0)hotbarButtons.put(toMain, toMainItem);
         if(exit >= 0)hotbarButtons.put(exit, exitItem);
@@ -252,14 +249,9 @@ public class PluginManager implements Listener {
             hubItem.setDurability(Short.parseShort(matStrings[1]));
         }
         ItemMeta meta = hubItem.getItemMeta();
-        meta.setDisplayName(chatColor(hubSec.getString("item.displayName")));
-        ArrayList<String> lore;
+        meta.setDisplayName(StringUtil.color(hubSec.getString("item.displayName")));
         if(hubSec.isList("item.lore")){
-            lore = new ArrayList<>(hubSec.getStringList("item.lore"));
-            for(int i = 0; i < lore.size();i++){
-                lore.set(i, chatColor(lore.get(i)));
-            }
-            meta.setLore(lore);
+            meta.setLore(StringUtil.color(hubSec.getStringList("item.lore")));
         }
         hubItem.setItemMeta(meta);
         hubWorlds = new ArrayList<>(hubSec.getStringList("enabledWorlds"));
@@ -627,10 +619,6 @@ public class PluginManager implements Listener {
 	
 	public GameBox getPlugin() {
 		return this.plugin;
-	}
-	
-	private String chatColor(String message){
-		return ChatColor.translateAlternateColorCodes('&', message);
 	}
 
     /**

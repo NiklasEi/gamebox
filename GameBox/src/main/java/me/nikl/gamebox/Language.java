@@ -29,6 +29,8 @@ public abstract class Language {
     public Language(GameBox plugin, Module module){
         this.plugin = plugin;
         this.module = module;
+
+        getLangFile(plugin.getConfig(module));
     }
 
     /**
@@ -47,15 +49,12 @@ public abstract class Language {
      * @param config
      * @throws FileNotFoundException if specified language file is not found
      * @throws UnsupportedEncodingException
-     * @throws IllegalArgumentException if file name is not set or invalid
      */
-    protected void getLangFile(FileConfiguration config)
-            throws FileNotFoundException, UnsupportedEncodingException,
-            IllegalArgumentException {
+    protected void getLangFile(FileConfiguration config) {
 
         // load default language
         try {
-            String defaultLangName = module == Module.GAMEBOX ? "language/lang_en.yml" : "language/" + module.moduleID() + "/lang_en.yml";
+            String defaultLangName = module == Module.GAMEBOX ? "language" + File.separatorChar + "lang_en.yml" : "language/" + module.moduleID() + "/lang_en.yml";
             defaultLanguage = YamlConfiguration.loadConfiguration(new InputStreamReader(GameBox.class.getResourceAsStream(defaultLangName), "UTF-8"));
         } catch (UnsupportedEncodingException e2) {
             plugin.getLogger().warning("Failed to load default language file for namespace: " + module.moduleID());
@@ -96,8 +95,16 @@ public abstract class Language {
         }
 
         // File exists
-        language = YamlConfiguration.loadConfiguration
-                (new InputStreamReader(new FileInputStream(languageFile), "UTF-8"));
+        try {
+            language = YamlConfiguration.loadConfiguration
+                    (new InputStreamReader(new FileInputStream(languageFile), "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            language = defaultLanguage;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            language = defaultLanguage;
+        }
 
         return;
     }
