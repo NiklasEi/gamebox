@@ -31,6 +31,7 @@ public abstract class Language {
         this.module = module;
 
         getLangFile(plugin.getConfig(module));
+        loadMessages();
     }
 
     /**
@@ -47,15 +48,13 @@ public abstract class Language {
      * 'default'/'default.yml': loads the english language file from inside the jar
      * 'lang_xx.yml': will try to load the given file inside the namespaces language folder
      * @param config
-     * @throws FileNotFoundException if specified language file is not found
-     * @throws UnsupportedEncodingException
      */
     protected void getLangFile(FileConfiguration config) {
 
         // load default language
         try {
-            String defaultLangName = module == Module.GAMEBOX ? "language" + File.separatorChar + "lang_en.yml" : "language/" + module.moduleID() + "/lang_en.yml";
-            defaultLanguage = YamlConfiguration.loadConfiguration(new InputStreamReader(GameBox.class.getResourceAsStream(defaultLangName), "UTF-8"));
+            String defaultLangName = module == Module.GAMEBOX ? "language/lang_en.yml" : "language/" + module.moduleID() + "/lang_en.yml";
+            defaultLanguage = YamlConfiguration.loadConfiguration(new InputStreamReader(GameBox.class.getClassLoader().getResourceAsStream(defaultLangName), "UTF-8"));
         } catch (UnsupportedEncodingException e2) {
             plugin.getLogger().warning("Failed to load default language file for namespace: " + module.moduleID());
             e2.printStackTrace();
@@ -96,12 +95,10 @@ public abstract class Language {
 
         // File exists
         try {
-            language = YamlConfiguration.loadConfiguration
-                    (new InputStreamReader(new FileInputStream(languageFile), "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            language = defaultLanguage;
-        } catch (FileNotFoundException e) {
+            language = YamlConfiguration
+                    .loadConfiguration(new InputStreamReader(new FileInputStream(languageFile)
+                            , "UTF-8"));
+        } catch (UnsupportedEncodingException | FileNotFoundException e) {
             e.printStackTrace();
             language = defaultLanguage;
         }
