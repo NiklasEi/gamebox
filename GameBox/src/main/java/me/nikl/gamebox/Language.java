@@ -106,16 +106,17 @@ public abstract class Language {
         return;
     }
 
+
     /**
-     * Find all messages that are missing in the language file.
+     * Find all string messages that are missing in the language file.
      *
-     * This method compares all message keys from the default english file
-     * with all set keys in the used language file. All missing keys are
+     * This method compares all message keys that hold a String in the default english
+     * file with all set keys in the used language file. All missing keys are
      * collected and returned.
      *
-     * @return list of all missing keys
+     * @return list of all missing keys (can be empty list)
      */
-    public List<String> findMissingMessages(){
+    public List<String> findMissingStringMessages(){
 
         List<String> toReturn = new ArrayList<>();
 
@@ -127,10 +128,31 @@ public abstract class Language {
                     // there is a message missing
                     toReturn.add(key);
                 }
-            } else if (defaultLanguage.isList(key)){
+            }
+        }
+        return toReturn;
+    }
+
+    /**
+     * Find all string messages that are missing in the language file.
+     *
+     * This method compares all message keys that hold a list in the default english
+     * file with all set keys in the used language file. All missing keys are
+     * collected and returned.
+     *
+     * @return list of all missing keys (can be empty list)
+     */
+    public List<String> findMissingListMessages(){
+
+        List<String> toReturn = new ArrayList<>();
+
+        if(defaultLanguage.equals(language)) return toReturn;
+
+        for(String key : defaultLanguage.getKeys(true)){
+            if (defaultLanguage.isList(key)){
                 if(!language.isList(key)){
                     // there is a list missing
-                    toReturn.add(key + "    (List)");
+                    toReturn.add(key);
                 }
             }
         }

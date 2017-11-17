@@ -263,7 +263,27 @@ public class GameBox extends JavaPlugin{
 		this.getCommand("gamebox").setExecutor(mainCommand);
 		this.getCommand("gameboxadmin").setExecutor(new AdminCommand(this));
 
+		checkLanguageFiles();
+
 		return true;
+	}
+
+	private void checkLanguageFiles() {
+		/*
+		ToDo: check for missing keys in all used language files and add some support for creating
+		Files that contain all customized messages and the default ones for previously unset keys
+		*/
+
+		// exp only for GB language file...
+		List<String> missingStringKeys = this.lang.findMissingStringMessages();
+		List<String> missingListKeys = this.lang.findMissingListMessages();
+
+		if(missingListKeys.isEmpty() && missingStringKeys.isEmpty()) return;
+
+		Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
+		Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Your used language file is missing some messages");
+		Bukkit.getConsoleSender().sendMessage(lang.PREFIX + "   Run " + ChatColor.BLUE + "/gba language" + ChatColor.RESET + " to get a list of the missing keys.");
+		Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
 	}
 
 	private void reloadListeners() {
