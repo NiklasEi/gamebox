@@ -632,8 +632,13 @@ public class PluginManager implements Listener {
         gamesRegistered ++;
     }
 
-	public GameManager getGameManager(String gameID){
-		return games.get(gameID).getGameManager();
+    public GameManager getGameManager(String gameID){
+        Module module = Module.fromID(gameID);
+        return module == null ? null : getGameManager(module);
+    }
+
+	public GameManager getGameManager(Module module){
+		return games.get(module).getGameManager();
 	}
 
 	public GUIManager getGuiManager(){

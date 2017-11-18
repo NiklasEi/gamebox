@@ -33,4 +33,12 @@ public enum Module {
         }
         return null;
     }
+
+    public static Module fromID(String gameID){
+        for(Module module : Module.values()){
+            if(module.moduleID.equals(gameID))
+                return module;
+        }
+        return null;
+    }
 }
