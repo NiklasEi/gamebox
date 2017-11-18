@@ -41,6 +41,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -101,7 +103,7 @@ public class PluginManager implements Listener {
 	private ArrayList<String> disabledWorlds = new ArrayList<>();
 
 	// hub stuff
-    private boolean hub, setOnWorldJoin;
+    private boolean setOnWorldJoin;
     private ItemStack hubItem;
     private ArrayList<String> hubWorlds;
     private int hubItemSlot;
@@ -121,9 +123,7 @@ public class PluginManager implements Listener {
 
         setHotBar();
 
-		hub = config.getBoolean("hubMode.enabled", false);
-		if(hub) getHub();
-
+		if(GameBoxSettings.hubMode) getHub();
 
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
@@ -226,7 +226,7 @@ public class PluginManager implements Listener {
         ConfigurationSection hubSec = config.getConfigurationSection("hubMode");
         if(!hubSec.isString("item.materialData") || !hubSec.isString("item.displayName")){
             Bukkit.getLogger().log(Level.WARNING, " missing configuration in the 'hubMode' section");
-            hub = false;
+            GameBoxSettings.hubMode = false;
             return;
         }
         String matString = hubSec.getString("item.materialData");
@@ -234,7 +234,7 @@ public class PluginManager implements Listener {
         Material mat = Material.getMaterial(matStrings[0]);
         if(mat == null){
             Bukkit.getLogger().log(Level.WARNING, " invalid material in the 'hubMode' section");
-            hub = false;
+            GameBoxSettings.hubMode = false;
             return;
         }
         hubItem = new ItemStack(mat);
@@ -243,7 +243,7 @@ public class PluginManager implements Listener {
                 Short.parseShort(matStrings[1]);
             } catch (NumberFormatException exception) {
                 exception.printStackTrace();
-                hub = false;
+                GameBoxSettings.hubMode = false;
                 return;
             }
             hubItem.setDurability(Short.parseShort(matStrings[1]));
@@ -413,7 +413,7 @@ public class PluginManager implements Listener {
             }
 
             // hub stuff
-            if(hub && hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName()) && setOnWorldJoin){
+            if(GameBoxSettings.hubMode && hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName()) && setOnWorldJoin){
                 GameBox.debug("in the hub world!");
                 giveHubItem(event.getPlayer());
             }
@@ -451,7 +451,7 @@ public class PluginManager implements Listener {
         if(!disabledWorlds.contains(event.getPlayer().getLocation().getWorld().getName())){
             gbPlayers.putIfAbsent(event.getPlayer().getUniqueId(), new GBPlayer(plugin, event.getPlayer().getUniqueId()));
         }
-        if(hub && hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName()) && setOnWorldJoin){
+        if(GameBoxSettings.hubMode && hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName()) && setOnWorldJoin){
             GameBox.debug("in the hub world!");
             giveHubItem(event.getPlayer());
         }
@@ -528,7 +528,7 @@ public class PluginManager implements Listener {
 
     @EventHandler
     public void onInteractEvent(PlayerInteractEvent event){
-        if(!hub) return;
+        if(!GameBoxSettings.hubMode) return;
         if(event.getItem() == null || event.getItem().getType() != hubItem.getType() || event.getItem().getItemMeta() == null || event.getItem().getItemMeta().getDisplayName() == null) return;
         if(event.getItem().getItemMeta().getDisplayName().equals(hubItem.getItemMeta().getDisplayName())){
             event.setCancelled(true);
@@ -794,5 +794,28 @@ public class PluginManager implements Listener {
                 return game;
         }
         return null;
+    }
+
+    /**
+     * Go through all modules and try getting game instances through their classes
+     */
+    public void loadGames() {
+        for(Module module : Module.values()){
+            loadGame(module);
+        }
+    }
+
+    private void loadGame(Module module) {
+        Class<Game> clazz = module.getGameClass();
+        if(clazz == null) return;
+
+        try {
+            Constructor<Game> ctor = clazz.getConstructor(GameBox.class);
+            games.put(module, ctor.newInstance(plugin));
+        } catch (NoSuchMethodException | IllegalAccessException
+                | InstantiationException | InvocationTargetException e) {
+            e.printStackTrace();
+            plugin.info(" The game class needs a public constructor taking a GameBox obj!");
+        }
     }
 }

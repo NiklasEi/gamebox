@@ -109,8 +109,9 @@ public abstract class Game {
                 + File.separator + "games"
                 + File.separator + getGameID()
                 + File.separator + "config.yml");
+
         if(!configFile.exists()){
-            configFile.mkdirs();
+            configFile.getParentFile().mkdirs();
             gameBox.saveResource("games"
                     + File.separator + getGameID()
                     + File.separator + "config.yml", false);

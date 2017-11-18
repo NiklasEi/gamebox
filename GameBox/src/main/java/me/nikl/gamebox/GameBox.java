@@ -7,7 +7,6 @@ import me.nikl.gamebox.data.Statistics;
 import me.nikl.gamebox.data.StatisticsFile;
 import me.nikl.gamebox.data.StatisticsMysql;
 import me.nikl.gamebox.games.GameLanguage;
-import me.nikl.gamebox.games.GameSettings;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.listeners.EnterGameBoxListener;
 import me.nikl.gamebox.listeners.LeftGameBoxListener;
@@ -23,18 +22,15 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.HandlerList;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.util.*;
+import java.io.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 
@@ -204,12 +200,6 @@ public class GameBox extends JavaPlugin{
 
 		// here try connecting to database when option set in config (for later)
 		if(GameBoxSettings.useMysql){
-			getLogger().log(Level.INFO, "- - - - - - - - - - - - - - - - - - - -");
-			getLogger().log(Level.INFO, "This plugin version does not support MYSQL!");
-			getLogger().log(Level.INFO, "Falling back to file storage!");
-			getLogger().log(Level.INFO, "- - - - - - - - - - - - - - - - - - - -");
-			GameBoxSettings.useMysql = false;
-
 			// on reload the old statistics have to be saved before loading the new one
 			if(statistics != null) statistics.save();
 
@@ -240,6 +230,7 @@ public class GameBox extends JavaPlugin{
 		if(GameBoxSettings.econEnabled){
 			if (!setupEconomy()){
 				getLogger().log(Level.SEVERE, "No economy found!");
+				getLogger().log(Level.SEVERE, "Even though it is enabled in the configuration file...");
 				GameBoxSettings.econEnabled = false;
 				return false;
 			}
@@ -251,6 +242,9 @@ public class GameBox extends JavaPlugin{
 		// get a new plugin manager and set the other managers and handlers
 		pManager = new PluginManager(this);
 		pManager.setGuiManager(new GUIManager(this));
+
+		// load games
+		pManager.loadGames();
 
 		pManager.setHandleInviteInput(new HandleInviteInput(this));
 		pManager.setHandleInvitations(new HandleInvitations(this));
@@ -479,5 +473,9 @@ public class GameBox extends JavaPlugin{
 
 		// ToDo: return configuration file of module
 		return null;
+	}
+
+	public void info(String message) {
+		getLogger().info(message);
 	}
 }
