@@ -6,6 +6,7 @@ import me.nikl.gamebox.data.PlaceholderAPIHook;
 import me.nikl.gamebox.data.Statistics;
 import me.nikl.gamebox.data.StatisticsFile;
 import me.nikl.gamebox.data.StatisticsMysql;
+import me.nikl.gamebox.games.Game;
 import me.nikl.gamebox.games.GameLanguage;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.listeners.EnterGameBoxListener;
@@ -243,19 +244,19 @@ public class GameBox extends JavaPlugin{
 		pManager = new PluginManager(this);
 		pManager.setGuiManager(new GUIManager(this));
 
-		// load games
-		pManager.loadGames();
-
 		pManager.setHandleInviteInput(new HandleInviteInput(this));
 		pManager.setHandleInvitations(new HandleInvitations(this));
-
-		// load players that are already online (otherwise done on join)
-		pManager.loadPlayers();
 
 		// set cmd executors
 		mainCommand = new MainCommand(this);
 		this.getCommand("gamebox").setExecutor(mainCommand);
 		this.getCommand("gameboxadmin").setExecutor(new AdminCommand(this));
+
+		// load games
+		pManager.loadGames();
+
+		// load players that are already online (otherwise done on join)
+		pManager.loadPlayers();
 
 		checkLanguageFiles();
 
@@ -471,8 +472,11 @@ public class GameBox extends JavaPlugin{
 		if(module == Module.GAMEBOX)
 			return getConfig();
 
-		// ToDo: return configuration file of module
-		return null;
+		Game game = getPluginManager().getGame(module);
+
+		if(game == null) return null;
+
+		return game.getConfig();
 	}
 
 	public void info(String message) {

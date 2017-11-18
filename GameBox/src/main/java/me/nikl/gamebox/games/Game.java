@@ -63,8 +63,6 @@ public abstract class Game {
         this.nms = gameBox.getNMS();
 
         this.gameSettings = new GameSettings();
-
-        onEnable();
     }
 
     public abstract void onDisable();

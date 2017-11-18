@@ -811,7 +811,9 @@ public class PluginManager implements Listener {
 
         try {
             Constructor<Game> ctor = clazz.getConstructor(GameBox.class);
-            games.put(module, ctor.newInstance(plugin));
+            Game game = ctor.newInstance(plugin);
+            games.put(module, game);
+            game.onEnable();
         } catch (NoSuchMethodException | IllegalAccessException
                 | InstantiationException | InvocationTargetException e) {
             e.printStackTrace();

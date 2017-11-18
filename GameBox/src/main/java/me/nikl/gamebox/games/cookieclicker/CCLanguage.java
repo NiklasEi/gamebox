@@ -5,6 +5,7 @@ import me.nikl.gamebox.games.GameLanguage;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
 import me.nikl.gamebox.util.Module;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
@@ -20,14 +21,14 @@ public class CCLanguage extends GameLanguage {
 			, GAME_COOKIE_NAME, GAME_OVEN_NAME, GAME_BUILDING_NAME;
 	public String GAME_PAYED, GAME_NOT_ENOUGH_MONEY;
 
-	public HashMap<Buildings, String> buildingName = new HashMap<>();
-	public HashMap<Buildings, List<String>> buildingLore = new HashMap<>();
+	public HashMap<Buildings, String> buildingName;
+	public HashMap<Buildings, List<String>> buildingLore;
 
 	public String GAME_UPGRADE_NAME;
 	public List<String> GAME_UPGRADE_LORE;
-	public HashMap<Integer, String> upgradeName = new HashMap<>();
-	public HashMap<Integer, List<String>> upgradeDescriptionLore = new HashMap<>();
-	public HashMap<UpgradeType, List<String>> upgradeLore = new HashMap<>();
+	public HashMap<Integer, String> upgradeName;
+	public HashMap<Integer, List<String>> upgradeDescriptionLore;
+	public HashMap<UpgradeType, List<String>> upgradeLore;
 
 	public CCLanguage(GameBox plugin){
 		super(plugin, Module.COOKIECLICKER);
@@ -56,6 +57,10 @@ public class CCLanguage extends GameLanguage {
 	private void loadUpgradeLanguage() {
 		this.GAME_UPGRADE_LORE = getStringList("upgrades.upgradeLore");
 		this.GAME_UPGRADE_NAME = getString("upgrades.upgradeDisplayName");
+
+		upgradeName = new HashMap<>();
+		upgradeLore = new HashMap<>();
+		upgradeDescriptionLore = new HashMap<>();
 
 		UpgradeType upgradeType;
 		List<String> lore = new ArrayList<>();
@@ -124,6 +129,10 @@ public class CCLanguage extends GameLanguage {
 	private void loadBuildingLanguage() {
 		this.GAME_BUILDING_LORE = getStringList("buildings.buildingLore");
 		this.GAME_BUILDING_NAME = getString("buildings.buildingDisplayName");
+
+		buildingName = new HashMap<>();
+		buildingLore = new HashMap<>();
+
 		Buildings building;
 		List<String> lore = new ArrayList<>();
 
