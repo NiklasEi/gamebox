@@ -145,6 +145,17 @@ public class GameBox extends JavaPlugin{
 			// Pie chart with number of games
 			metrics.addCustomChart(new Metrics.SimplePie("number_of_gamebox_games"
 					, () -> String.valueOf(PluginManager.gamesRegistered)));
+
+			// Pie chart info about token (disabled/enabled)
+			metrics.addCustomChart(new Metrics.SimplePie("token_enabled"
+					, () -> GameBoxSettings.tokensEnabled ? "Enabled" : "Disabled"));
+
+			// Pie chart with closed/open info of the token shop
+			if(GameBoxSettings.tokensEnabled)
+				metrics.addCustomChart(new Metrics.SimplePie("gamebox_shop_enabled"
+					, () -> getPluginManager().getGuiManager().getShopManager().isClosed() ?
+						"Closed" : "Open"));
+
 		} else {
 			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " You have opt out bStats... That's sad!");
 		}
