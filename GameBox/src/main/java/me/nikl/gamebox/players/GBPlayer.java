@@ -28,7 +28,7 @@ public class GBPlayer {
         // save current name of player for easier management (only in file!)
         if(!GameBoxSettings.useMysql) {
             Player player = Bukkit.getPlayer(uuid);
-            if (Bukkit.getPlayer(uuid) != null) {
+            if (player != null) {
                 statistics.set(uuid.toString(), "name", player.getName());
             }
         }

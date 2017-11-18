@@ -82,13 +82,13 @@ public class GUIManager {
 				}
 			}
 		}
-		if(GameBox.debug)Bukkit.getConsoleSender().sendMessage("Not in a GameBox GUI, checking shops now");
+		GameBox.debug("Not in a GameBox GUI, checking shops now");
 		if(shopManager.inShop(event.getWhoClicked().getUniqueId())){
 			event.setCancelled(true);
 			shopManager.onClick(event);
 			return;
 		}
-		if(GameBox.debug)Bukkit.getConsoleSender().sendMessage("Not in a Shop...");
+		GameBox.debug("Not in a Shop...");
 	}
 
 
