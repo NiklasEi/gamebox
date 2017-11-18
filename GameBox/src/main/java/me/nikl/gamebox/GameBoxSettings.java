@@ -39,6 +39,8 @@ public class GameBoxSettings {
 
     public static boolean bStats = true;
 
+    public static boolean hubMode = false;
+
     // what to do on player damage
     public static boolean closeInventoryOnDamage = true;
 
@@ -71,6 +73,8 @@ public class GameBoxSettings {
         }
 
         checkInventoryLength = checkInventoryTitleLength();
+
+        hubMode = config.getBoolean("hubMode.enabled", false);
     }
 
     private static boolean checkInventoryTitleLength() {
