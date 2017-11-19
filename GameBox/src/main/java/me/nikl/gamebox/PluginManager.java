@@ -633,7 +633,8 @@ public class PluginManager implements Listener {
     }
 
 	public GameManager getGameManager(String gameID){
-		return games.get(gameID).getGameManager();
+        Game game = getGame(gameID);
+		return game == null ? null : game.getGameManager();
 	}
 
 	public GUIManager getGuiManager(){
@@ -758,7 +759,7 @@ public class PluginManager implements Listener {
         if(gbPlayer == null) return false;
 
         gbPlayer.setTokens(gbPlayer.getTokens() + tokens);
-        Bukkit.getPlayer(player).sendMessage(lang.PREFIX + lang.WON_TOKEN.replace("%tokens%", String.valueOf(tokens)).replace("%game%", games.get(gameID).getGameLang().PLAIN_NAME));
+        Bukkit.getPlayer(player).sendMessage(lang.PREFIX + lang.WON_TOKEN.replace("%tokens%", String.valueOf(tokens)).replace("%game%", getGame(gameID).getGameLang().PLAIN_NAME));
         return true;
     }
 
