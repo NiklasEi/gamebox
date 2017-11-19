@@ -6,6 +6,7 @@ import me.nikl.gamebox.data.Statistics;
 import me.nikl.gamebox.games.GameManager;
 import me.nikl.gamebox.games.GameRule;
 import me.nikl.gamebox.nms.NMSUtil;
+import me.nikl.gamebox.util.Permission;
 import me.nikl.gamebox.util.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -53,6 +54,8 @@ public class CFGameManager implements GameManager {
         this.nms = connectFour.getGameBox().getNMS();
 
         this.statistics = connectFour.getGameBox().getStatistics();
+
+        this.gameRules = new HashMap<>();
 
         loadChips();
     }
@@ -175,16 +178,16 @@ public class CFGameManager implements GameManager {
         if(game.getState() != CFGameState.FINISHED) {
             game.cancel();
 
-            if(game.getRule()..isEconEnabled() && game.getPlayedChips() >= game.getRule().getMinNumberOfPlayedChips()){
-                if(!winner.hasPermission(Permissions.BYPASS_ALL.getPermission()) && !winner.hasPermission(Permissions.BYPASS_GAME.getPermission(Main.gameID))){
-                    Main.econ.depositPlayer(winner, game.getRule().getReward());
+            if(this.connectFour.getSettings().isEconEnabled() && game.getPlayedChips() >= game.getRule().getMinNumberOfPlayedChips()){
+                if(!winner.hasPermission(Permission.BYPASS_ALL.getPermission()) && !winner.hasPermission(Permission.BYPASS_GAME.getPermission(connectFour.getGameID()))){
+                    GameBox.econ.depositPlayer(winner, game.getRule().getReward());
                     winner.sendMessage(StringUtil.color(lang.PREFIX + lang.GAME_WON_MONEY_GAVE_UP.replaceAll("%reward%", game.getRule().getReward()+"").replaceAll("%loser%", loser.getName())));
                 } else {
                     winner.sendMessage(StringUtil.color(lang.PREFIX + lang.GAME_OTHER_GAVE_UP.replaceAll("%loser%", loser.getName())));
                 }
-            } else if(plugin.isEconEnabled()){
-                if(!winner.hasPermission(Permissions.BYPASS_ALL.getPermission()) && !winner.hasPermission(Permissions.BYPASS_GAME.getPermission(Main.gameID))){
-                    Main.econ.depositPlayer(winner, game.getRule().getCost());
+            } else if(connectFour.getSettings().isEconEnabled()){
+                if(!winner.hasPermission(Permission.BYPASS_ALL.getPermission()) && !winner.hasPermission(Permission.BYPASS_GAME.getPermission(connectFour.getGameID()))){
+                    GameBox.econ.depositPlayer(winner, game.getRule().getCost());
                     winner.sendMessage(StringUtil.color(lang.PREFIX + lang.GAME_WON_MONEY_GAVE_UP.replaceAll("%reward%", game.getRule().getCost()+"").replaceAll("%loser%", loser.getName())));
                 } else {
                     winner.sendMessage(StringUtil.color(lang.PREFIX + lang.GAME_OTHER_GAVE_UP.replaceAll("%loser%", loser.getName())));
@@ -206,7 +209,7 @@ public class CFGameManager implements GameManager {
 
     @Override
     public boolean isInGame(UUID uuid) {
-        for(Game game : games.values()){
+        for(CFGame game : games.values()){
             if((game.getFirstUUID().equals(uuid) && game.getFirst() != null ) || (game.getSecondUUID().equals(uuid) && game.getSecond() != null)){
                 return true;
             }
@@ -217,7 +220,7 @@ public class CFGameManager implements GameManager {
     @Override
     public int startGame(Player[] players, boolean playSounds, String... args) {
 
-        GameRules rule = gameRules.get(args[0]);
+        CFGameRules rule = gameRules.get(args[0]);
         if(rule == null){
             return GameBox.GAME_NOT_STARTED_ERROR;
         }
@@ -226,21 +229,21 @@ public class CFGameManager implements GameManager {
 
         boolean firstCanPay = true;
 
-        if (plugin.isEconEnabled() && !players[0].hasPermission(Permissions.BYPASS_ALL.getPermission()) && !players[0].hasPermission(Permissions.BYPASS_GAME.getPermission(Main.gameID)) && cost > 0.0) {
-            if (Main.econ.getBalance(players[0]) >= cost) {
+        if (connectFour.getSettings().isEconEnabled() && !players[0].hasPermission(Permission.BYPASS_ALL.getPermission()) && !players[0].hasPermission(Permission.BYPASS_GAME.getPermission(connectFour.getGameID())) && cost > 0.0) {
+            if (GameBox.econ.getBalance(players[0]) >= cost) {
 
             } else {
-                players[0].sendMessage(StringUtil.color(lang.PREFIX + plugin.lang.GAME_NOT_ENOUGH_MONEY));
+                players[0].sendMessage(StringUtil.color(lang.PREFIX + lang.GAME_NOT_ENOUGH_MONEY));
                 firstCanPay = false;
             }
         }
 
 
-        if (plugin.isEconEnabled() && !players[1].hasPermission(Permissions.BYPASS_ALL.getPermission()) && !players[1].hasPermission(Permissions.BYPASS_GAME.getPermission(Main.gameID)) && cost > 0.0) {
-            if (Main.econ.getBalance(players[1]) >= cost) {
+        if (connectFour.getSettings().isEconEnabled() && !players[1].hasPermission(Permission.BYPASS_ALL.getPermission()) && !players[1].hasPermission(Permission.BYPASS_GAME.getPermission(connectFour.getGameID())) && cost > 0.0) {
+            if (GameBox.econ.getBalance(players[1]) >= cost) {
 
             } else {
-                players[1].sendMessage(StringUtil.color(lang.PREFIX + plugin.lang.GAME_NOT_ENOUGH_MONEY));
+                players[1].sendMessage(StringUtil.color(lang.PREFIX + lang.GAME_NOT_ENOUGH_MONEY));
                 if(firstCanPay){
                     // only second player cannot pay
                     return GameBox.GAME_NOT_ENOUGH_MONEY_2;
@@ -259,16 +262,16 @@ public class CFGameManager implements GameManager {
         // both players can pay!
 
 
-        if (plugin.isEconEnabled()) {
-            Main.econ.withdrawPlayer(players[0], cost);
+        if (connectFour.getSettings().isEconEnabled()) {
+            GameBox.econ.withdrawPlayer(players[0], cost);
             players[0].sendMessage(StringUtil.color(lang.PREFIX + lang.GAME_PAYED.replaceAll("%cost%", String.valueOf(cost))));
 
 
-            Main.econ.withdrawPlayer(players[1], cost);
+            GameBox.econ.withdrawPlayer(players[1], cost);
             players[1].sendMessage(StringUtil.color(lang.PREFIX + lang.GAME_PAYED.replaceAll("%cost%", String.valueOf(cost))));
         }
 
-        games.put(players[0].getUniqueId(), new Game(gameRules.get(args[0]), plugin, playSounds && plugin.getPlaySounds(), players, chips));
+        games.put(players[0].getUniqueId(), new CFGame(gameRules.get(args[0]), connectFour, playSounds && connectFour.getSettings().isPlaySounds(), players, chips));
         return GameBox.GAME_STARTED;
     }
 
@@ -301,17 +304,17 @@ public class CFGameManager implements GameManager {
 
     public void onGameEnd(Player winner, Player loser, String key, int chipsPlayed) {
 
-        GameRules rule = gameRules.get(key);
+        CFGameRules rule = gameRules.get(key);
 
         if(rule.isSaveStats()){
             addWin(winner.getUniqueId(), rule.getKey());
         }
         if(rule.getTokens() > 0 && chipsPlayed >= rule.getMinNumberOfPlayedChips()){
-            plugin.gameBox.wonTokens(winner.getUniqueId(), rule.getTokens(), Main.gameID);
+            connectFour.getGameBox().wonTokens(winner.getUniqueId(), rule.getTokens(), connectFour.getGameID());
         }
     }
 
     public void addWin(UUID uuid, String key){
-        plugin.gameBox.getStatistics().addStatistics(uuid, Main.gameID, key, 1., SaveType.WINS);
+        statistics.addStatistics(uuid, connectFour.getGameID(), key, 1., SaveType.WINS);
     }
 }

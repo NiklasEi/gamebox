@@ -1,10 +1,11 @@
 package me.nikl.gamebox.games.connectfour;
 
-import me.nikl.gamebox.Permissions;
-import me.nikl.gamebox.Sounds;
+import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.nms.NMSUtil;
+import me.nikl.gamebox.util.Permission;
+import me.nikl.gamebox.util.Sound;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -27,7 +28,7 @@ public class CFGame extends BukkitRunnable{
 
     private CFGameRules rule;
     private boolean playSounds;
-    private Main plugin;
+    private ConnectFour connectFour;
 
     private UUID firstUUID, secondUUID;
     private Player first, second;
@@ -36,11 +37,11 @@ public class CFGame extends BukkitRunnable{
 
     private Inventory inv;
 
-    private Sound falling = Sounds.WOOD_CLICK.bukkitSound()
-            , insert = Sounds.CLICK.bukkitSound()
-            , turn = Sounds.NOTE_PLING.bukkitSound()
-            , won = Sounds.VILLAGER_YES.bukkitSound()
-            , lose = Sounds.VILLAGER_NO.bukkitSound();
+    private org.bukkit.Sound falling = Sound.WOOD_CLICK.bukkitSound()
+            , insert = Sound.CLICK.bukkitSound()
+            , turn = Sound.NOTE_PLING.bukkitSound()
+            , won = Sound.VILLAGER_YES.bukkitSound()
+            , lose = Sound.VILLAGER_NO.bukkitSound();
 
     private float volume = 0.5f, pitch= 1f;
 
@@ -53,9 +54,13 @@ public class CFGame extends BukkitRunnable{
 
     private int playedChips = 0;
 
+    private NMSUtil nms;
+    private CFLanguage lang;
 
-    CFGame(GameRules rule, Main plugin, boolean playSounds, Player[] players, Map<Integer, ItemStack> chips){
-        this.plugin = plugin;
+    CFGame(CFGameRules rule, ConnectFour connectFour, boolean playSounds, Player[] players, Map<Integer, ItemStack> chips){
+        this.connectFour = connectFour;
+        this.lang = (CFLanguage) connectFour.getGameLang();
+        this.nms = connectFour.getGameBox().getNMS();
         this.rule = rule;
         this.playSounds = playSounds;
 
@@ -87,9 +92,9 @@ public class CFGame extends BukkitRunnable{
         secondChip.setItemMeta(meta);
 
         if(rand.nextDouble() < 0.5){
-            this.state = GameState.FIRST_TURN;
+            this.state = CFGameState.FIRST_TURN;
         } else {
-            this.state = GameState.SECOND_TURN;
+            this.state = CFGameState.SECOND_TURN;
         }
 
         inv = Bukkit.createInventory(null, 54, "default");
@@ -97,21 +102,21 @@ public class CFGame extends BukkitRunnable{
         this.second.openInventory(inv);
         updateStatus();
 
-        runTaskTimer(plugin, 0, 5);
+        runTaskTimer(connectFour.getGameBox(), 0, 5);
     }
 
     private void updateStatus() {
         switch (this.state){
             case FIRST_TURN:
                 if(first!=null && second!=null){
-                    plugin.getNms().updateInventoryTitle(first, plugin.lang.TITLE_IN_GAME_YOUR_TURN.replace("%player%", first.getName()).replace("%time%", timeStr));
-                    plugin.getNms().updateInventoryTitle(second, plugin.lang.TITLE_IN_GAME_OTHERS_TURN.replace("%player%", first.getName()).replace("%time%", timeStr));
+                    nms.updateInventoryTitle(first, lang.TITLE_IN_GAME_YOUR_TURN.replace("%player%", first.getName()).replace("%time%", timeStr));
+                    nms.updateInventoryTitle(second, lang.TITLE_IN_GAME_OTHERS_TURN.replace("%player%", first.getName()).replace("%time%", timeStr));
                 }
                 break;
             case SECOND_TURN:
                 if(first!=null && second!=null){
-                    plugin.getNms().updateInventoryTitle(first, plugin.lang.TITLE_IN_GAME_OTHERS_TURN.replace("%player%", second.getName()).replace("%time%", timeStr));
-                    plugin.getNms().updateInventoryTitle(second, plugin.lang.TITLE_IN_GAME_YOUR_TURN.replace("%player%", second.getName()).replace("%time%", timeStr));
+                    nms.updateInventoryTitle(first, lang.TITLE_IN_GAME_OTHERS_TURN.replace("%player%", second.getName()).replace("%time%", timeStr));
+                    nms.updateInventoryTitle(second, lang.TITLE_IN_GAME_YOUR_TURN.replace("%player%", second.getName()).replace("%time%", timeStr));
                 }
                 break;
             case FINISHED:
@@ -123,7 +128,7 @@ public class CFGame extends BukkitRunnable{
     @Override
     public void run() {
 
-        if(state == GameState.FIRST_TURN || state == GameState.SECOND_TURN) {
+        if(state == CFGameState.FIRST_TURN || state == CFGameState.SECOND_TURN) {
             int oldTime = (int) Math.ceil(time);
             // for the wanted 20 ticks per second:
             //   this is not very accurate but sufficient in this case (imho)
@@ -131,8 +136,8 @@ public class CFGame extends BukkitRunnable{
             if (time < 0.25) {
                 // timer has run out!
 
-                state = state == GameState.SECOND_TURN ? GameState.FIRST_TURN : GameState.SECOND_TURN;
-                if(state == GameState.FIRST_TURN){
+                state = state == CFGameState.SECOND_TURN ? CFGameState.FIRST_TURN : CFGameState.SECOND_TURN;
+                if(state == CFGameState.FIRST_TURN){
                     if(playSounds) first.playSound(first.getLocation(), turn, volume, pitch);
                 } else {
                     if(playSounds) second.playSound(second.getLocation(), turn, volume, pitch);
@@ -153,10 +158,10 @@ public class CFGame extends BukkitRunnable{
                 break;
             case FALLING_FIRST:
                 if(fallingChip /9 < 5 && (inv.getItem(fallingChip +9) == null || inv.getItem(fallingChip +9).getType() == Material.AIR)){
-                    plugin.debug("set " + fallingChip + " to null");
+                    connectFour.debug("set " + fallingChip + " to null");
                     inv.setItem(fallingChip, null);
                     fallingChip +=9;
-                    plugin.debug("set " + fallingChip + " to fallingChip");
+                    connectFour.debug("set " + fallingChip + " to fallingChip");
                     inv.setItem(fallingChip, firstChip);
                     if(playSounds) {
                         first.playSound(first.getLocation(), falling, volume*0.5f, pitch);
@@ -165,17 +170,17 @@ public class CFGame extends BukkitRunnable{
                 } else {
                     if(checkForMatches(fallingChip)){
                         onGameEnd();
-                        state = GameState.FINISHED;
+                        state = CFGameState.FINISHED;
                         if(playSounds) {
                             first.playSound(first.getLocation(), won, volume, pitch);
                             second.playSound(second.getLocation(), lose, volume, pitch);
                         }
                         return;
                     } else if(isDraw()) {
-                        state = GameState.FINISHED;
+                        state = CFGameState.FINISHED;
                         if(first!=null && second!=null){
-                            plugin.getNms().updateInventoryTitle(first, plugin.lang.TITLE_DRAW);
-                            plugin.getNms().updateInventoryTitle(second, plugin.lang.TITLE_DRAW);
+                            nms.updateInventoryTitle(first, lang.TITLE_DRAW);
+                            nms.updateInventoryTitle(second, lang.TITLE_DRAW);
                             if(playSounds) {
                                 first.playSound(first.getLocation(), lose, volume, pitch);
                                 second.playSound(second.getLocation(), lose, volume, pitch);
@@ -183,7 +188,7 @@ public class CFGame extends BukkitRunnable{
                         }
                         return;
                     } else {
-                        state = GameState.SECOND_TURN;
+                        state = CFGameState.SECOND_TURN;
                         time = rule.getTimePerMove();
                         timeStr = String.valueOf((int) time);
                         updateStatus();
@@ -194,10 +199,10 @@ public class CFGame extends BukkitRunnable{
                 break;
             case FALLING_SECOND:
                 if(fallingChip /9 < 5 && (inv.getItem(fallingChip +9) == null || inv.getItem(fallingChip +9).getType() == Material.AIR)){
-                    plugin.debug("set " + fallingChip + " to null");
+                    connectFour.debug("set " + fallingChip + " to null");
                     inv.setItem(fallingChip, null);
                     fallingChip +=9;
-                    plugin.debug("set " + fallingChip + " to fallingChip");
+                    connectFour.debug("set " + fallingChip + " to fallingChip");
                     inv.setItem(fallingChip, secondChip);
                     if(playSounds) {
                         first.playSound(first.getLocation(), falling, volume*0.5f, pitch);
@@ -206,17 +211,17 @@ public class CFGame extends BukkitRunnable{
                 } else {
                     if(checkForMatches(fallingChip)){
                         onGameEnd();
-                        state = GameState.FINISHED;
+                        state = CFGameState.FINISHED;
                         if(playSounds) {
                             first.playSound(first.getLocation(), lose, volume, pitch);
                             second.playSound(second.getLocation(), won, volume, pitch);
                         }
                         return;
                     } else if(isDraw()) {
-                        state = GameState.FINISHED;
+                        state = CFGameState.FINISHED;
                         if(first!=null && second!=null){
-                            plugin.getNms().updateInventoryTitle(first, plugin.lang.TITLE_DRAW);
-                            plugin.getNms().updateInventoryTitle(second, plugin.lang.TITLE_DRAW);
+                            nms.updateInventoryTitle(first, lang.TITLE_DRAW);
+                            nms.updateInventoryTitle(second, lang.TITLE_DRAW);
                             if(playSounds) {
                                 first.playSound(first.getLocation(), lose, volume, pitch);
                                 second.playSound(second.getLocation(), lose, volume, pitch);
@@ -225,7 +230,7 @@ public class CFGame extends BukkitRunnable{
                         cancel();
                         return;
                     } else {
-                        state = GameState.FIRST_TURN;
+                        state = CFGameState.FIRST_TURN;
                         time = rule.getTimePerMove();
                         timeStr = String.valueOf((int) time);
                         updateStatus();
@@ -240,22 +245,20 @@ public class CFGame extends BukkitRunnable{
     private void onGameEnd(){
         cancel();
 
-        if(state != GameState.FALLING_SECOND && state != GameState.FALLING_FIRST){
-            Bukkit.getConsoleSender().sendMessage(plugin.lang.PREFIX + " *** wrong game state on game end ***");
+        if(state != CFGameState.FALLING_SECOND && state != CFGameState.FALLING_FIRST){
+            Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " *** wrong game state on game end ***");
             Bukkit.getConsoleSender().sendMessage(" Please contact Nikl on Spigot and show him this log");
             return;
         }
 
-        Player winner = state == GameState.FALLING_SECOND?second:first;
-        Player loser = state == GameState.FALLING_SECOND?first:second;
-
-        Language lang = plugin.lang;
+        Player winner = state == CFGameState.FALLING_SECOND?second:first;
+        Player loser = state == CFGameState.FALLING_SECOND?first:second;
 
         if(winner!=null && loser !=null){
 
-            if(plugin.isEconEnabled()){
-                if(!winner.hasPermission(Permissions.BYPASS_ALL.getPermission()) && !winner.hasPermission(Permissions.BYPASS_GAME.getPermission(Main.gameID))){
-                    Main.econ.depositPlayer(winner, rule.getReward());
+            if(connectFour.getSettings().isEconEnabled()){
+                if(!winner.hasPermission(Permission.BYPASS_ALL.getPermission()) && !winner.hasPermission(Permission.BYPASS_GAME.getPermission(connectFour.getGameID()))){
+                    GameBox.econ.depositPlayer(winner, rule.getReward());
                     winner.sendMessage((lang.PREFIX + lang.GAME_WON_MONEY.replaceAll("%reward%", rule.getReward()+"").replaceAll("%loser%", loser.getName())));
                 } else {
                     winner.sendMessage((lang.PREFIX + lang.GAME_WON.replaceAll("%loser%", loser.getName())));
@@ -265,12 +268,12 @@ public class CFGame extends BukkitRunnable{
             }
             loser.sendMessage((lang.PREFIX + lang.GAME_LOSE));
 
-            plugin.getNms().updateInventoryTitle(winner, plugin.lang.TITLE_WON);
-            plugin.getNms().updateInventoryTitle(loser, plugin.lang.TITLE_LOST);
+            nms.updateInventoryTitle(winner, lang.TITLE_WON);
+            nms.updateInventoryTitle(loser, lang.TITLE_LOST);
 
 
             // if the game is ended regularly ignore the played chips
-            plugin.getGameManager().onGameEnd(winner, loser, rule.getKey(), 999);
+            ((CFGameManager)connectFour.getGameManager()).onGameEnd(winner, loser, rule.getKey(), 999);
         }
     }
 
@@ -311,7 +314,7 @@ public class CFGame extends BukkitRunnable{
             toMark.clear();
             toMark.add(chip);
         }
-        plugin.debug("passed left/right check");
+        connectFour.debug("passed left/right check");
 
         // check for up
         for(int newChip = chip - 9; newChip>=0 && newChip/9>=0 ; newChip-=9){
@@ -337,7 +340,7 @@ public class CFGame extends BukkitRunnable{
             toMark.clear();
             toMark.add(chip);
         }
-        plugin.debug("passed up/down check");
+        connectFour.debug("passed up/down check");
 
 
 
@@ -365,7 +368,7 @@ public class CFGame extends BukkitRunnable{
             toMark.clear();
             toMark.add(chip);
         }
-        plugin.debug("passed up-right/down-left check");
+        connectFour.debug("passed up-right/down-left check");
 
 
 
@@ -390,13 +393,13 @@ public class CFGame extends BukkitRunnable{
         if(mark(toMark)){
             return true;
         }
-        plugin.debug("passed all checks");
+        connectFour.debug("passed all checks");
         return false;
     }
 
     private boolean checkEntry(int newChip) {
         if(inv.getItem(newChip) != null && inv.getItem(newChip).getType() != Material.AIR && inv.getItem(newChip).isSimilar(inv.getItem(fallingChip))){
-            plugin.debug("found " + newChip);
+            connectFour.debug("found " + newChip);
             return true;
         } else {
             return false;
@@ -404,15 +407,15 @@ public class CFGame extends BukkitRunnable{
     }
 
     private boolean mark(final Set<Integer> toMark) {
-        plugin.debug("   toMark entries: " + toMark.size());
+        connectFour.debug("   toMark entries: " + toMark.size());
         if(toMark.size() > 3){
 
-            plugin.debug("found match! ");
+            connectFour.debug("found match! ");
             ItemStack glowingChip;
-            if(state == GameState.FALLING_SECOND){
-                glowingChip = plugin.getNms().addGlow(secondChip.clone());
+            if(state == CFGameState.FALLING_SECOND){
+                glowingChip = nms.addGlow(secondChip.clone());
             } else {
-                glowingChip = plugin.getNms().addGlow(firstChip.clone());
+                glowingChip = nms.addGlow(firstChip.clone());
             }
             for(int i : toMark){
                 inv.setItem(i, glowingChip);
@@ -423,23 +426,23 @@ public class CFGame extends BukkitRunnable{
     }
 
     void onClick(InventoryClickEvent inventoryClickEvent) {
-        plugin.debug("onClick in game called");
+        connectFour.debug("onClick in game called");
         // clicked slot is empty!
         UUID uuid = inventoryClickEvent.getWhoClicked().getUniqueId();
-        if(uuid.equals(firstUUID) && state == GameState.FIRST_TURN){
+        if(uuid.equals(firstUUID) && state == CFGameState.FIRST_TURN){
             inv.setItem(inventoryClickEvent.getSlot() % 9, firstChip);
             fallingChip = inventoryClickEvent.getSlot() % 9;
-            state = GameState.FALLING_FIRST;
-            plugin.getNms().updateInventoryTitle(first, plugin.lang.TITLE_IN_GAME_YOUR_TURN.replace("%player%", first.getName()).replace("%time%", ""));
-            plugin.getNms().updateInventoryTitle(second, plugin.lang.TITLE_IN_GAME_OTHERS_TURN.replace("%player%", first.getName()).replace("%time%", ""));
+            state = CFGameState.FALLING_FIRST;
+            nms.updateInventoryTitle(first, lang.TITLE_IN_GAME_YOUR_TURN.replace("%player%", first.getName()).replace("%time%", ""));
+            nms.updateInventoryTitle(second, lang.TITLE_IN_GAME_OTHERS_TURN.replace("%player%", first.getName()).replace("%time%", ""));
             if(playSounds) first.playSound(first.getLocation(), insert, volume, pitch);
             playedChips++;
-        } else if(uuid.equals(secondUUID) && state == GameState.SECOND_TURN){
+        } else if(uuid.equals(secondUUID) && state == CFGameState.SECOND_TURN){
             inv.setItem(inventoryClickEvent.getSlot() % 9, secondChip);
             fallingChip = inventoryClickEvent.getSlot() % 9;
-            state = GameState.FALLING_SECOND;
-            plugin.getNms().updateInventoryTitle(first, plugin.lang.TITLE_IN_GAME_OTHERS_TURN.replace("%player%", first.getName()).replace("%time%", ""));
-            plugin.getNms().updateInventoryTitle(second, plugin.lang.TITLE_IN_GAME_YOUR_TURN.replace("%player%", first.getName()).replace("%time%", ""));
+            state = CFGameState.FALLING_SECOND;
+            nms.updateInventoryTitle(first, lang.TITLE_IN_GAME_OTHERS_TURN.replace("%player%", first.getName()).replace("%time%", ""));
+            nms.updateInventoryTitle(second, lang.TITLE_IN_GAME_YOUR_TURN.replace("%player%", first.getName()).replace("%time%", ""));
             if(playSounds) second.playSound(second.getLocation(), insert, volume, pitch);
             playedChips++;
         }

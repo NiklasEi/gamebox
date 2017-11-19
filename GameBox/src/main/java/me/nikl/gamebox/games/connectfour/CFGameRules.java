@@ -1,5 +1,6 @@
 package me.nikl.gamebox.games.connectfour;
 
+import me.nikl.gamebox.data.SaveType;
 import me.nikl.gamebox.games.GameRule;
 
 import java.util.HashSet;
@@ -16,6 +17,7 @@ public class CFGameRules extends GameRule{
 
     public CFGameRules(String key, int timePerMove, int minNumberOfPlayedChips, double cost, double reward, int tokens, boolean saveStats){
         super(saveStats, new HashSet<>(), key);
+        this.saveTypes.add(SaveType.WINS);
         this.cost = cost;
         this.reward = reward;
         this.tokens = tokens;
