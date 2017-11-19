@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.portal;
 
-import me.nikl.gamebox.games.cookieclicker.CookieClicker;
+import me.nikl.gamebox.games.cookieclicker.CCGame;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -13,7 +13,7 @@ import org.bukkit.material.MaterialData;
  */
 public class SanityDance extends Upgrade{
 
-    public SanityDance(CookieClicker game) {
+    public SanityDance(CCGame game) {
         super(game, 50);
         this.cost = 50000000000000000.;
         productionsRequirements.put(Buildings.PORTAL, 50);

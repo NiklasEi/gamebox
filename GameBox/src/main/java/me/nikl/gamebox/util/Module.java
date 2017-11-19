@@ -6,7 +6,8 @@ package me.nikl.gamebox.util;
  */
 public enum Module {
     GAMEBOX("gamebox"),
-    COOKIECLICKER("cookieclicker", "me.nikl.gamebox.games.cookieclicker.CCGame");
+    COOKIECLICKER("cookieclicker", "me.nikl.gamebox.games.cookieclicker.CookieClicker"),
+    CONNECTFOUR("connectfour", "me.nikl.gamebox.games.connectfour.ConnectFour");
 
     private String moduleID, gameClass;
 

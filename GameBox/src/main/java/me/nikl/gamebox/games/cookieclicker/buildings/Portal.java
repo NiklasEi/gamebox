@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.buildings;
 
-import me.nikl.gamebox.games.cookieclicker.CCGame;
+import me.nikl.gamebox.games.cookieclicker.CookieClicker;
 import org.bukkit.Material;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
@@ -10,7 +10,7 @@ import org.bukkit.material.MaterialData;
  */
 public class Portal extends Building {
 
-    public Portal(CCGame plugin, int slot, Buildings building) {
+    public Portal(CookieClicker plugin, int slot, Buildings building) {
         super(plugin, slot, building);
 
         icon = new MaterialData(Material.EYE_OF_ENDER).toItemStack();

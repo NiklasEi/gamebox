@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.bank;
 
-import me.nikl.gamebox.games.cookieclicker.CookieClicker;
+import me.nikl.gamebox.games.cookieclicker.CCGame;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -13,7 +13,7 @@ import org.bukkit.material.MaterialData;
  */
 public class TallerTellers extends Upgrade{
 
-    public TallerTellers(CookieClicker game) {
+    public TallerTellers(CCGame game) {
         super(game, 232);
         this.cost = 14000000;
         productionsRequirements.put(Buildings.BANK, 1);

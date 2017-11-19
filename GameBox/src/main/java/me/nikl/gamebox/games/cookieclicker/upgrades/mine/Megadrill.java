@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.mine;
 
-import me.nikl.gamebox.games.cookieclicker.CookieClicker;
+import me.nikl.gamebox.games.cookieclicker.CCGame;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -13,7 +13,7 @@ import org.bukkit.material.MaterialData;
  */
 public class Megadrill extends Upgrade{
 
-    public Megadrill(CookieClicker game) {
+    public Megadrill(CCGame game) {
         super(game, 17);
         this.cost = 600000;
         productionsRequirements.put(Buildings.MINE, 5);

@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.temple;
 
-import me.nikl.gamebox.games.cookieclicker.CookieClicker;
+import me.nikl.gamebox.games.cookieclicker.CCGame;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -13,7 +13,7 @@ import org.bukkit.material.MaterialData;
  */
 public class EnlargedPantheon extends Upgrade{
 
-    public EnlargedPantheon(CookieClicker game) {
+    public EnlargedPantheon(CCGame game) {
         super(game, 242);
         this.cost = 100000000000000.;
         productionsRequirements.put(Buildings.TEMPLE, 100);

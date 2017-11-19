@@ -7,6 +7,7 @@ import me.nikl.gamebox.data.SaveType;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.gui.game.GameGui;
+import me.nikl.gamebox.guis.gui.game.StartMultiplayerGamePage;
 import me.nikl.gamebox.guis.gui.game.TopListPage;
 import me.nikl.gamebox.nms.NMSUtil;
 import me.nikl.gamebox.util.*;
@@ -178,8 +179,25 @@ public abstract class Game {
                     meta.setLore(lore);
                 }
 
-                // Todo: two player game case
-                button.setAction(ClickAction.START_GAME);
+                switch (gameSettings.getGameType()){
+                    case SINGLE_PLAYER:
+                        button.setAction(ClickAction.START_GAME);
+                        break;
+
+                    case TWO_PLAYER:
+                        guiManager.registerGameGUI(new StartMultiplayerGamePage(gameBox, guiManager
+                                , gameSettings.getGameGuiSize()
+                                , module.moduleID(), buttonID, StringUtil.color(buttonSec
+                                .getString("inviteGuiTitle","&4title not set in config"))));
+
+                        button.setAction(ClickAction.OPEN_GAME_GUI);
+                        break;
+
+                    default:
+                        gameBox.getLogger().warning("Unhandled game type!");
+                        break;
+                }
+
 
                 button.setItemMeta(meta);
                 button.setArgs(module.moduleID(), buttonID);
@@ -191,7 +209,7 @@ public abstract class Game {
                     int slot = buttonSec.getInt("slot");
                     if (slot < 0 || slot >= gameGuiSlots) {
                         Bukkit.getLogger().log(Level.WARNING, "the slot of gameBox.gameButtons." + buttonID
-                                + " is out of the inventory range (0 - " + gameGuiSlots + ")");
+                                + " is out of the inventory range (0 - " + (gameGuiSlots - 1) + ")");
                         gameGui.setButton(button);
                     } else {
                         gameGui.setButton(button, slot);

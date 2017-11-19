@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.clicking;
 
-import me.nikl.gamebox.games.cookieclicker.CookieClicker;
+import me.nikl.gamebox.games.cookieclicker.CCGame;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
 import org.bukkit.Material;
@@ -12,7 +12,7 @@ import org.bukkit.material.MaterialData;
  */
 public class FantasteelMouse extends Upgrade{
 
-    public FantasteelMouse(CookieClicker game) {
+    public FantasteelMouse(CCGame game) {
         super(game, 366);
         this.cost = 5000000000000000000.;
         setClickCookieReq(100000000000000000.);

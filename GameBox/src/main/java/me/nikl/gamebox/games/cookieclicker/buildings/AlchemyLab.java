@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.buildings;
 
-import me.nikl.gamebox.games.cookieclicker.CCGame;
+import me.nikl.gamebox.games.cookieclicker.CookieClicker;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -11,7 +11,7 @@ import org.bukkit.material.MaterialData;
  */
 public class AlchemyLab extends Building {
 
-    public AlchemyLab(CCGame plugin, int slot, Buildings building) {
+    public AlchemyLab(CookieClicker plugin, int slot, Buildings building) {
         super(plugin, slot, building);
 
         // old minecraft versions are missing the material SPLASH_POTION

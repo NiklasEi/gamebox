@@ -632,6 +632,7 @@ public class PluginManager implements Listener {
         gamesRegistered ++;
     }
 
+    @Deprecated
     public GameManager getGameManager(String gameID){
         Module module = Module.fromID(gameID);
         return module == null ? null : getGameManager(module);
@@ -763,7 +764,7 @@ public class PluginManager implements Listener {
         if(gbPlayer == null) return false;
 
         gbPlayer.setTokens(gbPlayer.getTokens() + tokens);
-        Bukkit.getPlayer(player).sendMessage(lang.PREFIX + lang.WON_TOKEN.replace("%tokens%", String.valueOf(tokens)).replace("%game%", games.get(gameID).getGameLang().PLAIN_NAME));
+        Bukkit.getPlayer(player).sendMessage(lang.PREFIX + lang.WON_TOKEN.replace("%tokens%", String.valueOf(tokens)).replace("%game%", getGame(gameID).getGameLang().PLAIN_NAME));
         return true;
     }
 

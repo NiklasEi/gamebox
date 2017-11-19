@@ -22,5 +22,7 @@ public abstract class GameLanguage extends Language {
 
     public GameLanguage(GameBox plugin, Module module) {
         super(plugin, module);
+
+        this.GAME_HELP = getStringList("gameHelp");
     }
 }

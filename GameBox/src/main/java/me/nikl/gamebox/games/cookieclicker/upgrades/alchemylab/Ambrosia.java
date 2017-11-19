@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.alchemylab;
 
-import me.nikl.gamebox.games.cookieclicker.CookieClicker;
+import me.nikl.gamebox.games.cookieclicker.CCGame;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -11,7 +11,7 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
  */
 public class Ambrosia extends Upgrade{
 
-    public Ambrosia(CookieClicker game) {
+    public Ambrosia(CCGame game) {
         super(game, 49);
         this.cost = 3750000000000000.;
         productionsRequirements.put(Buildings.ALCHEMY_LAB, 50);

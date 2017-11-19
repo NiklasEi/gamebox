@@ -10,6 +10,8 @@ public class GameSettings {
 
     private boolean playSounds;
 
+    private boolean econEnabled;
+
     private GameType gameType;
 
     private int gameGuiSize;
@@ -20,6 +22,8 @@ public class GameSettings {
         this.gameType = GameType.SINGLE_PLAYER;
         this.gameGuiSize = 54;
         this.playSounds = GameBoxSettings.playSounds;
+
+        setEconEnabled(GameBoxSettings.econEnabled);
     }
 
     public boolean isHandleClicksOnHotbar() {
@@ -52,6 +56,14 @@ public class GameSettings {
 
     public void setPlaySounds(boolean playSounds) {
         this.playSounds = playSounds;
+    }
+
+    public boolean isEconEnabled() {
+        return econEnabled;
+    }
+
+    public void setEconEnabled(boolean econEnabled) {
+        this.econEnabled = econEnabled;
     }
 
     public enum GameType{

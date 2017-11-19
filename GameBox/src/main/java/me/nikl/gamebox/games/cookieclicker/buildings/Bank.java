@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.buildings;
 
-import me.nikl.gamebox.games.cookieclicker.CCGame;
+import me.nikl.gamebox.games.cookieclicker.CookieClicker;
 import org.bukkit.Material;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
@@ -10,7 +10,7 @@ import org.bukkit.material.MaterialData;
  */
 public class Bank extends Building {
 
-    public Bank(CCGame plugin, int slot, Buildings building) {
+    public Bank(CookieClicker plugin, int slot, Buildings building) {
         super(plugin, slot, building);
 
         icon = new MaterialData(Material.GOLD_NUGGET).toItemStack();

@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.farm;
 
-import me.nikl.gamebox.games.cookieclicker.CookieClicker;
+import me.nikl.gamebox.games.cookieclicker.CCGame;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -13,7 +13,7 @@ import org.bukkit.material.MaterialData;
  */
 public class FudgeFungus extends Upgrade{
 
-    public FudgeFungus(CookieClicker game) {
+    public FudgeFungus(CCGame game) {
         super(game, 295);
         this.cost = 550000000000000.;
         productionsRequirements.put(Buildings.FARM, 200);
