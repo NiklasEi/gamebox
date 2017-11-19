@@ -31,6 +31,12 @@ public abstract class Language {
         this.module = module;
 
         getLangFile(plugin.getConfig(module));
+
+        PREFIX = getString("prefix");
+        NAME = getString("name");
+        PLAIN_PREFIX = ChatColor.stripColor(PREFIX);
+        PLAIN_NAME = ChatColor.stripColor(NAME);
+
         loadMessages();
     }
 
