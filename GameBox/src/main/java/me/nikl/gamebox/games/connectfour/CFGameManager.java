@@ -1,10 +1,12 @@
-package me.nikl.connectfour;
+package me.nikl.gamebox.games.connectfour;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.Permissions;
 import me.nikl.gamebox.data.SaveType;
 import me.nikl.gamebox.data.Statistics;
-import me.nikl.gamebox.game.IGameManager;
+import me.nikl.gamebox.games.GameManager;
+import me.nikl.gamebox.games.GameRule;
+import me.nikl.gamebox.nms.NMSUtil;
+import me.nikl.gamebox.util.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -24,35 +26,59 @@ import java.util.UUID;
 /**
  * Created by Niklas on 14.04.2017.
  *
- * 2048s GameManager
+ * ConnectFour GameManager
  */
 
-public class GameManager implements IGameManager {
-    private Main plugin;
+public class CFGameManager implements GameManager {
+    private ConnectFour connectFour;
 
-    private Map<UUID, Game> games = new HashMap<>();
-    private Language lang;
+    private Map<UUID, CFGame> games = new HashMap<>();
+    private CFLanguage lang;
+
+    private NMSUtil nms;
 
     private Statistics statistics;
 
     private Map<Integer, ItemStack> chips = new HashMap<>();
 
 
-    private Map<String,GameRules> gameTypes;
+    private Map<String, CFGameRules> gameRules;
 
 
 
-    public GameManager(Main plugin){
-        this.plugin = plugin;
-        this.lang = plugin.lang;
+    public CFGameManager(ConnectFour connectFour){
+        this.connectFour = connectFour;
+        this.lang = (CFLanguage) connectFour.getGameLang();
 
-        this.statistics = plugin.gameBox.getStatistics();
+        this.nms = connectFour.getGameBox().getNMS();
+
+        this.statistics = connectFour.getGameBox().getStatistics();
 
         loadChips();
     }
 
+    @Override
+    public void loadGameRules(ConfigurationSection buttonSec, String buttonID) {
+        double cost = buttonSec.getDouble("cost", 0.);
+        double reward = buttonSec.getDouble("reward", 0.);
+        int tokens = buttonSec.getInt("tokens", 0);
+        boolean saveStats = buttonSec.getBoolean("saveStats", false);
+        int timePerMove = buttonSec.getInt("timePerMove", 30);
+        if(timePerMove < 1){
+            timePerMove = 30;
+        }
+        int minNumberOfPlayedChips = buttonSec.getInt("minNumberOfPlayedChips", 7);
+        gameRules.put(buttonID, new CFGameRules(buttonID, timePerMove, minNumberOfPlayedChips
+                , cost, reward, tokens, saveStats));
+    }
+
+    @Override
+    public Map<String, ? extends GameRule> getGameRules() {
+        return this.gameRules;
+    }
+
     private void loadChips() {
-        if(!plugin.getConfig().isConfigurationSection("chips")){
+        if(!connectFour.getConfig().isConfigurationSection("chips")){
             Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED +" the configuration section 'chips' can not be found!");
             Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED +" using two default chips");
 
@@ -66,7 +92,7 @@ public class GameManager implements IGameManager {
         List<String> lore;
         ItemStack chipStack;
 
-        ConfigurationSection chipsSection = plugin.getConfig().getConfigurationSection("chips");
+        ConfigurationSection chipsSection = connectFour.getConfig().getConfigurationSection("chips");
 
         int count = 0;
         for(String key: chipsSection.getKeys(false)){
@@ -80,16 +106,12 @@ public class GameManager implements IGameManager {
             meta = chipStack.getItemMeta();
 
             if(chipsSection.isString(key + ".displayName")){
-                displayName = chatColor(chipsSection.getString(key + ".displayName"));
+                displayName = StringUtil.color(chipsSection.getString(key + ".displayName"));
                 meta.setDisplayName(displayName);
             }
 
             if(chipsSection.isList(key + ".lore")){
-                lore = new ArrayList<>(chipsSection.getStringList(key + ".lore"));
-                for(int i = 0; i < lore.size();i++){
-                    lore.set(i, chatColor(lore.get(i)));
-                }
-                meta.setLore(lore);
+                meta.setLore(StringUtil.color(chipsSection.getStringList(key + ".lore")));
             }
 
             chipStack.setItemMeta(meta);
@@ -110,7 +132,7 @@ public class GameManager implements IGameManager {
 
     @Override
     public boolean onInventoryClick(InventoryClickEvent inventoryClickEvent) {
-        Game game = getGame(inventoryClickEvent.getWhoClicked().getUniqueId());
+        CFGame game = getGame(inventoryClickEvent.getWhoClicked().getUniqueId());
         if(game == null) return false;
 
         if(inventoryClickEvent.getCurrentItem() != null && inventoryClickEvent.getCurrentItem().getType() != Material.AIR) return false;
@@ -127,7 +149,7 @@ public class GameManager implements IGameManager {
             return false;
         }
 
-        Game game = getGame(inventoryCloseEvent.getPlayer().getUniqueId());
+        CFGame game = getGame(inventoryCloseEvent.getPlayer().getUniqueId());
         boolean firstClosed = inventoryCloseEvent.getPlayer().getUniqueId().equals(game.getFirstUUID());
         Player winner = firstClosed?game.getSecond():game.getFirst();
         Player loser = firstClosed?game.getFirst():game.getSecond();
@@ -139,9 +161,9 @@ public class GameManager implements IGameManager {
         return true;
     }
 
-    private void removeFromGame(boolean firstClosed, Player winner, Player loser, Game game) {
-        // make sure the player is not counted as in game anymore
-        if(game.getState() != GameState.FINISHED) game.onRemove(firstClosed);
+    private void removeFromGame(boolean firstClosed, Player winner, Player loser, CFGame game) {
+        // make sure the player is not counted as in connectFour anymore
+        if(game.getState() != CFGameState.FINISHED) game.onRemove(firstClosed);
 
         if(firstClosed){
             game.setFirst(null);
@@ -150,32 +172,32 @@ public class GameManager implements IGameManager {
         }
 
 
-        if(game.getState() != GameState.FINISHED) {
+        if(game.getState() != CFGameState.FINISHED) {
             game.cancel();
 
-            if(plugin.isEconEnabled() && game.getPlayedChips() >= game.getRule().getMinNumberOfPlayedChips()){
+            if(game.getRule()..isEconEnabled() && game.getPlayedChips() >= game.getRule().getMinNumberOfPlayedChips()){
                 if(!winner.hasPermission(Permissions.BYPASS_ALL.getPermission()) && !winner.hasPermission(Permissions.BYPASS_GAME.getPermission(Main.gameID))){
                     Main.econ.depositPlayer(winner, game.getRule().getReward());
-                    winner.sendMessage(chatColor(lang.PREFIX + lang.GAME_WON_MONEY_GAVE_UP.replaceAll("%reward%", game.getRule().getReward()+"").replaceAll("%loser%", loser.getName())));
+                    winner.sendMessage(StringUtil.color(lang.PREFIX + lang.GAME_WON_MONEY_GAVE_UP.replaceAll("%reward%", game.getRule().getReward()+"").replaceAll("%loser%", loser.getName())));
                 } else {
-                    winner.sendMessage(chatColor(lang.PREFIX + lang.GAME_OTHER_GAVE_UP.replaceAll("%loser%", loser.getName())));
+                    winner.sendMessage(StringUtil.color(lang.PREFIX + lang.GAME_OTHER_GAVE_UP.replaceAll("%loser%", loser.getName())));
                 }
             } else if(plugin.isEconEnabled()){
                 if(!winner.hasPermission(Permissions.BYPASS_ALL.getPermission()) && !winner.hasPermission(Permissions.BYPASS_GAME.getPermission(Main.gameID))){
                     Main.econ.depositPlayer(winner, game.getRule().getCost());
-                    winner.sendMessage(chatColor(lang.PREFIX + lang.GAME_WON_MONEY_GAVE_UP.replaceAll("%reward%", game.getRule().getCost()+"").replaceAll("%loser%", loser.getName())));
+                    winner.sendMessage(StringUtil.color(lang.PREFIX + lang.GAME_WON_MONEY_GAVE_UP.replaceAll("%reward%", game.getRule().getCost()+"").replaceAll("%loser%", loser.getName())));
                 } else {
-                    winner.sendMessage(chatColor(lang.PREFIX + lang.GAME_OTHER_GAVE_UP.replaceAll("%loser%", loser.getName())));
+                    winner.sendMessage(StringUtil.color(lang.PREFIX + lang.GAME_OTHER_GAVE_UP.replaceAll("%loser%", loser.getName())));
                 }
             } else {
-                winner.sendMessage(chatColor(lang.PREFIX + lang.GAME_OTHER_GAVE_UP.replaceAll("%loser%", loser.getName())));
+                winner.sendMessage(StringUtil.color(lang.PREFIX + lang.GAME_OTHER_GAVE_UP.replaceAll("%loser%", loser.getName())));
             }
 
-            loser.sendMessage(chatColor(lang.PREFIX + lang.GAME_GAVE_UP));
+            loser.sendMessage(StringUtil.color(lang.PREFIX + lang.GAME_GAVE_UP));
 
 
-            plugin.getNms().updateInventoryTitle(winner, lang.TITLE_WON);
-            game.setState(GameState.FINISHED);
+            nms.updateInventoryTitle(winner, lang.TITLE_WON);
+            game.setState(CFGameState.FINISHED);
 
             // pay out token and save stats in enabled
             onGameEnd(winner, loser, game.getRule().getKey(), game.getPlayedChips());
@@ -195,7 +217,7 @@ public class GameManager implements IGameManager {
     @Override
     public int startGame(Player[] players, boolean playSounds, String... args) {
 
-        GameRules rule = gameTypes.get(args[0]);
+        GameRules rule = gameRules.get(args[0]);
         if(rule == null){
             return GameBox.GAME_NOT_STARTED_ERROR;
         }
@@ -208,7 +230,7 @@ public class GameManager implements IGameManager {
             if (Main.econ.getBalance(players[0]) >= cost) {
 
             } else {
-                players[0].sendMessage(chatColor(lang.PREFIX + plugin.lang.GAME_NOT_ENOUGH_MONEY));
+                players[0].sendMessage(StringUtil.color(lang.PREFIX + plugin.lang.GAME_NOT_ENOUGH_MONEY));
                 firstCanPay = false;
             }
         }
@@ -218,7 +240,7 @@ public class GameManager implements IGameManager {
             if (Main.econ.getBalance(players[1]) >= cost) {
 
             } else {
-                players[1].sendMessage(chatColor(lang.PREFIX + plugin.lang.GAME_NOT_ENOUGH_MONEY));
+                players[1].sendMessage(StringUtil.color(lang.PREFIX + plugin.lang.GAME_NOT_ENOUGH_MONEY));
                 if(firstCanPay){
                     // only second player cannot pay
                     return GameBox.GAME_NOT_ENOUGH_MONEY_2;
@@ -239,14 +261,14 @@ public class GameManager implements IGameManager {
 
         if (plugin.isEconEnabled()) {
             Main.econ.withdrawPlayer(players[0], cost);
-            players[0].sendMessage(chatColor(lang.PREFIX + lang.GAME_PAYED.replaceAll("%cost%", String.valueOf(cost))));
+            players[0].sendMessage(StringUtil.color(lang.PREFIX + lang.GAME_PAYED.replaceAll("%cost%", String.valueOf(cost))));
 
 
             Main.econ.withdrawPlayer(players[1], cost);
-            players[1].sendMessage(chatColor(lang.PREFIX + lang.GAME_PAYED.replaceAll("%cost%", String.valueOf(cost))));
+            players[1].sendMessage(StringUtil.color(lang.PREFIX + lang.GAME_PAYED.replaceAll("%cost%", String.valueOf(cost))));
         }
 
-        games.put(players[0].getUniqueId(), new Game(gameTypes.get(args[0]), plugin, playSounds && plugin.getPlaySounds(), players, chips));
+        games.put(players[0].getUniqueId(), new Game(gameRules.get(args[0]), plugin, playSounds && plugin.getPlaySounds(), players, chips));
         return GameBox.GAME_STARTED;
     }
 
@@ -256,7 +278,7 @@ public class GameManager implements IGameManager {
             return;
         }
 
-        Game game = getGame(uuid);
+        CFGame game = getGame(uuid);
         boolean firstClosed = uuid.equals(game.getFirstUUID());
         Player winner = firstClosed?game.getSecond():game.getFirst();
         Player loser = firstClosed?game.getFirst():game.getSecond();
@@ -268,8 +290,8 @@ public class GameManager implements IGameManager {
         return;
     }
 
-    private Game getGame(UUID uuid){
-        for (Game game : games.values()){
+    private CFGame getGame(UUID uuid){
+        for (CFGame game : games.values()){
             if(game.getFirstUUID().equals(uuid) || game.getSecondUUID().equals(uuid)){
                 return game;
             }
@@ -277,19 +299,9 @@ public class GameManager implements IGameManager {
         return null;
     }
 
-
-    public void setGameTypes(Map<String, GameRules> gameTypes) {
-        this.gameTypes = gameTypes;
-    }
-
-
-    private String chatColor(String string) {
-        return ChatColor.translateAlternateColorCodes('&', string);
-    }
-
     public void onGameEnd(Player winner, Player loser, String key, int chipsPlayed) {
 
-        GameRules rule = gameTypes.get(key);
+        GameRules rule = gameRules.get(key);
 
         if(rule.isSaveStats()){
             addWin(winner.getUniqueId(), rule.getKey());

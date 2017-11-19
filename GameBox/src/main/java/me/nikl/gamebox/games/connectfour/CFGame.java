@@ -1,4 +1,4 @@
-package me.nikl.connectfour;
+package me.nikl.gamebox.games.connectfour;
 
 import me.nikl.gamebox.Permissions;
 import me.nikl.gamebox.Sounds;
@@ -23,9 +23,9 @@ import java.util.UUID;
  *
  *
  */
-public class Game extends BukkitRunnable{
+public class CFGame extends BukkitRunnable{
 
-    private GameRules rule;
+    private CFGameRules rule;
     private boolean playSounds;
     private Main plugin;
 
@@ -47,14 +47,14 @@ public class Game extends BukkitRunnable{
     private double time;
     private String timeStr = "";
 
-    private GameState state;
+    private CFGameState state;
 
     private int fallingChip;
 
     private int playedChips = 0;
 
 
-    Game(GameRules rule, Main plugin, boolean playSounds, Player[] players, Map<Integer, ItemStack> chips){
+    CFGame(GameRules rule, Main plugin, boolean playSounds, Player[] players, Map<Integer, ItemStack> chips){
         this.plugin = plugin;
         this.rule = rule;
         this.playSounds = playSounds;
@@ -490,15 +490,15 @@ public class Game extends BukkitRunnable{
         this.second = second;
     }
 
-    GameState getState() {
+    CFGameState getState() {
         return state;
     }
 
-    void setState(GameState state) {
+    void setState(CFGameState state) {
         this.state = state;
     }
 
-    GameRules getRule() {
+    CFGameRules getRule() {
         return rule;
     }
 

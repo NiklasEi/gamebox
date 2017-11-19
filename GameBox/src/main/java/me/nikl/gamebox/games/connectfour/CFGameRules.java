@@ -1,22 +1,23 @@
-package me.nikl.connectfour;
+package me.nikl.gamebox.games.connectfour;
+
+import me.nikl.gamebox.games.GameRule;
+
+import java.util.HashSet;
 
 /**
  * Created by Niklas on 16.02.2017.
  *
  * This class stores settings for a game mode
  */
-public class GameRules {
+public class CFGameRules extends GameRule{
 
     private int tokens, timePerMove, minNumberOfPlayedChips;
     private double cost, reward;
-    private boolean saveStats;
-    private String key;
 
-    public GameRules(String key, int timePerMove, int minNumberOfPlayedChips, double cost, double reward, int tokens, boolean saveStats){
+    public CFGameRules(String key, int timePerMove, int minNumberOfPlayedChips, double cost, double reward, int tokens, boolean saveStats){
+        super(saveStats, new HashSet<>(), key);
         this.cost = cost;
         this.reward = reward;
-        this.saveStats = saveStats;
-        this.key = key;
         this.tokens = tokens;
         this.timePerMove = timePerMove;
         this.minNumberOfPlayedChips = minNumberOfPlayedChips;
@@ -28,14 +29,6 @@ public class GameRules {
 
     public double getReward() {
         return reward;
-    }
-
-    public boolean isSaveStats() {
-        return saveStats;
-    }
-
-    public String getKey() {
-        return key;
     }
 
     public int getTokens() {
