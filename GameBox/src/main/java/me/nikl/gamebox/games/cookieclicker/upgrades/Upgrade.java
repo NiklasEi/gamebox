@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades;
 
-import me.nikl.gamebox.games.cookieclicker.CookieClicker;
+import me.nikl.gamebox.games.cookieclicker.CCGame;
 import me.nikl.gamebox.games.cookieclicker.CCLanguage;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.GameBox;
@@ -39,11 +39,11 @@ public abstract class Upgrade {
     protected List<String > lore;
     protected String name;
 
-    protected CookieClicker game;
+    protected CCGame game;
 
     protected boolean active;
 
-    public Upgrade(CookieClicker game, int id){
+    public Upgrade(CCGame game, int id){
         this.id = id;
         productionsRequirements = new HashMap<>();
         cookiesRequirements = new HashMap<>();

@@ -1,7 +1,7 @@
 package me.nikl.gamebox.games.cookieclicker.buildings;
 
 import me.nikl.gamebox.games.cookieclicker.CCLanguage;
-import me.nikl.gamebox.games.cookieclicker.CCGame;
+import me.nikl.gamebox.games.cookieclicker.CookieClicker;
 import me.nikl.gamebox.util.NumberUtil;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -27,7 +27,7 @@ public class Building {
 
     protected CCLanguage lang;
 
-    public Building(CCGame plugin, int slot, Buildings building){
+    public Building(CookieClicker plugin, int slot, Buildings building){
         this.lang = (CCLanguage) plugin.getGameLang();
         this.name = lang.buildingName.get(building);
 

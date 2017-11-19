@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.alchemylab;
 
-import me.nikl.gamebox.games.cookieclicker.CookieClicker;
+import me.nikl.gamebox.games.cookieclicker.CCGame;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -11,7 +11,7 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
  */
 public class AquaCrustulae extends Upgrade{
 
-    public AquaCrustulae(CookieClicker game) {
+    public AquaCrustulae(CCGame game) {
         super(game, 115);
         this.cost = 375000000000000000.;
         productionsRequirements.put(Buildings.ALCHEMY_LAB, 100);

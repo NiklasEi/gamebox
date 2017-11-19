@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.antimattercondenser;
 
-import me.nikl.gamebox.games.cookieclicker.CookieClicker;
+import me.nikl.gamebox.games.cookieclicker.CCGame;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -11,7 +11,7 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
  */
 public class SomeOtherSuperTinyFundamentalParticle extends Upgrade{
 
-    public SomeOtherSuperTinyFundamentalParticle(CookieClicker game) {
+    public SomeOtherSuperTinyFundamentalParticle(CCGame game) {
         super(game, 318);
         this.cost = 85000000000000000000000000000.;
         productionsRequirements.put(Buildings.ANTIMATTER_CONDENSER, 250);

@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.curser;
 
-import me.nikl.gamebox.games.cookieclicker.CookieClicker;
+import me.nikl.gamebox.games.cookieclicker.CCGame;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -13,7 +13,7 @@ import org.bukkit.material.MaterialData;
  */
 public class QuadrillionFingers extends Upgrade{
 
-    public QuadrillionFingers(CookieClicker game) {
+    public QuadrillionFingers(CCGame game) {
         super(game, 43);
         this.cost = 10000000000.;
         productionsRequirements.put(Buildings.CURSOR, 200);

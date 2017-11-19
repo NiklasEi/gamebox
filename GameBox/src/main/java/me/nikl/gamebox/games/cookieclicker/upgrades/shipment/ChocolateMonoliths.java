@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.shipment;
 
-import me.nikl.gamebox.games.cookieclicker.CookieClicker;
+import me.nikl.gamebox.games.cookieclicker.CCGame;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -13,7 +13,7 @@ import org.bukkit.material.MaterialData;
  */
 public class ChocolateMonoliths extends Upgrade{
 
-    public ChocolateMonoliths(CookieClicker game) {
+    public ChocolateMonoliths(CCGame game) {
         super(game, 114);
         this.cost = 25500000000000000.;
         productionsRequirements.put(Buildings.SHIPMENT, 100);

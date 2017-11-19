@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.wizardtower;
 
-import me.nikl.gamebox.games.cookieclicker.CookieClicker;
+import me.nikl.gamebox.games.cookieclicker.CCGame;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -13,7 +13,7 @@ import org.bukkit.material.MaterialData;
  */
 public class BeardlierBeards extends Upgrade{
 
-    public BeardlierBeards(CookieClicker game) {
+    public BeardlierBeards(CCGame game) {
         super(game, 245);
         this.cost = 16500000000.;
         productionsRequirements.put(Buildings.WIZARD_TOWER, 5);

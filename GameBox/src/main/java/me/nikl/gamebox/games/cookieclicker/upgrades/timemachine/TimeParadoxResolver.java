@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.timemachine;
 
-import me.nikl.gamebox.games.cookieclicker.CookieClicker;
+import me.nikl.gamebox.games.cookieclicker.CCGame;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -13,7 +13,7 @@ import org.bukkit.material.MaterialData;
  */
 public class TimeParadoxResolver extends Upgrade{
 
-    public TimeParadoxResolver(CookieClicker game) {
+    public TimeParadoxResolver(CCGame game) {
         super(game, 29);
         this.cost = 700000000000000.;
         productionsRequirements.put(Buildings.TIME_MACHINE, 5);

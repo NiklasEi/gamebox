@@ -1,11 +1,8 @@
 package me.nikl.gamebox.games.cookieclicker;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.data.Statistics;
-import me.nikl.gamebox.games.Game;
 import me.nikl.gamebox.games.GameRule;
-import me.nikl.gamebox.util.Permission;
 import me.nikl.gamebox.data.SaveType;
 import me.nikl.gamebox.games.GameManager;
 import org.bukkit.Bukkit;
@@ -27,9 +24,9 @@ import java.util.logging.Level;
  */
 
 public class CCGameManager implements GameManager {
-    private CCGame game;
+    private CookieClicker game;
 
-    private Map<UUID, CookieClicker> games = new HashMap<>();
+    private Map<UUID, CCGame> games = new HashMap<>();
 
     private Map<String, CCGameRules> gameRules = new HashMap<>();
     private Statistics statistics;
@@ -38,7 +35,7 @@ public class CCGameManager implements GameManager {
     private File savesFile;
     private FileConfiguration saves;
 
-    public CCGameManager(CCGame game){
+    public CCGameManager(CookieClicker game){
         this.game = game;
         this.statistics = game.getGameBox().getStatistics();
         this.lang = (CCLanguage) game.getGameLang();
@@ -63,7 +60,7 @@ public class CCGameManager implements GameManager {
     public boolean onInventoryClick(InventoryClickEvent inventoryClickEvent) {
         if(!games.keySet().contains(inventoryClickEvent.getWhoClicked().getUniqueId())) return false;
 
-        CookieClicker game = games.get(inventoryClickEvent.getWhoClicked().getUniqueId());
+        CCGame game = games.get(inventoryClickEvent.getWhoClicked().getUniqueId());
 
         game.onClick(inventoryClickEvent);
         return true;
@@ -102,9 +99,9 @@ public class CCGameManager implements GameManager {
         }
 
         if(saves.isConfigurationSection(rule.getKey() + "." + players[0].getUniqueId())) {
-            games.put(players[0].getUniqueId(), new CookieClicker(rule, game, players[0], playSounds, saves.getConfigurationSection(rule.getKey() + "." + players[0].getUniqueId())));
+            games.put(players[0].getUniqueId(), new CCGame(rule, game, players[0], playSounds, saves.getConfigurationSection(rule.getKey() + "." + players[0].getUniqueId())));
         } else {
-            games.put(players[0].getUniqueId(), new CookieClicker(rule, game, players[0], playSounds, null));
+            games.put(players[0].getUniqueId(), new CCGame(rule, game, players[0], playSounds, null));
         }
 
         return GameBox.GAME_STARTED;
@@ -113,7 +110,7 @@ public class CCGameManager implements GameManager {
 
     public void removeFromGame(UUID uuid) {
 
-        CookieClicker game = games.get(uuid);
+        CCGame game = games.get(uuid);
 
         if(game == null) return;
 
@@ -154,7 +151,7 @@ public class CCGameManager implements GameManager {
 
     public void onShutDown(){
         // save all open games!
-        for(CookieClicker game : games.values()){
+        for(CCGame game : games.values()){
             game.cancel();
             game.onGameEnd();
         }
@@ -172,7 +169,7 @@ public class CCGameManager implements GameManager {
 
         Set<Player> players = new HashSet<>();
 
-        for(CookieClicker game : games.values()){
+        for(CCGame game : games.values()){
             if(game.getRule().getKey().equals(key)){
                 players.add(game.getPlayer());
             }

@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.timemachine;
 
-import me.nikl.gamebox.games.cookieclicker.CookieClicker;
+import me.nikl.gamebox.games.cookieclicker.CCGame;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -13,7 +13,7 @@ import org.bukkit.material.MaterialData;
  */
 public class GreatLoopHypothesis extends Upgrade{
 
-    public GreatLoopHypothesis(CookieClicker game) {
+    public GreatLoopHypothesis(CCGame game) {
         super(game, 304);
         this.cost = 7000000000000000000000000.;
         productionsRequirements.put(Buildings.TIME_MACHINE, 200);

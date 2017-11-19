@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.clicking;
 
-import me.nikl.gamebox.games.cookieclicker.CookieClicker;
+import me.nikl.gamebox.games.cookieclicker.CCGame;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
 import org.bukkit.Material;
@@ -12,7 +12,7 @@ import org.bukkit.material.MaterialData;
  */
 public class EludiumMouse extends Upgrade{
 
-    public EludiumMouse(CookieClicker game) {
+    public EludiumMouse(CCGame game) {
         super(game, 190);
         this.cost = 500000000000000.;
         setClickCookieReq(10000000000000.);

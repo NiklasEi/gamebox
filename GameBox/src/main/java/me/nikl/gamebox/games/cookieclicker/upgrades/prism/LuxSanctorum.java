@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.prism;
 
-import me.nikl.gamebox.games.cookieclicker.CookieClicker;
+import me.nikl.gamebox.games.cookieclicker.CCGame;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -11,7 +11,7 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
  */
 public class LuxSanctorum extends Upgrade{
 
-    public LuxSanctorum(CookieClicker game) {
+    public LuxSanctorum(CCGame game) {
         super(game, 306);
         this.cost = 1050000000000000000000000000.;
         productionsRequirements.put(Buildings.PRISM, 200);

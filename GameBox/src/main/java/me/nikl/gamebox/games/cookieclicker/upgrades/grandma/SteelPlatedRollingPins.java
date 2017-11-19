@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.grandma;
 
-import me.nikl.gamebox.games.cookieclicker.CookieClicker;
+import me.nikl.gamebox.games.cookieclicker.CCGame;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -14,7 +14,7 @@ import org.bukkit.inventory.meta.SkullMeta;
  */
 public class SteelPlatedRollingPins extends Upgrade{
 
-    public SteelPlatedRollingPins(CookieClicker game) {
+    public SteelPlatedRollingPins(CCGame game) {
         super(game, 8);
         this.cost = 5000;
         productionsRequirements.put(Buildings.GRANDMA, 5);

@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.curser;
 
-import me.nikl.gamebox.games.cookieclicker.CookieClicker;
+import me.nikl.gamebox.games.cookieclicker.CCGame;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -13,7 +13,7 @@ import org.bukkit.material.MaterialData;
  */
 public class ReinforcedIndexFinger extends Upgrade{
 
-    public ReinforcedIndexFinger(CookieClicker game) {
+    public ReinforcedIndexFinger(CCGame game) {
         super(game, 0);
         this.cost = 100;
         productionsRequirements.put(Buildings.CURSOR, 1);

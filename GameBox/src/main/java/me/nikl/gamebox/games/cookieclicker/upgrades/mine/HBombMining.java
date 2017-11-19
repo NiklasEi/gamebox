@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.mine;
 
-import me.nikl.gamebox.games.cookieclicker.CookieClicker;
+import me.nikl.gamebox.games.cookieclicker.CCGame;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -13,7 +13,7 @@ import org.bukkit.material.MaterialData;
  */
 public class HBombMining extends Upgrade{
 
-    public HBombMining(CookieClicker game) {
+    public HBombMining(CCGame game) {
         super(game, 113);
         this.cost = 60000000000.;
         productionsRequirements.put(Buildings.MINE, 100);

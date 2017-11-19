@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.factory;
 
-import me.nikl.gamebox.games.cookieclicker.CookieClicker;
+import me.nikl.gamebox.games.cookieclicker.CCGame;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -13,7 +13,7 @@ import org.bukkit.material.MaterialData;
  */
 public class SturdierConveyorBelts extends Upgrade{
 
-    public SturdierConveyorBelts(CookieClicker game) {
+    public SturdierConveyorBelts(CCGame game) {
         super(game, 13);
         this.cost = 1300000;
         productionsRequirements.put(Buildings.FACTORY, 1);

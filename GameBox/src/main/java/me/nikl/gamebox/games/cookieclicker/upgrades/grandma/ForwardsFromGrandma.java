@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.grandma;
 
-import me.nikl.gamebox.games.cookieclicker.CookieClicker;
+import me.nikl.gamebox.games.cookieclicker.CCGame;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -13,7 +13,7 @@ import org.bukkit.inventory.meta.SkullMeta;
  */
 public class ForwardsFromGrandma extends Upgrade{
 
-    public ForwardsFromGrandma(CookieClicker game) {
+    public ForwardsFromGrandma(CCGame game) {
         super(game, 7);
         this.cost = 1000;
         productionsRequirements.put(Buildings.GRANDMA, 1);

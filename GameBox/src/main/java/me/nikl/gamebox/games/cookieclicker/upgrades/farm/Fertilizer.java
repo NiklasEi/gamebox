@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker.upgrades.farm;
 
-import me.nikl.gamebox.games.cookieclicker.CookieClicker;
+import me.nikl.gamebox.games.cookieclicker.CCGame;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -13,7 +13,7 @@ import org.bukkit.material.MaterialData;
  */
 public class Fertilizer extends Upgrade{
 
-    public Fertilizer(CookieClicker game) {
+    public Fertilizer(CCGame game) {
         super(game, 11);
         this.cost = 55000;
         productionsRequirements.put(Buildings.FARM, 5);
