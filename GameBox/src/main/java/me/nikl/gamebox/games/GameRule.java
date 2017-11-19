@@ -13,9 +13,12 @@ public class GameRule {
 
     protected boolean saveStats;
 
-    public GameRule(boolean saveStats, HashSet<SaveType> saveTypes){
+    protected String key;
+
+    public GameRule(boolean saveStats, HashSet<SaveType> saveTypes, String key){
         this.saveTypes = saveTypes;
         this.saveStats = saveStats;
+        this.key = key;
     }
 
     public HashSet<SaveType> getSaveTypes(){
@@ -24,5 +27,9 @@ public class GameRule {
 
     public boolean isSaveStats(){
         return saveStats;
+    }
+
+    public String getKey(){
+        return this.key;
     }
 }
