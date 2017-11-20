@@ -1,10 +1,10 @@
 package me.nikl.gamebox.games.cookieclicker;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.data.Statistics;
-import me.nikl.gamebox.games.GameRule;
+import me.nikl.gamebox.data.DataBase;
 import me.nikl.gamebox.data.SaveType;
 import me.nikl.gamebox.games.GameManager;
+import me.nikl.gamebox.games.GameRule;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -29,7 +29,7 @@ public class CCGameManager implements GameManager {
     private Map<UUID, CCGame> games = new HashMap<>();
 
     private Map<String, CCGameRules> gameRules = new HashMap<>();
-    private Statistics statistics;
+    private DataBase statistics;
     private CCLanguage lang;
 
     private File savesFile;
@@ -37,7 +37,7 @@ public class CCGameManager implements GameManager {
 
     public CCGameManager(CookieClicker game){
         this.game = game;
-        this.statistics = game.getGameBox().getStatistics();
+        this.statistics = game.getGameBox().getDataBase();
         this.lang = (CCLanguage) game.getGameLang();
 
         savesFile = new File(game.getDataFolder().toString() + File.separatorChar + "saves.yml");

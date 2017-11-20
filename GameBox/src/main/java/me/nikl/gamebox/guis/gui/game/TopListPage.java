@@ -1,8 +1,8 @@
 package me.nikl.gamebox.guis.gui.game;
 
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.data.DataBase;
 import me.nikl.gamebox.data.SaveType;
-import me.nikl.gamebox.data.Statistics;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.util.NumberUtil;
 import org.bukkit.Bukkit;
@@ -14,7 +14,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
 
 /**
  * Created by Niklas on 19.02.2017.
@@ -39,9 +38,9 @@ public class TopListPage  extends GameGuiPage{
 
     public void update(){
 
-        ArrayList<Statistics.Stat> topList = plugin.getStatistics().getTopList(args[0], args[1].replace(GUIManager.TOP_LIST_KEY_ADDON, ""), saveType, inventory.getSize());
+        ArrayList<DataBase.Stat> topList = plugin.getDataBase().getTopList(args[0], args[1].replace(GUIManager.TOP_LIST_KEY_ADDON, ""), saveType, inventory.getSize());
 
-        Statistics.Stat stat;
+        DataBase.Stat stat;
         ItemStack skull;
         SkullMeta skullMeta;
         ArrayList<String> skullLore;

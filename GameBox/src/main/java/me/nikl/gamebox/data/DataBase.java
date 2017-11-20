@@ -10,7 +10,7 @@ import java.util.UUID;
  *
  *
  */
-public abstract class Statistics {
+public abstract class DataBase {
 
 
     public static final String PLAYER_PLAY_SOUNDS = "playSounds";
@@ -22,21 +22,19 @@ public abstract class Statistics {
 
     // ToDo: this whole class is chaotic
     //   restructure for next main version update!
-    public Statistics(GameBox plugin){
+    public DataBase(GameBox plugin){
         this.plugin = plugin;
     }
 
-
-    public abstract boolean load();
+    public abstract boolean load(boolean async);
 
     public abstract boolean getBoolean(UUID uuid, String path);
-
 
     public abstract boolean getBoolean(UUID uuid, String path, boolean defaultValue);
 
     public abstract void set(String uuid, String path, Object b);
 
-    public abstract void save();
+    public abstract void save(boolean async);
 
     public abstract int getInt(UUID uuid, String path, int defaultValue);
 

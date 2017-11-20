@@ -5,32 +5,23 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.UUID;
+import java.io.*;
+import java.util.*;
 import java.util.logging.Level;
 
 /**
  * Created by Niklas on 02.03.2017.
  */
-public class StatisticsFile extends Statistics {
+public class FileDB extends DataBase {
     private File dataFile;
     private FileConfiguration data;
-    public StatisticsFile(GameBox plugin) {
+    public FileDB(GameBox plugin) {
         super(plugin);
         this.dataFile = new File(plugin.getDataFolder().toString() + File.separatorChar + "data.yml");
     }
 
     @Override
-    public boolean load() {
+    public boolean load(boolean async) {
         if(!dataFile.exists()){
             try {
                 dataFile.getParentFile().mkdir();
@@ -68,7 +59,7 @@ public class StatisticsFile extends Statistics {
     }
 
     @Override
-    public void save() {
+    public void save(boolean async) {
         try {
             this.data.save(dataFile);
         } catch (IOException e) {

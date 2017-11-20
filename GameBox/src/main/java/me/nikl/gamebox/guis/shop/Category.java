@@ -1,11 +1,11 @@
 package me.nikl.gamebox.guis.shop;
 
-import me.nikl.gamebox.util.ClickAction;
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.gui.AGui;
-import me.nikl.gamebox.players.GBPlayer;
+import me.nikl.gamebox.util.ClickAction;
 import me.nikl.gamebox.util.ItemStackUtil;
 import me.nikl.gamebox.util.StringUtil;
 import org.bukkit.Bukkit;
@@ -19,11 +19,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by Niklas on 13.04.2017.

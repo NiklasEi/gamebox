@@ -1,12 +1,12 @@
 package me.nikl.gamebox.guis.gui.game;
 
-import me.nikl.gamebox.games.Game;
-import me.nikl.gamebox.util.ClickAction;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.PluginManager;
+import me.nikl.gamebox.games.Game;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.gui.AGui;
+import me.nikl.gamebox.util.ClickAction;
 import me.nikl.gamebox.util.ItemStackUtil;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;

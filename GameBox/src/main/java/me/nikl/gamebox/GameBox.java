@@ -2,18 +2,17 @@ package me.nikl.gamebox;
 
 import me.nikl.gamebox.commands.AdminCommand;
 import me.nikl.gamebox.commands.MainCommand;
-import me.nikl.gamebox.data.PlaceholderAPIHook;
-import me.nikl.gamebox.data.Statistics;
-import me.nikl.gamebox.data.StatisticsFile;
-import me.nikl.gamebox.data.StatisticsMysql;
+import me.nikl.gamebox.data.DataBase;
+import me.nikl.gamebox.data.FileDB;
+import me.nikl.gamebox.data.MysqlDB;
 import me.nikl.gamebox.games.Game;
 import me.nikl.gamebox.games.GameLanguage;
 import me.nikl.gamebox.guis.GUIManager;
+import me.nikl.gamebox.invitation.HandleInvitations;
+import me.nikl.gamebox.invitation.HandleInviteInput;
 import me.nikl.gamebox.listeners.EnterGameBoxListener;
 import me.nikl.gamebox.listeners.LeftGameBoxListener;
 import me.nikl.gamebox.nms.*;
-import me.nikl.gamebox.players.HandleInvitations;
-import me.nikl.gamebox.players.HandleInviteInput;
 import me.nikl.gamebox.util.FileUtil;
 import me.nikl.gamebox.util.Module;
 import net.milkbowl.vault.economy.Economy;
@@ -74,7 +73,7 @@ public class GameBox extends JavaPlugin{
 
 	private MainCommand mainCommand;
 
-	private Statistics statistics;
+	private DataBase dataBase;
 
 	private Metrics metrics;
 
@@ -212,15 +211,15 @@ public class GameBox extends JavaPlugin{
 
 		// here try connecting to database when option set in config (for later)
 		if(GameBoxSettings.useMysql){
-			// on reload the old statistics have to be saved before loading the new one
-			if(statistics != null) statistics.save();
+			// on reload the old dataBase have to be saved before loading the new one
+			if(dataBase != null) dataBase.save();
 
 			// get and load a new statistic
-			this.statistics = new StatisticsMysql(this);
-			if (!statistics.load()) {
+			this.dataBase = new MysqlDB(this);
+			if (!dataBase.load()) {
 				getLogger().log(Level.SEVERE, " Falling back to file storage...");
 				GameBoxSettings.useMysql = false;
-				statistics = null;
+				dataBase = null;
 			}
 		}
 
@@ -228,12 +227,12 @@ public class GameBox extends JavaPlugin{
 		// and the plugin should fall back to file storage
 		if(!GameBoxSettings.useMysql) {
 
-			// on reload the old statistics have to be saved before loading the new one
-			if(statistics != null) statistics.save();
+			// on reload the old dataBase have to be saved before loading the new one
+			if(dataBase != null) dataBase.save();
 
-			// get and load a new file statistics
-			this.statistics = new StatisticsFile(this);
-			if (!statistics.load()) {
+			// get and load a new file dataBase
+			this.dataBase = new FileDB(this);
+			if (!dataBase.load()) {
 				getLogger().log(Level.SEVERE, " Something went wrong with the data file");
 				return false;
 			}
@@ -307,8 +306,8 @@ public class GameBox extends JavaPlugin{
 	}
 
 
-	public Statistics getStatistics(){
-		return this.statistics;
+	public DataBase getDataBase(){
+		return this.dataBase;
 	}
 
 
@@ -379,7 +378,7 @@ public class GameBox extends JavaPlugin{
 	@Override
 	public void onDisable(){
 		if(pManager != null) pManager.shutDown();
-		if(statistics != null) statistics.save();
+		if(dataBase != null) dataBase.save();
 	}
 
 

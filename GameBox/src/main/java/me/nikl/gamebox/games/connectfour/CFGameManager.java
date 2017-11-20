@@ -1,8 +1,8 @@
 package me.nikl.gamebox.games.connectfour;
 
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.data.DataBase;
 import me.nikl.gamebox.data.SaveType;
-import me.nikl.gamebox.data.Statistics;
 import me.nikl.gamebox.games.GameManager;
 import me.nikl.gamebox.games.GameRule;
 import me.nikl.gamebox.nms.NMSUtil;
@@ -18,7 +18,6 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +37,7 @@ public class CFGameManager implements GameManager {
 
     private NMSUtil nms;
 
-    private Statistics statistics;
+    private DataBase statistics;
 
     private Map<Integer, ItemStack> chips = new HashMap<>();
 
@@ -53,7 +52,7 @@ public class CFGameManager implements GameManager {
 
         this.nms = connectFour.getGameBox().getNMS();
 
-        this.statistics = connectFour.getGameBox().getStatistics();
+        this.statistics = connectFour.getGameBox().getDataBase();
 
         this.gameRules = new HashMap<>();
 

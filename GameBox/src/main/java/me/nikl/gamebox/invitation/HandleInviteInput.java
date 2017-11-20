@@ -1,4 +1,4 @@
-package me.nikl.gamebox.players;
+package me.nikl.gamebox.invitation;
 
 import me.nikl.gamebox.GameBox;
 import org.bukkit.Bukkit;
@@ -7,12 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by Niklas on 22.02.2017.

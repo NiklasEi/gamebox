@@ -1,7 +1,9 @@
 package me.nikl.gamebox.guis;
 
-import me.nikl.gamebox.*;
+import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
+import me.nikl.gamebox.GameBoxSettings;
+import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.events.EnterGameBoxEvent;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.gui.AGui;
@@ -12,7 +14,6 @@ import me.nikl.gamebox.guis.gui.game.TopListPage;
 import me.nikl.gamebox.guis.shop.Page;
 import me.nikl.gamebox.guis.shop.ShopManager;
 import me.nikl.gamebox.nms.NMSUtil;
-import me.nikl.gamebox.players.GBPlayer;
 import me.nikl.gamebox.util.ClickAction;
 import me.nikl.gamebox.util.Permission;
 import org.bukkit.Bukkit;

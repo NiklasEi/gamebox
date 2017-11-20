@@ -1,12 +1,11 @@
 package me.nikl.gamebox.data;
 
-import java.sql.Connection;
-
 import com.zaxxer.hikari.HikariDataSource;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ import java.util.UUID;
 /**
  * Created by Niklas
  */
-public class StatisticsMysql extends Statistics {
+public class MysqlDB extends DataBase {
 
 
     private static final String INSERT = "INSERT INTO GBPlayers VALUES(?,?,?,?) ON DUPLICATE KEY UPDATE UUID=?";
@@ -29,7 +28,7 @@ public class StatisticsMysql extends Statistics {
     private HikariDataSource hikari;
 
 
-    public StatisticsMysql(GameBox plugin) {
+    public MysqlDB(GameBox plugin) {
         super(plugin);
 
         FileConfiguration config = plugin.getConfig();
@@ -41,7 +40,7 @@ public class StatisticsMysql extends Statistics {
     }
 
     @Override
-    public boolean load() {
+    public boolean load(boolean async) {
         hikari = new HikariDataSource();
         hikari.setDataSourceClassName("com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
         hikari.addDataSourceProperty("serverName", host);
@@ -78,7 +77,7 @@ public class StatisticsMysql extends Statistics {
     }
 
     @Override
-    public void save() {
+    public void save(boolean async) {
 
     }
 

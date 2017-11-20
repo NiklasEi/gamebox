@@ -1,8 +1,7 @@
-package me.nikl.gamebox.players;
+package me.nikl.gamebox.data;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
-import me.nikl.gamebox.data.Statistics;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -16,14 +15,14 @@ public class GBPlayer {
     private UUID uuid;
     private boolean playSounds = true;
     private GameBox plugin;
-    private Statistics statistics;
+    private DataBase statistics;
 
     private int tokens;
 
     public GBPlayer(GameBox plugin, UUID uuid){
         this.uuid = uuid;
         this.plugin = plugin;
-        this.statistics = plugin.getStatistics();
+        this.statistics = plugin.getDataBase();
 
         // save current name of player for easier management (only in file!)
         if(!GameBoxSettings.useMysql) {
@@ -38,8 +37,8 @@ public class GBPlayer {
 
     private void loadData() {
         // ToDo
-        playSounds = statistics.getBoolean(uuid, Statistics.PLAYER_PLAY_SOUNDS, true);
-        tokens = statistics.getInt(uuid, Statistics.TOKEN_PATH, 0);
+        playSounds = statistics.getBoolean(uuid, DataBase.PLAYER_PLAY_SOUNDS, true);
+        tokens = statistics.getInt(uuid, DataBase.TOKEN_PATH, 0);
     }
 
     public UUID getUuid() {
@@ -77,7 +76,7 @@ public class GBPlayer {
 
     public void save() {
         //go through all values and save them
-        statistics.set(uuid.toString(), Statistics.PLAYER_PLAY_SOUNDS, playSounds);
-        statistics.set(uuid.toString(), Statistics.TOKEN_PATH, tokens);
+        statistics.set(uuid.toString(), DataBase.PLAYER_PLAY_SOUNDS, playSounds);
+        statistics.set(uuid.toString(), DataBase.TOKEN_PATH, tokens);
     }
 }

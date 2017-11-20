@@ -1,7 +1,7 @@
 package me.nikl.gamebox;
 
-import me.nikl.gamebox.data.Statistics;
-import me.nikl.gamebox.players.GBPlayer;
+import me.nikl.gamebox.data.DataBase;
+import me.nikl.gamebox.data.GBPlayer;
 import org.bukkit.entity.Player;
 
 /**
@@ -33,12 +33,12 @@ public class GameBoxAPI {
         }
 
         // handle offline or not cached players
-        if(!plugin.getStatistics().isSet(player.getUniqueId().toString())) {
-            plugin.getStatistics().set(player.getUniqueId().toString(), Statistics.TOKEN_PATH, count);
+        if(!plugin.getDataBase().isSet(player.getUniqueId().toString())) {
+            plugin.getDataBase().set(player.getUniqueId().toString(), DataBase.TOKEN_PATH, count);
             return true;
         } else {
-            int oldCount = plugin.getStatistics().getInt(player.getUniqueId(), Statistics.TOKEN_PATH, 0);
-            plugin.getStatistics().set(player.getUniqueId().toString(), Statistics.TOKEN_PATH, count + oldCount);
+            int oldCount = plugin.getDataBase().getInt(player.getUniqueId(), DataBase.TOKEN_PATH, 0);
+            plugin.getDataBase().set(player.getUniqueId().toString(), DataBase.TOKEN_PATH, count + oldCount);
             return true;
         }
     }
@@ -56,7 +56,7 @@ public class GameBoxAPI {
             gbPlayer.setTokens(count);
             return true;
         }
-        plugin.getStatistics().set(player.getUniqueId().toString(), Statistics.TOKEN_PATH, count);
+        plugin.getDataBase().set(player.getUniqueId().toString(), DataBase.TOKEN_PATH, count);
         return true;
     }
 
@@ -80,11 +80,11 @@ public class GameBoxAPI {
         }
 
         // handle offline or not cached players
-        if(plugin.getStatistics().isSet(player.getUniqueId().toString())) {
+        if(plugin.getDataBase().isSet(player.getUniqueId().toString())) {
 
-            int oldCount = plugin.getStatistics().getInt(player.getUniqueId(), Statistics.TOKEN_PATH, 0);
+            int oldCount = plugin.getDataBase().getInt(player.getUniqueId(), DataBase.TOKEN_PATH, 0);
             if(oldCount >= count){
-                plugin.getStatistics().set(player.getUniqueId().toString(), Statistics.TOKEN_PATH, oldCount - count);
+                plugin.getDataBase().set(player.getUniqueId().toString(), DataBase.TOKEN_PATH, oldCount - count);
                 return true;
             } else {
                 return false;
@@ -103,7 +103,7 @@ public class GameBoxAPI {
             return gbPlayer.getTokens();
         }
 
-        return plugin.getStatistics().getInt(player.getUniqueId(), Statistics.TOKEN_PATH, 0);
+        return plugin.getDataBase().getInt(player.getUniqueId(), DataBase.TOKEN_PATH, 0);
     }
 
 

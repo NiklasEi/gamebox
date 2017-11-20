@@ -2,9 +2,9 @@ package me.nikl.gamebox.commands;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
+import me.nikl.gamebox.data.DataBase;
+import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.util.Permission;
-import me.nikl.gamebox.data.Statistics;
-import me.nikl.gamebox.players.GBPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -100,10 +100,10 @@ public class AdminCommand implements CommandExecutor {
             }
 
             // handle offline or not cached players
-            if(!plugin.getStatistics().isSet(player.getUniqueId().toString())){
+            if(!plugin.getDataBase().isSet(player.getUniqueId().toString())){
                 switch (args[0].toLowerCase()){
                     case "givetoken":
-                        plugin.getStatistics().set(player.getUniqueId().toString(), Statistics.TOKEN_PATH, count);
+                        plugin.getDataBase().set(player.getUniqueId().toString(), DataBase.TOKEN_PATH, count);
                         break;
 
                     case "taketoken":
@@ -111,7 +111,7 @@ public class AdminCommand implements CommandExecutor {
                         return true;
 
                     case "settoken":
-                        plugin.getStatistics().set(player.getUniqueId().toString(), Statistics.TOKEN_PATH, count);
+                        plugin.getDataBase().set(player.getUniqueId().toString(), DataBase.TOKEN_PATH, count);
                         break;
 
                     default: // can't happen due to the check at the beginning of the command
@@ -121,29 +121,29 @@ public class AdminCommand implements CommandExecutor {
                 sender.sendMessage(lang.PREFIX + lang.CMD_TOKEN.replace("%player%", player.getName()).replace("%token%", String.valueOf(count)));
                 return true;
             } else {
-                int oldCount = plugin.getStatistics().getInt(player.getUniqueId(), Statistics.TOKEN_PATH, 0);
+                int oldCount = plugin.getDataBase().getInt(player.getUniqueId(), DataBase.TOKEN_PATH, 0);
                 switch (args[0].toLowerCase()){
                     case "givetoken":
-                        plugin.getStatistics().set(player.getUniqueId().toString(), Statistics.TOKEN_PATH, count + oldCount);
+                        plugin.getDataBase().set(player.getUniqueId().toString(), DataBase.TOKEN_PATH, count + oldCount);
                         break;
 
                     case "taketoken":
                         if(oldCount >= count){
-                            plugin.getStatistics().set(player.getUniqueId().toString(), Statistics.TOKEN_PATH, oldCount - count);
+                            plugin.getDataBase().set(player.getUniqueId().toString(), DataBase.TOKEN_PATH, oldCount - count);
                         } else {
                             sender.sendMessage(lang.PREFIX + ChatColor.RED + " " + player.getName() + " only has " + oldCount + " token!");
                             return true;
                         }
 
                     case "settoken":
-                        plugin.getStatistics().set(player.getUniqueId().toString(), Statistics.TOKEN_PATH, count);
+                        plugin.getDataBase().set(player.getUniqueId().toString(), DataBase.TOKEN_PATH, count);
                         break;
 
                     default: // can't happen due to the check at the beginning of the command
                         return false;
 
                 }
-                sender.sendMessage(lang.PREFIX + lang.CMD_TOKEN.replace("%player%", player.getName()).replace("%token%", String.valueOf(plugin.getStatistics().getInt(player.getUniqueId(), Statistics.TOKEN_PATH, 0))));
+                sender.sendMessage(lang.PREFIX + lang.CMD_TOKEN.replace("%player%", player.getName()).replace("%token%", String.valueOf(plugin.getDataBase().getInt(player.getUniqueId(), DataBase.TOKEN_PATH, 0))));
                 return true;
             }
         } // end of give/take/set token cmd
@@ -170,7 +170,7 @@ public class AdminCommand implements CommandExecutor {
             }
 
             sender.sendMessage(lang.PREFIX + lang.CMD_TOKEN.replace("%player%", player.getName()).replace("%token%"
-                    , String.valueOf(plugin.getStatistics().getInt(player.getUniqueId(), Statistics.TOKEN_PATH, 0))));
+                    , String.valueOf(plugin.getDataBase().getInt(player.getUniqueId(), DataBase.TOKEN_PATH, 0))));
             return true;
         } else if(args[0].equalsIgnoreCase("reload")){
             if(plugin.reload()){

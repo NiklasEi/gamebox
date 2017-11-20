@@ -1,9 +1,9 @@
 package me.nikl.gamebox.guis.gui.game;
 
-import me.nikl.gamebox.util.ClickAction;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
+import me.nikl.gamebox.util.ClickAction;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

@@ -1,17 +1,16 @@
 package me.nikl.gamebox;
 
+import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.events.LeftGameBoxEvent;
 import me.nikl.gamebox.games.Game;
 import me.nikl.gamebox.games.GameManager;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.timer.TitleTimer;
+import me.nikl.gamebox.invitation.HandleInvitations;
+import me.nikl.gamebox.invitation.HandleInviteInput;
 import me.nikl.gamebox.nms.NMSUtil;
-import me.nikl.gamebox.players.GBPlayer;
-import me.nikl.gamebox.players.HandleInvitations;
-import me.nikl.gamebox.players.HandleInviteInput;
 import me.nikl.gamebox.util.*;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -24,32 +23,17 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 
 /**

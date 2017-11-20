@@ -1,13 +1,13 @@
 package me.nikl.gamebox.guis.shop;
 
-import me.nikl.gamebox.util.ClickAction;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.PluginManager;
+import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.gui.AGui;
-import me.nikl.gamebox.players.GBPlayer;
+import me.nikl.gamebox.util.ClickAction;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;

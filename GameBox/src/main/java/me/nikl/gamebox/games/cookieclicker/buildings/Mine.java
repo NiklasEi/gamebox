@@ -1,7 +1,7 @@
 package me.nikl.gamebox.games.cookieclicker.buildings;
 
-import me.nikl.gamebox.games.cookieclicker.CookieClicker;
 import me.nikl.gamebox.GameBoxSettings;
+import me.nikl.gamebox.games.cookieclicker.CookieClicker;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.ItemMeta;

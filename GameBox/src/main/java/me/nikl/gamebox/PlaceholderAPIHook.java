@@ -1,7 +1,6 @@
-package me.nikl.gamebox.data;
+package me.nikl.gamebox;
 
 import me.clip.placeholderapi.external.EZPlaceholderHook;
-import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.games.Game;
 import org.bukkit.entity.Player;
 

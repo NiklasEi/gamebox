@@ -1,13 +1,13 @@
 package me.nikl.gamebox.guis.gui;
 
-import me.nikl.gamebox.util.ClickAction;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.PluginManager;
+import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.button.ToggleButton;
-import me.nikl.gamebox.players.GBPlayer;
+import me.nikl.gamebox.util.ClickAction;
 import me.nikl.gamebox.util.ItemStackUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
