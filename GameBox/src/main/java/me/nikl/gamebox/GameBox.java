@@ -14,7 +14,6 @@ import me.nikl.gamebox.listeners.EnterGameBoxListener;
 import me.nikl.gamebox.listeners.LeftGameBoxListener;
 import me.nikl.gamebox.nms.*;
 import me.nikl.gamebox.util.FileUtil;
-import me.nikl.gamebox.util.Module;
 import net.milkbowl.vault.economy.Economy;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -83,6 +82,7 @@ public class GameBox extends JavaPlugin{
 	@Deprecated
 	public static boolean playSounds = GameBoxSettings.playSounds;
 
+	private GameRegistry gameRegistry;
 
 
 	@Override
@@ -99,12 +99,18 @@ public class GameBox extends JavaPlugin{
 			return;
 		}
 
+		this.gameRegistry = new GameRegistry(this);
+		// GameBox module
+		new Module(this, "gamebox");
+
 		if (!reload()) {
 			getLogger().severe(" Problem while loading the plugin! Plugin was disabled!");
 
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
 		}
+
+		registerGames();
 
 		if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
 			new PlaceholderAPIHook(this, "gamebox");
@@ -120,8 +126,8 @@ public class GameBox extends JavaPlugin{
 				@Override
 				public HashMap<String, Integer> call() throws Exception {
 					HashMap<String, Integer> valueMap = new HashMap<>();
-					for(Module module : getPluginManager().getGames().keySet()){
-						valueMap.put(getOriginalGameName(module), 1);
+					for(String gameID : getPluginManager().getGames().keySet()){
+						valueMap.put(getOriginalGameName(gameID), 1);
 					}
 					return valueMap;
 				}
@@ -133,8 +139,8 @@ public class GameBox extends JavaPlugin{
 
 				Map<String, Integer> entry = new HashMap<>();
 
-				for(Module module : getPluginManager().getGames().keySet()){
-					entry.put(getOriginalGameName(module), 1);
+				for(String gameID : getPluginManager().getGames().keySet()){
+					entry.put(getOriginalGameName(gameID), 1);
 				}
 
 				map.put(String.valueOf(getPluginManager().getGames().size()), entry);
@@ -178,6 +184,14 @@ public class GameBox extends JavaPlugin{
 		}.runTaskLaterAsynchronously(this, 100);
 	}
 
+	private void registerGames() {
+		// Default games:
+		new Module(this, "connectfour"
+				, "me.nikl.gamebox.games.connectfour.ConnectFour");
+		new Module(this, "cookieclicker"
+				, "me.nikl.gamebox.games.cookieclicker.CookieClicker");
+	}
+
 	/**
 	 * Reload method called onEnable and on the reload command
 	 *
@@ -212,11 +226,11 @@ public class GameBox extends JavaPlugin{
 		// here try connecting to database when option set in config (for later)
 		if(GameBoxSettings.useMysql){
 			// on reload the old dataBase have to be saved before loading the new one
-			if(dataBase != null) dataBase.save();
+			if(dataBase != null) dataBase.save(false);
 
 			// get and load a new statistic
 			this.dataBase = new MysqlDB(this);
-			if (!dataBase.load()) {
+			if (!dataBase.load(false)) {
 				getLogger().log(Level.SEVERE, " Falling back to file storage...");
 				GameBoxSettings.useMysql = false;
 				dataBase = null;
@@ -228,11 +242,11 @@ public class GameBox extends JavaPlugin{
 		if(!GameBoxSettings.useMysql) {
 
 			// on reload the old dataBase have to be saved before loading the new one
-			if(dataBase != null) dataBase.save();
+			if(dataBase != null) dataBase.save(false);
 
 			// get and load a new file dataBase
 			this.dataBase = new FileDB(this);
-			if (!dataBase.load()) {
+			if (!dataBase.load(false)) {
 				getLogger().log(Level.SEVERE, " Something went wrong with the data file");
 				return false;
 			}
@@ -261,9 +275,6 @@ public class GameBox extends JavaPlugin{
 		mainCommand = new MainCommand(this);
 		this.getCommand("gamebox").setExecutor(mainCommand);
 		this.getCommand("gameboxadmin").setExecutor(new AdminCommand(this));
-
-		// load games
-		pManager.loadGames();
 
 		// load players that are already online (otherwise done on join)
 		pManager.loadPlayers();
@@ -378,7 +389,7 @@ public class GameBox extends JavaPlugin{
 	@Override
 	public void onDisable(){
 		if(pManager != null) pManager.shutDown();
-		if(dataBase != null) dataBase.save();
+		if(dataBase != null) dataBase.save(false);
 	}
 
 
@@ -444,16 +455,15 @@ public class GameBox extends JavaPlugin{
 	 * when using the customized game names.
 	 * Try to get the default name from the default
 	 * language files, then fall back on hardcoded names.
-	 * @param module Id of the game
+	 * @param gameID Id of the game
 	 * @return the original name if given, otherwise the ID itself
 	 */
-	private String getOriginalGameName(Module module){
-		if(module == null) return "null";
+	private String getOriginalGameName(String gameID){
+		if(gameID == null) return "null";
 
-		GameLanguage gameLang = getPluginManager().getGame(module).getGameLang();
+		GameLanguage gameLang = getPluginManager().getGame(gameID).getGameLang();
 		if(gameLang != null) return gameLang.PLAIN_NAME;
 
-		String gameID = module.moduleID();
 		switch (gameID){
 			case "minesweeper": return "Minesweeper";
 			case "battleship": return "Battleship";
@@ -479,7 +489,7 @@ public class GameBox extends JavaPlugin{
 	}
 
 	public FileConfiguration getConfig(Module module) {
-		if(module == Module.GAMEBOX)
+		if(module.getModuleID().equals("gamebox"))
 			return getConfig();
 
 		Game game = getPluginManager().getGame(module);
@@ -491,5 +501,9 @@ public class GameBox extends JavaPlugin{
 
 	public void info(String message) {
 		getLogger().info(message);
+	}
+
+	public GameRegistry getGameRegistry() {
+		return gameRegistry;
 	}
 }

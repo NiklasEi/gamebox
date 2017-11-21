@@ -66,7 +66,7 @@ public class PluginManager implements Listener {
 	// save and handle invitations
     private HandleInvitations handleInvitations;
 
-	private Map<Module, Game> games = new HashMap<>();
+	private Map<String, Game> games = new HashMap<>();
 
 	// save the players inventory contents
 	private Map<UUID, ItemStack[]> savedContents  = new HashMap<>();
@@ -314,8 +314,8 @@ public class PluginManager implements Listener {
 
 		GameBox.debug("checking gameManagers     clicked inv has " + event.getInventory().getSize() + " slots");
 
-		for(Module module: games.keySet()){
-            GameManager gameManager = games.get(module).getGameManager();
+		for(String gameID : games.keySet()){
+            GameManager gameManager = games.get(gameID).getGameManager();
 			if(gameManager.isInGame(uuid)){
 				event.setCancelled(true);
 				if((event.getRawSlot() - event.getSlot()) < event.getView().getTopInventory().getSize()){
@@ -324,7 +324,7 @@ public class PluginManager implements Listener {
                     GameBox.debug("click in top or middle inventory");
 				    gameManager.onInventoryClick(event);
                 } else {
-				    if(games.get(module).getSettings().isHandleClicksOnHotbar()){
+				    if(games.get(gameID).getSettings().isHandleClicksOnHotbar()){
                         gameManager.onInventoryClick(event);
                     } else {
 				        if(event.getView().getBottomInventory().getItem(event.getSlot()) == null){
@@ -333,7 +333,7 @@ public class PluginManager implements Listener {
                         }
                         if(event.getSlot() == toGame){
                             gameManager.removeFromGame(event.getWhoClicked().getUniqueId());
-                            guiManager.openGameGui((Player) event.getWhoClicked(), module.moduleID(), GUIManager.MAIN_GAME_GUI);
+                            guiManager.openGameGui((Player) event.getWhoClicked(), gameID, GUIManager.MAIN_GAME_GUI);
                             if(GameBoxSettings.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
                                 ((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.CLICK.bukkitSound(), volume, pitch);
                             }
@@ -611,19 +611,18 @@ public class PluginManager implements Listener {
      * @param game Game instance to register
      */
     public void registerGame(Game game){
-        games.put(game.getModule(), game);
+        games.put(game.getGameID(), game);
         Permission.addGameID(game.getGameID());
         gamesRegistered ++;
     }
 
-    @Deprecated
     public GameManager getGameManager(String gameID){
-        Module module = Module.fromID(gameID);
-        return module == null ? null : getGameManager(module);
+        Game game = getGame(gameID);
+        return game == null ? null : game.getGameManager();
     }
 
 	public GameManager getGameManager(Module module){
-		return games.get(module).getGameManager();
+		return getGameManager(module.getModuleID());
 	}
 
 	public GUIManager getGuiManager(){
@@ -655,8 +654,11 @@ public class PluginManager implements Listener {
 
 
     private GameManager getGameManager(UUID uuid){
-        for(Module module : games.keySet()){
-            if(games.get(module).getGameManager().isInGame(uuid)) return games.get(module).getGameManager();
+        GameManager manager;
+        for(String gameID : games.keySet()){
+            manager = getGameManager(gameID);
+            if(manager.isInGame(uuid))
+                return manager;
         }
         return null;
     }
@@ -666,8 +668,9 @@ public class PluginManager implements Listener {
     }
 
     public boolean isInGame(UUID uuid){
-        for(Module module : games.keySet()){
-            if(games.get(module).getGameManager().isInGame(uuid)) return true;
+        for(String gameID : games.keySet()){
+            if(getGameManager(gameID).isInGame(uuid))
+                return true;
         }
         return false;
     }
@@ -748,7 +751,9 @@ public class PluginManager implements Listener {
         if(gbPlayer == null) return false;
 
         gbPlayer.setTokens(gbPlayer.getTokens() + tokens);
-        Bukkit.getPlayer(player).sendMessage(lang.PREFIX + lang.WON_TOKEN.replace("%tokens%", String.valueOf(tokens)).replace("%game%", getGame(gameID).getGameLang().PLAIN_NAME));
+        Bukkit.getPlayer(player).sendMessage(lang.PREFIX + lang.WON_TOKEN
+                .replace("%tokens%", String.valueOf(tokens))
+                .replace("%game%", getGame(gameID).getGameLang().PLAIN_NAME));
         return true;
     }
 
@@ -760,22 +765,16 @@ public class PluginManager implements Listener {
         }
     }
 
-    public Map<Module, Game> getGames(){
+    public Map<String, Game> getGames(){
         return this.games;
     }
 
     public Game getGame(Module module) {
-        return this.games.get(module);
+        return getGame(module.getModuleID());
     }
 
     public Game getGame(String gameID){
-        Module module;
-        try {
-            module = Module.valueOf(gameID.toUpperCase().replace(" ", "_"));
-        } catch (IllegalArgumentException e){
-            return null;
-        }
-        return getGame(module);
+        return games.get(gameID);
     }
 
     public Game getGame(UUID uuid){
@@ -786,28 +785,7 @@ public class PluginManager implements Listener {
         return null;
     }
 
-    /**
-     * Go through all modules and try getting game instances through their classes
-     */
-    public void loadGames() {
-        for(Module module : Module.values()){
-            loadGame(module);
-        }
-    }
-
-    private void loadGame(Module module) {
-        Class<Game> clazz = module.getGameClass();
-        if(clazz == null) return;
-
-        try {
-            Constructor<Game> ctor = clazz.getConstructor(GameBox.class);
-            Game game = ctor.newInstance(plugin);
-            games.put(module, game);
-            game.onEnable();
-        } catch (NoSuchMethodException | IllegalAccessException
-                | InstantiationException | InvocationTargetException e) {
-            e.printStackTrace();
-            plugin.info(" The game class needs a public constructor taking a GameBox obj!");
-        }
+    public void addGame(Game game) {
+        games.put(game.getGameID(), game);
     }
 }

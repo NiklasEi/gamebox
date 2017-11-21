@@ -3,6 +3,7 @@ package me.nikl.gamebox.games;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.GameBoxSettings;
+import me.nikl.gamebox.Module;
 import me.nikl.gamebox.data.SaveType;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
@@ -11,6 +12,7 @@ import me.nikl.gamebox.guis.gui.game.StartMultiplayerGamePage;
 import me.nikl.gamebox.guis.gui.game.TopListPage;
 import me.nikl.gamebox.nms.NMSUtil;
 import me.nikl.gamebox.util.*;
+import org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -55,10 +57,11 @@ public abstract class Game {
 
     protected String[] subCommands;
 
-    public Game(GameBox gameBox, Module module, String[] subCommands){
-        this.module = module;
-        this.subCommands = subCommands;
+    public Game(GameBox gameBox, String gameID, String[] subCommands){
+        this.module = gameBox.getGameRegistry().getModule(gameID);
+        Validate.notNull(module, " You cannot initialize a game without registering it's module first!");
 
+        this.subCommands = subCommands;
         this.gameBox = gameBox;
         this.gbLang = gameBox.lang;
         this.nms = gameBox.getNMS();
@@ -187,7 +190,7 @@ public abstract class Game {
                     case TWO_PLAYER:
                         guiManager.registerGameGUI(new StartMultiplayerGamePage(gameBox, guiManager
                                 , gameSettings.getGameGuiSize()
-                                , module.moduleID(), buttonID, StringUtil.color(buttonSec
+                                , getGameID(), buttonID, StringUtil.color(buttonSec
                                 .getString("inviteGuiTitle","&4title not set in config"))));
 
                         button.setAction(ClickAction.OPEN_GAME_GUI);
@@ -200,7 +203,7 @@ public abstract class Game {
 
 
                 button.setItemMeta(meta);
-                button.setArgs(module.moduleID(), buttonID);
+                button.setArgs(getGameID(), buttonID);
 
                 // from here it is game specific info
                 gameManager.loadGameRules(buttonSec, buttonID);
@@ -299,7 +302,7 @@ public abstract class Game {
 
                 button.setItemMeta(meta);
                 button.setAction(ClickAction.SHOW_TOP_LIST);
-                button.setArgs(module.moduleID(), buttonID + GUIManager.TOP_LIST_KEY_ADDON);
+                button.setArgs(getGameID(), buttonID + GUIManager.TOP_LIST_KEY_ADDON);
 
 
                 setTheButton:
@@ -324,7 +327,7 @@ public abstract class Game {
 
                 SaveType saveType = gameRules.get(buttonID).getSaveTypes().iterator().next();
 
-                TopListPage topListPage = new TopListPage(gameBox, guiManager, 54, module.moduleID(), buttonID + GUIManager.TOP_LIST_KEY_ADDON,
+                TopListPage topListPage = new TopListPage(gameBox, guiManager, 54, getGameID(), buttonID + GUIManager.TOP_LIST_KEY_ADDON,
                         StringUtil.color(buttonSec.getString("inventoryTitle", "Title missing in config")), saveType, lore);
 
                 guiManager.registerGameGUI(topListPage);
@@ -341,7 +344,7 @@ public abstract class Game {
     }
 
     public String getGameID() {
-        return module.moduleID();
+        return module.getModuleID();
     }
 
     public GameSettings getSettings() {

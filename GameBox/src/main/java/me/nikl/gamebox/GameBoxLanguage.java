@@ -1,6 +1,5 @@
 package me.nikl.gamebox;
 
-import me.nikl.gamebox.util.Module;
 import org.bukkit.ChatColor;
 
 import java.util.List;
@@ -53,7 +52,7 @@ public class GameBoxLanguage extends Language{
 
 	
 	GameBoxLanguage(GameBox plugin){
-		super(plugin, Module.GAMEBOX);
+		super(plugin, "gamebox");
 	}
 
 	@Override

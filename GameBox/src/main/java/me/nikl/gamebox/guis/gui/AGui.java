@@ -407,8 +407,6 @@ public abstract class AGui {
 					}
 				}
 
-
-				// ToDo: compatibility for give commands
 				if(shopItem.manipulatesInventory() && this instanceof Shop){
 					GameBox.debug("   closed due to shop item manipulating the inventory");
 					event.getWhoClicked().closeInventory();

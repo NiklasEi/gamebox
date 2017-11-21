@@ -4,7 +4,6 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.games.GameLanguage;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
-import me.nikl.gamebox.util.Module;
 import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
@@ -30,7 +29,7 @@ public class CCLanguage extends GameLanguage {
 	public HashMap<UpgradeType, List<String>> upgradeLore;
 
 	public CCLanguage(GameBox plugin){
-		super(plugin, Module.COOKIECLICKER);
+		super(plugin, "cookieclicker");
 	}
 
 

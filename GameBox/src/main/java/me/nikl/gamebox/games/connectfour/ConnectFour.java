@@ -3,7 +3,6 @@ package me.nikl.gamebox.games.connectfour;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.games.Game;
 import me.nikl.gamebox.games.GameSettings;
-import me.nikl.gamebox.util.Module;
 
 /**
  * Created by Niklas on 14.04.2017.
@@ -13,7 +12,7 @@ import me.nikl.gamebox.util.Module;
 public class ConnectFour extends Game {
 
     public ConnectFour(GameBox gameBox) {
-        super(gameBox, Module.CONNECTFOUR, new String[]{"connectfour", "connect4", "c4"});
+        super(gameBox, "connectfour", new String[]{"connectfour", "connect4", "c4"});
     }
 
     @Override

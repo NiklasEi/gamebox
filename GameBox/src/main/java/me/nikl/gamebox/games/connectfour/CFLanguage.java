@@ -1,8 +1,8 @@
 package me.nikl.gamebox.games.connectfour;
 
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.Module;
 import me.nikl.gamebox.games.GameLanguage;
-import me.nikl.gamebox.util.Module;
 
 /**
  * Class loading and storing messages.
@@ -18,7 +18,7 @@ public class CFLanguage extends GameLanguage{
 	public String TITLE_IN_GAME_YOUR_TURN, TITLE_IN_GAME_OTHERS_TURN, TITLE_WON, TITLE_LOST;
 	
 	public CFLanguage(GameBox gameBox){
-		super(gameBox, Module.CONNECTFOUR);
+		super(gameBox, "connectfour");
 	}
 
 	@Override

@@ -2,7 +2,7 @@ package me.nikl.gamebox.games;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.Language;
-import me.nikl.gamebox.util.Module;
+import me.nikl.gamebox.Module;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +22,12 @@ public abstract class GameLanguage extends Language {
 
     public GameLanguage(GameBox plugin, Module module) {
         super(plugin, module);
+
+        this.GAME_HELP = getStringList("gameHelp");
+    }
+
+    public GameLanguage(GameBox plugin, String moduleID) {
+        super(plugin, moduleID);
 
         this.GAME_HELP = getStringList("gameHelp");
     }

@@ -1,9 +1,9 @@
 package me.nikl.gamebox.games.cookieclicker;
 
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.Module;
 import me.nikl.gamebox.games.Game;
 import me.nikl.gamebox.games.GameSettings;
-import me.nikl.gamebox.util.Module;
 
 /**
  * Created by Niklas
@@ -13,7 +13,7 @@ import me.nikl.gamebox.util.Module;
 public class CookieClicker extends Game {
 
     public CookieClicker(GameBox gameBox) {
-        super(gameBox, Module.COOKIECLICKER, new String[]{"cookies", "cc"});
+        super(gameBox, "cookieclicker", new String[]{"cookies", "cc"});
     }
 
     @Override
