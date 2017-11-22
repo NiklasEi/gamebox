@@ -1,5 +1,6 @@
 package me.nikl.gamebox.nms;
 
+import io.netty.handler.codec.DecoderException;
 import net.minecraft.server.v1_8_R2.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -32,14 +33,25 @@ public class NMSUtil_1_8_R2 implements NMSUtil {
 		EntityPlayer ep = ((CraftPlayer)player).getHandle();
 		newTitle = ChatColor.translateAlternateColorCodes('&',newTitle);
 
-		if(checkInventoryTitleLength){
+		if(checkInventoryTitleLength && newTitle.length() > 32){
 			newTitle = "Title is too long (> 32)";
 		}
 
 		PacketPlayOutOpenWindow packet = new PacketPlayOutOpenWindow(ep.activeContainer.windowId
 				, "minecraft:chest", new ChatMessage(newTitle)
-				, player.getOpenInventory().getTopInventory().getSize());		ep.playerConnection.sendPacket(packet);
-		ep.updateInventory(ep.activeContainer);
+				, player.getOpenInventory().getTopInventory().getSize());
+
+		try {
+			ep.playerConnection.sendPacket(packet);
+			ep.updateInventory(ep.activeContainer);
+		} catch (DecoderException ex){
+			if(!checkInventoryTitleLength){
+				checkInventoryTitleLength = true;
+				updateInventoryTitle(player, newTitle);
+			} else {
+				Bukkit.getConsoleSender().sendMessage("DecoderException while trying to send new title < 32 chars O.o");
+			}
+		}
 	}
 	
 	@Override
