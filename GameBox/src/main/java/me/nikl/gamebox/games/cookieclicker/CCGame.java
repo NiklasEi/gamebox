@@ -319,7 +319,8 @@ public class CCGame extends BukkitRunnable {
         this.playSounds = game.getSettings().isPlaySounds() && playSounds;
 
         // create inventory
-        String title = lang.GAME_TITLE.replace("%score%", String.valueOf((int) cookies));
+        String title = lang.GAME_TITLE
+                .replace("%score%", String.valueOf((int) cookies));
         if(GameBoxSettings.checkInventoryLength && title.length() > 32){
             title = "Title is too long!";
         }
@@ -353,6 +354,7 @@ public class CCGame extends BukkitRunnable {
         meta = oven.getItemMeta();
         meta.setDisplayName(lang.GAME_OVEN_NAME);
         oven.setItemMeta(meta);
+
         updateOven();
     }
 
@@ -360,7 +362,9 @@ public class CCGame extends BukkitRunnable {
         ArrayList<String> lore = new ArrayList<>();
         for(String line : lang.GAME_OVEN_LORE){
             lore.add(line.replace("%cookies_per_second%", NumberUtil.convertHugeNumber(cookiesPerSecond))
-                    .replace("%cookies_per_click%", NumberUtil.convertHugeNumber(cookiesPerClick)));
+                    .replace("%cookies_per_click%", NumberUtil.convertHugeNumber(cookiesPerClick))
+                    .replace("%cookies_per_second_long%", NumberUtil.convertHugeNumber(cookiesPerSecond, false))
+                    .replace("%cookies_per_click_long%", NumberUtil.convertHugeNumber(cookiesPerClick, false)));
         }
         ItemMeta meta = oven.getItemMeta();
         meta.setLore(lore);
@@ -585,7 +589,6 @@ public class CCGame extends BukkitRunnable {
 
         if(save.isConfigurationSection("productions")) {
 
-            // building name of Cursor was corrected => allow for old save and convert
             Buildings building;
             for (String key : save.getConfigurationSection("productions").getKeys(false)) {
                 try{
@@ -594,11 +597,6 @@ public class CCGame extends BukkitRunnable {
                 } catch (IllegalArgumentException exception){
                     // ignore
                 }
-            }
-
-            if(save.isInt("productions.CURSER")){
-                buildings.get(Buildings.CURSOR).addProductions(save.getInt("productions" + "." + "CURSER", 0));
-                save.set("productions.CURSER", null);
             }
         }
 
@@ -627,7 +625,9 @@ public class CCGame extends BukkitRunnable {
 
         lastTimeStamp = newTimeStamp;
 
-        nms.updateInventoryTitle(player, lang.GAME_TITLE.replace("%score%", NumberUtil.convertHugeNumber(cookies)));
+        nms.updateInventoryTitle(player, lang.GAME_TITLE
+                .replace("%score%", NumberUtil.convertHugeNumber(cookies))
+                .replace("%score_long%", NumberUtil.convertHugeNumber(cookies, false)));
         checkUpgrades();
     }
 

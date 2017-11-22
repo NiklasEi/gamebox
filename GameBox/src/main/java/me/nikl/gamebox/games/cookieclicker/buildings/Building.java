@@ -96,7 +96,10 @@ public class Building {
             newLore.add(line.replace("%count%", String.valueOf(count))
                     .replace("%cost%", NumberUtil.convertHugeNumber(getCost()))
                     .replace("%cookies_per_second_per_item%", NumberUtil.convertHugeNumber(getProductionPerSecondPerItem()))
-                    .replace("%cookies_per_second%", NumberUtil.convertHugeNumber(getAllInAllProductionPerSecond())));
+                    .replace("%cookies_per_second%", NumberUtil.convertHugeNumber(getAllInAllProductionPerSecond()))
+                    .replace("%cost_long%", NumberUtil.convertHugeNumber(getCost(), false))
+                    .replace("%cookies_per_second_per_item_long%", NumberUtil.convertHugeNumber(getProductionPerSecondPerItem(), false))
+                    .replace("%cookies_per_second_long%", NumberUtil.convertHugeNumber(getAllInAllProductionPerSecond(), false)));
         }
         ItemMeta meta = icon.getItemMeta();
         meta.setLore(newLore);

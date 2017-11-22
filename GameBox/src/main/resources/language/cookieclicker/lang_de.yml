@@ -87,7 +87,7 @@ buildings:
     description:
       - '&5&o"Rufe Kekse mit Zaubern herbei."'
   shipment:
-    name: "Weltraumfracht"
+    name: "Weltraumfrachter"
     description:
       - '&5&o"Bringt Kekse vom fernen Keksplaneten."'
   alchemy_lab:
@@ -111,7 +111,7 @@ buildings:
   prism:
     name: "Prisma"
     description:
-      - '&5&o"Verwandelt Licht zu Keksen."'
+      - '&5&o"Verwandelt reines Licht in Kekse."'
 
 
 upgrades:
@@ -371,7 +371,7 @@ upgrades:
       name: "Canola Öl Quellen"
       description:
         - '&5&o"Ein bis jetzt nicht verwendeter Rohstoff.'
-        - '&5&o     Canola Öl weicht den untergrund auf'
+        - '&5&o     Canola Öl weicht den Untergrund auf'
         - '&5&o     und verleiht der gewonnen Schokolade'
         - '&5&o     ihren unglaublichen Geschmack."'
 

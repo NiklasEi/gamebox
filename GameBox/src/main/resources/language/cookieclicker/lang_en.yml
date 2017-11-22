@@ -9,9 +9,11 @@ game:
     notEnoughMoney: " &4You do not have enough money!"
   closedGame: " &2You have a current score of &6%score%"
   inventoryTitles:
+    # %score% uses short names for high numbers. For longer names use %score_long%
     gameTitle: "&9&lCC   &r&1%score% cookies"
   cookieName: "&1&lCookie"
   ovenName: "&a&lYour Cookie Production"
+  # for longer names of high numbers use %cookies_per_second_long% and %cookies_per_click_long%
   ovenLore:
     - ""
     - '&1You currently produce'
@@ -35,6 +37,8 @@ gameHelp:
   - '            - Your Grandma'
 
 
+# If you would like to use longer names for high numbers attach 'long' to the placeholders
+#      e.g.: %cost% -> %cost_long%
 buildings:
   # this allows you to colour the display name of the buildings
   #   %name% is defined for each building below

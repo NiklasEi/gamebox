@@ -101,10 +101,12 @@ public abstract class Upgrade {
 
         lore = new ArrayList<>();
         for(String line : lang.upgradeLore.get(upgradeType)){
-            line = line.replace("%cost%", NumberUtil.convertHugeNumber(cost));
+            line = line.replace("%cost%", NumberUtil.convertHugeNumber(cost)
+                    .replace("%cost_long%", NumberUtil.convertHugeNumber(cost, false)));
 
             if(buildings != null && buildings.length > 0){
-                line = line.replace("%building%", lang.buildingName.get(buildings[0]).toLowerCase()).replace("%Building%", lang.buildingName.get(buildings[0]));
+                line = line.replace("%building%", lang.buildingName.get(buildings[0]).toLowerCase())
+                        .replace("%Building%", lang.buildingName.get(buildings[0]));
             }
 
             switch (upgradeType){

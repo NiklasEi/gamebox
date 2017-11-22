@@ -7,6 +7,10 @@ package me.nikl.gamebox.util;
 public class NumberUtil {
 
     public static String convertHugeNumber(double number){
+        return convertHugeNumber(number, true);
+    }
+
+    public static String convertHugeNumber(double number, boolean shortNames){
         if(number >= 1000.) {
             String numberStr = String.format("%.0f", number);
 
@@ -49,7 +53,11 @@ public class NumberUtil {
                 return "Way too much...";
             }
 
-            return numberStr + NAMES[index - 1];
+            if(shortNames) {
+                return numberStr + SHORTNAMES[index - 1];
+            } else {
+                return numberStr + NAMES[index - 1];
+            }
         } else {
             String numberStr = String.valueOf(number);
             String[] split = numberStr.split("\\.");
@@ -65,25 +73,51 @@ public class NumberUtil {
 
     private static final String NAMES[] = new String[]{
             "",
-            " million",
-            " billion",
-            " trillion",
-            " quadrillion",
-            " quintillion",
-            " sextillion",
-            " septillion",
-            " octillion",
-            " nonillion",
-            " decillion",
-            " undecillion",
-            " duodecillion",
-            " tredecillion",
-            " quattuordecillion",
-            " quindecillion",
-            " sexdecillion",
-            " septendecillion",
-            " octodecillion",
-            " novemdecillion",
-            " vigintillion",
+            " Million",
+            " Billion",
+            " Trillion",
+            " Quadrillion",
+            " Quintillion",
+            " Sextillion",
+            " Septillion",
+            " Octillion",
+            " Nonillion",
+            " Decillion",
+            " Undecillion",
+            " Duodecillion",
+            " Tredecillion",
+            " Quattuordecillion",
+            " Quindecillion",
+            " Sexdecillion",
+            " Septendecillion",
+            " Octodecillion",
+            " Novemdecillion",
+            " Vigintillion",
+    };
+
+
+
+    private static final String SHORTNAMES[] = new String[]{
+            "",
+            " M",
+            " B",
+            " T",
+            " Quad",
+            " Quin",
+            " Sext",
+            " Sept",
+            " Oct",
+            " Non",
+            " Dec",
+            " Undec",
+            " Duodec",
+            " Tredec",
+            " Quattuordec",
+            " Quindec",
+            " Sexdec",
+            " Septendec",
+            " Octodec",
+            " Novemdec",
+            " Vigint",
     };
 }
