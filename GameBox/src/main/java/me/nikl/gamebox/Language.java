@@ -23,6 +23,7 @@ public abstract class Language {
     public String NAME = ChatColor.DARK_AQUA+"GameBox"+ChatColor.RESET;
     public String PLAIN_PREFIX = ChatColor.stripColor(PREFIX);
     public String PLAIN_NAME = ChatColor.stripColor(NAME);
+    public String DEFAULT_NAME, DEFAULT_PLAIN_NAME;
 
     public Language(GameBox plugin, Module module){
         this.plugin = plugin;
@@ -34,6 +35,10 @@ public abstract class Language {
         NAME = getString("name");
         PLAIN_PREFIX = ChatColor.stripColor(PREFIX);
         PLAIN_NAME = ChatColor.stripColor(NAME);
+
+        // default is the value assigned to unknown games in bStats
+        DEFAULT_NAME = defaultLanguage.getString("name", "Other (custom game)");
+        DEFAULT_PLAIN_NAME = ChatColor.stripColor(DEFAULT_NAME);
 
         loadMessages();
     }

@@ -18,7 +18,7 @@ public class CFLanguage extends GameLanguage{
 	public String TITLE_IN_GAME_YOUR_TURN, TITLE_IN_GAME_OTHERS_TURN, TITLE_WON, TITLE_LOST;
 	
 	public CFLanguage(GameBox gameBox){
-		super(gameBox, "connectfour");
+		super(gameBox, GameBox.MODULE_CONNECTFOUR);
 	}
 
 	@Override

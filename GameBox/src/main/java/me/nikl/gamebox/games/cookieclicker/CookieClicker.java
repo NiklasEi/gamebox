@@ -1,7 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.Module;
 import me.nikl.gamebox.games.Game;
 import me.nikl.gamebox.games.GameSettings;
 
@@ -13,12 +12,13 @@ import me.nikl.gamebox.games.GameSettings;
 public class CookieClicker extends Game {
 
     public CookieClicker(GameBox gameBox) {
-        super(gameBox, "cookieclicker", new String[]{"cookies", "cc"});
+        super(gameBox, GameBox.MODULE_COOKIECLICKER
+                , new String[]{GameBox.MODULE_COOKIECLICKER, "cookies", "cc"});
     }
 
     @Override
     public void onDisable() {
-
+        ((CCGameManager)gameManager).onShutDown();
     }
 
     @Override

@@ -29,7 +29,7 @@ public class CCLanguage extends GameLanguage {
 	public HashMap<UpgradeType, List<String>> upgradeLore;
 
 	public CCLanguage(GameBox plugin){
-		super(plugin, "cookieclicker");
+		super(plugin, GameBox.MODULE_COOKIECLICKER);
 	}
 
 

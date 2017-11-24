@@ -12,7 +12,8 @@ import me.nikl.gamebox.games.GameSettings;
 public class ConnectFour extends Game {
 
     public ConnectFour(GameBox gameBox) {
-        super(gameBox, "connectfour", new String[]{"connectfour", "connect4", "c4"});
+        super(gameBox, GameBox.MODULE_CONNECTFOUR
+                , new String[]{GameBox.MODULE_CONNECTFOUR, "connect4", "c4"});
     }
 
     @Override

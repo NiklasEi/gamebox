@@ -40,6 +40,9 @@ import java.util.logging.Level;
  */
 public class GameBox extends JavaPlugin{
 
+	public static final String MODULE_CONNECTFOUR = "connectfour";
+	public static final String MODULE_COOKIECLICKER = "cookieclicker";
+
 	// enable debug mode (print debug messages)
 	public static final boolean debug = false;
 
@@ -186,9 +189,9 @@ public class GameBox extends JavaPlugin{
 
 	private void registerGames() {
 		// Default games:
-		new Module(this, "connectfour"
+		new Module(this, MODULE_CONNECTFOUR
 				, "me.nikl.gamebox.games.connectfour.ConnectFour");
-		new Module(this, "cookieclicker"
+		new Module(this, MODULE_COOKIECLICKER
 				, "me.nikl.gamebox.games.cookieclicker.CookieClicker");
 	}
 
@@ -344,7 +347,7 @@ public class GameBox extends JavaPlugin{
 			return false;
 		}
 		
-		if(debug) getLogger().info("Your server is running version " + version);
+		debug("Your server is running version " + version);
 		
 		switch (version) {
 			case "v1_8_R1":
@@ -389,7 +392,7 @@ public class GameBox extends JavaPlugin{
 	@Override
 	public void onDisable(){
 		if(pManager != null) pManager.shutDown();
-		if(dataBase != null) dataBase.save(false);
+		if(dataBase != null) dataBase.onShutDown();
 	}
 
 
@@ -450,42 +453,20 @@ public class GameBox extends JavaPlugin{
 	/**
 	 * Get the original game name from the module enum
 	 *
-	 * This is to make the statistics on bStats nicer.
+	 * This is to make the statistics on bStats cleaner.
 	 * Since the game names can be changed, the statistics would be messed up,
 	 * when using the customized game names.
-	 * Try to get the default name from the default
-	 * language files, then fall back on hardcoded names.
+	 * Get the default name from the default
+	 * language file of the game.
 	 * @param gameID Id of the game
-	 * @return the original name if given, otherwise the ID itself
+	 * @return the original name, or 'Other (custom game)'
 	 */
 	private String getOriginalGameName(String gameID){
-		if(gameID == null) return "null";
-
 		GameLanguage gameLang = getPluginManager().getGame(gameID).getGameLang();
-		if(gameLang != null) return gameLang.PLAIN_NAME;
+		if(gameLang != null) return gameLang.DEFAULT_PLAIN_NAME;
 
-		switch (gameID){
-			case "minesweeper": return "Minesweeper";
-			case "battleship": return "Battleship";
-			case "whacamole": return "WhacAMole";
-			case "2048": return "2048";
-			case "gemcrush": return "GemCrush";
-			case "sudoku": return "Sudoku";
-			case "connect4": return "ConnectFour";
-
-			// prevent chaos on bstats...
-
-			case "cookieclicker": return "Cookie Clicker";
-			case "tictactoe": return "Tic-tac-toe";
-			case "rockpaperscissors": return "Rock–paper–scissors";
-			case "fruitninja": return "Fruit Ninja";
-			case "solitaire": return "Solitaire";
-			case "headsortails": return "Heads or Tails";
-			case "mastermind": return "Mastermind";
-			case "tetris": return "Tetris";
-			case "chess": return "Chess";
-		}
-		return gameID;
+		// is also set as default name, if not set in language file
+		return "Other (custom game)";
 	}
 
 	public FileConfiguration getConfig(Module module) {

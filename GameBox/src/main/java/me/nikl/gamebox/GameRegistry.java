@@ -71,7 +71,7 @@ public class GameRegistry {
         } catch (NoSuchMethodException | IllegalAccessException
                 | InstantiationException | InvocationTargetException e) {
             e.printStackTrace();
-            gameBox.info(" The game class needs a public constructor taking a GameBox obj!");
+            gameBox.info(" The game class needs a public constructor taking only a GameBox obj!");
         }
     }
 
