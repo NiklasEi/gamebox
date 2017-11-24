@@ -4,6 +4,7 @@ import me.nikl.gamebox.GameBox;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.*;
 import java.util.*;
@@ -60,11 +61,31 @@ public class FileDB extends DataBase {
 
     @Override
     public void save(boolean async) {
-        try {
-            this.data.save(dataFile);
-        } catch (IOException e) {
-            Bukkit.getLogger().log(Level.SEVERE, "failed to save statistics", e);
-            e.printStackTrace();
+        if(async) {
+            final FileDB fileDB = this;
+            BukkitRunnable runnable = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    GameBox.debug(" saving to file async...");
+                    try {
+                        data.save(dataFile);
+                    } catch (IOException e) {
+                        Bukkit.getLogger().log(Level.SEVERE, "failed to save statistics (async)");
+                        e.printStackTrace();
+                    }
+                    GameBox.debug(" ...done");
+                    fileDB.removeRunnable(this);
+                }
+            };
+            runnables.add(runnable);
+            runnable.runTaskAsynchronously(plugin);
+        } else {
+            try {
+                this.data.save(dataFile);
+            } catch (IOException e) {
+                Bukkit.getLogger().log(Level.SEVERE, "failed to save statistics");
+                e.printStackTrace();
+            }
         }
     }
 
@@ -167,5 +188,18 @@ public class FileDB extends DataBase {
     @Override
     public boolean isSet(String path) {
         return data.isSet(path);
+    }
+
+    @Override
+    public void loadPlayer(GBPlayer player, boolean async) {
+
+    }
+
+    @Override
+    public void savePlayer(GBPlayer player, boolean async) {
+        // async ignored here for file saving... It is in cache anyways
+        String uuid = player.getUuid().toString();
+        set(uuid, DataBase.PLAYER_PLAY_SOUNDS, player.isPlaySounds());
+        set(uuid, DataBase.TOKEN_PATH, player.getTokens());
     }
 }

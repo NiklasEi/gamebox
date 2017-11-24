@@ -1,8 +1,11 @@
 package me.nikl.gamebox.data;
 
 import me.nikl.gamebox.GameBox;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -11,6 +14,8 @@ import java.util.UUID;
  *
  */
 public abstract class DataBase {
+
+    protected Set<BukkitRunnable> runnables = new HashSet<>();
 
 
     public static final String PLAYER_PLAY_SOUNDS = "playSounds";
@@ -44,10 +49,27 @@ public abstract class DataBase {
 
     public abstract boolean isSet(String path);
 
+    public abstract void loadPlayer(GBPlayer player, boolean async);
+
+    public abstract void savePlayer(GBPlayer player, boolean async);
+
+    public void onShutDown(){
+        save(true);
+        boolean waiting = !runnables.isEmpty();
+        if(waiting) plugin.info(" waiting on async tasks...");
+        while (!runnables.isEmpty()){}
+        if(waiting) plugin.info(" ... done");
+    }
+
+    public void removeRunnable(BukkitRunnable runnable){
+        runnables.remove(runnable);
+    }
 
     public class Stat{
         private double value;
         private UUID uuid;
+
+        private SaveType saveType;
 
         Stat(UUID uuid, double value){
             this.uuid = uuid;
@@ -60,6 +82,10 @@ public abstract class DataBase {
 
         public UUID getUuid() {
             return uuid;
+        }
+
+        public SaveType getSaveType() {
+            return saveType;
         }
     }
 }

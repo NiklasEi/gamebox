@@ -101,4 +101,14 @@ public class MysqlDB extends DataBase {
         return false;
     }
 
+    @Override
+    public void loadPlayer(GBPlayer player, boolean async) {
+
+    }
+
+    @Override
+    public void savePlayer(GBPlayer player, boolean async) {
+
+    }
+
 }

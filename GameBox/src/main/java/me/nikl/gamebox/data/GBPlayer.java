@@ -74,9 +74,11 @@ public class GBPlayer {
         save();
     }
 
-    public void save() {
-        //go through all values and save them
-        statistics.set(uuid.toString(), DataBase.PLAYER_PLAY_SOUNDS, playSounds);
-        statistics.set(uuid.toString(), DataBase.TOKEN_PATH, tokens);
+    public void save(){
+        save(false);
+    }
+
+    public void save(boolean async) {
+        statistics.savePlayer(this, async);
     }
 }
