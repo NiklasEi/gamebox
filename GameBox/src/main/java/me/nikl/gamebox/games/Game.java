@@ -72,6 +72,7 @@ public abstract class Game {
     public abstract void onDisable();
 
     public void onEnable(){
+        GameBox.debug(" enabling the game: " + module.getModuleID());
         loadConfig();
 
         // abstract
@@ -107,16 +108,22 @@ public abstract class Game {
     public abstract void loadGameManager();
 
     public boolean loadConfig(){
+        GameBox.debug(" load config... (" + module.getModuleID() + ")");
         File configFile = new File(gameBox.getDataFolder()
                 + File.separator + "games"
                 + File.separator + getGameID()
                 + File.separator + "config.yml");
 
         if(!configFile.exists()){
+            GameBox.debug(" default config missing in GB folder (" + module.getModuleID() + ")");
             configFile.getParentFile().mkdirs();
-            gameBox.saveResource("games"
-                    + File.separator + getGameID()
-                    + File.separator + "config.yml", false);
+            if(module.getExternalPlugin() != null){
+                FileUtil.copyExternalResources(gameBox, module);
+            } else {
+                gameBox.saveResource("games"
+                        + File.separator + getGameID()
+                        + File.separator + "config.yml", false);
+            }
         }
 
         this.dataFolder = new File(gameBox.getDataFolder()
