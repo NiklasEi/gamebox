@@ -218,13 +218,13 @@ public class AdminCommand implements CommandExecutor {
     }
 
     private void sendHelpMessages(CommandSender sender) {
-        sender.sendMessage(lang.PREFIX + ChatColor.BOLD + ChatColor.GOLD + " Change the number of tokens for online/offline players");
-        sender.sendMessage(lang.PREFIX + ChatColor.DARK_GREEN + " /gba [givetoken:taketoken:settoken] [player name] [count (integer)]");
-        sender.sendMessage(lang.PREFIX + ChatColor.BOLD + ChatColor.GOLD + " Get the number of tokens an online/offline player has");
-        sender.sendMessage(lang.PREFIX + ChatColor.DARK_GREEN + " /gba [token] [player name]");
-        sender.sendMessage(lang.PREFIX + ChatColor.BOLD + ChatColor.GOLD + " Reload Gamebox and all registered games");
-        sender.sendMessage(lang.PREFIX + ChatColor.DARK_GREEN + " /gba reload");
-        sender.sendMessage(lang.PREFIX + ChatColor.BOLD + ChatColor.GOLD + " Display information about your used language file");
-        sender.sendMessage(lang.PREFIX + ChatColor.DARK_GREEN + " /gba language");
+        plugin.info(ChatColor.BOLD.toString() + ChatColor.GOLD + " Change the number of tokens for online/offline players");
+        plugin.info(ChatColor.DARK_GREEN + " /gba [givetoken:taketoken:settoken] [player name] [count (integer)]");
+        plugin.info(ChatColor.BOLD.toString() + ChatColor.GOLD + " Get the number of tokens an online/offline player has");
+        plugin.info(ChatColor.DARK_GREEN + " /gba [token] [player name]");
+        plugin.info(ChatColor.BOLD.toString() + ChatColor.GOLD + " Reload Gamebox and all registered games");
+        plugin.info(ChatColor.DARK_GREEN + " /gba reload");
+        plugin.info(ChatColor.BOLD.toString() + ChatColor.GOLD + " Display information about your used language file");
+        plugin.info(ChatColor.DARK_GREEN + " /gba language");
     }
 }

@@ -481,7 +481,7 @@ public class GameBox extends JavaPlugin{
 	}
 
 	public void info(String message) {
-		getLogger().info(message);
+		Bukkit.getConsoleSender().sendMessage(lang.PREFIX + message);
 	}
 
 	public GameRegistry getGameRegistry() {
