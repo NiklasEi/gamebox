@@ -109,7 +109,7 @@ public class FileUtil {
                     if(entry.isDirectory()) continue;
 
                     // only take resources from module folders
-                    if(pathParts.length < 2){
+                    if(pathParts.length < 3){
                         continue;
                     }
 
@@ -120,7 +120,7 @@ public class FileUtil {
                     }
 
                     StringBuilder builder = new StringBuilder();
-                    for(int i = 1; i < pathParts.length; i++){
+                    for(int i = 2; i < pathParts.length; i++){
                         builder.append(pathParts[i]);
                         if(i+1 < pathParts.length){
                             builder.append(File.separatorChar);
@@ -162,6 +162,13 @@ public class FileUtil {
         return true;
     }
 
+    /**
+     * Slightly adapted method from Bukkit...
+     *
+     * @param resourcePath path to the resource in the external plugin
+     * @param gbPath wanted path for the resource in gameBox
+     * @param plugin external plugin
+     */
     static private void saveResourceToGBFolder(String resourcePath, String gbPath, JavaPlugin plugin) {
         if(resourcePath == null || resourcePath.isEmpty()) {
             throw new IllegalArgumentException("ResourcePath cannot be null or empty");
