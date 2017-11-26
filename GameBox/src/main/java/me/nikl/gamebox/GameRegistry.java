@@ -1,7 +1,9 @@
 package me.nikl.gamebox;
 
 import me.nikl.gamebox.games.Game;
+import me.nikl.gamebox.util.FileUtil;
 
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -27,6 +29,11 @@ public class GameRegistry {
         }
 
         modules.put(module.getModuleID(), module);
+
+        if(module.getExternalPlugin() != null){
+            FileUtil.copyExternalResources(gameBox, module);
+        }
+
         if(module.isGame())
             loadGame(module);
         return true;

@@ -1,6 +1,7 @@
 package me.nikl.gamebox;
 
 import org.apache.commons.lang.Validate;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Created by nikl on 21.11.17.
@@ -12,7 +13,9 @@ public class Module {
 
     private boolean isGame = false;
 
-    public Module(GameBox gameBox, String moduleID, String classPath){
+    private JavaPlugin externalPlugin;
+
+    public Module(GameBox gameBox, String moduleID, String classPath, JavaPlugin plugin){
         Validate.isTrue(moduleID != null && !moduleID.isEmpty()
                 , " moduleID cannot be null or empty!");
         if(classPath != null && !classPath.isEmpty()) {
@@ -20,15 +23,28 @@ public class Module {
         }
         this.classPath = classPath;
         this.moduleID = moduleID.toLowerCase();
+        this.externalPlugin = plugin;
 
         gameBox.getGameRegistry().registerModule(this);
     }
 
-    public Module(GameBox gameBox, String moduleID){
-        this.isGame = false;
-        this.moduleID = moduleID.toLowerCase();
+    /**
+     * For internal game module
+     *
+     * For external use ExternalModule
+     * @param moduleID
+     * @param classPath
+     */
+    public Module(GameBox gameBox, String moduleID, String classPath){
+        this(gameBox, moduleID, classPath, null);
+    }
 
-        gameBox.getGameRegistry().registerModule(this);
+    /**
+     * For non-game module
+     * @param moduleID
+     */
+    public Module(GameBox gameBox, String moduleID){
+        this(gameBox, moduleID, null, null);
     }
 
     public String getModuleID() {
@@ -50,5 +66,9 @@ public class Module {
         }
 
         return moduleID.equalsIgnoreCase(((Module) module).moduleID);
+    }
+
+    public JavaPlugin getExternalPlugin() {
+        return externalPlugin;
     }
 }
