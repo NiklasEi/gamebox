@@ -54,7 +54,7 @@ public abstract class DataBase {
     public abstract void savePlayer(GBPlayer player, boolean async);
 
     public void onShutDown(){
-        save(true);
+        save(false);
         boolean waiting = !runnables.isEmpty();
         if(waiting) plugin.info(" waiting on async tasks...");
         while (!runnables.isEmpty()){}
