@@ -3,7 +3,6 @@ package me.nikl.gamebox;
 import me.nikl.gamebox.games.Game;
 import me.nikl.gamebox.util.FileUtil;
 
-import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -11,6 +10,7 @@ import java.util.logging.Level;
 
 /**
  * Created by nikl on 21.11.17.
+ *
  */
 public class GameRegistry {
 
@@ -31,7 +31,10 @@ public class GameRegistry {
         modules.put(module.getModuleID(), module);
 
         if(module.getExternalPlugin() != null){
-            FileUtil.copyExternalResources(gameBox, module);
+            if(!FileUtil.copyExternalResources(gameBox, module)){
+                gameBox.info(" Failed to completely load the external module '" + module.getModuleID() + "'");
+                return false;
+            }
         }
 
         if(module.isGame())

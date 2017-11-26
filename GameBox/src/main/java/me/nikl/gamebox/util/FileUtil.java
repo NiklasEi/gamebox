@@ -60,9 +60,9 @@ public class FileUtil {
     }
 
 
-    public static void copyExternalResources(GameBox gameBox, Module module){
+    public static boolean copyExternalResources(GameBox gameBox, Module module){
         JavaPlugin external = module.getExternalPlugin();
-        if(external == null) return;
+        if(external == null) return false;
         URL main = external.getClass().getResource(module.getClassPath()
                 .split("\\.")[module.getClassPath().split("\\.").length - 1] + ".class");
 
@@ -70,6 +70,10 @@ public class FileUtil {
             JarURLConnection connection = (JarURLConnection) main.openConnection();
 
             JarFile jar = new JarFile(connection.getJarFileURL().getFile());
+
+            boolean foundDefaultLang = false;
+            boolean foundConfig = false;
+
             for (Enumeration list = jar.entries(); list.hasMoreElements(); ) {
                 JarEntry entry = (JarEntry) list.nextElement();
 
@@ -78,19 +82,19 @@ public class FileUtil {
 
                 if(folderName.equals("language")) {
 
-                    // ToDo: make sure that every module has a default file and force module folder for config and language!
-
-                    if (pathParts.length < 2 || !entry.getName().endsWith(".yml")){
+                    if (pathParts.length < 3 || !entry.getName().endsWith(".yml")){
                         continue;
                     }
 
-                    // length = 2 is ok, because all lang files belong to the one module then
-                    if(pathParts.length >= 3){
-                        // subfolder in language folder
-                        if(!pathParts[1].equalsIgnoreCase(module.getModuleID())) continue;
-                    }
+                    // subfolder in language folder
+                    if(!pathParts[1].equalsIgnoreCase(module.getModuleID())) continue;
 
                     String fileName = pathParts[pathParts.length - 1];
+
+                    if(fileName.equals("lang_en.yml")){
+                        foundDefaultLang = true;
+                    }
+
                     String gbPath = gameBox.getDataFolder().toString() + File.separatorChar
                             + "language" + File.separatorChar
                             + module.getModuleID() + File.separatorChar + fileName;
@@ -104,13 +108,15 @@ public class FileUtil {
                 } else if(folderName.equalsIgnoreCase("games")){
                     if(entry.isDirectory()) continue;
 
-                    // length = 2 is ok, because all lang files belong to the one module then
-                    if(pathParts.length >= 3){
-                        // subfolder in language folder
-                        if(!pathParts[1].equalsIgnoreCase(module.getModuleID())){
-                            // resource of other module
-                            continue;
-                        }
+                    // only take resources from module folders
+                    if(pathParts.length < 2){
+                        continue;
+                    }
+
+                    // check module folder
+                    if(!pathParts[1].equalsIgnoreCase(module.getModuleID())){
+                        // resource of other module
+                        continue;
                     }
 
                     StringBuilder builder = new StringBuilder();
@@ -121,6 +127,10 @@ public class FileUtil {
                         }
                     }
                     String fileName = builder.toString();
+
+                    if(fileName.equals("config.yml")){
+                        foundConfig = true;
+                    }
 
                     String gbPath = gameBox.getDataFolder().toString() + File.separatorChar
                             + "games" + File.separatorChar
@@ -134,9 +144,22 @@ public class FileUtil {
                 }
             }
             jar.close();
+            if(!foundDefaultLang){
+                gameBox.info(" Failed to locate default language file for the module '" + module.getModuleID() +"'");
+                gameBox.info(" " + jar.getName() + " is missing the file 'language/" + module.getModuleID() +"/lang_en.yml'");
+            }
+            if(!foundConfig){
+                gameBox.info(" Failed to locate the configuration of the module '" + module.getModuleID() +"'");
+                gameBox.info(" " + jar.getName() + " is missing the file 'games/" + module.getModuleID() +"/config.yml'");
+            }
+            if(!foundConfig || !foundDefaultLang){
+                return false;
+            }
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     static private void saveResourceToGBFolder(String resourcePath, String gbPath, JavaPlugin plugin) {
