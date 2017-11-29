@@ -44,7 +44,7 @@ public class GameBox extends JavaPlugin{
 	public static final String MODULE_COOKIECLICKER = "cookieclicker";
 
 	// enable debug mode (print debug messages)
-	public static final boolean debug = false;
+	public static boolean debug = false;
 
 	// toggle to stop inventory contents to be restored when a new gui is opened and automatically closes the old one
 	public static boolean openingNewGUI = false;

@@ -2,6 +2,7 @@ package me.nikl.gamebox.commands;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
+import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.data.DataBase;
 import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.util.Permission;
@@ -11,6 +12,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 
@@ -211,6 +213,13 @@ public class AdminCommand implements CommandExecutor {
             Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " ");
             Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Default messages are used for these keys.");
             Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
+            return true;
+        } else if(args[0].equalsIgnoreCase("debug")){
+            if(sender instanceof Player){
+                return true;
+            }
+            GameBox.debug = !GameBox.debug;
+            sender.sendMessage(lang.PREFIX + " Set debug mode to: " + GameBox.debug);
             return true;
         }
         sendHelpMessages(sender);
