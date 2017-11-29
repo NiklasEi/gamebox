@@ -36,9 +36,7 @@ public class GBPlayer {
     }
 
     private void loadData() {
-        // ToDo
-        playSounds = statistics.getBoolean(uuid, DataBase.PLAYER_PLAY_SOUNDS, true);
-        tokens = statistics.getInt(uuid, DataBase.TOKEN_PATH, 0);
+        statistics.loadPlayer(this, true);
     }
 
     public UUID getUuid() {

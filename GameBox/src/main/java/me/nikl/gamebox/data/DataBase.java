@@ -1,6 +1,7 @@
 package me.nikl.gamebox.data;
 
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.GameBoxSettings;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ public abstract class DataBase {
 
     protected Set<BukkitRunnable> runnables = new HashSet<>();
 
+    protected BukkitRunnable autoSave;
+
 
     public static final String PLAYER_PLAY_SOUNDS = "playSounds";
     public static final String GAMES_STATISTICS_NODE = "gameStatistics";
@@ -29,6 +32,22 @@ public abstract class DataBase {
     //   restructure for next main version update!
     public DataBase(GameBox plugin){
         this.plugin = plugin;
+
+        this.autoSave = new BukkitRunnable() {
+            @Override
+            public void run() {
+                GameBox.debug(" auto saving...");
+                if(plugin == null || plugin.getDataBase() == null)
+                    this.cancel();
+                plugin.getDataBase().save(true);
+            }
+        };
+
+        int interval = GameBoxSettings.autoSaveInterval;
+        if(interval > 0){
+            autoSave.runTaskTimerAsynchronously(plugin
+                    , interval * 60 * 20, interval * 60 * 20);
+        }
     }
 
     public abstract boolean load(boolean async);
@@ -54,6 +73,8 @@ public abstract class DataBase {
     public abstract void savePlayer(GBPlayer player, boolean async);
 
     public void onShutDown(){
+        if(autoSave != null)
+            autoSave.cancel();
         save(false);
         boolean waiting = !runnables.isEmpty();
         if(waiting) plugin.info(" waiting on async tasks...");

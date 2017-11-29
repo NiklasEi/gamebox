@@ -133,6 +133,9 @@ settings:
   #   players should be in a save place when playing (imo)...
   # if false the player can stay in game as long as he doesn't die
   closeInventoryOnDamage: true
+  # save interval in minutes
+  #   set to 0 or negative value to disable auto save
+  autoSaveInterval: 5
 
 
 # the plugin includes events on specific occasions

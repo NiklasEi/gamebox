@@ -44,6 +44,8 @@ public class GameBoxSettings {
     // what to do on player damage
     public static boolean closeInventoryOnDamage = true;
 
+    public static int autoSaveInterval = 5;
+
 
     public static void loadSettings(GameBox plugin){
         FileConfiguration config = plugin.getConfig();
@@ -58,6 +60,8 @@ public class GameBoxSettings {
         exceptInvitesWithoutPlayPermission = config.getBoolean("settings.exceptInvitesWithoutPlayPermission", false);
         bStats = config.getBoolean("settings.bStats", true);
         closeInventoryOnDamage = config.getBoolean("settings.closeInventoryOnDamage", true);
+
+        autoSaveInterval = config.getInt("settings.autoSaveInterval", 5);
 
         keepArmor = config.getBoolean("settings.keepArmor", false);
 

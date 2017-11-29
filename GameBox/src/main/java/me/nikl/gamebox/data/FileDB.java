@@ -192,7 +192,11 @@ public class FileDB extends DataBase {
 
     @Override
     public void loadPlayer(GBPlayer player, boolean async) {
+        boolean playSounds = getBoolean(player.getUuid(), DataBase.PLAYER_PLAY_SOUNDS, true);
+        int token = getInt(player.getUuid(), DataBase.TOKEN_PATH, 0);
 
+        player.setPlaySounds(playSounds);
+        player.setTokens(token);
     }
 
     @Override
