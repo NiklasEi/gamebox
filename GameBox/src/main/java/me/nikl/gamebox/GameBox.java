@@ -39,6 +39,7 @@ import java.util.logging.Level;
  * Main class of the plugin GameBox
  */
 public class GameBox extends JavaPlugin{
+	public static final String MODULE_GAMEBOX = "gamebox";
 
 	public static final String MODULE_CONNECTFOUR = "connectfour";
 	public static final String MODULE_COOKIECLICKER = "cookieclicker";
@@ -104,7 +105,7 @@ public class GameBox extends JavaPlugin{
 
 		this.gameRegistry = new GameRegistry(this);
 		// GameBox module
-		new Module(this, "gamebox");
+		new Module(this, MODULE_GAMEBOX);
 
 		if (!reload()) {
 			getLogger().severe(" Problem while loading the plugin! Plugin was disabled!");
@@ -116,7 +117,7 @@ public class GameBox extends JavaPlugin{
 		registerGames();
 
 		if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
-			new PlaceholderAPIHook(this, "gamebox");
+			new PlaceholderAPIHook(this, MODULE_GAMEBOX);
 			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Hooked into PlaceholderAPI");
 		}
 
@@ -173,18 +174,41 @@ public class GameBox extends JavaPlugin{
 		new BukkitRunnable(){
 			@Override
 			public void run() {
-				if(PluginManager.gamesRegistered == 0){
-					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
-					Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED + " There are no registered games!");
-					Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED + " All games are add-ons");
-					Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED + " You should visit Spigot and get a few ;)");
-					Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED + "   https://www.spigotmc.org/resources/37273/");
-					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
-				} else {
-					Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.GREEN + " " + PluginManager.gamesRegistered + " games were registered. Have fun :)");
-				}
+				runLateChecks();
 			}
-		}.runTaskLaterAsynchronously(this, 100);
+		}.runTaskLater(this, 100);
+	}
+
+	private void runLateChecks() {
+		if(GameBoxSettings.checkInventoryLength  && langFilesShortened()) {
+			info(ChatColor.RED + " Your server version can't handle more then 32 characters in inventory titles!");
+			info(ChatColor.RED + " GameBox will shorten too long titles (marked by '...') to prevent errors.");
+			info(ChatColor.RED + " To fix this, create your own language file with shorter titles.");
+		}
+
+		checkLanguageFiles();
+
+		if(PluginManager.gamesRegistered == 0){
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
+			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED + " There are no registered games!");
+			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED + " You should visit Spigot and get a few ;)");
+			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED + "   https://www.spigotmc.org/resources/37273/");
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
+		} else {
+			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.GREEN + " " + PluginManager.gamesRegistered + " games were registered. Have fun :)");
+		}
+	}
+
+	private boolean langFilesShortened() {
+		Game game;
+		for(String moduleID : gameRegistry.getModuleIDs()){
+			if(moduleID.equals(MODULE_GAMEBOX)){
+				if(lang.isShortened()) return true;
+			}
+			game = getPluginManager().getGame(moduleID);
+			if(game != null && game.getGameLang().isShortened()) return true;
+		}
+		return false;
 	}
 
 	private void registerGames() {
@@ -281,8 +305,6 @@ public class GameBox extends JavaPlugin{
 
 		// load players that are already online (otherwise done on join)
 		pManager.loadPlayers();
-
-		checkLanguageFiles();
 
 		return true;
 	}
@@ -470,7 +492,7 @@ public class GameBox extends JavaPlugin{
 	}
 
 	public FileConfiguration getConfig(Module module) {
-		if(module.getModuleID().equals("gamebox"))
+		if(module.getModuleID().equals(MODULE_GAMEBOX))
 			return getConfig();
 
 		Game game = getPluginManager().getGame(module);
@@ -478,6 +500,17 @@ public class GameBox extends JavaPlugin{
 		if(game == null) return null;
 
 		return game.getConfig();
+	}
+
+	public Language getLanguage(Module module) {
+		if(module.getModuleID().equals("gamebox"))
+			return lang;
+
+		Game game = getPluginManager().getGame(module);
+
+		if(game == null) return null;
+
+		return game.getGameLang();
 	}
 
 	public void info(String message) {

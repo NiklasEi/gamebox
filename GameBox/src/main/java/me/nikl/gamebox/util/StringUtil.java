@@ -24,4 +24,11 @@ public class StringUtil {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 
+    public static String shorten(String str, int length) {
+        if(str != null && str.length() > length) {
+            return str.substring(0, length - 3) + "...";
+        } else {
+            return str;
+        }
+    }
 }

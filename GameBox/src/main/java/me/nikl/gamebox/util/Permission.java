@@ -22,7 +22,7 @@ public enum Permission {
 	private static ArrayList<String> gameIDs  = new ArrayList<>();
 	private boolean perGame;
 	private String perm;
-	private String preNode = "gamebox";
+	private String preNode = GameBox.MODULE_GAMEBOX;
 	
 	Permission(String perm, boolean perGame){
 		this.perm = preNode + "." + perm + (perGame ? ".%gameID%" : "");

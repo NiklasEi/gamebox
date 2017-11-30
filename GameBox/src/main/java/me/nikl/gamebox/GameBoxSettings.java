@@ -85,8 +85,6 @@ public class GameBoxSettings {
         try {
             Inventory inventory = Bukkit.createInventory(null, 27, "This title is longer then 32 characters!");
         } catch (Exception e){
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " Your server version can't handle more then 32 characters in inventory titles!");
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " GameBox will replace too long titles. You should shorten them in your language file.");
             return true;
         }
         return false;

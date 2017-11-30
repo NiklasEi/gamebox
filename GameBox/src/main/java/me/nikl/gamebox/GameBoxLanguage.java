@@ -52,7 +52,7 @@ public class GameBoxLanguage extends Language{
 
 	
 	GameBoxLanguage(GameBox plugin){
-		super(plugin, "gamebox");
+		super(plugin, GameBox.MODULE_GAMEBOX);
 	}
 
 	@Override

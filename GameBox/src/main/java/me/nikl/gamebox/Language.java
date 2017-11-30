@@ -1,5 +1,6 @@
 package me.nikl.gamebox;
 
+import me.nikl.gamebox.util.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -13,6 +14,7 @@ import java.util.List;
  * Created by nikl on 24.10.17.
  */
 public abstract class Language {
+    private boolean shortened = false;
 
     protected GameBox plugin;
     protected Module module;
@@ -68,7 +70,7 @@ public abstract class Language {
 
         // load default language
         try {
-            String defaultLangName = moduleID.equals("gamebox") ? "language/lang_en.yml" : "language/" + module.getModuleID() + "/lang_en.yml";
+            String defaultLangName = moduleID.equals(GameBox.MODULE_GAMEBOX) ? "language/lang_en.yml" : "language/" + module.getModuleID() + "/lang_en.yml";
             defaultLanguage = YamlConfiguration.loadConfiguration(
                     new InputStreamReader(module.getExternalPlugin() == null
                             ? plugin.getResource(defaultLangName)
@@ -87,7 +89,7 @@ public abstract class Language {
         }
 
         if(fileName == null || !fileName.endsWith(".yml")){
-            String path = moduleID.equals("gamebox") ? "'config.yml'" : "'games" + "/" + moduleID + "/config.yml'";
+            String path = moduleID.equals(GameBox.MODULE_GAMEBOX) ? "'config.yml'" : "'games" + "/" + moduleID + "/config.yml'";
             plugin.getLogger().warning("Language file for " + moduleID + " is not specified or not valid.");
             plugin.getLogger().warning("Did you forget to give the file ending '.yml'?");
             plugin.getLogger().warning("Should be set in " + path + " as value of 'langFile'");
@@ -96,7 +98,7 @@ public abstract class Language {
             return;
         }
 
-        File languageFile = moduleID.equals("gamebox") ?
+        File languageFile = moduleID.equals(GameBox.MODULE_GAMEBOX) ?
                 new File(plugin.getDataFolder().toString() + File.separatorChar + "language" + File.separatorChar
                         + fileName)
                 :
@@ -104,7 +106,7 @@ public abstract class Language {
                         + moduleID + File.separatorChar + fileName);
 
         if(!languageFile.exists()){
-            String path = moduleID.equals("gamebox") ? "'config.yml'"
+            String path = moduleID.equals(GameBox.MODULE_GAMEBOX) ? "'config.yml'"
                     : "'games" + "/" + moduleID + "/config.yml'";
             plugin.getLogger().warning("The in '" + path + "' as 'langFile' configured file '" + fileName + "' does not exist!");
             plugin.getLogger().warning("Falling back to the default file...");
@@ -230,18 +232,32 @@ public abstract class Language {
      * @return message
      */
     protected String getString(String path, boolean color) {
+        String toReturn;
         if(!language.isString(path)){
-            String toReturn = defaultLanguage.getString(path);
+            toReturn = defaultLanguage.getString(path);
+            if(GameBoxSettings.checkInventoryLength && toReturn != null && toReturn.length() > 32){
+                toReturn = StringUtil.shorten(toReturn, 32);
+                shortened = true;
+            }
             if(color && toReturn != null){
                 return ChatColor.translateAlternateColorCodes('&', defaultLanguage.getString(path));
             }
-            return defaultLanguage.getString(path);
+            return toReturn;
         }
-        if(!color) return language.getString(path);
-        return ChatColor.translateAlternateColorCodes('&',language.getString(path));
+        toReturn = language.getString(path);
+        if(GameBoxSettings.checkInventoryLength && toReturn != null && toReturn.length() > 32){
+            toReturn = StringUtil.shorten(toReturn, 32);
+            shortened = true;
+        }
+        if(!color) return toReturn;
+        return ChatColor.translateAlternateColorCodes('&',toReturn);
     }
 
     protected String getString(String path){
         return getString(path, true);
+    }
+
+    public boolean isShortened() {
+        return shortened;
     }
 }

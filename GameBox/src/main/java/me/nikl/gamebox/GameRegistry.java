@@ -5,7 +5,9 @@ import me.nikl.gamebox.util.FileUtil;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Set;
 import java.util.logging.Level;
 
 /**
@@ -85,4 +87,7 @@ public class GameRegistry {
         }
     }
 
+    public Set<String> getModuleIDs() {
+        return Collections.unmodifiableSet(modules.keySet());
+    }
 }
