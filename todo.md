@@ -11,13 +11,6 @@
 * Bungeecord support
 * Settings menu
   * sort the games in the main GUI
-* new and up to date example game
-* abstract game class
-  * get data folder
-  * reload game
-  * settings and config
-  * game manager
-  * load config and lang? in predefined onEnable
 * new options on events. Also fire events, so that other plugins can listen for them. 
   * on invite:
     * possible action bar message
@@ -35,6 +28,6 @@
 
 
 Small stuff:
-* use gamebox logger everywhere
+* check the bStats original game names (v1) against the default names in the lang files (used in v2). If they don't match there will be mess in the statistics...
     
 
