@@ -171,12 +171,13 @@ public class GameBox extends JavaPlugin{
 
 
 		// check for registered games
+		// running as a bukkit runnable ensures that the task is run as soon as all plugins are loaded.
 		new BukkitRunnable(){
 			@Override
 			public void run() {
 				runLateChecks();
 			}
-		}.runTaskLater(this, 100);
+		}.runTask(this);
 	}
 
 	private void runLateChecks() {
@@ -189,13 +190,13 @@ public class GameBox extends JavaPlugin{
 		checkLanguageFiles();
 
 		if(PluginManager.gamesRegistered == 0){
-			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
-			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED + " There are no registered games!");
-			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED + " You should visit Spigot and get a few ;)");
-			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED + "   https://www.spigotmc.org/resources/37273/");
-			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
+			info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
+			info(ChatColor.RED + " There are no registered games!");
+			info(ChatColor.RED + " You should visit Spigot and get a few ;)");
+			info(ChatColor.RED + "   https://www.spigotmc.org/resources/37273/");
+			info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
 		} else {
-			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.GREEN + " " + PluginManager.gamesRegistered + " games were registered. Have fun :)");
+			info(ChatColor.GREEN + " " + PluginManager.gamesRegistered + " games were registered. Have fun :)");
 		}
 	}
 
