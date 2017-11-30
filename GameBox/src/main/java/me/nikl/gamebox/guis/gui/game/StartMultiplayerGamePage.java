@@ -4,6 +4,7 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.util.ClickAction;
+import me.nikl.gamebox.util.InventoryUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -58,7 +59,7 @@ public class StartMultiplayerGamePage extends GameGuiPage {
         GameBox.debug("loading inventory");
         invitations.put(uniqueId, new ArrayList<>());
         invitationButtons.put(uniqueId, new AButton[inventory.getSize()]);
-        Inventory inv = Bukkit.createInventory(null, 54, "Your invite inv.");
+        Inventory inv = InventoryUtil.createInventory(null, 54, "Your invite inv.");
         inv.setContents(inventory.getContents().clone());
 
         openInventories.put(uniqueId, inv);
@@ -78,7 +79,7 @@ public class StartMultiplayerGamePage extends GameGuiPage {
 
     private void updateInvitations(UUID uuid2) {
         if(!openInventories.containsKey(uuid2)){
-            openInventories.put(uuid2, Bukkit.createInventory(null, 54, "Your invite inv."));
+            openInventories.put(uuid2, InventoryUtil.createInventory(null, 54, "Your invite inv."));
         }
         Inventory inv = openInventories.get(uuid2);
         inv.setContents(inventory.getContents().clone());

@@ -36,7 +36,7 @@ public class NMSUtil_1_8_R3 implements NMSUtil {
 		newTitle = ChatColor.translateAlternateColorCodes('&',newTitle);
 
 		if(checkInventoryTitleLength && newTitle.length() > 32){
-			newTitle = "Title is too long (> 32)";
+			newTitle = newTitle.substring(0, 28) + "...";
 		}
 
 		PacketPlayOutOpenWindow packet = new PacketPlayOutOpenWindow(ep.activeContainer.windowId

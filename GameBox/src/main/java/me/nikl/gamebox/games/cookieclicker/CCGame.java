@@ -19,6 +19,7 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.temple.*;
 import me.nikl.gamebox.games.cookieclicker.upgrades.timemachine.*;
 import me.nikl.gamebox.games.cookieclicker.upgrades.wizardtower.*;
 import me.nikl.gamebox.nms.NMSUtil;
+import me.nikl.gamebox.util.InventoryUtil;
 import me.nikl.gamebox.util.NumberUtil;
 import me.nikl.gamebox.util.Sound;
 import org.bukkit.Bukkit;
@@ -321,10 +322,8 @@ public class CCGame extends BukkitRunnable {
         // create inventory
         String title = lang.GAME_TITLE
                 .replace("%score%", String.valueOf((int) cookies));
-        if(GameBoxSettings.checkInventoryLength && title.length() > 32){
-            title = "Title is too long!";
-        }
-        this.inventory = Bukkit.createInventory(null, 54, title);
+
+        this.inventory = InventoryUtil.createInventory(null, 54, title);
 
         if(save != null){
             //load the game

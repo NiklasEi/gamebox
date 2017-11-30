@@ -12,7 +12,9 @@ import me.nikl.gamebox.guis.gui.game.StartMultiplayerGamePage;
 import me.nikl.gamebox.guis.shop.Shop;
 import me.nikl.gamebox.guis.shop.ShopItem;
 import me.nikl.gamebox.util.ClickAction;
+import me.nikl.gamebox.util.InventoryUtil;
 import me.nikl.gamebox.util.Permission;
+import me.nikl.gamebox.util.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -75,11 +77,7 @@ public abstract class AGui {
 			title = title.replace("%game%", pluginManager.getGame(args[0]).getGameLang().PLAIN_NAME);
 		}
 
-		if(GameBoxSettings.checkInventoryLength && title.length() > 32){
-			title = "Title is too long!";
-		}
-
-		this.inventory = Bukkit.createInventory(null, slots, title);
+		this.inventory = InventoryUtil.createInventory(null, slots, title);
 	}
 	
 	public boolean open(Player player){

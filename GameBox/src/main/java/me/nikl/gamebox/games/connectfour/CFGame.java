@@ -2,6 +2,7 @@ package me.nikl.gamebox.games.connectfour;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.nms.NMSUtil;
+import me.nikl.gamebox.util.InventoryUtil;
 import me.nikl.gamebox.util.Permission;
 import me.nikl.gamebox.util.Sound;
 import org.bukkit.Bukkit;
@@ -93,7 +94,7 @@ public class CFGame extends BukkitRunnable{
             this.state = CFGameState.SECOND_TURN;
         }
 
-        inv = Bukkit.createInventory(null, 54, "default");
+        inv = InventoryUtil.createInventory(null, 54, "default");
         this.first.openInventory(inv);
         this.second.openInventory(inv);
         updateStatus();

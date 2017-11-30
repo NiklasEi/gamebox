@@ -8,6 +8,7 @@ import me.nikl.gamebox.guis.GUIManager;
 import me.nikl.gamebox.guis.button.AButton;
 import me.nikl.gamebox.guis.button.ToggleButton;
 import me.nikl.gamebox.util.ClickAction;
+import me.nikl.gamebox.util.InventoryUtil;
 import me.nikl.gamebox.util.ItemStackUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -131,11 +132,7 @@ public class MainGui extends AGui{
 
 		String title = this.title.replace("%player%", Bukkit.getPlayer(player.getUuid()).getName());
 
-		if(GameBoxSettings.checkInventoryLength && title.length() > 32){
-			title = "Title is too long!";
-		}
-
-		Inventory inventory = Bukkit.createInventory(null, this.inventory.getSize(), title);
+		Inventory inventory = InventoryUtil.createInventory(null, this.inventory.getSize(), title);
 
 		inventory.setContents(this.inventory.getContents().clone());
 

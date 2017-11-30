@@ -181,10 +181,10 @@ public class GameBox extends JavaPlugin{
 	}
 
 	private void runLateChecks() {
-		if(GameBoxSettings.checkInventoryLength  && langFilesShortened()) {
+		if(GameBoxSettings.checkInventoryLength) {
 			info(ChatColor.RED + " Your server version can't handle more then 32 characters in inventory titles!");
 			info(ChatColor.RED + " GameBox will shorten too long titles (marked by '...') to prevent errors.");
-			info(ChatColor.RED + " To fix this, create your own language file with shorter titles.");
+			info(ChatColor.RED + " To fix this ('...'), create your own language file with shorter titles.");
 		}
 
 		checkLanguageFiles();
@@ -198,18 +198,6 @@ public class GameBox extends JavaPlugin{
 		} else {
 			info(ChatColor.GREEN + " " + PluginManager.gamesRegistered + " games were registered. Have fun :)");
 		}
-	}
-
-	private boolean langFilesShortened() {
-		Game game;
-		for(String moduleID : gameRegistry.getModuleIDs()){
-			if(moduleID.equals(MODULE_GAMEBOX)){
-				if(lang.isShortened()) return true;
-			}
-			game = getPluginManager().getGame(moduleID);
-			if(game != null && game.getGameLang().isShortened()) return true;
-		}
-		return false;
 	}
 
 	private void registerGames() {

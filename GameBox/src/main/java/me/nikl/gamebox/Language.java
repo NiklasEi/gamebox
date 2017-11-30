@@ -1,7 +1,5 @@
 package me.nikl.gamebox;
 
-import me.nikl.gamebox.util.StringUtil;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -12,9 +10,13 @@ import java.util.List;
 
 /**
  * Created by nikl on 24.10.17.
+ *
+ * Super class for all Language classes.
+ * Holds the file configurations and some basic messages.
+ *
+ * Provides methods to load messages from the files.
  */
 public abstract class Language {
-    private boolean shortened = false;
 
     protected GameBox plugin;
     protected Module module;
@@ -235,29 +237,17 @@ public abstract class Language {
         String toReturn;
         if(!language.isString(path)){
             toReturn = defaultLanguage.getString(path);
-            if(GameBoxSettings.checkInventoryLength && toReturn != null && toReturn.length() > 32){
-                toReturn = StringUtil.shorten(toReturn, 32);
-                shortened = true;
-            }
             if(color && toReturn != null){
                 return ChatColor.translateAlternateColorCodes('&', defaultLanguage.getString(path));
             }
             return toReturn;
         }
         toReturn = language.getString(path);
-        if(GameBoxSettings.checkInventoryLength && toReturn != null && toReturn.length() > 32){
-            toReturn = StringUtil.shorten(toReturn, 32);
-            shortened = true;
-        }
         if(!color) return toReturn;
         return ChatColor.translateAlternateColorCodes('&',toReturn);
     }
 
     protected String getString(String path){
         return getString(path, true);
-    }
-
-    public boolean isShortened() {
-        return shortened;
     }
 }
