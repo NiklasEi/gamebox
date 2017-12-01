@@ -42,7 +42,8 @@ public abstract class Language {
         PLAIN_NAME = ChatColor.stripColor(NAME);
 
         // default is the value assigned to unknown games in bStats
-        DEFAULT_NAME = defaultLanguage.getString("name", "Other (custom game)");
+        DEFAULT_NAME = ChatColor.translateAlternateColorCodes('&'
+                , defaultLanguage.getString("name", "Other (custom game)"));
         DEFAULT_PLAIN_NAME = ChatColor.stripColor(DEFAULT_NAME);
 
         loadMessages();
