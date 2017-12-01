@@ -5,9 +5,7 @@ import me.nikl.gamebox.util.FileUtil;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 
 /**
@@ -24,9 +22,17 @@ public class GameRegistry {
         this.gameBox = plugin;
     }
 
+    private final Set<String> forbiddenModuleIDs =
+            new HashSet<>(Arrays.asList("all, game, games"));
+
     public boolean registerModule(Module module){
         if(isRegistered(module.getModuleID())) {
             gameBox.getLogger().log(Level.WARNING, " A Module tried registering with an already in use ID!");
+            return false;
+        }
+
+        if(forbiddenModuleIDs.contains(module.getModuleID())){
+            gameBox.getLogger().log(Level.WARNING, " A Module tried registering with a forbidden ID (" + module.getModuleID() + ")");
             return false;
         }
 
