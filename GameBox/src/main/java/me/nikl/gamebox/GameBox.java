@@ -26,10 +26,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 
@@ -45,7 +42,7 @@ public class GameBox extends JavaPlugin{
 	public static final String MODULE_COOKIECLICKER = "cookieclicker";
 
 	// enable debug mode (print debug messages)
-	public static boolean debug = false;
+	public static boolean debug = true;
 
 	// toggle to stop inventory contents to be restored when a new gui is opened and automatically closes the old one
 	public static boolean openingNewGUI = false;
@@ -75,6 +72,7 @@ public class GameBox extends JavaPlugin{
 	private PluginManager pManager;
 
 	private MainCommand mainCommand;
+	private AdminCommand adminCommand;
 
 	private DataBase dataBase;
 
@@ -87,8 +85,6 @@ public class GameBox extends JavaPlugin{
 	public static boolean playSounds = GameBoxSettings.playSounds;
 
 	private GameRegistry gameRegistry;
-
-	private HashMap<String, HashMap<String, List<String>>> missingLanguageKeys;
 
 
 	@Override
@@ -177,6 +173,7 @@ public class GameBox extends JavaPlugin{
 		new BukkitRunnable(){
 			@Override
 			public void run() {
+				debug(" running late check in GameBox");
 				runLateChecks();
 			}
 		}.runTask(this);
@@ -189,7 +186,7 @@ public class GameBox extends JavaPlugin{
 			info(ChatColor.RED + " To fix this ('...'), create your own language file with shorter titles.");
 		}
 
-		checkLanguageFiles();
+		adminCommand.printIncompleteLangFilesInfo();
 
 		if(PluginManager.gamesRegistered == 0){
 			info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
@@ -225,9 +222,6 @@ public class GameBox extends JavaPlugin{
 
 		// copy default language file from jar to language folders
 		FileUtil.copyDefaultLanguageFiles();
-
-		// reset missing language keys
-		missingLanguageKeys = new HashMap<>();
 
 		// get gamebox language file
 		this.lang = new GameBoxLanguage(this);
@@ -294,82 +288,14 @@ public class GameBox extends JavaPlugin{
 
 		// set cmd executors
 		mainCommand = new MainCommand(this);
+		adminCommand = new AdminCommand(this);
 		this.getCommand("gamebox").setExecutor(mainCommand);
-		this.getCommand("gameboxadmin").setExecutor(new AdminCommand(this));
+		this.getCommand("gameboxadmin").setExecutor(adminCommand);
 
 		// load players that are already online (otherwise done on join)
 		pManager.loadPlayers();
 
 		return true;
-	}
-
-	private void checkLanguageFiles() {
-		/*
-		ToDo: check for missing keys in all used language files and add some support for creating
-		Files that contain all customized messages and the default ones for previously unset keys
-		*/
-		HashMap<String, List<String>> currentKeys;
-		for(String moduleID : gameRegistry.getModuleIDs()){
-			currentKeys = collectMissingKeys(moduleID);
-			if(!currentKeys.isEmpty()){
-				missingLanguageKeys.put(moduleID, currentKeys);
-			}
-		}
-
-		if(missingLanguageKeys.isEmpty()) return;
-
-		List<String> keys;
-		info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
-		for(String moduleID : missingLanguageKeys.keySet()){
-			currentKeys = missingLanguageKeys.get(moduleID);
-			info(" Missing from " + ChatColor.BLUE + getLanguage(moduleID).DEFAULT_PLAIN_NAME
-					+ ChatColor.RESET + " language file:");
-
-			if(currentKeys.keySet().contains("string")){
-				info(" ");
-				info(ChatColor.BOLD + "   Strings:");
-				keys = currentKeys.get("string");
-				for(String key : keys){
-					info(ChatColor.RED + "   -> " + ChatColor.RESET + key);
-				}
-			}
-
-			if(currentKeys.keySet().contains("list")){
-				info(" ");
-				info(ChatColor.BOLD + "   Lists:");
-				keys = currentKeys.get("list");
-				for(String key : keys){
-					info(ChatColor.RED + "   -> " + ChatColor.RESET + key);
-				}
-			}
-			info(" ");
-			info(" ");
-		}
-		info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
-
-		info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
-		info(" Your used language files are missing some messages");
-		info("   Run " + ChatColor.BLUE + "/gba language" + ChatColor.RESET + " to get more info.");
-		info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
-	}
-
-	private HashMap<String, List<String>> collectMissingKeys(String moduleID){
-		Language language = getLanguage(moduleID);
-
-		List<String> missingStringKeys = language.findMissingStringMessages();
-		List<String> missingListKeys = language.findMissingListMessages();
-
-		HashMap<String, List<String>> toReturn = new HashMap<>();
-
-		if(!missingListKeys.isEmpty()){
-			toReturn.put("list", missingListKeys);
-		}
-
-		if(!missingStringKeys.isEmpty()){
-			toReturn.put("string", missingStringKeys);
-		}
-
-		return toReturn;
 	}
 
 	private void reloadListeners() {

@@ -3,6 +3,7 @@ package me.nikl.gamebox.commands;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.GameBoxSettings;
+import me.nikl.gamebox.Language;
 import me.nikl.gamebox.data.DataBase;
 import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.util.Permission;
@@ -13,7 +14,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -26,10 +30,22 @@ public class AdminCommand implements CommandExecutor {
     private GameBox plugin;
     private GameBoxLanguage lang;
 
+    private HashMap<String, HashMap<String, List<String>>> missingLanguageKeys;
+
 
     public AdminCommand(GameBox plugin){
         this.plugin = plugin;
         this.lang = plugin.lang;
+
+        missingLanguageKeys = new HashMap<>();
+
+        new BukkitRunnable(){
+            @Override
+            public void run() {
+                GameBox.debug(" running late check in Admin command");
+                checkLanguageFiles();
+            }
+        }.runTask(plugin);
     }
 
     @Override
@@ -184,35 +200,28 @@ public class AdminCommand implements CommandExecutor {
                 return true;
             }
         } else if(args[0].equalsIgnoreCase("language")){
-
-            List<String> missingStringKeys = this.lang.findMissingStringMessages();
-            List<String> missingListKeys = this.lang.findMissingListMessages();
-
-            if(missingListKeys.isEmpty() && missingStringKeys.isEmpty()){
-                Bukkit.getConsoleSender().sendMessage(" No missing messages in your language file:)");
-                return true;
-            }
-
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
-            Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Your language file is missing messages!");
-            Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " ");
-            if(!missingListKeys.isEmpty()){
-                Bukkit.getConsoleSender().sendMessage(lang.PREFIX + "  String lists:");
-                for(String key : missingListKeys){
-                    Bukkit.getConsoleSender().sendMessage(lang.PREFIX + "     " + key);
+            // args length is min. 1
+            if(args.length == 1){
+                if(missingLanguageKeys.isEmpty()){
+                    plugin.info(ChatColor.GREEN + " You have no missing messages in your language files :)");
+                    return true;
+                } else {
+                    // ToDo: allow for cmd from op? (atm only printed to console)
+                    printIncompleteLangFilesInfo();
+                    return true;
                 }
-                Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " ");
-            }
-            if(!missingStringKeys.isEmpty()){
-                Bukkit.getConsoleSender().sendMessage(lang.PREFIX + "  Strings:");
-                for(String key : missingStringKeys){
-                    Bukkit.getConsoleSender().sendMessage(lang.PREFIX + "     " + key);
+            } else if(args.length == 2){
+                switch (args[1].toLowerCase()){
+                    case "all":
+                        printMissingKeys(sender);
+                        return true;
+                    default:
+                        // ToDo print keys of only one specific file
+                        sender.sendMessage(" Todo...");
+                        return true;
                 }
-                Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " ");
             }
-            Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " ");
-            Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Default messages are used for these keys.");
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
+
             return true;
         } else if(args[0].equalsIgnoreCase("debug")){
             if(sender instanceof Player){
@@ -226,6 +235,28 @@ public class AdminCommand implements CommandExecutor {
         return true;
     }
 
+    public void printIncompleteLangFilesInfo() {
+        // return if no keys are missing. This is only for calls from outside this class (e.g. from main class)
+        if (missingLanguageKeys.isEmpty()) return;
+
+        // print info about the incomplete files
+        plugin.info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
+        plugin.info(ChatColor.BOLD + " There are missing keys in the following file(s):");
+        plugin.info("");
+        Iterator<String> iterator = missingLanguageKeys.keySet().iterator();
+        String moduleID;
+        while (iterator.hasNext()){
+            moduleID = iterator.next();
+            plugin.info(ChatColor.RED + "   -> " + ChatColor.RESET + plugin.getLanguage(moduleID).DEFAULT_PLAIN_NAME);
+        }
+        plugin.info("");
+        plugin.info(" To get the specific missing keys of one file run ");
+        plugin.info("      " + ChatColor.BLUE + "/gba language <>");
+        plugin.info(" To get the specific missing keys of all files run ");
+        plugin.info("      " + ChatColor.BLUE + "/gba language all");
+        plugin.info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
+    }
+
     private void sendHelpMessages(CommandSender sender) {
         plugin.info(ChatColor.BOLD.toString() + ChatColor.GOLD + " Change the number of tokens for online/offline players");
         plugin.info(ChatColor.DARK_GREEN + " /gba [givetoken:taketoken:settoken] [player name] [count (integer)]");
@@ -235,5 +266,84 @@ public class AdminCommand implements CommandExecutor {
         plugin.info(ChatColor.DARK_GREEN + " /gba reload");
         plugin.info(ChatColor.BOLD.toString() + ChatColor.GOLD + " Display information about your used language file");
         plugin.info(ChatColor.DARK_GREEN + " /gba language");
+    }
+
+    private void printMissingKeys(CommandSender sender){
+        if(missingLanguageKeys.isEmpty()) return;
+
+        HashMap<String, List<String>> currentKeys;
+        List<String> keys;
+        plugin.info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
+        Iterator<String> iterator = missingLanguageKeys.keySet().iterator();
+        String moduleID;
+        while(iterator.hasNext()){
+            moduleID = iterator.next();
+            currentKeys = missingLanguageKeys.get(moduleID);
+            plugin.info(" Missing from " + ChatColor.BLUE + plugin.getLanguage(moduleID).DEFAULT_PLAIN_NAME
+                    + ChatColor.RESET + " language file:");
+
+            if(currentKeys.keySet().contains("string")){
+                plugin.info(" ");
+                plugin.info(ChatColor.BOLD + "   Strings:");
+                keys = currentKeys.get("string");
+                for(String key : keys){
+                    plugin.info(ChatColor.RED + "   -> " + ChatColor.RESET + key);
+                }
+            }
+
+            if(currentKeys.keySet().contains("list")){
+                plugin.info(" ");
+                plugin.info(ChatColor.BOLD + "   Lists:");
+                keys = currentKeys.get("list");
+                for(String key : keys){
+                    plugin.info(ChatColor.RED + "   -> " + ChatColor.RESET + key);
+                }
+            }
+            if(iterator.hasNext()) {
+                plugin.info(" ");
+                plugin.info(" ");
+            } else {
+                plugin.info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
+            }
+        }
+    }
+
+
+
+    private void checkLanguageFiles() {
+		/*
+		ToDo: check for missing keys in all used language files and add some support for creating
+		Files that contain all customized messages and the default ones for previously unset keys
+		*/
+        HashMap<String, List<String>> currentKeys;
+        for(String moduleID : plugin.getGameRegistry().getModuleIDs()){
+            currentKeys = collectMissingKeys(moduleID);
+            if(!currentKeys.isEmpty()){
+                missingLanguageKeys.put(moduleID, currentKeys);
+            }
+        }
+    }
+
+    private HashMap<String, List<String>> collectMissingKeys(String moduleID){
+        Language language = plugin.getLanguage(moduleID);
+
+        List<String> missingStringKeys = language.findMissingStringMessages();
+        List<String> missingListKeys = language.findMissingListMessages();
+
+        HashMap<String, List<String>> toReturn = new HashMap<>();
+
+        if(!missingListKeys.isEmpty()){
+            toReturn.put("list", missingListKeys);
+        }
+
+        if(!missingStringKeys.isEmpty()){
+            toReturn.put("string", missingStringKeys);
+        }
+
+        return toReturn;
+    }
+
+    public HashMap<String, HashMap<String, List<String>>> getMissingLanguageKeys(){
+        return this.missingLanguageKeys;
     }
 }
