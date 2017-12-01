@@ -21,6 +21,8 @@ public abstract class Language {
     protected GameBox plugin;
     protected Module module;
 
+    protected File languageFile;
+
     protected FileConfiguration defaultLanguage;
     protected FileConfiguration language;
 
@@ -101,7 +103,7 @@ public abstract class Language {
             return;
         }
 
-        File languageFile = moduleID.equals(GameBox.MODULE_GAMEBOX) ?
+        languageFile = moduleID.equals(GameBox.MODULE_GAMEBOX) ?
                 new File(plugin.getDataFolder().toString() + File.separatorChar + "language" + File.separatorChar
                         + fileName)
                 :
@@ -250,5 +252,19 @@ public abstract class Language {
 
     protected String getString(String path){
         return getString(path, true);
+    }
+
+    // Todo (from admin command)
+    protected boolean createDiffFile(){
+        File diffFile = new File(languageFile.getAbsolutePath() + "(missingKeys)");
+        int copy = 0;
+        while (diffFile.exists()){
+            copy++;
+            diffFile = new File(languageFile.getAbsolutePath() + "(missingKeys)(" + String.valueOf(copy) + ")");
+        }
+
+        FileConfiguration diffConfiguration = YamlConfiguration.loadConfiguration(diffFile);
+
+        return false;
     }
 }

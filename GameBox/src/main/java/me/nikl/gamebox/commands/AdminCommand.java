@@ -346,4 +346,9 @@ public class AdminCommand implements CommandExecutor {
     public HashMap<String, HashMap<String, List<String>>> getMissingLanguageKeys(){
         return this.missingLanguageKeys;
     }
+
+    // Todo (method in language)
+    private void createDiffFile(String moduleID){
+
+    }
 }
