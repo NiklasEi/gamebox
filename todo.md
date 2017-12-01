@@ -29,5 +29,5 @@
 
 Small stuff:
 * check the bStats original game names (v1) against the default names in the lang files (used in v2). If they don't match there will be mess in the statistics...
-    
+* replace deprecated PlayerPickupItemEvent with EntityPickupItemEvent (uwaga! only in 1.12)
 
