@@ -88,6 +88,8 @@ public class GameBox extends JavaPlugin{
 
 	private GameRegistry gameRegistry;
 
+	private HashMap<String, HashMap<String, List<String>>> missingLanguageKeys;
+
 
 	@Override
 	public void onEnable(){
@@ -224,6 +226,9 @@ public class GameBox extends JavaPlugin{
 		// copy default language file from jar to language folders
 		FileUtil.copyDefaultLanguageFiles();
 
+		// reset missing language keys
+		missingLanguageKeys = new HashMap<>();
+
 		// get gamebox language file
 		this.lang = new GameBoxLanguage(this);
 
@@ -303,17 +308,68 @@ public class GameBox extends JavaPlugin{
 		ToDo: check for missing keys in all used language files and add some support for creating
 		Files that contain all customized messages and the default ones for previously unset keys
 		*/
+		HashMap<String, List<String>> currentKeys;
+		for(String moduleID : gameRegistry.getModuleIDs()){
+			currentKeys = collectMissingKeys(moduleID);
+			if(!currentKeys.isEmpty()){
+				missingLanguageKeys.put(moduleID, currentKeys);
+			}
+		}
 
-		// exp only for GB language file...
-		List<String> missingStringKeys = this.lang.findMissingStringMessages();
-		List<String> missingListKeys = this.lang.findMissingListMessages();
+		if(missingLanguageKeys.isEmpty()) return;
 
-		if(missingListKeys.isEmpty() && missingStringKeys.isEmpty()) return;
+		List<String> keys;
+		info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
+		for(String moduleID : missingLanguageKeys.keySet()){
+			currentKeys = missingLanguageKeys.get(moduleID);
+			info(" Missing from " + ChatColor.BLUE + getLanguage(moduleID).DEFAULT_PLAIN_NAME
+					+ ChatColor.RESET + " language file:");
 
-		Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
-		Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Your used language file is missing some messages");
-		Bukkit.getConsoleSender().sendMessage(lang.PREFIX + "   Run " + ChatColor.BLUE + "/gba language" + ChatColor.RESET + " to get a list of the missing keys.");
-		Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
+			if(currentKeys.keySet().contains("string")){
+				info(" ");
+				info(ChatColor.BOLD + "   Strings:");
+				keys = currentKeys.get("string");
+				for(String key : keys){
+					info(ChatColor.RED + "   -> " + ChatColor.RESET + key);
+				}
+			}
+
+			if(currentKeys.keySet().contains("list")){
+				info(" ");
+				info(ChatColor.BOLD + "   Lists:");
+				keys = currentKeys.get("list");
+				for(String key : keys){
+					info(ChatColor.RED + "   -> " + ChatColor.RESET + key);
+				}
+			}
+			info(" ");
+			info(" ");
+		}
+		info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
+
+		info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
+		info(" Your used language files are missing some messages");
+		info("   Run " + ChatColor.BLUE + "/gba language" + ChatColor.RESET + " to get more info.");
+		info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
+	}
+
+	private HashMap<String, List<String>> collectMissingKeys(String moduleID){
+		Language language = getLanguage(moduleID);
+
+		List<String> missingStringKeys = language.findMissingStringMessages();
+		List<String> missingListKeys = language.findMissingListMessages();
+
+		HashMap<String, List<String>> toReturn = new HashMap<>();
+
+		if(!missingListKeys.isEmpty()){
+			toReturn.put("list", missingListKeys);
+		}
+
+		if(!missingStringKeys.isEmpty()){
+			toReturn.put("string", missingStringKeys);
+		}
+
+		return toReturn;
 	}
 
 	private void reloadListeners() {
@@ -462,11 +518,11 @@ public class GameBox extends JavaPlugin{
 	}
 
 	/**
-	 * Get the original game name from the module enum
+	 * Get the original game name from the module
 	 *
-	 * This is to make the statistics on bStats cleaner.
-	 * Since the game names can be changed, the statistics would be messed up,
-	 * when using the customized game names.
+	 * This is to make the statistics on bStats cleaner
+	 * and to have unified names of the games (since they can be customised).
+	 *
 	 * Get the default name from the default
 	 * language file of the game.
 	 * @param gameID Id of the game
@@ -481,10 +537,14 @@ public class GameBox extends JavaPlugin{
 	}
 
 	public FileConfiguration getConfig(Module module) {
-		if(module.getModuleID().equals(MODULE_GAMEBOX))
+		return getConfig(module.getModuleID());
+	}
+
+	public FileConfiguration getConfig(String moduleId) {
+		if(moduleId.equals(MODULE_GAMEBOX))
 			return getConfig();
 
-		Game game = getPluginManager().getGame(module);
+		Game game = getPluginManager().getGame(moduleId);
 
 		if(game == null) return null;
 
@@ -492,10 +552,14 @@ public class GameBox extends JavaPlugin{
 	}
 
 	public Language getLanguage(Module module) {
-		if(module.getModuleID().equals("gamebox"))
+		return getLanguage(module.getModuleID());
+	}
+
+	public Language getLanguage(String moduleID) {
+		if(moduleID.equals(MODULE_GAMEBOX))
 			return lang;
 
-		Game game = getPluginManager().getGame(module);
+		Game game = getPluginManager().getGame(moduleID);
 
 		if(game == null) return null;
 
