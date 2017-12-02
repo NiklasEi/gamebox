@@ -258,6 +258,12 @@ public abstract class Game {
         }
 
         Map<String, ? extends GameRule> gameRules = gameManager.getGameRules();
+        if(gameRules == null || gameRules.isEmpty()){
+            gameBox.getLogger().log(Level.WARNING, " While loading " + gameLang.DEFAULT_PLAIN_NAME
+                    + " the game manager failed to return any valid game rules!");
+            return;
+            // Todo: system to unregister from guis...
+        }
 
         // get top list buttons
         if (config.isConfigurationSection("gameBox.topListButtons")) {

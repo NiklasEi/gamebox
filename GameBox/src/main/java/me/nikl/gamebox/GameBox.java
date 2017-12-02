@@ -40,9 +40,10 @@ public class GameBox extends JavaPlugin{
 
 	public static final String MODULE_CONNECTFOUR = "connectfour";
 	public static final String MODULE_COOKIECLICKER = "cookieclicker";
+	public static final String MODULE_MATCHIT = "matchit";
 
 	// enable debug mode (print debug messages)
-	public static boolean debug = true;
+	public static boolean debug = false;
 
 	// toggle to stop inventory contents to be restored when a new gui is opened and automatically closes the old one
 	public static boolean openingNewGUI = false;
@@ -205,6 +206,8 @@ public class GameBox extends JavaPlugin{
 				, "me.nikl.gamebox.games.connectfour.ConnectFour");
 		new Module(this, MODULE_COOKIECLICKER
 				, "me.nikl.gamebox.games.cookieclicker.CookieClicker");
+		new Module(this, MODULE_MATCHIT
+				, "me.nikl.gamebox.games.matchit.MatchIt");
 	}
 
 	/**
