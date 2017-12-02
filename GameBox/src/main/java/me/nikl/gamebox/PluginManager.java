@@ -546,8 +546,12 @@ public class PluginManager implements Listener {
             }
         }
 
-        gamesRegistered = 0;
+        for(Game game : games.values()){
+            GameBox.debug("disabling " + game.getGameLang().DEFAULT_PLAIN_NAME);
+            game.onDisable();
+        }
 
+        gamesRegistered = 0;
 
         logging:
         if(savedContents.size() > 0){
