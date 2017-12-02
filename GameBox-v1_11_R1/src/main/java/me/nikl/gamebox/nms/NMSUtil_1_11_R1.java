@@ -24,7 +24,7 @@ public class NMSUtil_1_11_R1 implements NMSUtil{
 	public void updateInventoryTitle(Player player, String newTitle) {
 		EntityPlayer entityPlayer = ((CraftPlayer)player).getHandle();
 		PacketPlayOutOpenWindow packet = new PacketPlayOutOpenWindow(entityPlayer.activeContainer.windowId,
-				"minecraft:chest", new ChatMessage(ChatColor.translateAlternateColorCodes('&',newTitle)),
+				"minecraft:chest", IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + ChatColor.translateAlternateColorCodes('&',newTitle) + "\"}"),
 				player.getOpenInventory().getTopInventory().getSize());
 		entityPlayer.playerConnection.sendPacket(packet);
 		entityPlayer.updateInventory(entityPlayer.activeContainer);
