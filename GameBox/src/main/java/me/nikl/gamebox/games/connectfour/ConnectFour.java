@@ -22,6 +22,11 @@ public class ConnectFour extends Game {
     }
 
     @Override
+    public void init() {
+
+    }
+
+    @Override
     public void loadSettings() {
         gameSettings.setGameType(GameSettings.GameType.TWO_PLAYER);
         gameSettings.setGameGuiSize(54);

@@ -22,6 +22,11 @@ public class CookieClicker extends Game {
     }
 
     @Override
+    public void init() {
+
+    }
+
+    @Override
     public void loadSettings() {
         gameSettings.setGameType(GameSettings.GameType.SINGLE_PLAYER);
         gameSettings.setGameGuiSize(54);

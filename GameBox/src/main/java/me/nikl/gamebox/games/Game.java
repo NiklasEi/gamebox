@@ -78,10 +78,22 @@ public abstract class Game {
         // abstract
         loadSettings();
         loadLanguage();
+
+        // at this point the game can load any game specific stuff (e.g. from config)
+        init();
+
         loadGameManager();
 
         hook();
     }
+
+    /**
+     * Initialize the game
+     *
+     * At this point the settings and the language are set,
+     * but not the manager.
+     */
+    public abstract void init();
 
     /**
      * This method will be called on enable,
