@@ -7,9 +7,10 @@ game:
     # use %cost% for the amount payed
     payed: " &2You paid &4%cost%"
     notEnoughMoney: " &4You do not have enough money!"
-  closedGame: " &2You have a current score of &6%score%"
   inventoryTitles:
-    gameTitle: "&9&lMatch It    &r&1%time%"
+    gameTitle: "&9&lMatch It    &r&a%matched%&r/&4%pairs%     &r&1%time%"
+    gameTitleStart: "&9&lMatch It    &r&1Click to start"
+    gameTitleWon: "&9&lMatch It      Won in   &r&1%time%"
 
 
 prefix: "[&3MatchIt&r]"

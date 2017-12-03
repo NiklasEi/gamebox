@@ -502,4 +502,8 @@ public class GameBox extends JavaPlugin{
 	public GameRegistry getGameRegistry() {
 		return gameRegistry;
 	}
+
+    public void warning(String message) {
+		getLogger().warning(message);
+    }
 }
