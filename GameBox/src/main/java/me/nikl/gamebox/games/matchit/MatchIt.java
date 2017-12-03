@@ -26,6 +26,8 @@ import java.util.List;
 public class MatchIt extends Game{
     private List<ItemStack> pairItems;
 
+    private ItemStack cover, border;
+
     public MatchIt(GameBox gameBox) {
         super(gameBox, GameBox.MODULE_MATCHIT
                 , new String[]{GameBox.MODULE_MATCHIT, "mi"});
@@ -49,7 +51,8 @@ public class MatchIt extends Game{
                     continue;
 
                 itemStack = loadItem(itemsSec.getConfigurationSection(key));
-                if(itemStack != null) pairItems.add(itemStack.clone());
+                if(itemStack != null && !pairItems.contains(itemStack))
+                    pairItems.add(itemStack.clone());
             }
         } catch (UnsupportedEncodingException e2) {
             gameBox.getLogger().warning("Failed to load default config file for: " + module.getModuleID());
@@ -58,27 +61,15 @@ public class MatchIt extends Game{
     }
 
     private ItemStack loadItem(ConfigurationSection itemSection){
-        ItemStack toReturn;
-        ItemMeta meta;
-
-        if(!itemSection.isString("matData")){
-            gameBox.warning(" missing 'matData' in " + gameLang.PLAIN_NAME + " config. Key: " + itemSection.getName());
-            return null;
-        }
-        toReturn = ItemStackUtil.getItemStack(itemSection.getString( "matData"));
+        ItemStack toReturn = ItemStackUtil.loadItem(itemSection);
         if(toReturn == null){
-            gameBox.warning(" invalid 'matData' in " + gameLang.PLAIN_NAME + " config. Key: " + itemSection.getName());
+            warn(" missing or invalid 'matData' config-key: " + itemSection.getName());
             return null;
         }
-        meta = toReturn.getItemMeta();
-        if(itemSection.isString("displayName")){
-            meta.setDisplayName(StringUtil.color(itemSection.getString("displayName")));
-        }
-        if(itemSection.isList("lore")){
-            meta.setLore(StringUtil.color(itemSection.getStringList("lore")));
-        }
-        toReturn.setItemMeta(meta);
 
+        if(itemSection.isBoolean("glow")){
+            toReturn = nms.addGlow(toReturn);
+        }
         return toReturn;
     }
 
@@ -108,11 +99,36 @@ public class MatchIt extends Game{
                 if(itemStack != null) pairItems.add(itemStack.clone());
             }
             if(getPairItems().isEmpty()){
-                gameBox.warning(" there are no items defined for the game " + gameLang.PLAIN_NAME);
-                gameBox.warning(" falling back to default...");
+                warn(" there are no items defined!");
+                warn("    falling back to default...");
                 setDefaultItems();
                 // ToDo or deregister the game!
             }
+        }
+
+        if(config.isConfigurationSection("coverItem")){
+            cover = loadItem(config.getConfigurationSection("coverItem"));
+        }
+        if(cover == null){
+            warn(" missing or invalid cover item in %config%");
+            warn("    falling back to default...");
+            cover = new MaterialData(Material.STAINED_GLASS_PANE, (byte) 3).toItemStack(1);
+            ItemMeta meta = cover.getItemMeta();
+            meta.setDisplayName(StringUtil.color("&1Click to uncover"));
+            cover.setItemMeta(meta);
+        }
+
+
+        if(config.isConfigurationSection("borderItem")){
+            border = loadItem(config.getConfigurationSection("borderItem"));
+        }
+        if(border == null){
+            warn(" missing or invalid cover item in %config%");
+            warn("    falling back to default...");
+            border = new MaterialData(Material.STAINED_GLASS_PANE, (byte) 15).toItemStack(1);
+            ItemMeta meta = border.getItemMeta();
+            meta.setDisplayName(StringUtil.color("&r"));
+            border.setItemMeta(meta);
         }
     }
 
@@ -137,8 +153,16 @@ public class MatchIt extends Game{
         return pairItems;
     }
 
+    public ItemStack getCover() {
+        return cover;
+    }
+
+    public ItemStack getBorder() {
+        return border;
+    }
+
     public enum GridSize{
-        FULL(54), MIDDLE(4*7), SMALL(2*5);
+        BIG(54), MIDDLE(4*7), SMALL(2*5);
 
         private int size;
         GridSize(int size){

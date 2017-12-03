@@ -53,10 +53,13 @@ public class MIGameManager implements GameManager {
 
     @Override
     public int startGame(Player[] players, boolean playSounds, String... args) {
+        MIGameRule rule = gameRules.get(args[0]);
+        if(rule == null) return GameBox.GAME_NOT_STARTED_ERROR;
         games.put(players[0].getUniqueId(),
                 new MIGame(matchIt, players[0]
-                        , playSounds && matchIt.getSettings().isPlaySounds()));
-        return 1;
+                        , playSounds && matchIt.getSettings().isPlaySounds()
+                        , rule));
+        return GameBox.GAME_STARTED;
     }
 
     @Override
@@ -75,8 +78,15 @@ public class MIGameManager implements GameManager {
     public void loadGameRules(ConfigurationSection buttonSec, String buttonID) {
         double cost = buttonSec.getDouble("cost", 0.);
         boolean saveStats = buttonSec.getBoolean("saveStats", false);
+        MatchIt.GridSize gridSize;
 
-        gameRules.put(buttonID, new MIGameRule(saveStats, cost, buttonID));
+        try {
+            gridSize = MatchIt.GridSize.valueOf(buttonSec.getString("size", "medium").toUpperCase());
+        } catch (IllegalArgumentException exception){
+            gridSize = MatchIt.GridSize.MIDDLE;
+        }
+
+        gameRules.put(buttonID, new MIGameRule(saveStats, cost, buttonID, gridSize));
     }
 
     @Override

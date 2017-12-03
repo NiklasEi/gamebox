@@ -44,6 +44,7 @@ public abstract class Game {
     protected Module module;
 
     protected File dataFolder;
+    protected File configFile;
 
     protected GameManager gameManager;
 
@@ -57,7 +58,7 @@ public abstract class Game {
 
     protected String[] subCommands;
 
-    public Game(GameBox gameBox, String gameID, String[] subCommands){
+    protected Game(GameBox gameBox, String gameID, String[] subCommands){
         this.module = gameBox.getGameRegistry().getModule(gameID);
         Validate.notNull(module, " You cannot initialize a game without registering it's module first!");
 
@@ -121,7 +122,7 @@ public abstract class Game {
 
     public boolean loadConfig(){
         GameBox.debug(" load config... (" + module.getModuleID() + ")");
-        File configFile = new File(gameBox.getDataFolder()
+        configFile = new File(gameBox.getDataFolder()
                 + File.separator + "games"
                 + File.separator + getGameID()
                 + File.separator + "config.yml");
@@ -429,5 +430,15 @@ public abstract class Game {
         } else {
             return true;
         }
+    }
+
+    public void warn(String message){
+        gameBox.getLogger().warning(" " + gameLang.PLAIN_PREFIX + message
+                .replace("%config%", "GameBox/games/" + getGameID() + "/config.yml"));
+    }
+
+    public void info(String message){
+        gameBox.getLogger().info(" " + gameLang.PLAIN_PREFIX + message
+                .replace("%config%", "GameBox/games/" + getGameID() + "/config.yml"));
     }
 }

@@ -3,13 +3,12 @@ package me.nikl.gamebox.games.matchit;
 import me.nikl.gamebox.nms.NMSUtil;
 import me.nikl.gamebox.util.InventoryUtil;
 import me.nikl.gamebox.util.Sound;
+import me.nikl.gamebox.util.StringUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -32,13 +31,14 @@ public class MIGame extends BukkitRunnable {
 
     private int firstOpen = -1
             , secondOpen = -1;
+    private long firstMilli, secondMilli;
 
     private Inventory inventory;
     private boolean started = false;
 
     private HashMap<Integer, Pair> pairs;
 
-    private ItemStack cover;
+    private ItemStack cover, border;
 
     private MatchIt.GridSize gridSize = MatchIt.GridSize.SMALL;
 
@@ -54,14 +54,19 @@ public class MIGame extends BukkitRunnable {
 
     private boolean over = false;
 
-    public MIGame(MatchIt matchIt, Player player, boolean playSounds){
+    private MIGameRule rule;
+
+    public MIGame(MatchIt matchIt, Player player, boolean playSounds, MIGameRule rule){
+        this.rule = rule;
+        this.gridSize = rule.getGridSize();
         this.playSounds = playSounds;
         this.player = player;
         this.matchIt = matchIt;
         this.language = (MILanguage) matchIt.getGameLang();
         this.nms = matchIt.getGameBox().getNMS();
 
-        this.cover = new MaterialData(Material.STAINED_GLASS_PANE).toItemStack(1);
+        this.cover = matchIt.getCover();
+        this.border = matchIt.getBorder();
 
         nrPairs = gridSize.getSize()/2;
 
@@ -80,41 +85,51 @@ public class MIGame extends BukkitRunnable {
         }
 
         int slot = event.getSlot();
+        if(inventoryToGrid(slot) < 0) return;
+        if(pairs.get(inventoryToGrid(slot)) == null) return;
 
         if(firstOpen < 0){
             if(inventoryToGrid(slot) >= 0){
                 show(slot);
                 firstOpen = slot;
+                firstMilli = System.currentTimeMillis();
             }
             return;
         }
 
         if(secondOpen < 0){
             if(inventoryToGrid(slot) >= 0){
+                if(firstOpen == slot) return;
                 show(slot);
 
                 if(pairs.get(inventoryToGrid(slot)).equals(pairs.get(inventoryToGrid(firstOpen)))){
                     firstOpen = -1;
                     secondOpen = -1;
+                    pairs.remove(inventoryToGrid(slot));
+                    pairs.remove(inventoryToGrid(firstOpen));
                     matched++;
                     if(matched == nrPairs){
                         over = true;
                         nms.updateInventoryTitle(player, language.INV_TITLE_WON
-                                .replace("%time%", String.valueOf(time)));
+                                .replace("%time%", StringUtil.formatTime(time)));
                         onGameEnd();
                     } else {
                         updateTitle();
                     }
                 } else {
                     secondOpen = slot;
+                    secondMilli = System.currentTimeMillis();
                 }
             }
             return;
         }
 
-        hide(firstOpen, secondOpen);
-        firstOpen = -1;
-        secondOpen = -1;
+        if(slot != firstOpen && slot != secondOpen) {
+            hide(firstOpen, secondOpen);
+            firstOpen = -1;
+            secondOpen = -1;
+            onClick(event);
+        }
     }
 
     private void startGame(){
@@ -123,11 +138,11 @@ public class MIGame extends BukkitRunnable {
     }
 
     private void generateGame() {
-        /*
+
         for(int slot = 0; slot < inventory.getSize(); slot++){
-            inventory.setItem(slot, cover);
-        }*/
-        // FULL => 6 x 9, MIDDLE => 4 x 7, SMALL => 2 x 5
+            inventory.setItem(slot, border);
+        }
+        // BIG => 6 x 9, MIDDLE => 4 x 7, SMALL => 2 x 5
 
 
         pairs = new HashMap<>();
@@ -163,7 +178,7 @@ public class MIGame extends BukkitRunnable {
     private int gridToInventory(int gridSlot){
         switch (this.gridSize){
             default:
-            case FULL:
+            case BIG:
                 return gridSlot;
 
             case SMALL:
@@ -178,7 +193,7 @@ public class MIGame extends BukkitRunnable {
 
         switch (this.gridSize){
             default:
-            case FULL:
+            case BIG:
                 return inventorySlot;
 
             case SMALL:
@@ -217,13 +232,20 @@ public class MIGame extends BukkitRunnable {
 
     private void updateTitle(){
         nms.updateInventoryTitle(player, language.INV_TITLE_GAME
-                .replace("%time%", String.valueOf(time))
+                .replace("%time%", StringUtil.formatTime(time))
                 .replace("%matched%", String.valueOf(matched))
                 .replace("%pairs%", String.valueOf(nrPairs)));
     }
 
     @Override
     public void run() {
+        if(secondOpen >= 0 && firstOpen >= 0){
+            if(secondMilli + 2000 < System.currentTimeMillis()){
+                hide(firstOpen, secondOpen);
+                firstOpen = -1;
+                secondOpen = -1;
+            }
+        }
         time ++;
         updateTitle();
     }
