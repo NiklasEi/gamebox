@@ -31,4 +31,11 @@ public class StringUtil {
             return str;
         }
     }
+
+    public static String formatTime(int seconds){
+        int minutes = seconds/60;
+        int sec = seconds%60;
+        return (minutes < 10 ? "0" + String.valueOf(minutes) : String.valueOf(minutes))
+                + ":" + (sec < 10 ? "0" + String.valueOf(sec) : String.valueOf(sec));
+    }
 }

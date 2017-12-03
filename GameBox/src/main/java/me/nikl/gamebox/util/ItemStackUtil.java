@@ -1,6 +1,7 @@
 package me.nikl.gamebox.util;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
@@ -13,6 +14,10 @@ import java.util.List;
  * Utility class for ItemStacks
  */
 public class ItemStackUtil {
+    public static final String MAT = "materialData";
+    public static final String LORE = "lore";
+    public static final String NAME = "displayName";
+    public static final String GLOW = "glow";
 
     public static ItemStack getItemStack(String matDataString){
         Material mat; short data;
@@ -67,5 +72,21 @@ public class ItemStackUtil {
         }
         helpItem.setItemMeta(meta);
         return helpItem;
+    }
+
+    public static ItemStack loadItem(ConfigurationSection section){
+        ItemStack toReturn = getItemStack(section.getString(MAT));
+        if(toReturn == null) return null;
+        ItemMeta meta = toReturn.getItemMeta();
+
+        if(section.isString(NAME)){
+            meta.setDisplayName(StringUtil.color(section.getString(NAME)));
+        }
+        if(section.isList(LORE)){
+            meta.setLore(StringUtil.color(section.getStringList(LORE)));
+        }
+        toReturn.setItemMeta(meta);
+
+        return toReturn;
     }
 }
