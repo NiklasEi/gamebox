@@ -31,12 +31,13 @@ public class MIGame extends BukkitRunnable {
 
     private int firstOpen = -1
             , secondOpen = -1;
-    private long firstMilli, secondMilli;
+
+    private long startMilli, secondMilli;
 
     private Inventory inventory;
     private boolean started = false;
 
-    private HashMap<Integer, Pair> pairs;
+    private Map<Integer, Pair> pairs;
 
     private ItemStack cover, border;
 
@@ -86,40 +87,35 @@ public class MIGame extends BukkitRunnable {
 
         int slot = event.getSlot();
         if(inventoryToGrid(slot) < 0) return;
-        if(pairs.get(inventoryToGrid(slot)) == null) return;
+        if(!pairs.containsKey(inventoryToGrid(slot))) return;
 
         if(firstOpen < 0){
-            if(inventoryToGrid(slot) >= 0){
-                show(slot);
-                firstOpen = slot;
-                firstMilli = System.currentTimeMillis();
-            }
+            show(slot);
+            firstOpen = slot;
             return;
         }
 
         if(secondOpen < 0){
-            if(inventoryToGrid(slot) >= 0){
-                if(firstOpen == slot) return;
-                show(slot);
+            if(firstOpen == slot) return;
+            show(slot);
 
-                if(pairs.get(inventoryToGrid(slot)).equals(pairs.get(inventoryToGrid(firstOpen)))){
-                    firstOpen = -1;
-                    secondOpen = -1;
-                    pairs.remove(inventoryToGrid(slot));
-                    pairs.remove(inventoryToGrid(firstOpen));
-                    matched++;
-                    if(matched == nrPairs){
-                        over = true;
-                        nms.updateInventoryTitle(player, language.INV_TITLE_WON
-                                .replace("%time%", StringUtil.formatTime(time)));
-                        onGameEnd();
-                    } else {
-                        updateTitle();
-                    }
+            if(pairs.get(inventoryToGrid(slot)).equals(pairs.get(inventoryToGrid(firstOpen)))){
+                firstOpen = -1;
+                secondOpen = -1;
+                pairs.remove(inventoryToGrid(slot));
+                pairs.remove(inventoryToGrid(firstOpen));
+                matched++;
+                if(matched == nrPairs){
+                    over = true;
+                    nms.updateInventoryTitle(player, language.INV_TITLE_WON
+                            .replace("%time%", StringUtil.formatTime(time)));
+                    onGameEnd();
                 } else {
-                    secondOpen = slot;
-                    secondMilli = System.currentTimeMillis();
+                    updateTitle();
                 }
+            } else {
+                secondOpen = slot;
+                secondMilli = System.currentTimeMillis();
             }
             return;
         }
@@ -133,8 +129,9 @@ public class MIGame extends BukkitRunnable {
     }
 
     private void startGame(){
+        startMilli = System.currentTimeMillis();
         updateTitle();
-        runTaskTimerAsynchronously(matchIt.getGameBox(), 20, 20);
+        runTaskTimerAsynchronously(matchIt.getGameBox(), 5, 5);
     }
 
     private void generateGame() {
@@ -240,13 +237,13 @@ public class MIGame extends BukkitRunnable {
     @Override
     public void run() {
         if(secondOpen >= 0 && firstOpen >= 0){
-            if(secondMilli + 2000 < System.currentTimeMillis()){
+            if(secondMilli + 2500 < System.currentTimeMillis()){
                 hide(firstOpen, secondOpen);
                 firstOpen = -1;
                 secondOpen = -1;
             }
         }
-        time ++;
+        time = (int) ((System.currentTimeMillis() - startMilli)/1000);
         updateTitle();
     }
 
