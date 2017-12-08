@@ -1,8 +1,8 @@
-package me.nikl.gamebox.guis.gui.game;
+package me.nikl.gamebox.inventory.gui.game;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.guis.GUIManager;
-import me.nikl.gamebox.guis.button.AButton;
+import me.nikl.gamebox.inventory.GUIManager;
+import me.nikl.gamebox.inventory.button.AButton;
 import me.nikl.gamebox.util.ClickAction;
 import me.nikl.gamebox.util.InventoryUtil;
 import org.bukkit.Bukkit;

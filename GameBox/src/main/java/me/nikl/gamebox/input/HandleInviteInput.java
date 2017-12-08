@@ -1,4 +1,4 @@
-package me.nikl.gamebox.invitation;
+package me.nikl.gamebox.input;
 
 import me.nikl.gamebox.GameBox;
 import org.bukkit.Bukkit;

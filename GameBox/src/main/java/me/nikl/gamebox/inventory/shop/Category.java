@@ -1,10 +1,10 @@
-package me.nikl.gamebox.guis.shop;
+package me.nikl.gamebox.inventory.shop;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.data.GBPlayer;
-import me.nikl.gamebox.guis.GUIManager;
-import me.nikl.gamebox.guis.button.AButton;
-import me.nikl.gamebox.guis.gui.AGui;
+import me.nikl.gamebox.inventory.GUIManager;
+import me.nikl.gamebox.inventory.button.AButton;
+import me.nikl.gamebox.inventory.gui.AGui;
 import me.nikl.gamebox.util.ClickAction;
 import me.nikl.gamebox.util.ItemStackUtil;
 import me.nikl.gamebox.util.StringUtil;

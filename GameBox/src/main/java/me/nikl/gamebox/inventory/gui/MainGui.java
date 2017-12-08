@@ -1,12 +1,12 @@
-package me.nikl.gamebox.guis.gui;
+package me.nikl.gamebox.inventory.gui;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.data.GBPlayer;
-import me.nikl.gamebox.guis.GUIManager;
-import me.nikl.gamebox.guis.button.AButton;
-import me.nikl.gamebox.guis.button.ToggleButton;
+import me.nikl.gamebox.inventory.GUIManager;
+import me.nikl.gamebox.inventory.button.AButton;
+import me.nikl.gamebox.inventory.button.ToggleButton;
 import me.nikl.gamebox.util.ClickAction;
 import me.nikl.gamebox.util.InventoryUtil;
 import me.nikl.gamebox.util.ItemStackUtil;

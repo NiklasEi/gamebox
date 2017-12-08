@@ -4,7 +4,7 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.games.Game;
-import me.nikl.gamebox.guis.GUIManager;
+import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.util.Permission;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;

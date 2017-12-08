@@ -1,4 +1,4 @@
-package me.nikl.gamebox.guis.shop;
+package me.nikl.gamebox.inventory.shop;
 
 import org.bukkit.inventory.ItemStack;
 

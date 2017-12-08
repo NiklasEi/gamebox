@@ -1,11 +1,11 @@
-package me.nikl.gamebox.invitation;
+package me.nikl.gamebox.input;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.commands.MainCommand;
-import me.nikl.gamebox.guis.gui.game.StartMultiplayerGamePage;
+import me.nikl.gamebox.inventory.gui.game.StartMultiplayerGamePage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;

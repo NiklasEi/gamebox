@@ -1,4 +1,4 @@
-package me.nikl.gamebox.guis.button;
+package me.nikl.gamebox.inventory.button;
 
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.ItemMeta;

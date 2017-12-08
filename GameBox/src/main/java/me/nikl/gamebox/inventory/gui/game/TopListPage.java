@@ -1,9 +1,9 @@
-package me.nikl.gamebox.guis.gui.game;
+package me.nikl.gamebox.inventory.gui.game;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.data.DataBase;
 import me.nikl.gamebox.data.SaveType;
-import me.nikl.gamebox.guis.GUIManager;
+import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.util.NumberUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

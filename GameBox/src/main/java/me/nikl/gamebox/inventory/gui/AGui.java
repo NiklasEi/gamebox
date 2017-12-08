@@ -1,20 +1,19 @@
-package me.nikl.gamebox.guis.gui;
+package me.nikl.gamebox.inventory.gui;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.events.EnterGameBoxEvent;
 import me.nikl.gamebox.games.GameManager;
-import me.nikl.gamebox.guis.GUIManager;
-import me.nikl.gamebox.guis.button.AButton;
-import me.nikl.gamebox.guis.gui.game.GameGui;
-import me.nikl.gamebox.guis.gui.game.StartMultiplayerGamePage;
-import me.nikl.gamebox.guis.shop.Shop;
-import me.nikl.gamebox.guis.shop.ShopItem;
+import me.nikl.gamebox.inventory.GUIManager;
+import me.nikl.gamebox.inventory.button.AButton;
+import me.nikl.gamebox.inventory.gui.game.GameGui;
+import me.nikl.gamebox.inventory.gui.game.StartMultiplayerGamePage;
+import me.nikl.gamebox.inventory.shop.Shop;
+import me.nikl.gamebox.inventory.shop.ShopItem;
 import me.nikl.gamebox.util.ClickAction;
 import me.nikl.gamebox.util.InventoryUtil;
 import me.nikl.gamebox.util.Permission;
-import me.nikl.gamebox.util.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;

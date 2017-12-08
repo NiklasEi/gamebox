@@ -1,18 +1,18 @@
-package me.nikl.gamebox.guis;
+package me.nikl.gamebox.inventory;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.events.EnterGameBoxEvent;
-import me.nikl.gamebox.guis.button.AButton;
-import me.nikl.gamebox.guis.gui.AGui;
-import me.nikl.gamebox.guis.gui.MainGui;
-import me.nikl.gamebox.guis.gui.game.GameGui;
-import me.nikl.gamebox.guis.gui.game.GameGuiPage;
-import me.nikl.gamebox.guis.gui.game.TopListPage;
-import me.nikl.gamebox.guis.shop.Page;
-import me.nikl.gamebox.guis.shop.ShopManager;
+import me.nikl.gamebox.inventory.button.AButton;
+import me.nikl.gamebox.inventory.gui.AGui;
+import me.nikl.gamebox.inventory.gui.MainGui;
+import me.nikl.gamebox.inventory.gui.game.GameGui;
+import me.nikl.gamebox.inventory.gui.game.GameGuiPage;
+import me.nikl.gamebox.inventory.gui.game.TopListPage;
+import me.nikl.gamebox.inventory.shop.Page;
+import me.nikl.gamebox.inventory.shop.ShopManager;
 import me.nikl.gamebox.nms.NMSUtil;
 import me.nikl.gamebox.util.ClickAction;
 import me.nikl.gamebox.util.Permission;

@@ -1,7 +1,7 @@
-package me.nikl.gamebox.guis.shop;
+package me.nikl.gamebox.inventory.shop;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.guis.GUIManager;
+import me.nikl.gamebox.inventory.GUIManager;
 
 /**
  * Created by Niklas on 13.04.2017.

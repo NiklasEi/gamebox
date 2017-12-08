@@ -1,4 +1,4 @@
-package me.nikl.gamebox.guis.timer;
+package me.nikl.gamebox.inventory.timer;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.PluginManager;
