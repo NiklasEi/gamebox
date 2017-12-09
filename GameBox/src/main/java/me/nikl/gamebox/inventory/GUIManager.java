@@ -18,10 +18,12 @@ import me.nikl.gamebox.util.ClickAction;
 import me.nikl.gamebox.util.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,6 +51,8 @@ public class GUIManager {
 
 	public static final String MAIN_GAME_GUI = "main";
 
+	private AButton tokenButton;
+
 
 	public GUIManager(GameBox plugin){
 		this.plugin = plugin;
@@ -58,10 +62,18 @@ public class GUIManager {
 
 		this.mainGui = new MainGui(plugin, this);
 		shopManager = new ShopManager(plugin, this);
+		loadTokenButton();
 		if(GameBoxSettings.tokensEnabled) mainGui.registerShop();
 	}
-	
-	
+
+	private void loadTokenButton() {
+		ItemStack tokensItem = new MaterialData(Material.GOLD_NUGGET).toItemStack(1);
+		tokensItem = plugin.getNMS().addGlow(tokensItem);
+		tokenButton = new AButton(tokensItem);
+		tokenButton.setAction(ClickAction.NOTHING);
+	}
+
+
 	public void onInvClick(InventoryClickEvent event) {
 		// get the uuid and check where the click should go
 		UUID uuid = event.getWhoClicked().getUniqueId();
@@ -277,7 +289,7 @@ public class GUIManager {
 
 		gameGuis.get(args[0]).put(args[1], gui);
 		GameBox.debug("registered gamegui: " + args[0] + ", " + args[1]);
-		AButton gameButton = new AButton(button.getData(), 1);
+		AButton gameButton = new AButton(button);
 		gameButton.setItemMeta(button.getItemMeta());
 		gameButton.setAction(ClickAction.OPEN_GAME_GUI);
 		gameButton.setArgs(args[0], args[1]);
@@ -369,5 +381,9 @@ public class GUIManager {
 	public void updateTokens(GBPlayer gbPlayer) {
 		mainGui.updateTokens(gbPlayer);
 		shopManager.updateTokens(gbPlayer);
+	}
+
+	public AButton getTokenButton() {
+		return tokenButton.clone();
 	}
 }

@@ -82,12 +82,12 @@ public class PluginManager implements Listener {
 	private Map<Integer, ItemStack> hotbarButtons = new HashMap<>();
 
 	// list of disabled worlds
-	private ArrayList<String> disabledWorlds = new ArrayList<>();
+	private List<String> disabledWorlds = new ArrayList<>();
 
 	// hub stuff
     private boolean setOnWorldJoin;
     private ItemStack hubItem;
-    private ArrayList<String> hubWorlds;
+    private List<String> hubWorlds;
     private int hubItemSlot;
 
     //sounds
@@ -744,7 +744,7 @@ public class PluginManager implements Listener {
         return false;
     }
 
-    public ArrayList<String > getDisabledWorlds(){
+    public List<String > getDisabledWorlds(){
         return this.disabledWorlds;
     }
 

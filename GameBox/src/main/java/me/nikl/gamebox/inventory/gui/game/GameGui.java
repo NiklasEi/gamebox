@@ -40,7 +40,7 @@ public class GameGui extends AGui {
 
         // set lower grid
         if(hotBarButtons.containsKey(PluginManager.exit)) {
-            AButton exit = new AButton(hotBarButtons.get(PluginManager.exit).getData(), 1);
+            AButton exit = new AButton(hotBarButtons.get(PluginManager.exit));
             ItemMeta meta = hotBarButtons.get(PluginManager.exit).getItemMeta();
             exit.setItemMeta(meta);
             exit.setAction(ClickAction.CLOSE);
@@ -49,7 +49,7 @@ public class GameGui extends AGui {
 
 
         if(hotBarButtons.containsKey(PluginManager.toMain)) {
-            AButton main = new AButton(hotBarButtons.get(PluginManager.toMain).getData(), 1);
+            AButton main = new AButton(hotBarButtons.get(PluginManager.toMain));
             ItemMeta meta = hotBarButtons.get(PluginManager.toMain).getItemMeta();
             main.setItemMeta(meta);
             main.setAction(ClickAction.OPEN_MAIN_GUI);

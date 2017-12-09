@@ -24,7 +24,7 @@ public class GameGuiPage extends GameGui{
 
         // set lower grid
         if(hotBarButtons.get(PluginManager.toGame) != null) {
-            AButton gameGUI = new AButton(hotBarButtons.get(PluginManager.toGame).getData(), 1);
+            AButton gameGUI = new AButton(hotBarButtons.get(PluginManager.toGame));
             ItemMeta meta = hotBarButtons.get(PluginManager.toGame).getItemMeta();
             gameGUI.setItemMeta(meta);
             gameGUI.setAction(ClickAction.OPEN_GAME_GUI);

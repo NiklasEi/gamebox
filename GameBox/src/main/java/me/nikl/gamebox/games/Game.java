@@ -189,7 +189,7 @@ public abstract class Game {
                 }
 
 
-                AButton button = new AButton(mat.getData(), 1);
+                AButton button = new AButton(mat);
                 ItemMeta meta = button.getItemMeta();
 
                 if (buttonSec.isString("displayName")) {
@@ -314,7 +314,7 @@ public abstract class Game {
                 }
 
 
-                AButton button = new AButton(mat.getData(), 1);
+                AButton button = new AButton(mat);
                 ItemMeta meta = button.getItemMeta();
 
                 if (buttonSec.isString("displayName")) {

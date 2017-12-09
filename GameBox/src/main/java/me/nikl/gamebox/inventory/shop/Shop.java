@@ -46,7 +46,7 @@ public class Shop extends AGui{
 
         // set lower grid
         if (hotBarButtons.get(PluginManager.exit) != null) {
-            AButton exit = new AButton(hotBarButtons.get(PluginManager.exit).getData(), 1);
+            AButton exit = new AButton(hotBarButtons.get(PluginManager.exit));
             ItemMeta meta = hotBarButtons.get(PluginManager.exit).getItemMeta();
             exit.setItemMeta(meta);
             exit.setAction(ClickAction.CLOSE);
@@ -55,7 +55,7 @@ public class Shop extends AGui{
 
 
         if (hotBarButtons.get(PluginManager.toMain) != null) {
-            AButton main = new AButton(hotBarButtons.get(PluginManager.toMain).getData(), 1);
+            AButton main = new AButton(hotBarButtons.get(PluginManager.toMain));
             ItemMeta meta = hotBarButtons.get(PluginManager.toMain).getItemMeta();
             main.setItemMeta(meta);
             main.setAction(ClickAction.OPEN_MAIN_GUI);
@@ -67,13 +67,10 @@ public class Shop extends AGui{
 
         if(GameBoxSettings.tokensEnabled) {
             // set a placeholder in the general main gui
-            ItemStack tokensItem = new AButton(new MaterialData(Material.GOLD_NUGGET), 1);
-            tokensItem = plugin.getNMS().addGlow(tokensItem);
-            AButton tokens = new AButton(tokensItem);
+            AButton tokens = guiManager.getTokenButton();
             ItemMeta meta = tokens.getItemMeta();
             meta.setDisplayName("Placeholder");
             tokens.setItemMeta(meta);
-            tokens.setAction(ClickAction.NOTHING);
             setButton(tokens, tokenButtonSlot);
         }
     }
@@ -91,10 +88,7 @@ public class Shop extends AGui{
     void loadPlayerShop(GBPlayer player){
 
         if(GameBoxSettings.tokensEnabled) {
-            ItemStack tokensItem = new AButton(new MaterialData(Material.GOLD_NUGGET), 1);
-            tokensItem = plugin.getNMS().addGlow(tokensItem);
-            AButton tokens = new AButton(tokensItem);
-            tokens.setAction(ClickAction.NOTHING);
+            AButton tokens = guiManager.getTokenButton();
             tokenButtons.put(player.getUuid(), tokens);
         }
 

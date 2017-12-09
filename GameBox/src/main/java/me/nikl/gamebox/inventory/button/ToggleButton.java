@@ -18,9 +18,11 @@ public class ToggleButton extends AButton {
     private String toggleDisplayName = "missing name";
     private List<String> toggleLore = new ArrayList<>(Arrays.asList("missing lore"));
 
+    // ToDo: get rid of MaterialData / Data usage for mc 1.13
 
+    @Deprecated
     public ToggleButton(MaterialData mat, int count, MaterialData mat2) {
-        super(mat, count);
+        super(mat.toItemStack(1));
         this.toggleData = mat2;
     }
 

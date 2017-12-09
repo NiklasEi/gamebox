@@ -31,7 +31,7 @@ public class StartMultiplayerGamePage extends GameGuiPage {
         super(plugin, guiManager, slots, gameID, key, title);
 
 
-        AButton button = new AButton(new MaterialData(Material.IRON_BLOCK), 1);
+        AButton button = new AButton(new MaterialData(Material.IRON_BLOCK).toItemStack(1));
         button.setAction(ClickAction.START_PLAYER_INPUT);
         button.setArgs(gameID, key);
         ItemMeta meta = button.getItemMeta();
@@ -88,7 +88,7 @@ public class StartMultiplayerGamePage extends GameGuiPage {
             if(i >= inventory.getSize()) break;
             Player player1 = Bukkit.getPlayer(uuid1);
             if(player1 == null) continue;
-            AButton skull =  new AButton(new MaterialData(Material.SKULL_ITEM), 1);
+            AButton skull =  new AButton(new MaterialData(Material.SKULL_ITEM).toItemStack(1));
             skull.setDurability((short) 3);
             SkullMeta meta = (SkullMeta) skull.getItemMeta();
             meta.setOwner(player1.getName());

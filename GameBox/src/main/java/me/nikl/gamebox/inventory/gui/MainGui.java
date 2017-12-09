@@ -63,13 +63,10 @@ public class MainGui extends AGui{
 
 		if(GameBoxSettings.tokensEnabled) {
 			// set a placeholder in the general main gui
-			ItemStack tokensItem = new AButton(new MaterialData(Material.GOLD_NUGGET), 1);
-			tokensItem = plugin.getNMS().addGlow(tokensItem);
-			AButton tokens = new AButton(tokensItem);
+			AButton tokens = guiManager.getTokenButton();
 			meta = tokens.getItemMeta();
 			meta.setDisplayName("Placeholder");
 			tokens.setItemMeta(meta);
-			tokens.setAction(ClickAction.NOTHING);
 			setButton(tokens, tokenButtonSlot);
 		}
 
@@ -78,7 +75,7 @@ public class MainGui extends AGui{
 
 		// set lower grid
 		if(hotBarButtons.containsKey(PluginManager.exit)) {
-			AButton exit = new AButton(hotBarButtons.get(PluginManager.exit).getData(), 1);
+			AButton exit = new AButton(hotBarButtons.get(PluginManager.exit));
 			meta = hotBarButtons.get(PluginManager.exit).getItemMeta();
 			exit.setItemMeta(meta);
 			exit.setAction(ClickAction.CLOSE);
@@ -123,10 +120,7 @@ public class MainGui extends AGui{
 		soundButtons.put(player.getUuid(), soundToggle);
 
 		if(GameBoxSettings.tokensEnabled) {
-			ItemStack tokensItem = new AButton(new MaterialData(Material.GOLD_NUGGET), 1);
-			tokensItem = plugin.getNMS().addGlow(tokensItem);
-			AButton tokens = new AButton(tokensItem);
-			tokens.setAction(ClickAction.NOTHING);
+			AButton tokens = guiManager.getTokenButton();
 			tokenButtons.put(player.getUuid(), tokens);
 		}
 

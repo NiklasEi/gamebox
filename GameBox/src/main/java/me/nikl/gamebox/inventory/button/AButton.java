@@ -3,7 +3,6 @@ package me.nikl.gamebox.inventory.button;
 import me.nikl.gamebox.inventory.gui.AGui;
 import me.nikl.gamebox.util.ClickAction;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
 
 /**
  * Created by niklas on 2/5/17.
@@ -13,18 +12,11 @@ public class AButton extends ItemStack{
 	private ClickAction action;
 	private AGui gui;
 	private String[] args;
-	
-	
-	@SuppressWarnings("deprecation")
-	public AButton(MaterialData mat, int count){
-		super(mat.getItemType());
-		this.setData(mat);
-		this.setDurability(mat.getData());
-		this.setAmount(count);
-	}
+
 
 	public AButton(ItemStack item){
 		super(item);
+		if(getAmount()< 1) setAmount(1);
 	}
 	
 	public void setAction(ClickAction action){
@@ -47,6 +39,13 @@ public class AButton extends ItemStack{
 
 	public String[] getArgs(){
 		return this.args;
+	}
+
+	@Override
+	public AButton clone(){
+		AButton clone = new AButton(this);
+		clone.setActionAndArgs(this.action, this.args);
+		return clone;
 	}
 	
 }

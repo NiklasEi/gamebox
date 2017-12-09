@@ -62,8 +62,6 @@ public class MainCommand implements CommandExecutor{
 
 			guiManager.openMainGui(player);
 			return true;
-
-
 		}
 
 		/*

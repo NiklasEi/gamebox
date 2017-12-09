@@ -15,20 +15,20 @@ public class GBPlayer {
     private UUID uuid;
     private boolean playSounds = true;
     private GameBox plugin;
-    private DataBase statistics;
+    private DataBase dataBase;
 
     private int tokens;
 
     public GBPlayer(GameBox plugin, UUID uuid){
         this.uuid = uuid;
         this.plugin = plugin;
-        this.statistics = plugin.getDataBase();
+        this.dataBase = plugin.getDataBase();
 
         // save current name of player for easier management (only in file!)
         if(!GameBoxSettings.useMysql) {
             Player player = Bukkit.getPlayer(uuid);
             if (player != null) {
-                statistics.set(uuid.toString(), "name", player.getName());
+                dataBase.set(uuid.toString(), "name", player.getName());
             }
         }
 
@@ -36,7 +36,7 @@ public class GBPlayer {
     }
 
     private void loadData() {
-        statistics.loadPlayer(this, true);
+        dataBase.loadPlayer(this, true);
     }
 
     public UUID getUuid() {
@@ -67,7 +67,7 @@ public class GBPlayer {
     public void remove() {
         //TOdO
         // remove special inventories and save any data
-        // after this call this object will be removed
+        // after this call this object will be removed from player map
         plugin.getPluginManager().getGuiManager().removePlayer(this.uuid);
         save();
     }
@@ -77,6 +77,6 @@ public class GBPlayer {
     }
 
     public void save(boolean async) {
-        statistics.savePlayer(this, async);
+        dataBase.savePlayer(this, async);
     }
 }
