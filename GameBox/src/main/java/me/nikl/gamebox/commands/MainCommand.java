@@ -190,9 +190,26 @@ public class MainCommand implements CommandExecutor{
 			this.subCommands.put(gameID, null);
 			return;
 		}
+
 		for(int i = 0; i < subCommands.length;i++){
 			subCommands[i] = subCommands[i].toLowerCase();
 		}
-		this.subCommands.put(gameID, new ArrayList<>(Arrays.asList(subCommands)));
+
+		ArrayList<String> list = new ArrayList<>(Arrays.asList(subCommands));
+
+		// ensure that subcommands are unique...
+		subcmds:
+		for(int i = 0; i < subCommands.length;i++){
+			for(String id : this.subCommands.keySet()){
+				if(this.subCommands.get(id) != null && this.subCommands.get(id).contains(subCommands[i])){
+					plugin.warning("Subcommand '" + subCommands[i] + "' of game '" + gameID + "' is already in use for the game '" + id + "'!");
+					list.remove(subCommands[i]);
+					continue subcmds;
+				}
+
+			}
+		}
+
+		this.subCommands.put(gameID, list);
 	}
 }
