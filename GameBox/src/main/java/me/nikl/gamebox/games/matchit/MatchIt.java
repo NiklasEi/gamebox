@@ -123,7 +123,7 @@ public class MatchIt extends Game{
             border = loadItem(config.getConfigurationSection("borderItem"));
         }
         if(border == null){
-            warn(" missing or invalid cover item in %config%");
+            warn(" missing or invalid border item in %config%");
             warn("    falling back to default...");
             border = new MaterialData(Material.STAINED_GLASS_PANE, (byte) 15).toItemStack(1);
             ItemMeta meta = border.getItemMeta();
