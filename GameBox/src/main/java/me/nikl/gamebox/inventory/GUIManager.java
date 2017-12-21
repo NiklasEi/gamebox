@@ -59,10 +59,11 @@ public class GUIManager {
 		this.nms = plugin.getNMS();
 		this.lang = plugin.lang;
 		this.gameGuis = new HashMap<>();
+		loadTokenButton();
 
 		this.mainGui = new MainGui(plugin, this);
 		shopManager = new ShopManager(plugin, this);
-		loadTokenButton();
+
 		if(GameBoxSettings.tokensEnabled) mainGui.registerShop();
 	}
 
