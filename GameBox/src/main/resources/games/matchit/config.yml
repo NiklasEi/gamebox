@@ -84,6 +84,14 @@ gameBox:
       - '&6Rank:&1 %rank%'
       - '&6Time:&1 %time%'
 
+coverItem:
+  materialData: "160:3"
+  displayName: "&1Click to uncover"
+
+borderItem:
+  materialData: "160:15"
+  displayName: "&1Click to uncover"
+
 items:
   '1':
     # material data of the item
