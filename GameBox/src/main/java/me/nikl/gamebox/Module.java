@@ -3,6 +3,10 @@ package me.nikl.gamebox;
 import org.apache.commons.lang.Validate;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by nikl on 21.11.17.
  *
@@ -15,12 +19,19 @@ public class Module {
 
     private JavaPlugin externalPlugin;
 
-    public Module(GameBox gameBox, String moduleID, String classPath, JavaPlugin plugin){
+    private List<String> subCommands;
+
+    public Module(GameBox gameBox, String moduleID, String classPath, JavaPlugin plugin, String... subCommands){
         Validate.isTrue(moduleID != null && !moduleID.isEmpty()
                 , " moduleID cannot be null or empty!");
         if(classPath != null && !classPath.isEmpty()) {
             this.isGame = true;
         }
+
+        if(subCommands != null && !(subCommands.length < 1)) {
+            this.subCommands = Arrays.asList(subCommands);
+        }
+
         this.classPath = classPath;
         this.moduleID = moduleID.toLowerCase();
         this.externalPlugin = plugin;
@@ -31,7 +42,7 @@ public class Module {
     /**
      * For internal game module
      *
-     * For external use ExternalModule
+     * For external use constructor taking an additional JavaPlugin
      * @param moduleID
      * @param classPath
      */
@@ -40,7 +51,7 @@ public class Module {
     }
 
     /**
-     * For non-game module
+     * For non-game internal module
      * @param moduleID
      */
     public Module(GameBox gameBox, String moduleID){
@@ -70,5 +81,9 @@ public class Module {
 
     public JavaPlugin getExternalPlugin() {
         return externalPlugin;
+    }
+
+    public List<String> getSubCommands() {
+        return subCommands;
     }
 }

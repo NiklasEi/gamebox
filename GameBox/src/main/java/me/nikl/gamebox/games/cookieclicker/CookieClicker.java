@@ -12,8 +12,7 @@ import me.nikl.gamebox.games.GameSettings;
 public class CookieClicker extends Game {
 
     public CookieClicker(GameBox gameBox) {
-        super(gameBox, GameBox.MODULE_COOKIECLICKER
-                , new String[]{GameBox.MODULE_COOKIECLICKER, "cookies", "cc"});
+        super(gameBox, GameBox.MODULE_COOKIECLICKER);
     }
 
     @Override

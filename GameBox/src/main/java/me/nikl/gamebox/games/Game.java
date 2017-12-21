@@ -56,13 +56,10 @@ public abstract class Game {
 
     protected NMSUtil nms;
 
-    protected String[] subCommands;
-
-    protected Game(GameBox gameBox, String gameID, String[] subCommands){
+    protected Game(GameBox gameBox, String gameID){
         this.module = gameBox.getGameRegistry().getModule(gameID);
         Validate.notNull(module, " You cannot initialize a game without registering it's module first!");
 
-        this.subCommands = subCommands;
         this.gameBox = gameBox;
         this.gbLang = gameBox.lang;
         this.nms = gameBox.getNMS();
@@ -265,7 +262,7 @@ public abstract class Game {
 
             gameButton.setItemMeta(meta);
 
-            guiManager.registerMainGameGUI(gameGui, gameButton, this.subCommands);
+            guiManager.registerMainGameGUI(gameGui, gameButton);
         } else {
             gameBox.getLogger().log(Level.WARNING, " Missing or wrong configured main button for " + gameLang.PLAIN_NAME + "!");
         }

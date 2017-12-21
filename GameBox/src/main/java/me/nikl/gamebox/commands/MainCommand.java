@@ -2,6 +2,7 @@ package me.nikl.gamebox.commands;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
+import me.nikl.gamebox.Module;
 import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.games.Game;
 import me.nikl.gamebox.inventory.GUIManager;
@@ -12,10 +13,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by niklas on 10/17/16.
@@ -28,9 +26,7 @@ public class MainCommand implements CommandExecutor{
 	private GUIManager guiManager;
 	private GameBoxLanguage lang;
 
-	public static String inviteClickCommand = "clickableMessageWasClicked";
-
-	private Map<String, ArrayList<String>> subCommands = new HashMap<>();
+	public static final String INVITE_CLICK_COMMAND = UUID.randomUUID().toString();
 	
 	public MainCommand(GameBox plugin){
 		this.plugin = plugin;
@@ -69,7 +65,7 @@ public class MainCommand implements CommandExecutor{
 		 */
 
 		// click command
-		if (args[0].equalsIgnoreCase(inviteClickCommand) && sender instanceof Player){
+		if (args[0].equals(INVITE_CLICK_COMMAND) && sender instanceof Player){
 			// handle click commands from clickable invite messages
 			if(inviteClickCommand((Player) sender, args)){
 				// gui has been successfully opened
@@ -83,28 +79,28 @@ public class MainCommand implements CommandExecutor{
 		// sub commands
 		if(args.length == 1){
 			// check whether the given argument is a listed sub command
-			for(String id : subCommands.keySet()){
-				if(subCommands.get(id) == null) continue;
-				if(subCommands.get(id).contains(args[0].toLowerCase())){
-					if (!(sender instanceof Player)) {
-						sender.sendMessage(ChatColor.translateAlternateColorCodes('&', lang.PREFIX + lang.CMD_ONLY_PLAYER));
-						return true;
-					}
-
-					// this will be checked again when opening the gui but checking it here
-					//   removes the necessity to save and later restore the inventory of the player
-					if(!sender.hasPermission(Permission.OPEN_ALL_GAME_GUI.getPermission()) && !sender.hasPermission(Permission.OPEN_GAME_GUI.getPermission(id))){
-						sender.sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
-						return true;
-					}
-
-					Player player = (Player) sender;
-					String[] arguments = new String[2];
-					arguments[0] = id; arguments[1] = GUIManager.MAIN_GAME_GUI;
-					guiManager.openGameGui(player, arguments);
+			Module module = plugin.getGameRegistry().getModuleBySubCommand(args[0]);
+			if(module != null) {
+				if (!(sender instanceof Player)) {
+					sender.sendMessage(ChatColor.translateAlternateColorCodes('&', lang.PREFIX + lang.CMD_ONLY_PLAYER));
 					return true;
 				}
+
+				// this will be checked again when opening the gui but checking it here
+				//   removes the necessity to save and later restore the inventory of the player
+				if (!sender.hasPermission(Permission.OPEN_ALL_GAME_GUI.getPermission()) && !sender.hasPermission(Permission.OPEN_GAME_GUI.getPermission(module))) {
+					sender.sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
+					return true;
+				}
+
+				Player player = (Player) sender;
+				String[] arguments = new String[2];
+				arguments[0] = module.getModuleID();
+				arguments[1] = GUIManager.MAIN_GAME_GUI;
+				guiManager.openGameGui(player, arguments);
+				return true;
 			}
+
 			// help command
 			if(args[0].equalsIgnoreCase("help") || args[0].equals("?")){
 				if(!sender.hasPermission(Permission.CMD_HELP.getPermission())){
@@ -132,18 +128,16 @@ public class MainCommand implements CommandExecutor{
 
 				String allSubCommands;
 				Game game;
-				for(String gameID : subCommands.keySet()) {
+				for(String gameID : plugin.getGameRegistry().getModuleIDs()) {
 
 					game = plugin.getPluginManager().getGame(gameID);
+					// check whether it's really a game module...
 					if (game == null) continue;
 
 					// get subcommands
-					if(subCommands.get(gameID) != null && !subCommands.get(gameID).isEmpty()){
-						allSubCommands = "";
-						for(String sub : subCommands.get(gameID)){
-							if(allSubCommands.length() != 0) allSubCommands += ":";
-							allSubCommands += sub;
-						}
+					Set<String> subCmds = plugin.getGameRegistry().getModuleSubCommands(game.getModule());
+					if(subCmds != null && !subCmds.isEmpty()){
+						allSubCommands = String.join(":", subCmds);
 					} else {
 						allSubCommands = " ";
 					}
@@ -183,33 +177,5 @@ public class MainCommand implements CommandExecutor{
 			args[i-1] = argsOld[i];
 		}
 		return guiManager.openGameGui(sender, args);
-	}
-
-	public void registerSubCommands(String gameID, String... subCommands){
-		if(subCommands == null || subCommands.length < 1){
-			this.subCommands.put(gameID, null);
-			return;
-		}
-
-		for(int i = 0; i < subCommands.length;i++){
-			subCommands[i] = subCommands[i].toLowerCase();
-		}
-
-		ArrayList<String> list = new ArrayList<>(Arrays.asList(subCommands));
-
-		// ensure that subcommands are unique...
-		subcmds:
-		for(int i = 0; i < subCommands.length;i++){
-			for(String id : this.subCommands.keySet()){
-				if(this.subCommands.get(id) != null && this.subCommands.get(id).contains(subCommands[i])){
-					plugin.warning("Subcommand '" + subCommands[i] + "' of game '" + gameID + "' is already in use for the game '" + id + "'!");
-					list.remove(subCommands[i]);
-					continue subcmds;
-				}
-
-			}
-		}
-
-		this.subCommands.put(gameID, list);
 	}
 }

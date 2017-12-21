@@ -275,9 +275,8 @@ public class GUIManager {
 	 *
 	 * @param gui game gui to register
 	 * @param button button in the main gui that will open the game gui
-	 * @param subCommand optional sub commands to fast-open the game gui
 	 */
-	public void registerMainGameGUI(GameGui gui, ItemStack button, String... subCommand){
+	public void registerMainGameGUI(GameGui gui, ItemStack button){
 		if(gui.getArgs() == null || gui.getArgs().length != 2){
 			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED + " Error while registering a gui");
 			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED + "   missing args");
@@ -295,29 +294,6 @@ public class GUIManager {
 		gameButton.setAction(ClickAction.OPEN_GAME_GUI);
 		gameButton.setArgs(args[0], args[1]);
 		mainGui.setButton(gameButton);
-		plugin.getMainCommand().registerSubCommands(args[0], subCommand);
-	}
-
-	@Deprecated
-	public void registerGameGUI(String gameID, String key, GameGui gui, ItemStack button, String... subCommand){
-		Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Your version of " + plugin.getPluginManager().getGame(gameID).getGameLang().PLAIN_NAME + " is outdated!");
-		if(key.equals(MAIN_GAME_GUI)){
-			registerMainGameGUI(gui, button, subCommand);
-		} else {
-			registerGameGUI(gui);
-		}
-	}
-
-	@Deprecated
-	public void registerGameGUI(String gameID, String key, GameGui gui){
-		Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Your version of " + plugin.getPluginManager().getGame(gameID).getGameLang().PLAIN_NAME + " is outdated!");
-		registerGameGUI(gui);
-	}
-
-	@Deprecated
-	public void registerTopList(String gameID, String key, TopListPage gui){
-		Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Your version of " + plugin.getPluginManager().getGame(gameID).getGameLang().PLAIN_NAME + " is outdated!");
-		registerGameGUI(gui);
 	}
 
 	public AGui getCurrentGui(UUID uuid){

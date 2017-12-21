@@ -29,8 +29,7 @@ public class MatchIt extends Game{
     private ItemStack cover, border;
 
     public MatchIt(GameBox gameBox) {
-        super(gameBox, GameBox.MODULE_MATCHIT
-                , new String[]{GameBox.MODULE_MATCHIT, "mi"});
+        super(gameBox, GameBox.MODULE_MATCHIT);
     }
 
     private void setDefaultItems() {

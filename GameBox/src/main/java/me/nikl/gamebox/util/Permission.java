@@ -1,6 +1,7 @@
 package me.nikl.gamebox.util;
 
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.Module;
 import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
@@ -54,4 +55,8 @@ public enum Permission {
 		Permission.gameIDs.add(gameID);
 		GameBox.debug("registered permissions for: " + gameID);
 	}
+
+    public String getPermission(Module module) {
+		return getPermission(module.getModuleID());
+    }
 }

@@ -79,7 +79,7 @@ public class HandleInvitations extends BukkitRunnable{
                         ",{\"text\":\"" + lang.INVITATION_PRE_TEXT + "\",\"color\":\""
                         + lang.INVITATION_PRE_COLOR + "\"},{\"text\":\"" + lang.INVITATION_CLICK_TEXT + "\",\"color\":\""
                         + lang.INVITATION_CLICK_COLOR + "\",\"bold\":" + boldClick + ",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/gb "
-                        + MainCommand.inviteClickCommand + " " + args[0] + " " + args[1]
+                        + MainCommand.INVITE_CLICK_COMMAND + " " + args[0] + " " + args[1]
                         + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + lang.INVITATION_HOVER_TEXT + "\",\"color\":\""
                         + lang.INVITATION_HOVER_COLOR + "\"}}}, {\"text\":\"" + lang.INVITATION_AFTER_TEXT + "\",\"color\":\"" + lang.INVITATION_AFTER_COLOR + "\"}]");
             }

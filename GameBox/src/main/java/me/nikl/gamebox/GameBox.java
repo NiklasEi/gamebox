@@ -203,11 +203,14 @@ public class GameBox extends JavaPlugin{
 	private void registerGames() {
 		// Default games:
 		new Module(this, MODULE_CONNECTFOUR
-				, "me.nikl.gamebox.games.connectfour.ConnectFour");
+				, "me.nikl.gamebox.games.connectfour.ConnectFour", null
+				, GameBox.MODULE_CONNECTFOUR, "connect4", "c4");
 		new Module(this, MODULE_COOKIECLICKER
-				, "me.nikl.gamebox.games.cookieclicker.CookieClicker");
+				, "me.nikl.gamebox.games.cookieclicker.CookieClicker", null
+				, GameBox.MODULE_COOKIECLICKER, "cookies", "cc");
 		new Module(this, MODULE_MATCHIT
-				, "me.nikl.gamebox.games.matchit.MatchIt");
+				, "me.nikl.gamebox.games.matchit.MatchIt", null
+				, GameBox.MODULE_MATCHIT, "mi");
 	}
 
 	/**
