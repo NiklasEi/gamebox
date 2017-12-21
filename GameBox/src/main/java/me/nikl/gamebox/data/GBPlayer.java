@@ -16,27 +16,32 @@ public class GBPlayer {
     private boolean playSounds = true;
     private GameBox plugin;
     private DataBase dataBase;
-
+    private boolean allowInvites = true;
     private int tokens;
+    private Player player;
+
+    private boolean loaded = false;
 
     public GBPlayer(GameBox plugin, UUID uuid){
         this.uuid = uuid;
         this.plugin = plugin;
         this.dataBase = plugin.getDataBase();
 
-        // save current name of player for easier management (only in file!)
-        if(!GameBoxSettings.useMysql) {
-            Player player = Bukkit.getPlayer(uuid);
-            if (player != null) {
-                dataBase.set(uuid.toString(), "name", player.getName());
-            }
-        }
+        this.player = Bukkit.getPlayer(uuid);
 
         loadData();
     }
 
     private void loadData() {
         dataBase.loadPlayer(this, true);
+    }
+
+    public void setPlayerData(int token, boolean playSounds, boolean allowInvites){
+        this.tokens = token;
+        this.allowInvites = allowInvites;
+        this.playSounds = playSounds;
+
+        this.loaded = true;
     }
 
     public UUID getUuid() {
@@ -65,11 +70,11 @@ public class GBPlayer {
     }
 
     public void remove() {
-        //TOdO
+        //TOdO (async not possible on shutdown...)
         // remove special inventories and save any data
         // after this call this object will be removed from player map
         plugin.getPluginManager().getGuiManager().removePlayer(this.uuid);
-        save();
+        save(true);
     }
 
     public void save(){
@@ -78,5 +83,17 @@ public class GBPlayer {
 
     public void save(boolean async) {
         dataBase.savePlayer(this, async);
+    }
+
+    public boolean isLoaded() {
+        return loaded;
+    }
+
+    public boolean allowsInvites() {
+        return allowInvites;
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 }

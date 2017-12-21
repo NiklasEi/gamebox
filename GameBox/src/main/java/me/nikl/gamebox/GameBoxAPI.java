@@ -2,6 +2,8 @@ package me.nikl.gamebox;
 
 import me.nikl.gamebox.data.DataBase;
 import me.nikl.gamebox.data.GBPlayer;
+import org.apache.commons.lang.Validate;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 /**
@@ -18,9 +20,16 @@ public class GameBoxAPI {
     }
 
 
-    public boolean giveToken(Player player, int count){
-        if(player == null) return false;
-        if(count < 0) return false;
+    /**
+     * Give token to the specified player.
+     * This might be done async and this method returns before the value is changed!
+     * @param player name
+     * @param count token to give
+     */
+    public void giveToken(OfflinePlayer player, int count){
+        Validate.notNull(player, "Player cannot be null!");
+        Validate.isTrue(count > 0, "token count to give must be greater then 0");
+
         // handle cached online players
         cachedPlayer:
         if(player.isOnline()) {
@@ -29,23 +38,27 @@ public class GameBoxAPI {
                 break cachedPlayer;
             }
             gbPlayer.setTokens(gbPlayer.getTokens() + count);
-            return true;
+            return;
         }
 
         // handle offline or not cached players
-        if(!plugin.getDataBase().isSet(player.getUniqueId().toString())) {
-            plugin.getDataBase().set(player.getUniqueId().toString(), DataBase.TOKEN_PATH, count);
-            return true;
-        } else {
-            int oldCount = plugin.getDataBase().getInt(player.getUniqueId(), DataBase.TOKEN_PATH, 0);
-            plugin.getDataBase().set(player.getUniqueId().toString(), DataBase.TOKEN_PATH, count + oldCount);
-            return true;
-        }
+        plugin.getDataBase().getToken(player.getUniqueId(), new DataBase.Callback<Integer>() {
+            @Override
+            public void onSuccess(Integer done) {
+                plugin.getDataBase().setToken(player.getUniqueId(), done + count);
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                plugin.getLogger().warning(" Failed to handle API call giveToken for player: " + player.getName());
+            }
+        });
     }
 
-    public boolean setToken(Player player, int count){
-        if(player == null) return false;
-        if(count < 0) return false;
+    public void setToken(OfflinePlayer player, int count){
+        Validate.notNull(player, "Player cannot be null!");
+        Validate.isTrue(count >= 0, "token count must be greater then or equal 0");
+
         // handle cached online players
         cachedPlayer:
         if(player.isOnline()) {
@@ -54,15 +67,22 @@ public class GameBoxAPI {
                 break cachedPlayer;
             }
             gbPlayer.setTokens(count);
-            return true;
+            return;
         }
-        plugin.getDataBase().set(player.getUniqueId().toString(), DataBase.TOKEN_PATH, count);
-        return true;
+        plugin.getDataBase().setToken(player.getUniqueId(), count);
     }
 
-    public boolean takeToken(Player player, int count){
-        if(player == null) return false;
-        if(count < 0) return false;
+    /**
+     * Take token from a specified player
+     * @param player
+     * @param count token to take
+     *              ToDo!?
+     * @throws IllegalArgumentException if the player does not have enough token.
+     * Check with {@link #getToken(Player)} before attempting to take any token.
+     */
+    public void takeToken(OfflinePlayer player, int count){
+        Validate.notNull(player, "Player cannot be null!");
+        Validate.isTrue(count > 0, "token to take must be greater then 0");
         // handle cached online players
 
         cachedPlayer:
@@ -73,29 +93,17 @@ public class GameBoxAPI {
             }
             if(gbPlayer.getTokens() >= count){
                 gbPlayer.setTokens(gbPlayer.getTokens() - count);
-                return true;
+                return;
             } else {
-                return false;
+                throw new IllegalArgumentException("player does not have enough token!");
             }
         }
 
-        // handle offline or not cached players
-        if(plugin.getDataBase().isSet(player.getUniqueId().toString())) {
-
-            int oldCount = plugin.getDataBase().getInt(player.getUniqueId(), DataBase.TOKEN_PATH, 0);
-            if(oldCount >= count){
-                plugin.getDataBase().set(player.getUniqueId().toString(), DataBase.TOKEN_PATH, oldCount - count);
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
+        // ToDo: handle offline or not cached players
     }
 
     public int getToken(Player player){
-        if(player == null) return 0;
+        Validate.notNull(player, "Player cannot be null!");
 
         // handle cached players
         GBPlayer gbPlayer = plugin.getPluginManager().getPlayer(player.getUniqueId());
@@ -103,7 +111,20 @@ public class GameBoxAPI {
             return gbPlayer.getTokens();
         }
 
-        return plugin.getDataBase().getInt(player.getUniqueId(), DataBase.TOKEN_PATH, 0);
+        plugin.getDataBase().getToken(player.getUniqueId(), new DataBase.Callback<Integer>() {
+            @Override
+            public void onSuccess(Integer done) {
+
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+
+            }
+        });
+
+        // ToDo: return token count...
+        return 0;
     }
 
 

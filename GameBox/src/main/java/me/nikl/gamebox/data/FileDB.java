@@ -45,21 +45,6 @@ public class FileDB extends DataBase {
     }
 
     @Override
-    public boolean getBoolean(UUID uuid, String path){
-        return getBoolean(uuid, path, false);
-    }
-
-    @Override
-    public boolean getBoolean(UUID uuid, String path, boolean defaultValue) {
-        return data.getBoolean(uuid + "." + path, defaultValue);
-    }
-
-    @Override
-    public void set(String uuid, String path, Object b) {
-        data.set(uuid + "." + path, b);
-    }
-
-    @Override
     public void save(boolean async) {
         if(async) {
             final FileDB fileDB = this;
@@ -87,11 +72,6 @@ public class FileDB extends DataBase {
                 e.printStackTrace();
             }
         }
-    }
-
-    @Override
-    public int getInt(UUID uuid, String path, int defaultValue) {
-        return data.getInt(uuid + "." + path, defaultValue);
     }
 
     @Override
@@ -186,24 +166,34 @@ public class FileDB extends DataBase {
     }
 
     @Override
-    public boolean isSet(String path) {
-        return data.isSet(path);
-    }
-
-    @Override
     public void loadPlayer(GBPlayer player, boolean async) {
-        boolean playSounds = getBoolean(player.getUuid(), DataBase.PLAYER_PLAY_SOUNDS, true);
-        int token = getInt(player.getUuid(), DataBase.TOKEN_PATH, 0);
+        boolean playSounds = data.getBoolean(player.getUuid() + "." +  DataBase.PLAYER_PLAY_SOUNDS, true);
+        boolean allowInvitations = data.getBoolean(player.getUuid() + "." +  DataBase.PLAYER_ALLOW_INVITATIONS, true);
+        int token = data.getInt(player.getUuid() + "." +  DataBase.PLAYER_TOKEN_PATH, 0);
 
-        player.setPlaySounds(playSounds);
-        player.setTokens(token);
+        player.setPlayerData(token, playSounds, allowInvitations);
     }
 
     @Override
     public void savePlayer(GBPlayer player, boolean async) {
         // async ignored here for file saving... It is in cache anyways
         String uuid = player.getUuid().toString();
-        set(uuid, DataBase.PLAYER_PLAY_SOUNDS, player.isPlaySounds());
-        set(uuid, DataBase.TOKEN_PATH, player.getTokens());
+        data.set(uuid + "." +  DataBase.PLAYER_PLAY_SOUNDS, player.isPlaySounds());
+        data.set(uuid + "." +  DataBase.PLAYER_TOKEN_PATH, player.getTokens());
+    }
+
+    @Override
+    public void set(UUID uuid, String path, Object value) {
+        data.set(uuid + "." + path, value);
+    }
+
+    @Override
+    public void getToken(UUID uuid, Callback<Integer> callback) {
+        callback.onSuccess(data.getInt(uuid.toString() + "." +  PLAYER_TOKEN_PATH, 0));
+    }
+
+    @Override
+    public void setToken(UUID uuid, int token) {
+        data.set(uuid + "." +  DataBase.PLAYER_TOKEN_PATH, token);
     }
 }

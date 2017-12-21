@@ -21,9 +21,16 @@ public abstract class DataBase {
     protected BukkitRunnable autoSave;
 
 
-    public static final String PLAYER_PLAY_SOUNDS = "playSounds";
     public static final String GAMES_STATISTICS_NODE = "gameStatistics";
-    public static final String TOKEN_PATH = "tokens";
+
+    public static final String PLAYER_PLAY_SOUNDS = "playSounds";
+    public static final String PLAYER_ALLOW_INVITATIONS = "allowInvitations";
+    public static final String PLAYER_TOKEN_PATH = "tokens";
+
+    public static final String PLAYER_UUID = "uuid";
+    public static final String PLAYER_NAME = "name";
+
+    public static final String PLAYER_TABLE = "GBPlayers";
 
     protected GameBox plugin;
 
@@ -39,7 +46,7 @@ public abstract class DataBase {
                 GameBox.debug(" auto saving...");
                 if(plugin == null || plugin.getDataBase() == null)
                     this.cancel();
-                plugin.getDataBase().save(true);
+                save(true);
             }
         };
 
@@ -52,25 +59,17 @@ public abstract class DataBase {
 
     public abstract boolean load(boolean async);
 
-    public abstract boolean getBoolean(UUID uuid, String path);
-
-    public abstract boolean getBoolean(UUID uuid, String path, boolean defaultValue);
-
-    public abstract void set(String uuid, String path, Object b);
-
     public abstract void save(boolean async);
-
-    public abstract int getInt(UUID uuid, String path, int defaultValue);
 
     public abstract void addStatistics(UUID uuid, String gameID, String gameTypeID, double value, SaveType saveType);
 
     public abstract ArrayList<Stat> getTopList(String gameID, String gameTypeID, SaveType saveType, int maxNumber);
 
-    public abstract boolean isSet(String path);
-
     public abstract void loadPlayer(GBPlayer player, boolean async);
 
     public abstract void savePlayer(GBPlayer player, boolean async);
+
+    public abstract void set(UUID uuid, String path, Object value);
 
     public void onShutDown(){
         if(autoSave != null)
@@ -85,6 +84,10 @@ public abstract class DataBase {
     public void removeRunnable(BukkitRunnable runnable){
         runnables.remove(runnable);
     }
+
+    public abstract void getToken(UUID uuid, final Callback<Integer> callback);
+
+    public abstract void setToken(UUID uuid, int token);
 
     public class Stat{
         private double value;
@@ -108,5 +111,10 @@ public abstract class DataBase {
         public SaveType getSaveType() {
             return saveType;
         }
+    }
+
+    public interface Callback<T> {
+        void onSuccess(T done);
+        void onFailure(Throwable throwable);
     }
 }
