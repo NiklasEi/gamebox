@@ -38,9 +38,9 @@ public class FileUtil {
             Plugin gameBox = Bukkit.getPluginManager().getPlugin("GameBox");
             for (Enumeration list = jar.entries(); list.hasMoreElements(); ) {
                 JarEntry entry = (JarEntry) list.nextElement();
-                if(entry.getName().split(File.separator)[0].equals("language")) {
+                if(entry.getName().split("/")[0].equals("language")) {
 
-                    String[] pathParts = entry.getName().split(File.separator);
+                    String[] pathParts = entry.getName().split("/");
 
                     if (pathParts.length < 2 || !entry.getName().endsWith(".yml")){
                         continue;
@@ -77,7 +77,7 @@ public class FileUtil {
             for (Enumeration list = jar.entries(); list.hasMoreElements(); ) {
                 JarEntry entry = (JarEntry) list.nextElement();
 
-                String[] pathParts = entry.getName().split(File.separator);
+                String[] pathParts = entry.getName().split("/");
                 String folderName = pathParts[0];
 
                 if(folderName.equals("language")) {
