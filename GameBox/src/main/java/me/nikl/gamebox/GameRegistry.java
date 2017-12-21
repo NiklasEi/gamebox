@@ -77,8 +77,10 @@ public class GameRegistry {
      */
     public void loadGames() {
         for(Module module : modules.values()){
-            if(module.isGame())
+            if(module.isGame()) {
                 loadGame(module);
+                registerSubCommands(module);
+            }
         }
     }
 

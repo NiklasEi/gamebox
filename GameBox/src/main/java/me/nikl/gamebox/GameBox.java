@@ -167,17 +167,6 @@ public class GameBox extends JavaPlugin{
 		} else {
 			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " You have opt out bStats... That's sad!");
 		}
-
-
-		// check for registered games
-		// running as a bukkit runnable ensures that the task is run as soon as all plugins are loaded.
-		new BukkitRunnable(){
-			@Override
-			public void run() {
-				debug(" running late check in GameBox");
-				runLateChecks();
-			}
-		}.runTask(this);
 	}
 
 	private void runLateChecks() {
@@ -300,6 +289,20 @@ public class GameBox extends JavaPlugin{
 
 		// load players that are already online (otherwise done on join)
 		pManager.loadPlayers();
+
+		// load all already registered games from the Registry
+		//    on first startup this will do nothing...
+		gameRegistry.loadGames();
+
+		// check for registered games
+		// running as a bukkit runnable ensures that the task is run as soon as all plugins are loaded.
+		new BukkitRunnable(){
+			@Override
+			public void run() {
+				debug(" running late check in GameBox");
+				runLateChecks();
+			}
+		}.runTask(this);
 
 		return true;
 	}
