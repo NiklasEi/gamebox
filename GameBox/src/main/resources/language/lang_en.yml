@@ -51,7 +51,11 @@ commandMessages:
     - '   Players per game: %playerNum%'
     footer:
     - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
-  tokenInfo: ' &2%player% has %token% token'
+  tokenInfo: ' &2%player% has %token% token.'
+  gaveToken: ' &2Gave %token% to %player%.'
+  tookToken: ' &2Took %token% from %player%.'
+  notEnoughToken: ' &4Failed! %player% only has %token% token.'
+  setToken: ' &2%player% now has %token% token.'
   reload:
     fail: " &4Reloading of the plugin and all games failed!"
     success: " &aGameBox and all games have been reloaded!"

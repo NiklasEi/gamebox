@@ -15,6 +15,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -54,7 +55,7 @@ public class AdminCommand implements CommandExecutor {
             return true;
         }
 
-        if(args.length == 0) {
+        if(args.length == 0 || (args.length == 1 && args[0].equalsIgnoreCase("help"))) {
             sendHelpMessages(sender);
             return true;
         }
@@ -84,58 +85,73 @@ public class AdminCommand implements CommandExecutor {
             // all arguments are valid
 
             // handle cached online players
-            cachedPlayer:
-            if(player.isOnline()){
-                GBPlayer gbPlayer = plugin.getPluginManager().getPlayer(player.getUniqueId());
-                if(gbPlayer == null){
-                    break cachedPlayer;
-                }
+            GBPlayer gbPlayer = plugin.getPluginManager().getPlayer(player.getUniqueId());
+            if(gbPlayer != null && gbPlayer.isLoaded()){
                 switch (args[0].toLowerCase()){
                     case "givetoken":
                         gbPlayer.setTokens(gbPlayer.getTokens() + count);
-                        break;
+                        sender.sendMessage(lang.PREFIX + lang.CMD_GAVE_TOKEN.replace("%player%", player.getName()).replace("%token%", String.valueOf(count)));
+                        return true;
 
                     case "taketoken":
                         if(gbPlayer.getTokens() >= count){
                             gbPlayer.setTokens(gbPlayer.getTokens() - count);
+                            sender.sendMessage(lang.PREFIX + lang.CMD_TOOK_TOKEN.replace("%player%", player.getName()).replace("%token%", String.valueOf(count)));
+                            return true;
                         } else {
-                            sender.sendMessage(lang.PREFIX + ChatColor.RED + " " + player.getName() + " only has " + gbPlayer.getTokens() + " token!");
+                            sender.sendMessage(lang.PREFIX + lang.CMD_NOT_ENOUGH_TOKEN.replace("%player%", player.getName()).replace("%token%", String.valueOf(gbPlayer.getTokens())));
                             return true;
                         }
-                        break;
 
                     case "settoken":
                         gbPlayer.setTokens(count);
-                        break;
+                        sender.sendMessage(lang.PREFIX + lang.CMD_SET_TOKEN.replace("%player%", player.getName()).replace("%token%", String.valueOf(count)));
+                        return true;
 
                     default: // can't happen due to the check at the beginning of the command
                         return false;
 
                 }
-                sender.sendMessage(lang.PREFIX + lang.CMD_TOKEN.replace("%player%", player.getName()).replace("%token%", String.valueOf(gbPlayer.getTokens())));
-                return true;
             }
 
             // handle offline or not cached players
             switch (args[0].toLowerCase()){
                 case "givetoken":
                     plugin.getApi().giveToken(player, count);
-                    break;
+                    sender.sendMessage(lang.PREFIX + lang.CMD_GAVE_TOKEN.replace("%player%", player.getName()).replace("%token%", String.valueOf(count)));
+                    return true;
 
                 case "taketoken":
-                    sender.sendMessage(lang.PREFIX + ChatColor.RED+ " " + player.getName() + " only has " + 0 + " token!");
+                    plugin.getApi().takeToken(player, count, new DataBase.Callback<Integer>() {
+                        @Override
+                        public void onSuccess(Integer done) {
+                            sender.sendMessage(lang.PREFIX + lang.CMD_TOOK_TOKEN.replace("%player%", player.getName()).replace("%token%", String.valueOf(count)));
+                        }
+
+                        @Override
+                        public void onFailure(@Nullable Throwable throwable, @Nullable Integer value) {
+                            if(value != null){
+                                sender.sendMessage(lang.PREFIX + lang.CMD_NOT_ENOUGH_TOKEN.replace("%player%", player.getName()).replace("%token%", String.valueOf(value)));
+                            } else {
+                                sender.sendMessage(lang.PREFIX + " Error...");
+                                if(throwable != null){
+                                    throwable.printStackTrace();
+                                }
+                            }
+                        }
+                    });
                     return true;
 
                 case "settoken":
-                    plugin.getDataBase().set(player.getUniqueId(), DataBase.PLAYER_TOKEN_PATH, count);
-                    break;
+                    plugin.getDataBase().setToken(player.getUniqueId(), count);
+                    sender.sendMessage(lang.PREFIX + lang.CMD_SET_TOKEN.replace("%player%", player.getName()).replace("%token%", String.valueOf(count)));
+                    return true;
 
                 default: // can't happen due to the check at the beginning of the command
                     return false;
 
             }
-            sender.sendMessage(lang.PREFIX + lang.CMD_TOKEN.replace("%player%", player.getName()).replace("%token%", String.valueOf(count)));
-            return true;
+            // unreachable
 
         } // end of give/take/set token cmd
         else if(args[0].equalsIgnoreCase("token")){
@@ -156,21 +172,22 @@ public class AdminCommand implements CommandExecutor {
                 if(gbPlayer == null){
                     break cachedPlayer;
                 }
-                sender.sendMessage(lang.PREFIX + lang.CMD_TOKEN.replace("%player%", player.getName()).replace("%token%", String.valueOf(gbPlayer.getTokens())));
+                sender.sendMessage(lang.PREFIX + lang.CMD_TOKEN_INFO.replace("%player%", player.getName()).replace("%token%", String.valueOf(gbPlayer.getTokens())));
                 return true;
             }
 
             plugin.getDataBase().getToken(player.getUniqueId(), new DataBase.Callback<Integer>() {
                 @Override
                 public void onSuccess(Integer done) {
-                    sender.sendMessage(lang.PREFIX + lang.CMD_TOKEN
+                    sender.sendMessage(lang.PREFIX + lang.CMD_TOKEN_INFO
                             .replace("%player%", player.getName())
                             .replace("%token%", String.valueOf(done)));
                 }
 
                 @Override
-                public void onFailure(Throwable throwable) {
+                public void onFailure(@Nullable Throwable throwable, @Nullable Integer value) {
                     sender.sendMessage(lang.PREFIX + " Failed to get token for player: " + player.getName());
+                    if(throwable != null) throwable.printStackTrace();
                 }
             });
             return true;

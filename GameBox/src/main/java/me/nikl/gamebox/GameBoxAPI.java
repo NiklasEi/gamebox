@@ -131,7 +131,7 @@ public class GameBoxAPI {
 
             @Override
             public void onFailure(@Nullable Throwable throwable, @Nullable Integer value) {
-                callback.onFailure(throwable, value);
+                callback.onFailure(throwable, null);
                 return;
             }
         });
