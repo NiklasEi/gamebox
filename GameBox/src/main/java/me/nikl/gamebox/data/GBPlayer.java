@@ -27,8 +27,6 @@ public class GBPlayer {
         this.plugin = plugin;
         this.dataBase = plugin.getDataBase();
 
-        this.player = Bukkit.getPlayer(uuid);
-
         loadData();
     }
 
@@ -94,6 +92,9 @@ public class GBPlayer {
     }
 
     public Player getPlayer() {
+        if(player == null){
+            this.player = Bukkit.getPlayer(uuid);
+        }
         return player;
     }
 }
