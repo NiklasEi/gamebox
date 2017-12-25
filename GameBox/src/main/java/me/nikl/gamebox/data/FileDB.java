@@ -6,8 +6,17 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 
 /**
@@ -47,7 +56,6 @@ public class FileDB extends DataBase {
     @Override
     public void save(boolean async) {
         if(async) {
-            final FileDB fileDB = this;
             BukkitRunnable runnable = new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -59,10 +67,8 @@ public class FileDB extends DataBase {
                         e.printStackTrace();
                     }
                     GameBox.debug(" ...done");
-                    fileDB.removeRunnable(this);
                 }
             };
-            runnables.add(runnable);
             runnable.runTaskAsynchronously(plugin);
         } else {
             try {
@@ -179,6 +185,7 @@ public class FileDB extends DataBase {
         // async ignored here for file saving... It is in cache anyways
         String uuid = player.getUuid().toString();
         data.set(uuid + "." +  DataBase.PLAYER_PLAY_SOUNDS, player.isPlaySounds());
+        data.set(uuid + "." +  DataBase.PLAYER_ALLOW_INVITATIONS, player.allowsInvites());
         data.set(uuid + "." +  DataBase.PLAYER_TOKEN_PATH, player.getTokens());
     }
 
@@ -195,5 +202,10 @@ public class FileDB extends DataBase {
     @Override
     public void setToken(UUID uuid, int token) {
         data.set(uuid + "." +  DataBase.PLAYER_TOKEN_PATH, token);
+    }
+
+    @Override
+    public void onShutDown(){
+        super.onShutDown();
     }
 }

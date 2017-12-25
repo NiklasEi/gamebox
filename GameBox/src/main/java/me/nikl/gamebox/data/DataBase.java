@@ -5,8 +5,6 @@ import me.nikl.gamebox.GameBoxSettings;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -15,9 +13,6 @@ import java.util.UUID;
  *
  */
 public abstract class DataBase {
-
-    protected Set<BukkitRunnable> runnables = new HashSet<>();
-
     protected BukkitRunnable autoSave;
 
 
@@ -46,7 +41,14 @@ public abstract class DataBase {
                 GameBox.debug(" auto saving...");
                 if(plugin == null || plugin.getDataBase() == null)
                     this.cancel();
-                save(true);
+                GameBox.debug("    saving all players...");
+                for(GBPlayer player : plugin.getPluginManager().getGbPlayers().values()){
+                    player.save(true);
+                }
+                GameBox.debug("    saving database...");
+                // already async, no need to create a second async task
+                save(false);
+                GameBox.debug(" done!");
             }
         };
 
@@ -75,14 +77,6 @@ public abstract class DataBase {
         if(autoSave != null)
             autoSave.cancel();
         save(false);
-        boolean waiting = !runnables.isEmpty();
-        if(waiting) plugin.info(" waiting on async tasks...");
-        while (!runnables.isEmpty()){}
-        if(waiting) plugin.info(" ... done");
-    }
-
-    public void removeRunnable(BukkitRunnable runnable){
-        runnables.remove(runnable);
     }
 
     public abstract void getToken(UUID uuid, final Callback<Integer> callback);

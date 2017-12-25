@@ -8,7 +8,11 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -79,7 +83,7 @@ public class MysqlDB extends DataBase {
 
     @Override
     public void save(boolean async) {
-
+        // nothing to do here
     }
 
     @Override
@@ -142,12 +146,9 @@ public class MysqlDB extends DataBase {
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
-                } finally {
-                    runnables.remove(this);
                 }
             }
         };
-        runnables.add(task);
         task.runTaskAsynchronously(plugin);
     }
 
@@ -164,13 +165,11 @@ public class MysqlDB extends DataBase {
                     statement.setBoolean(3, player.allowsInvites());
                     statement.setString(4, player.getUuid().toString());
                     statement.execute();
-                    runnables.remove(this);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
         };
-        runnables.add(task);
         if(async){
             task.runTaskAsynchronously(plugin);
         } else {
@@ -186,6 +185,50 @@ public class MysqlDB extends DataBase {
     @Override
     public void getToken(UUID uuid, Callback<Integer> callback) {
 
+        // load token for a player
+        BukkitRunnable task = new BukkitRunnable() {
+            @Override
+            public void run() {
+                try (Connection connection = hikari.getConnection();
+                     PreparedStatement select = connection.prepareStatement(SELECT_TOKEN)) {
+
+                    select.setString(1, uuid.toString());
+                    ResultSet result = select.executeQuery();
+                    if (result.next()) {
+                        new BukkitRunnable() {
+
+                            @Override
+                            public void run() {
+                                // call callable back on main thread
+                                Bukkit.getScheduler().runTask(plugin, () -> {
+                                    try {
+                                        callback.onSuccess(result.getInt(PLAYER_TOKEN_PATH));
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    } finally {
+                                        try {
+                                            result.close();
+                                        } catch (SQLException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                });
+                            }
+                        }.runTask(plugin);
+                    } else {
+                        plugin.warning( " empty result set trying to get token for " +uuid.toString());
+                        try {
+                            result.close();
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        task.runTaskAsynchronously(plugin);
     }
 
     @Override
@@ -200,6 +243,12 @@ public class MysqlDB extends DataBase {
                 e.printStackTrace();
             }
         });
+    }
+
+    @Override
+    public void onShutDown(){
+        super.onShutDown();
+        hikari.close();
     }
 
 }
