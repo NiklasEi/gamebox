@@ -4,6 +4,7 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -109,6 +110,6 @@ public abstract class DataBase {
 
     public interface Callback<T> {
         void onSuccess(T done);
-        void onFailure(Throwable throwable);
+        void onFailure(@Nullable Throwable throwable, @Nullable T value);
     }
 }
