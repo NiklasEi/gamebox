@@ -140,9 +140,9 @@ public class GameBoxAPI {
     /**
      * Get token count for online/offline player
      *
-     * This is done async and will return the value via Callback
+     * This is done async for not loaded players and will return the value via Callback
      * @param player to look up
-     * @param callback to call with loaded token count
+     * @param callback to call with loaded token count or error
      */
     public void getToken(OfflinePlayer player, DataBase.Callback<Integer> callback){
         Validate.notNull(player, "Player cannot be null!");
@@ -150,7 +150,14 @@ public class GameBoxAPI {
         // handle cached players
         GBPlayer gbPlayer = plugin.getPluginManager().getPlayer(player.getUniqueId());
         if(gbPlayer != null){
-            callback.onSuccess(gbPlayer.getTokens());
+            if(gbPlayer.isLoaded()){
+                callback.onSuccess(gbPlayer.getTokens());
+            } else {
+                // player data is being looked up... Wait a bit and try again
+                GameBox.debug("rescheduling lookup... Player is being loaded while lookup try.");
+                Bukkit.getScheduler().runTaskLater(plugin, () -> getToken(player, callback), 2);
+                return;
+            }
         }
 
         plugin.getDataBase().getToken(player.getUniqueId(),callback);
