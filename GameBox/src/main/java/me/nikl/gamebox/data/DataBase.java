@@ -14,25 +14,23 @@ import java.util.UUID;
  *
  */
 public abstract class DataBase {
+
+    protected static final String GAMES_STATISTICS_NODE = "gameStatistics";
+
+    protected static final String PLAYER_PLAY_SOUNDS = "playSounds";
+    protected static final String PLAYER_ALLOW_INVITATIONS = "allowInvitations";
+    protected static final String PLAYER_TOKEN_PATH = "tokens";
+
+    protected static final String PLAYER_UUID = "uuid";
+    protected static final String PLAYER_NAME = "name";
+
+    protected static final String PLAYER_TABLE = "GBPlayers";
+
     protected BukkitRunnable autoSave;
-
-
-    public static final String GAMES_STATISTICS_NODE = "gameStatistics";
-
-    public static final String PLAYER_PLAY_SOUNDS = "playSounds";
-    public static final String PLAYER_ALLOW_INVITATIONS = "allowInvitations";
-    public static final String PLAYER_TOKEN_PATH = "tokens";
-
-    public static final String PLAYER_UUID = "uuid";
-    public static final String PLAYER_NAME = "name";
-
-    public static final String PLAYER_TABLE = "GBPlayers";
 
     protected GameBox plugin;
 
 
-    // ToDo: this whole class is chaotic
-    //   restructure for next main version update!
     public DataBase(GameBox plugin){
         this.plugin = plugin;
 
