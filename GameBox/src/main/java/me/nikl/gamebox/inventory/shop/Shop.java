@@ -9,13 +9,11 @@ import me.nikl.gamebox.inventory.button.AButton;
 import me.nikl.gamebox.inventory.gui.AGui;
 import me.nikl.gamebox.util.ClickAction;
 import me.nikl.gamebox.util.InventoryUtil;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.material.MaterialData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,21 +43,21 @@ public class Shop extends AGui{
 
 
         // set lower grid
-        if (hotBarButtons.get(PluginManager.exit) != null) {
-            AButton exit = new AButton(hotBarButtons.get(PluginManager.exit));
-            ItemMeta meta = hotBarButtons.get(PluginManager.exit).getItemMeta();
+        if (hotBarButtons.get(PluginManager.exitButtonSlot) != null) {
+            AButton exit = new AButton(hotBarButtons.get(PluginManager.exitButtonSlot));
+            ItemMeta meta = hotBarButtons.get(PluginManager.exitButtonSlot).getItemMeta();
             exit.setItemMeta(meta);
             exit.setAction(ClickAction.CLOSE);
-            setLowerButton(exit, PluginManager.exit);
+            setLowerButton(exit, PluginManager.exitButtonSlot);
         }
 
 
-        if (hotBarButtons.get(PluginManager.toMain) != null) {
-            AButton main = new AButton(hotBarButtons.get(PluginManager.toMain));
-            ItemMeta meta = hotBarButtons.get(PluginManager.toMain).getItemMeta();
+        if (hotBarButtons.get(PluginManager.toMainButtonSlot) != null) {
+            AButton main = new AButton(hotBarButtons.get(PluginManager.toMainButtonSlot));
+            ItemMeta meta = hotBarButtons.get(PluginManager.toMainButtonSlot).getItemMeta();
             main.setItemMeta(meta);
             main.setAction(ClickAction.OPEN_MAIN_GUI);
-            setLowerButton(main, PluginManager.toMain);
+            setLowerButton(main, PluginManager.toMainButtonSlot);
         }
 
 

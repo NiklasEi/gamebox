@@ -50,9 +50,13 @@ commandMessages:
     - '   Spieler: %playerNum%'
     footer:
     - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
-  tokenInfo: ' &2%player% has %token% token'
+  tokenInfo: ' &2%player% hat %token% Token.'
+  gaveToken: ' &2%token% Token wurden %player% gegeben.'
+  tookToken: ' &2%token% Token wurden von %player% genommen.'
+  notEnoughToken: ' &4Fehler! %player% hat nur %token% Token.'
+  setToken: ' &2%player% hat jetzt %token% Token.'
   reload:
-    fail: " &4Fehler beim reload von GameBox!"
+    fail: " &4Fehler beim Neustart von GameBox!"
     success: " &aGameBox und alle Spiele wurden neu geladen!"
 
 

@@ -52,8 +52,8 @@ commandMessages:
     footer:
     - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
   tokenInfo: ' &2%player% has %token% token.'
-  gaveToken: ' &2Gave %token% to %player%.'
-  tookToken: ' &2Took %token% from %player%.'
+  gaveToken: ' &2Gave %token% token to %player%.'
+  tookToken: ' &2Took %token% token from %player%.'
   notEnoughToken: ' &4Failed! %player% only has %token% token.'
   setToken: ' &2%player% now has %token% token.'
   reload:

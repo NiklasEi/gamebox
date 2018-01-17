@@ -2,16 +2,15 @@ package me.nikl.gamebox;
 
 import me.nikl.gamebox.util.Sound;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.inventory.Inventory;
 
 /**
  * Created by Niklas on 07.05.2017.
  *
- * class to store settings
+ * class to store global settings
  */
 public class GameBoxSettings {
+
     public static boolean exceptInvitesWithoutPlayPermission = false;
 
     //toggle for playing sounds
@@ -24,11 +23,11 @@ public class GameBoxSettings {
     public static boolean useMysql = false;
 
     // is changed in main class
-    public static boolean delayedInventoryUpdate = false;
+    public static boolean version1_8 = false;
 
     // time in seconds for inputs and invitations
-    public static int timeForPlayerInput = 30;
-    public static int timeForInvitations = 30;
+    public static int inviteInputDuration = 30;
+    public static int inviteValidDuration = 60;
 
     public static boolean econEnabled = false;
     public static boolean tokensEnabled = false;
@@ -44,7 +43,7 @@ public class GameBoxSettings {
     // what to do on player damage
     public static boolean closeInventoryOnDamage = true;
 
-    public static int autoSaveInterval = 5;
+    public static int autoSaveInterval = 10;
 
 
     public static void loadSettings(GameBox plugin){
@@ -54,14 +53,14 @@ public class GameBoxSettings {
         tokensEnabled = config.getBoolean("economy.tokens.enabled", false);
         econEnabled = config.getBoolean("economy.enabled", false);
         playSounds = config.getBoolean("guiSettings.playSounds", true);
-        timeForInvitations = config.getInt("timeForInvitations", 30);
-        timeForPlayerInput = config.getInt("timeForPlayerInput", 30);
+        inviteValidDuration = config.getInt("settings.invitations.inviteValidDuration", 60);
+        inviteInputDuration = config.getInt("settings.invitations.inviteInputDuration", 30);
         useMysql = config.getBoolean("mysql.enabled", false);
         exceptInvitesWithoutPlayPermission = config.getBoolean("settings.exceptInvitesWithoutPlayPermission", false);
         bStats = config.getBoolean("settings.bStats", true);
         closeInventoryOnDamage = config.getBoolean("settings.closeInventoryOnDamage", true);
 
-        autoSaveInterval = config.getInt("settings.autoSaveInterval", 5);
+        autoSaveInterval = config.getInt("settings.autoSaveInterval", 10);
 
         keepArmor = config.getBoolean("settings.keepArmor", false);
 
@@ -83,7 +82,7 @@ public class GameBoxSettings {
 
     private static boolean checkInventoryTitleLength() {
         try {
-            Inventory inventory = Bukkit.createInventory(null, 27, "This title is longer then 32 characters!");
+            Bukkit.createInventory(null, 27, "This title is longer then 32 characters!");
         } catch (Exception e){
             return true;
         }

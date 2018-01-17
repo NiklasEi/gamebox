@@ -96,12 +96,15 @@ public class PluginManager implements Listener {
     private Map<UUID, GBPlayer> gbPlayers = new HashMap<>();
 
     // hot bar stuff
-	public static int exit, toMain, toGame, toHold = 0;
-    public static List<Integer> slotsToKeep = new ArrayList<>();
+	private static int exitButtonSlot = 4;
+    private static int toMainButtonSlot = 0;
+    private static int toGameButtonSlot = 8;
+    private static int emptyHotBarSlotToHold = 1;
+    private static List<Integer> slotsToKeep = new ArrayList<>();
 	private Map<Integer, ItemStack> hotbarButtons = new HashMap<>();
 
 	// list of disabled worlds
-	private List<String> disabledWorlds = new ArrayList<>();
+	private List<String> blockedWorlds = new ArrayList<>();
 
 	// hub stuff
     private boolean setOnWorldJoin;
@@ -118,8 +121,8 @@ public class PluginManager implements Listener {
 		this.nms = plugin.getNMS();
 		this.config = plugin.getConfig();
 
-		if(config.isList("blockedWorlds")){
-		    disabledWorlds = new ArrayList<>(config.getStringList("blockedWorlds"));
+		if(config.isList("settings.blockedWorlds")){
+		    blockedWorlds = new ArrayList<>(config.getStringList("settings.blockedWorlds"));
         }
 
         setHotBar();
@@ -133,28 +136,28 @@ public class PluginManager implements Listener {
 
     public void loadPlayers() {
 	    for(Player player : Bukkit.getOnlinePlayers()){
-            if(!disabledWorlds.contains(player.getLocation().getWorld().getName())){
+            if(!blockedWorlds.contains(player.getLocation().getWorld().getName())){
                 gbPlayers.putIfAbsent(player.getUniqueId(), new GBPlayer(plugin, player.getUniqueId()));
             }
         }
     }
 
     private void setHotBar() {
-        exit = (config.getInt("guiSettings.hotBarNavigation.exitSlot", 4) >= 0 && config.getInt("guiSettings.hotBarNavigation.exitSlot", 4) < 9)? config.getInt("guiSettings.hotBarNavigation.exitSlot", 4):4;
-        toMain = (config.getInt("guiSettings.hotBarNavigation.mainMenuSlot", 0) >= 0 && config.getInt("guiSettings.hotBarNavigation.mainMenuSlot", 0) < 9)? config.getInt("guiSettings.hotBarNavigation.mainMenuSlot", 0):0;
-        toGame = (config.getInt("guiSettings.hotBarNavigation.gameMenuSlot", 8) >= 0 && config.getInt("guiSettings.hotBarNavigation.gameMenuSlot", 8) < 9)? config.getInt("guiSettings.hotBarNavigation.gameMenuSlot", 8):8;
+        exitButtonSlot = (config.getInt("guiSettings.hotBarNavigation.exitSlot", 4) >= 0 && config.getInt("guiSettings.hotBarNavigation.exitSlot", 4) < 9)? config.getInt("guiSettings.hotBarNavigation.exitSlot", 4):4;
+        toMainButtonSlot = (config.getInt("guiSettings.hotBarNavigation.mainMenuSlot", 0) >= 0 && config.getInt("guiSettings.hotBarNavigation.mainMenuSlot", 0) < 9)? config.getInt("guiSettings.hotBarNavigation.mainMenuSlot", 0):0;
+        toGameButtonSlot = (config.getInt("guiSettings.hotBarNavigation.gameMenuSlot", 8) >= 0 && config.getInt("guiSettings.hotBarNavigation.gameMenuSlot", 8) < 9)? config.getInt("guiSettings.hotBarNavigation.gameMenuSlot", 8):8;
 
         if(config.getInt("guiSettings.hotBarNavigation.exitSlot") < 0){
             plugin.getLogger().log(Level.WARNING, " The exit button is disabled!");
-            exit = -999;
+            exitButtonSlot = -999;
         }
         if(config.getInt("guiSettings.hotBarNavigation.mainMenuSlot") < 0){
             plugin.getLogger().log(Level.WARNING, " The back-to-main-menu button is disabled!");
-            toMain = -999;
+            toMainButtonSlot = -999;
         }
         if(config.getInt("guiSettings.hotBarNavigation.gameMenuSlot") < 0){
             plugin.getLogger().log(Level.WARNING, " The back-to-game-menu button is disabled!");
-            toGame = -999;
+            toGameButtonSlot = -999;
         }
 
         ItemStack toMainItem = ItemStackUtil.getItemStack(config.getString("guiSettings.hotBarNavigation.mainMenuMaterial"))
@@ -185,9 +188,9 @@ public class PluginManager implements Listener {
         meta = toGameItem.getItemMeta(); meta.setDisplayName(StringUtil.color(lang.BUTTON_TO_GAME_MENU)); toGameItem.setItemMeta(meta);
         meta = exitItem.getItemMeta(); meta.setDisplayName(StringUtil.color(lang.BUTTON_EXIT)); exitItem.setItemMeta(meta);
 
-        if(toMain >= 0)hotbarButtons.put(toMain, toMainItem);
-        if(exit >= 0)hotbarButtons.put(exit, exitItem);
-        if(toGame >= 0)hotbarButtons.put(toGame, toGameItem);
+        if(toMainButtonSlot >= 0)hotbarButtons.put(toMainButtonSlot, toMainItem);
+        if(exitButtonSlot >= 0)hotbarButtons.put(exitButtonSlot, exitItem);
+        if(toGameButtonSlot >= 0)hotbarButtons.put(toGameButtonSlot, toGameItem);
 
 
         // load special hot bar slots which keep their items
@@ -201,25 +204,25 @@ public class PluginManager implements Listener {
 
         while(it.hasNext()){
             int slot = it.next();
-            if(slot == toMain || slot == exit || slot == toGame) it.remove();
+            if(slot == toMainButtonSlot || slot == exitButtonSlot || slot == toGameButtonSlot) it.remove();
             if(slot < 0 || slot > 8) it.remove();
         }
 
         // try finding an empty hubItemSlot to hold while in GUI/game
         if(hotbarButtons.values().size() + slotsToKeep.size() < 9){
-            while(toHold == exit || toHold == toMain  || toHold == toGame || slotsToKeep.contains(toHold)){
-                toHold++;
+            while(emptyHotBarSlotToHold == exitButtonSlot || emptyHotBarSlotToHold == toMainButtonSlot || emptyHotBarSlotToHold == toGameButtonSlot || slotsToKeep.contains(emptyHotBarSlotToHold)){
+                emptyHotBarSlotToHold++;
             }
         } else {
-            while(toHold == exit || toHold == toMain  || toHold == toGame ){
-                toHold++;
+            while(emptyHotBarSlotToHold == exitButtonSlot || emptyHotBarSlotToHold == toMainButtonSlot || emptyHotBarSlotToHold == toGameButtonSlot){
+                emptyHotBarSlotToHold++;
             }
         }
     }
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event){
-	    if(disabledWorlds.contains(event.getPlayer().getLocation().getWorld().getName())) return;
+	    if(blockedWorlds.contains(event.getPlayer().getLocation().getWorld().getName())) return;
 	    handleInviteInput.onChat(event);
     }
 
@@ -285,10 +288,9 @@ public class PluginManager implements Listener {
         }
 
         // player will hold an empty slot, which removes the annoying animation when clicking in an inventory with an item in your hand
-		player.getInventory().setHeldItemSlot(toHold);
+		player.getInventory().setHeldItemSlot(emptyHotBarSlotToHold);
 	}
 
-	@SuppressWarnings("deprecation")
     public void restoreInventory(Player player){
 		if(!savedContents.containsKey(player.getUniqueId())) return;
 		if(GameBox.openingNewGUI){
@@ -298,7 +300,9 @@ public class PluginManager implements Listener {
 		GameBox.debug("restoring inventory contents...");
 		player.getInventory().setContents(savedContents.get(player.getUniqueId()));
         player.getInventory().setHeldItemSlot(hotBarSlot.get(player.getUniqueId()));
-        if(GameBoxSettings.delayedInventoryUpdate) {
+
+        // in 1.8 there is a short delay necessary to display the restored inventory contents.
+        if(GameBoxSettings.version1_8) {
             new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -308,6 +312,7 @@ public class PluginManager implements Listener {
         } else {
             player.updateInventory();
         }
+
 		savedContents.remove(player.getUniqueId());
         hotBarSlot.remove(player.getUniqueId());
         new LeftGameBoxEvent(player);
@@ -348,20 +353,20 @@ public class PluginManager implements Listener {
 				            GameBox.debug("empty hotbar slot clicked... returning");
 				            return;
                         }
-                        if(event.getSlot() == toGame){
+                        if(event.getSlot() == toGameButtonSlot){
                             gameManager.removeFromGame(event.getWhoClicked().getUniqueId());
                             guiManager.openGameGui((Player) event.getWhoClicked(), gameID, GUIManager.MAIN_GAME_GUI);
                             if(GameBoxSettings.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
                                 ((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.CLICK.bukkitSound(), volume, pitch);
                             }
                             return;
-                        } else if(event.getSlot() == toMain){
+                        } else if(event.getSlot() == toMainButtonSlot){
                             gameManager.removeFromGame(event.getWhoClicked().getUniqueId());
                             guiManager.openMainGui((Player) event.getWhoClicked());
                             if(GameBoxSettings.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
                                 ((Player)event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.CLICK.bukkitSound(), volume, pitch);
                             }
-                        } else if(event.getSlot() == exit){
+                        } else if(event.getSlot() == exitButtonSlot){
                             event.getWhoClicked().closeInventory();
                             ((Player)event.getWhoClicked()).updateInventory();
                             if(GameBoxSettings.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
@@ -408,7 +413,7 @@ public class PluginManager implements Listener {
 
 	@EventHandler
     public void onWorldChange(PlayerChangedWorldEvent event){
-        if(!disabledWorlds.contains(event.getPlayer().getLocation().getWorld().getName())){
+        if(!blockedWorlds.contains(event.getPlayer().getLocation().getWorld().getName())){
             if(!gbPlayers.containsKey(event.getPlayer().getUniqueId())){
                 gbPlayers.put(event.getPlayer().getUniqueId(), new GBPlayer(plugin, event.getPlayer().getUniqueId()));
             }
@@ -449,7 +454,7 @@ public class PluginManager implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event){
-        if(!disabledWorlds.contains(event.getPlayer().getLocation().getWorld().getName())){
+        if(!blockedWorlds.contains(event.getPlayer().getLocation().getWorld().getName())){
             gbPlayers.putIfAbsent(event.getPlayer().getUniqueId(), new GBPlayer(plugin, event.getPlayer().getUniqueId()));
         }
         if(GameBoxSettings.hubMode && hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName()) && setOnWorldJoin){
@@ -763,8 +768,8 @@ public class PluginManager implements Listener {
         return false;
     }
 
-    public List<String > getDisabledWorlds(){
-        return this.disabledWorlds;
+    public List<String > getBlockedWorlds(){
+        return this.blockedWorlds;
     }
 
     public boolean wonTokens(UUID player, int tokens, String gameID) {

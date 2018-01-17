@@ -74,12 +74,12 @@ public class MainGui extends AGui{
 		Map<Integer, ItemStack> hotBarButtons = plugin.getPluginManager().getHotBarButtons();
 
 		// set lower grid
-		if(hotBarButtons.containsKey(PluginManager.exit)) {
-			AButton exit = new AButton(hotBarButtons.get(PluginManager.exit));
-			meta = hotBarButtons.get(PluginManager.exit).getItemMeta();
+		if(hotBarButtons.containsKey(PluginManager.exitButtonSlot)) {
+			AButton exit = new AButton(hotBarButtons.get(PluginManager.exitButtonSlot));
+			meta = hotBarButtons.get(PluginManager.exitButtonSlot).getItemMeta();
 			exit.setItemMeta(meta);
 			exit.setAction(ClickAction.CLOSE);
-			setLowerButton(exit, PluginManager.exit);
+			setLowerButton(exit, PluginManager.exitButtonSlot);
 		}
 	}
 

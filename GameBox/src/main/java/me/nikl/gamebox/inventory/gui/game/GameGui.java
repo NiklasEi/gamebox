@@ -39,21 +39,21 @@ public class GameGui extends AGui {
 
 
         // set lower grid
-        if(hotBarButtons.containsKey(PluginManager.exit)) {
-            AButton exit = new AButton(hotBarButtons.get(PluginManager.exit));
-            ItemMeta meta = hotBarButtons.get(PluginManager.exit).getItemMeta();
+        if(hotBarButtons.containsKey(PluginManager.exitButtonSlot)) {
+            AButton exit = new AButton(hotBarButtons.get(PluginManager.exitButtonSlot));
+            ItemMeta meta = hotBarButtons.get(PluginManager.exitButtonSlot).getItemMeta();
             exit.setItemMeta(meta);
             exit.setAction(ClickAction.CLOSE);
-            setLowerButton(exit, PluginManager.exit);
+            setLowerButton(exit, PluginManager.exitButtonSlot);
         }
 
 
-        if(hotBarButtons.containsKey(PluginManager.toMain)) {
-            AButton main = new AButton(hotBarButtons.get(PluginManager.toMain));
-            ItemMeta meta = hotBarButtons.get(PluginManager.toMain).getItemMeta();
+        if(hotBarButtons.containsKey(PluginManager.toMainButtonSlot)) {
+            AButton main = new AButton(hotBarButtons.get(PluginManager.toMainButtonSlot));
+            ItemMeta meta = hotBarButtons.get(PluginManager.toMainButtonSlot).getItemMeta();
             main.setItemMeta(meta);
             main.setAction(ClickAction.OPEN_MAIN_GUI);
-            setLowerButton(main, PluginManager.toMain);
+            setLowerButton(main, PluginManager.toMainButtonSlot);
         }
     }
 

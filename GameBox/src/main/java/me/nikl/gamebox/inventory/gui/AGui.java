@@ -288,13 +288,15 @@ public abstract class AGui {
 					}
 				}
 				long timeStamp = System.currentTimeMillis();
-				boolean worked = pluginManager.getHandleInviteInput().addWaiting(event.getWhoClicked().getUniqueId(), timeStamp + GameBoxSettings.timeForPlayerInput*1000, args);
+				boolean worked = pluginManager.getHandleInviteInput().addWaiting(event.getWhoClicked().getUniqueId()
+						, timeStamp + GameBoxSettings.inviteInputDuration *1000, args);
 				if(worked){
 					event.getWhoClicked().closeInventory();
 					((Player)event.getWhoClicked()).updateInventory();
 					event.getWhoClicked().sendMessage(plugin.lang.PREFIX + plugin.lang.INPUT_START_MESSAGE);
 					for(String message : plugin.lang.INPUT_HELP_MESSAGE){
-						event.getWhoClicked().sendMessage(message.replace("%seconds%", String.valueOf(GameBoxSettings.timeForPlayerInput)));
+						event.getWhoClicked().sendMessage(message
+								.replace("%seconds%", String.valueOf(GameBoxSettings.inviteInputDuration)));
 					}
 					return true;
 				}
@@ -378,7 +380,6 @@ public abstract class AGui {
 				if(!shopItem.getPermissions().isEmpty()){
 					for(String permission : shopItem.getPermissions()){
 						if(!event.getWhoClicked().hasPermission(permission)){
-							Bukkit.getConsoleSender().sendMessage("does not have  " + permission);
 							guiManager.sentInventoryTitleMessage((Player)event.getWhoClicked(), plugin.lang.SHOP_TITLE_REQUIREMENT_NOT_FULFILLED, null);
 							return false;
 						}
@@ -388,7 +389,6 @@ public abstract class AGui {
 				if(!shopItem.getNoPermissions().isEmpty()){
 					for(String noPermission : shopItem.getNoPermissions()){
 						if(event.getWhoClicked().hasPermission(noPermission)){
-							Bukkit.getConsoleSender().sendMessage("has " + noPermission);
 							guiManager.sentInventoryTitleMessage((Player)event.getWhoClicked(), plugin.lang.SHOP_TITLE_REQUIREMENT_NOT_FULFILLED, null);
 							return false;
 						}
@@ -432,7 +432,7 @@ public abstract class AGui {
 				return true;
 
 			default:
-				Bukkit.getConsoleSender().sendMessage("Missing case: "+action);
+				plugin.warning("Missing case: "+action);
 				return false;
 		}
 	}

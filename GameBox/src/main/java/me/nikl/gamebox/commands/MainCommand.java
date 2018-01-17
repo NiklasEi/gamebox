@@ -50,7 +50,7 @@ public class MainCommand implements CommandExecutor{
 				sender.sendMessage(ChatColor.translateAlternateColorCodes('&', lang.PREFIX + lang.CMD_ONLY_PLAYER));
 				return true;
 			}
-			if (plugin.getPluginManager().getDisabledWorlds().contains(((Player) sender).getLocation().getWorld().getName())) {
+			if (plugin.getPluginManager().getBlockedWorlds().contains(((Player) sender).getLocation().getWorld().getName())) {
 				sender.sendMessage(lang.PREFIX + lang.CMD_DISABLED_WORLD);
 				return true;
 			}

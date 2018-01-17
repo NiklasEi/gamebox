@@ -7,9 +7,9 @@ import me.nikl.gamebox.data.FileDB;
 import me.nikl.gamebox.data.MysqlDB;
 import me.nikl.gamebox.games.Game;
 import me.nikl.gamebox.games.GameLanguage;
-import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.input.HandleInvitations;
 import me.nikl.gamebox.input.HandleInviteInput;
+import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.listeners.EnterGameBoxListener;
 import me.nikl.gamebox.listeners.LeftGameBoxListener;
 import me.nikl.gamebox.nms.*;
@@ -25,9 +25,14 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.io.*;
-import java.util.*;
-import java.util.concurrent.Callable;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 
 /**
@@ -36,8 +41,11 @@ import java.util.logging.Level;
  * Main class of the plugin GameBox
  */
 public class GameBox extends JavaPlugin{
+
+	// the module id of gamebox itself
 	public static final String MODULE_GAMEBOX = "gamebox";
 
+	// game module ids
 	public static final String MODULE_CONNECTFOUR = "connectfour";
 	public static final String MODULE_COOKIECLICKER = "cookieclicker";
 	public static final String MODULE_MATCHIT = "matchit";
@@ -45,11 +53,12 @@ public class GameBox extends JavaPlugin{
 	// enable debug mode (print debug messages)
 	public static boolean debug = false;
 
-	// toggle to stop inventory contents to be restored when a new gui is opened and automatically closes the old one
+	// toggle to stop inventory contents to be restored when a new gui is opened
 	public static boolean openingNewGUI = false;
 
-	// these are returned from GameManagers when a new game is started/failed to start
-	public static final int GAME_STARTED = 1, GAME_NOT_STARTED_ERROR = 0, GAME_NOT_ENOUGH_MONEY = 2, GAME_NOT_ENOUGH_MONEY_1 = 3, GAME_NOT_ENOUGH_MONEY_2 = 4;
+	// return values for GameManagers when a new game is started/failed to start
+	public static final int GAME_STARTED = 1, GAME_NOT_STARTED_ERROR = 0,
+			GAME_NOT_ENOUGH_MONEY = 2, GAME_NOT_ENOUGH_MONEY_1 = 3, GAME_NOT_ENOUGH_MONEY_2 = 4;
 	
 	// plugin configuration
 	private FileConfiguration config;
@@ -63,28 +72,27 @@ public class GameBox extends JavaPlugin{
 	// economy
 	public static Economy econ = null;
 
-	// language file
+	// main language obj
 	public GameBoxLanguage lang;
 
-	/*
-	 * Plugin manager that manages all game managers
-	 * Listens to events and passes them on
- 	 */
+	// Plugin manager that manages all game managers and listens to bukkit events.
 	private PluginManager pManager;
 
+	// Commands
 	private MainCommand mainCommand;
 	private AdminCommand adminCommand;
 
+	// database wrapper
 	private DataBase dataBase;
 
+	// bStats metrics
 	private Metrics metrics;
 
+	// listeners for GameBox events
 	private LeftGameBoxListener leftGameBoxListener;
 	private EnterGameBoxListener enterGameBoxListener;
 
-	@Deprecated
-	public static boolean playSounds = GameBoxSettings.playSounds;
-
+	// GameRegistry manages the registration of modules
 	private GameRegistry gameRegistry;
 
 
@@ -94,7 +102,7 @@ public class GameBox extends JavaPlugin{
 		if (!setUpNMS()) {
 			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
 			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " Your server version is not compatible with this plugin!");
-			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "   Get the newest version on Spigot:");
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "   You should get the newest version on Spigot:");
 			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "   https://www.spigotmc.org/resources/37273/");
 			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
 
@@ -104,7 +112,7 @@ public class GameBox extends JavaPlugin{
 
 		this.gameRegistry = new GameRegistry(this);
 		// GameBox module
-		new Module(this, MODULE_GAMEBOX);
+		new Module(this, MODULE_GAMEBOX, null, null);
 
 		if (!reload()) {
 			getLogger().severe(" Problem while loading the plugin! Plugin was disabled!");
@@ -122,51 +130,64 @@ public class GameBox extends JavaPlugin{
 
 		// send data with bStats if not opt out
 		if(GameBoxSettings.bStats) {
-			metrics = new Metrics(this);
-
-			// Bar chart of all installed games
-			metrics.addCustomChart(new Metrics.SimpleBarChart("gamebox_games", new Callable<Map<String, Integer>>(){
-				@Override
-				public HashMap<String, Integer> call() throws Exception {
-					HashMap<String, Integer> valueMap = new HashMap<>();
-					for(String gameID : getPluginManager().getGames().keySet()){
-						valueMap.put(getOriginalGameName(gameID), 1);
-					}
-					return valueMap;
-				}
-			}));
-
-			// Drill down pie with number of games and further breakdown of proportions of the games
-			metrics.addCustomChart(new Metrics.DrilldownPie("games_drill_down", () -> {
-				Map<String, Map<String, Integer>> map = new HashMap<>();
-
-				Map<String, Integer> entry = new HashMap<>();
-
-				for(String gameID : getPluginManager().getGames().keySet()){
-					entry.put(getOriginalGameName(gameID), 1);
-				}
-
-				map.put(String.valueOf(getPluginManager().getGames().size()), entry);
-				return map;
-			}));
-
-			// Pie chart with number of games
-			metrics.addCustomChart(new Metrics.SimplePie("number_of_gamebox_games"
-					, () -> String.valueOf(PluginManager.gamesRegistered)));
-
-			// Pie chart info about token (disabled/enabled)
-			metrics.addCustomChart(new Metrics.SimplePie("token_enabled"
-					, () -> GameBoxSettings.tokensEnabled ? "Enabled" : "Disabled"));
-
-			// Pie chart with closed/open info of the token shop
-			if(GameBoxSettings.tokensEnabled)
-				metrics.addCustomChart(new Metrics.SimplePie("gamebox_shop_enabled"
-					, () -> getPluginManager().getGuiManager().getShopManager().isClosed() ?
-						"Closed" : "Open"));
-
+			setupMetrics();
 		} else {
 			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " You have opt out bStats... That's sad!");
 		}
+	}
+
+	private void setupMetrics() {
+		metrics = new Metrics(this);
+
+		// Bar chart of all installed games
+		metrics.addCustomChart(new Metrics.SimpleBarChart("gamebox_games", () -> {
+            HashMap<String, Integer> valueMap = new HashMap<>();
+            for(String gameID : getPluginManager().getGames().keySet()){
+                valueMap.put(getOriginalGameName(gameID), 1);
+            }
+            return valueMap;
+        }));
+
+		// Drill down pie with number of games and further breakdown of proportions of the games
+		metrics.addCustomChart(new Metrics.DrilldownPie("games_drill_down", () -> {
+			Map<String, Map<String, Integer>> map = new HashMap<>();
+
+			Map<String, Integer> entry = new HashMap<>();
+
+			for(String gameID : getPluginManager().getGames().keySet()){
+				entry.put(getOriginalGameName(gameID), 1);
+			}
+
+			map.put(String.valueOf(getPluginManager().getGames().size()), entry);
+			return map;
+		}));
+
+		// Pie chart with number of games
+		metrics.addCustomChart(new Metrics.SimplePie("number_of_gamebox_games"
+				, () -> String.valueOf(PluginManager.gamesRegistered)));
+
+		// Pie chart info about token (disabled/enabled)
+		metrics.addCustomChart(new Metrics.SimplePie("token_enabled"
+				, () -> GameBoxSettings.tokensEnabled ? "Enabled" : "Disabled"));
+
+		// Pie chart with closed/open info of the token shop
+		if(GameBoxSettings.tokensEnabled)
+			metrics.addCustomChart(new Metrics.SimplePie("gamebox_shop_enabled"
+					, () -> getPluginManager().getGuiManager().getShopManager().isClosed() ?
+					"Closed" : "Open"));
+
+		// Pie chart with data storage types
+		metrics.addCustomChart(new Metrics.SimplePie("data_storage_type", () -> {
+			if(GameBoxSettings.useMysql){
+				return "MySQL";
+			}
+
+			return "File (yml)";
+		}));
+
+		// Pie chart for hub mode
+		metrics.addCustomChart(new Metrics.SimplePie("hub_mode_enabled"
+				, () -> GameBoxSettings.hubMode ? "Enabled" : "Disabled"));
 	}
 
 	private void runLateChecks() {
@@ -354,17 +375,17 @@ public class GameBox extends JavaPlugin{
 		switch (version) {
 			case "v1_8_R1":
 				nms = new NMSUtil_1_8_R1();
-				GameBoxSettings.delayedInventoryUpdate = true;
+				GameBoxSettings.version1_8 = true;
 				break;
 
 			case "v1_8_R2":
 				nms = new NMSUtil_1_8_R2();
-				GameBoxSettings.delayedInventoryUpdate = true;
+				GameBoxSettings.version1_8 = true;
 				break;
 
 			case "v1_8_R3":
 				nms = new NMSUtil_1_8_R3();
-				GameBoxSettings.delayedInventoryUpdate = true;
+				GameBoxSettings.version1_8 = true;
 				break;
 
 			case "v1_9_R1":

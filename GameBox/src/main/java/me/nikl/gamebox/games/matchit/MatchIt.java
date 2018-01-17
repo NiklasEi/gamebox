@@ -1,6 +1,7 @@
 package me.nikl.gamebox.games.matchit;
 
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.games.Game;
 import me.nikl.gamebox.games.GameSettings;
 import me.nikl.gamebox.util.ItemStackUtil;
@@ -9,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
@@ -16,7 +18,6 @@ import org.bukkit.material.MaterialData;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -44,7 +45,7 @@ public class MatchIt extends Game{
 
             ConfigurationSection itemsSec = defaultConfig.getConfigurationSection("items");
             ItemStack itemStack;
-            ItemMeta meta;
+
             for(String key : itemsSec.getKeys(false)){
                 if(!itemsSec.isConfigurationSection(key))
                     continue;
@@ -69,6 +70,13 @@ public class MatchIt extends Game{
         if(itemSection.isBoolean("glow")){
             toReturn = nms.addGlow(toReturn);
         }
+
+        if(!GameBoxSettings.version1_8){
+            ItemMeta meta = toReturn.getItemMeta();
+            meta.addItemFlags(ItemFlag.values());
+            toReturn.setItemMeta(meta);
+        }
+
         return toReturn;
     }
 

@@ -67,12 +67,15 @@ public class GBPlayer {
         plugin.getPluginManager().getGuiManager().updateTokens(this);
     }
 
-    public void remove() {
-        //TOdO (async not possible on shutdown...)
+    public void remove(boolean async) {
         // remove special inventories and save any data
         // after this call this object will be removed from player map
         plugin.getPluginManager().getGuiManager().removePlayer(this.uuid);
-        save(true);
+        save(async);
+    }
+
+    public void remove(){
+        remove(false);
     }
 
     public void save(){

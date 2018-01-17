@@ -74,7 +74,6 @@ public class MysqlDB extends DataBase {
         } catch (SQLException e) {
             e.printStackTrace();
             GameBoxSettings.useMysql = false;
-            plugin.warning(" Falling back to file storage!");
             return false;
         }
 
@@ -88,12 +87,13 @@ public class MysqlDB extends DataBase {
 
     @Override
     public void addStatistics(UUID uuid, String gameID, String gameTypeID, double value, SaveType saveType) {
-
+        // Todo!
     }
 
     @Override
     public ArrayList<Stat> getTopList(String gameID, String gameTypeID, SaveType saveType, int maxNumber) {
-        return null;
+        // Todo!
+        return new ArrayList<>();
     }
 
     @Override
@@ -112,30 +112,26 @@ public class MysqlDB extends DataBase {
                     insert.setString(1, p.getUniqueId().toString());
                     insert.setString(2, p.getName());
                     insert.setInt(3, 0);
-                    insert.setBoolean(3, true);
-                    insert.setBoolean(3, true);
+                    insert.setBoolean(4, true);
+                    insert.setBoolean(5, true);
+                    insert.setString(6, p.getName());
                     insert.execute();
 
                     select.setString(1, p.getUniqueId().toString());
                     ResultSet result = select.executeQuery();
                     if (result.next()) {
+                        final boolean sound = result.getBoolean(PLAYER_PLAY_SOUNDS);
+                        final boolean invites = result.getBoolean(PLAYER_ALLOW_INVITATIONS);
+                        final int token = result.getInt(PLAYER_TOKEN_PATH);
 
                         // back to main thread and set player
-                        Bukkit.getScheduler().runTask(plugin, () -> {
-                            try {
-                                player.setPlayerData(result.getInt(PLAYER_TOKEN_PATH)
-                                        , result.getBoolean(PLAYER_PLAY_SOUNDS)
-                                        , result.getBoolean(PLAYER_ALLOW_INVITATIONS));
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            } finally {
-                                try {
-                                    result.close();
-                                } catch (SQLException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
+                        Bukkit.getScheduler().runTask(plugin, () ->
+                                player.setPlayerData(token, sound, invites));
+                        try {
+                            result.close();
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
                     } else {
                         plugin.warning( " empty result set when loading player " + p.getName());
                         try {
@@ -155,25 +151,28 @@ public class MysqlDB extends DataBase {
     @Override
     public void savePlayer(final GBPlayer player, boolean async) {
         // must work async and sync since sync is needed on server shutdown
-        BukkitRunnable task = new BukkitRunnable(){
-            @Override
-            public void run(){
-                try (Connection connection = hikari.getConnection();
-                     PreparedStatement statement = connection.prepareStatement(SAVE)){
-                    statement.setInt(1, player.getTokens());
-                    statement.setBoolean(2, player.isPlaySounds());
-                    statement.setBoolean(3, player.allowsInvites());
-                    statement.setString(4, player.getUuid().toString());
-                    statement.execute();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
         if(async){
-            task.runTaskAsynchronously(plugin);
+            new BukkitRunnable(){
+                @Override
+                public void run(){
+                    savePlayerRun(player);
+                }
+            }.runTaskAsynchronously(plugin);
         } else {
-            task.runTask(plugin);
+            savePlayerRun(player);
+        }
+    }
+
+    private void savePlayerRun(final GBPlayer player){
+        try (Connection connection = hikari.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SAVE)){
+            statement.setInt(1, player.getTokens());
+            statement.setBoolean(2, player.isPlaySounds());
+            statement.setBoolean(3, player.allowsInvites());
+            statement.setString(4, player.getUuid().toString());
+            statement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 

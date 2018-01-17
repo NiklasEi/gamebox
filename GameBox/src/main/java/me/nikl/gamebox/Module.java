@@ -39,25 +39,6 @@ public class Module {
         gameBox.getGameRegistry().registerModule(this);
     }
 
-    /**
-     * For internal game module
-     *
-     * For external use constructor taking an additional JavaPlugin
-     * @param moduleID
-     * @param classPath
-     */
-    public Module(GameBox gameBox, String moduleID, String classPath){
-        this(gameBox, moduleID, classPath, null);
-    }
-
-    /**
-     * For non-game internal module
-     * @param moduleID
-     */
-    public Module(GameBox gameBox, String moduleID){
-        this(gameBox, moduleID, null, null);
-    }
-
     public String getModuleID() {
         return moduleID;
     }

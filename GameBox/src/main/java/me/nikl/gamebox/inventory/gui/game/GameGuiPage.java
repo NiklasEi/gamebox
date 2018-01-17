@@ -23,13 +23,13 @@ public class GameGuiPage extends GameGui{
         Map<Integer, ItemStack> hotBarButtons = plugin.getPluginManager().getHotBarButtons();
 
         // set lower grid
-        if(hotBarButtons.get(PluginManager.toGame) != null) {
-            AButton gameGUI = new AButton(hotBarButtons.get(PluginManager.toGame));
-            ItemMeta meta = hotBarButtons.get(PluginManager.toGame).getItemMeta();
+        if(hotBarButtons.get(PluginManager.toGameButtonSlot) != null) {
+            AButton gameGUI = new AButton(hotBarButtons.get(PluginManager.toGameButtonSlot));
+            ItemMeta meta = hotBarButtons.get(PluginManager.toGameButtonSlot).getItemMeta();
             gameGUI.setItemMeta(meta);
             gameGUI.setAction(ClickAction.OPEN_GAME_GUI);
             gameGUI.setArgs(gameID, GUIManager.MAIN_GAME_GUI);
-            setLowerButton(gameGUI, PluginManager.toGame);
+            setLowerButton(gameGUI, PluginManager.toGameButtonSlot);
         }
     }
 }

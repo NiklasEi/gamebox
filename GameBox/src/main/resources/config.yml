@@ -1,16 +1,17 @@
-# ----------------------------------------------------------------------------#
-#                                                                             #
-#                               GameBox config                                #
-#                                                                             #
-# ----------------------------------------------------------------------------#
-#
-# Plugin made by Nikl
-#   if you have any problems/suggestions please pm me on Spigot
-#   or write in the plugin discussion.
-#
-# Thank you for playing, I hope you like the plugin!
-#
-# ----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------#
+#                                                                                   #
+#                                  GameBox config                                   #
+#                                                                                   #
+# ----------------------------------------------------------------------------------#
+#                                                                                   #
+# Plugin made by Nikl                                                               #
+#   if you have any problems/suggestions please pm me on Spigot,                    #
+#   or write in the plugin discussion,                                              #
+#   or open an issue on GitHub.                                                     #
+#                                                                                   #
+# Thank you for playing, I hope you like the plugin!                                #
+#                                                                                   #
+# ----------------------------------------------------------------------------------#
 
 
 
@@ -18,68 +19,115 @@
 #   to use the default messages just write 'default' (this option uses a file from inside the jar!)
 #   you cannot customise messages when using 'default', but your messages will always be up to date
 # If you want custom messages please write your own file or use one of the already written 'lang_xx.yml' files
-# If an update added new messages that are not in your defined file the plugin will print a warning and a list
-#   of missing paths and will use the corresponding default messages until you added them in your file
-#   To get an up to date language file just delete one of the included files and reload
+# If an update added new messages that are not in your defined file the plugin will print a warning.
 langFile: 'default'
 
 
-# in these worlds the commands (and hub item) will not work
-blockedWorlds:
-  - "world_nether"
-
-
-# time an invite stays valid (in seconds)
-timeForInvitations: 40
-# time the input to send invitations stays open (in seconds)
-timeForPlayerInput: 20
-
-
+# Economy related settings.
 economy:
-  # this enables economy
+  # Global economy switch. This requires vault and an economy plugin!
+  # Token are not influenced by this setting.
   enabled: false
-  # the token switch is global (for all games) and does not require any other plugins
+  # Token are a currency you can win by playing games and spend in the integrated token shop.
   tokens:
+    # Global token switch.
     enabled: true
 
 
+# General plugin settings
+settings:
+
+  # In these worlds the commands will not work.
+  blockedWorlds:
+  #- "world_nether"
+  #- "world_end"
+
+  # Enable players to accept game invitations without having the play permission.
+  # The permission is still needed to send the invitation!
+  #    This makes sense when not all players have all play permissions.
+  # Default: false
+  exceptInvitesWithoutPlayPermission: false
+
+  # If true, players will keep their armor on while in a GUI or game.
+  # Default: false
+  keepArmor: false
+
+  # Invitation settings
+  invitations:
+
+    # Duration in seconds for an invite to stay valid.
+    # Default: 60
+    inviteValidDuration: 60
+
+    # Duration for the invite input to stay open.
+    # Default: 30
+    inviteInputDuration: 30
+
+    clickMessage:
+      # Switch for click messages.
+      # The click message provides an easy and fast way to navigate to the invitation.
+      enabled: true
+
+  # Close the inventory (either GUI or game) when a player is damaged.
+  # If false the inventory stays open until the player dies.
+  closeInventoryOnDamage: true
+
+  # Interval for automatically saving player data.
+  # Set to 0 or any negative value to disable auto save.
+  # Interval is given in minutes!
+  # Default: 10
+  autoSaveInterval: 10
+
+  # Send plugin/server data to bStats.
+  # This does not affect your server's performance in any noticeable way!
+  # All data is anonymous and helps me evaluating features.
+  # You can take a look yourself: https://bstats.org/plugin/bukkit/GameBox
+  # Please consider twice before changing this to false.
+  bstats: true
+
+
+# Settings related with the GameBox GUI
 guiSettings:
-  # global sound switch
-  # you should keep this 'true'
-  #   every player can decide to turn sounds off in the gui
+  # Global sound switch.
+  # You should keep this 'true', since every player can decide to turn sounds off for themselves
+  #   in the GUI or via command.
   playSounds: true
-  # you can customize the standard sounds in the main GUI
-  #   for all sounds take a look at the github repo:
-  #     https://github.com/NiklasEi/GameBox/blob/master/src/me/nikl/gamebox/Sounds.java
+
+  # Sounds used in the GameBox GUI
+  # For all sounds take a look at the GitHub repository (see Spigot page for the link).
   standardSounds:
+    # Sound for successful clicks
     successfulClick: "CLICK"
+    # Sound for unsuccessful clicks
     unsuccessfulClick: "VILLAGER_NO"
 
-
-  # Here you can customize the navigation buttons in the players hot bar
-  # disable navigation buttons by giving them a negative slot
-  #   valid slots are from 0 to 8
+  # Customize the navigation buttons that are in the players hot bar.
+  # Disable a navigation button by giving it a negative slot.
+  # Valid slots range from 0 to 8.
   hotBarNavigation:
+    # Exit the menu on click.
     exitSlot: 4
+    # Go to the main menu on click.
     mainMenuSlot: 0
+    # Go to the game menu on click.
+    # This button only appears while inside a submenu of a specific game.
     gameMenuSlot: 8
+
     # button materials
     exitMaterial: "BARRIER"
     mainMenuMaterial: "DARK_OAK_DOOR_ITEM"
     gameMenuMaterial: "BIRCH_DOOR_ITEM"
 
-
-  # Players will keep the items, that are in the defined slots while they are in a GUI/Game
-  #   This should only be used to guaranty compatibility for plugins which only function
-  #   when players have certain items in their inventory
-  # Slots from 0 - 8
-  # Do not use a slot that is taken by navigation buttons
+  # You can define slots in which the items are kept.
+  # Valid slots range from 0 to 8.
+  # Do not use a slot that is taken by navigation buttons!
   keepItemsSlots:
   #- 2
   #- 6
 
-# Optional MySQL settings
-#   if the connection fails, the plugin will fall back to file storage
+
+# MySQL settings.
+# If the connection fails the plugin will fall back to file storage.
 mysql:
   enabled: false
   host: "localhost"
@@ -89,65 +137,48 @@ mysql:
   password: "password"
 
 
-# hubmode makes GameBox usage easier.
-# It can give players an item they can click with to open the GUI, instead of having to use a command.
+# HubMode makes playing GameBox games easier.
+# It can give players an item they can click with to open the GUI.
 hubMode:
+
+  # HubMode switch.
+  # If this is set to false all HubMode settings below are irrelevant.
   enabled: false
-  # hubmode will only work in these worlds
+
+  # HubMode will only work in these worlds
   enabledWorlds:
   - "world"
-  # Whenever a player joins one of the enabled worlds, he gets the hubitem (if it is not already in the inventory)
+
+  # Whenever a player joins one of the enabled worlds his inventory is checked for the hubitem.
+  # If he doesn't have it it will be added to his inventory.
   giveItemOnWorldJoin: true
-  # slot in the hot bar the item is set to (if giveItemOnWorldJoin)
-  #   if the slot is taken the plugin will try to find another one
+
+  # Preferred slot for the hubitem.
+  # If the slot is taken the plugin will try to find another one.
   slot: 0
+
+  # Configuration for the hubitem itself.
   item:
-     # define the Material and data for the item (format: 'material:data')
+     # Material and data of the item (format: 'material:data')
      materialData: "CHEST"
-     # display name of the item
+     # Display name of the item.
      displayName: "&3&lGameBox"
-     # lore of the item (optional)
+     # Lore of the item (optional).
      lore:
      - ""
      - "&1Click with this item to open the menu"
 
 
-# general plugin settings
-settings:
-  # this enables players to accept game invitations without having the play permission.
-  #   The permission is still needed to send the invitation!
-  exceptInvitesWithoutPlayPermission: false
-  # If set to 'true' players will keep their armor on while in a GUI or game
-  keepArmor: false
-  # invitation settings
-  invitations:
-    clickMessage:
-      # whether players can click to get to the invite
-      enabled: true
-  # Send plugin/server data to bStats
-  # all data is anonymous and helps me figuring out what games and what versions are played most
-  #   you can take a look at all the data that is send here: https://bstats.org/plugin/bukkit/GameBox
-  #   please consider leaving this on 'true'
-  bstats: true
-  # whether or not to close the menu/game when the player is attacked
-  #   players should be in a save place when playing (imo)...
-  # if false the player can stay in game as long as he doesn't die
-  closeInventoryOnDamage: true
-  # save interval in minutes
-  #   set to 0 or negative value to disable auto save
-  autoSaveInterval: 5
-
-
-# the plugin includes events on specific occasions
-#   for example: when entering GameBox and after leaving GameBox
-#
-# Plugin intern listeners are able to run commands for you
+# Plugin intern listeners are able to run some basic code during GameBox events for you.
 listeners:
-  # event called before the player enters GameBox
+
+  # Event is called before the player enters a GameBox GUI or game.
+  # This event is only called if no GameBox inventory was open before.
   enteringGameBox:
     commands:
     #- "tell %player% Have fun!
-  # event called directly after the player left GameBox
+
+  # Event is called directly after the player left any GameBox inventory (GUI or game).
   leftGameBox:
     commands:
     #- "tell %player% Come back!"
