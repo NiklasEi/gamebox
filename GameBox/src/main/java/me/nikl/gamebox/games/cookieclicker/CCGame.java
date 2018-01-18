@@ -1,6 +1,5 @@
 package me.nikl.gamebox.games.cookieclicker;
 
-import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.games.cookieclicker.buildings.*;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.alchemylab.*;
@@ -19,10 +18,9 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.temple.*;
 import me.nikl.gamebox.games.cookieclicker.upgrades.timemachine.*;
 import me.nikl.gamebox.games.cookieclicker.upgrades.wizardtower.*;
 import me.nikl.gamebox.nms.NMSUtil;
-import me.nikl.gamebox.util.InventoryUtil;
-import me.nikl.gamebox.util.NumberUtil;
-import me.nikl.gamebox.util.Sound;
-import org.bukkit.Bukkit;
+import me.nikl.gamebox.utility.InventoryUtil;
+import me.nikl.gamebox.utility.NumberUtil;
+import me.nikl.gamebox.utility.Sound;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;

@@ -5,7 +5,7 @@ import me.nikl.gamebox.games.Game;
 import me.nikl.gamebox.games.GameSettings;
 
 /**
- * Created by Niklas on 14.04.2017.
+ * @author Niklas Eicker
  *
  * Main class for the GameBox game 2048
  */

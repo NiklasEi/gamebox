@@ -155,15 +155,15 @@ public class MysqlDB extends DataBase {
             new BukkitRunnable(){
                 @Override
                 public void run(){
-                    savePlayerRun(player);
+                    savePlayer(player);
                 }
             }.runTaskAsynchronously(plugin);
         } else {
-            savePlayerRun(player);
+            savePlayer(player);
         }
     }
 
-    private void savePlayerRun(final GBPlayer player){
+    private void savePlayer(final GBPlayer player){
         try (Connection connection = hikari.getConnection();
              PreparedStatement statement = connection.prepareStatement(SAVE)){
             statement.setInt(1, player.getTokens());
@@ -174,11 +174,6 @@ public class MysqlDB extends DataBase {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void set(UUID uuid, String path, Object value) {
-
     }
 
     @Override

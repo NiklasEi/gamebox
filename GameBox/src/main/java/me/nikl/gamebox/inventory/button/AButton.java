@@ -1,7 +1,7 @@
 package me.nikl.gamebox.inventory.button;
 
 import me.nikl.gamebox.inventory.gui.AGui;
-import me.nikl.gamebox.util.ClickAction;
+import me.nikl.gamebox.inventory.ClickAction;
 import org.bukkit.inventory.ItemStack;
 
 /**

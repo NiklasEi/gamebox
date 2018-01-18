@@ -1,7 +1,7 @@
 package me.nikl.gamebox.games.cookieclicker.buildings;
 
 /**
- * Created by Niklas on 09.07.2017.
+ * @author Niklas Eicker
  */
 public enum Buildings {
     CURSOR, FARM, GRANDMA, MINE, FACTORY, BANK, TEMPLE, WIZARD_TOWER, SHIPMENT, ALCHEMY_LAB,

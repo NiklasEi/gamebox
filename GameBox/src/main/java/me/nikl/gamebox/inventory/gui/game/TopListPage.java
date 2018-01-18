@@ -4,7 +4,7 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.data.DataBase;
 import me.nikl.gamebox.data.SaveType;
 import me.nikl.gamebox.inventory.GUIManager;
-import me.nikl.gamebox.util.NumberUtil;
+import me.nikl.gamebox.utility.NumberUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -16,7 +16,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.util.ArrayList;
 
 /**
- * Created by Niklas on 19.02.2017.
+ * @author Niklas Eicker
  *
  */
 public class TopListPage  extends GameGuiPage{

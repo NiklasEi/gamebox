@@ -3,9 +3,9 @@ package me.nikl.gamebox.inventory.shop;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.button.AButton;
-import me.nikl.gamebox.util.ClickAction;
-import me.nikl.gamebox.util.ItemStackUtil;
-import me.nikl.gamebox.util.StringUtil;
+import me.nikl.gamebox.inventory.ClickAction;
+import me.nikl.gamebox.utility.ItemStackUtil;
+import me.nikl.gamebox.utility.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 /**
- * Created by Niklas on 13.04.2017.
+ * @author Niklas Eicker
  *
  * GUI containing all shop categories
  */

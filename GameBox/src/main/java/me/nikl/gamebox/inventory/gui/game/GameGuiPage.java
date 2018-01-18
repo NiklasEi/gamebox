@@ -4,14 +4,14 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.button.AButton;
-import me.nikl.gamebox.util.ClickAction;
+import me.nikl.gamebox.inventory.ClickAction;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Map;
 
 /**
- * Created by Niklas on 14.02.2017.
+ * @author Niklas Eicker
  *
  *
  */

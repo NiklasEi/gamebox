@@ -7,8 +7,8 @@ import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.button.AButton;
 import me.nikl.gamebox.inventory.gui.AGui;
-import me.nikl.gamebox.util.ClickAction;
-import me.nikl.gamebox.util.InventoryUtil;
+import me.nikl.gamebox.inventory.ClickAction;
+import me.nikl.gamebox.utility.InventoryUtil;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -21,7 +21,7 @@ import java.util.UUID;
 
 
 /**
- * Created by Niklas on 13.04.2017.
+ * @author Niklas Eicker
  *
  * class to extend upon for shop GUIs
  */

@@ -6,7 +6,7 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
 
 /**
- * Created by Niklas on 09.07.2017.
+ * @author Niklas Eicker
  *
  */
 public class GlowInTheDark extends Upgrade{

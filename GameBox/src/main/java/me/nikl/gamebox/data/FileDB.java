@@ -20,7 +20,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 /**
- * Created by Niklas on 02.03.2017.
+ * @author Niklas Eicker
  */
 public class FileDB extends DataBase {
     private File dataFile;
@@ -187,11 +187,6 @@ public class FileDB extends DataBase {
         data.set(uuid + "." +  DataBase.PLAYER_PLAY_SOUNDS, player.isPlaySounds());
         data.set(uuid + "." +  DataBase.PLAYER_ALLOW_INVITATIONS, player.allowsInvites());
         data.set(uuid + "." +  DataBase.PLAYER_TOKEN_PATH, player.getTokens());
-    }
-
-    @Override
-    public void set(UUID uuid, String path, Object value) {
-        data.set(uuid + "." + path, value);
     }
 
     @Override

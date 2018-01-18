@@ -8,7 +8,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 
 /**
- * Created by Niklas on 05.07.2017.
+ * @author Niklas Eicker
  */
 public class Mine extends Building {
 

@@ -8,10 +8,10 @@ import me.nikl.gamebox.events.EnterGameBoxEvent;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.button.AButton;
 import me.nikl.gamebox.inventory.gui.AGui;
-import me.nikl.gamebox.util.ClickAction;
-import me.nikl.gamebox.util.ItemStackUtil;
-import me.nikl.gamebox.util.Permission;
-import me.nikl.gamebox.util.StringUtil;
+import me.nikl.gamebox.inventory.ClickAction;
+import me.nikl.gamebox.utility.ItemStackUtil;
+import me.nikl.gamebox.utility.Permission;
+import me.nikl.gamebox.utility.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -27,7 +27,7 @@ import java.util.*;
 import java.util.logging.Level;
 
 /**
- * Created by Niklas on 13.04.2017.
+ * @author Niklas Eicker
  *
  *
  */
@@ -69,7 +69,6 @@ public class ShopManager {
 
         this.closed = !shop.getBoolean("open");
 
-        List<String> lore;
         ItemStack mainItem = ItemStackUtil.getItemStack(shop.getString("shop.button.materialData", Material.STORAGE_MINECART.toString()));
         if (shop.getBoolean("shop.button.glow")) mainItem = plugin.getNMS().addGlow(mainItem);
         mainButton = new AButton(mainItem);

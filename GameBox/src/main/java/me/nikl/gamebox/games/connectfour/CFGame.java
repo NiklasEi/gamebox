@@ -2,9 +2,9 @@ package me.nikl.gamebox.games.connectfour;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.nms.NMSUtil;
-import me.nikl.gamebox.util.InventoryUtil;
-import me.nikl.gamebox.util.Permission;
-import me.nikl.gamebox.util.Sound;
+import me.nikl.gamebox.utility.InventoryUtil;
+import me.nikl.gamebox.utility.Permission;
+import me.nikl.gamebox.utility.Sound;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -17,7 +17,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.*;
 
 /**
- * Created by Niklas on 14.04.2017.
+ * @author Niklas Eicker
  *
  *
  */

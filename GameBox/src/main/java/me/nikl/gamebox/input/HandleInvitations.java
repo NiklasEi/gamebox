@@ -13,7 +13,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.*;
 
 /**
- * Created by Niklas on 22.02.2017.
+ * @author Niklas Eicker
  *
  *
  */

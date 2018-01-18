@@ -6,8 +6,8 @@ import me.nikl.gamebox.data.SaveType;
 import me.nikl.gamebox.games.GameManager;
 import me.nikl.gamebox.games.GameRule;
 import me.nikl.gamebox.nms.NMSUtil;
-import me.nikl.gamebox.util.Permission;
-import me.nikl.gamebox.util.StringUtil;
+import me.nikl.gamebox.utility.Permission;
+import me.nikl.gamebox.utility.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Created by Niklas on 14.04.2017.
+ * @author Niklas Eicker
  *
  * ConnectFour GameManager
  */
@@ -99,7 +99,7 @@ public class CFGameManager implements GameManager {
         int count = 0;
         for(String key: chipsSection.getKeys(false)){
 
-            chipStack = me.nikl.gamebox.util.ItemStackUtil.getItemStack(chipsSection.getString(key + ".materialData"));
+            chipStack = me.nikl.gamebox.utility.ItemStackUtil.getItemStack(chipsSection.getString(key + ".materialData"));
 
             if(chipStack == null){
                 Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED +" problem loading chip: "+key);

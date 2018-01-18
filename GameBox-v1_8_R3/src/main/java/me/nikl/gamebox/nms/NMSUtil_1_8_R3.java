@@ -15,7 +15,7 @@ import java.lang.reflect.Field;
 /**
  * Created by niklas on 10/17/16.
  *
- * nms util for 1.8.R3
+ * nms utility for 1.8.R3
  */
 public class NMSUtil_1_8_R3 implements NMSUtil {
 

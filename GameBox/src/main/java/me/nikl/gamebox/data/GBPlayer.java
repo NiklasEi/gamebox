@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import java.util.UUID;
 
 /**
- * Created by Niklas on 17.02.2017.
+ * @author Niklas Eicker
  *
  */
 public class GBPlayer {

@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
 /**
- * Created by Niklas on 09.07.2017.
+ * @author Niklas Eicker
  */
 public class PruneJuice extends Upgrade{
 

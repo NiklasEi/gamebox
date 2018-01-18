@@ -1,9 +1,9 @@
 package me.nikl.gamebox.games.matchit;
 
 import me.nikl.gamebox.nms.NMSUtil;
-import me.nikl.gamebox.util.InventoryUtil;
-import me.nikl.gamebox.util.Sound;
-import me.nikl.gamebox.util.StringUtil;
+import me.nikl.gamebox.utility.InventoryUtil;
+import me.nikl.gamebox.utility.Sound;
+import me.nikl.gamebox.utility.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;

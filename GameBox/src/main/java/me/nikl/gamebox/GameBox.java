@@ -13,7 +13,7 @@ import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.listeners.EnterGameBoxListener;
 import me.nikl.gamebox.listeners.LeftGameBoxListener;
 import me.nikl.gamebox.nms.*;
-import me.nikl.gamebox.util.FileUtil;
+import me.nikl.gamebox.utility.FileUtil;
 import net.milkbowl.vault.economy.Economy;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -63,7 +63,7 @@ public class GameBox extends JavaPlugin{
 	// plugin configuration
 	private FileConfiguration config;
 	
-	// nms util
+	// nms utility
 	private NMSUtil nms;
 
 	// API
@@ -129,7 +129,7 @@ public class GameBox extends JavaPlugin{
 		}
 
 		// send data with bStats if not opt out
-		if(GameBoxSettings.bStats) {
+		if(GameBoxSettings.bStatsMetrics) {
 			setupMetrics();
 		} else {
 			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " You have opt out bStats... That's sad!");
@@ -187,7 +187,7 @@ public class GameBox extends JavaPlugin{
 
 		// Pie chart for hub mode
 		metrics.addCustomChart(new Metrics.SimplePie("hub_mode_enabled"
-				, () -> GameBoxSettings.hubMode ? "Enabled" : "Disabled"));
+				, () -> GameBoxSettings.hubModeEnabled ? "Enabled" : "Disabled"));
 	}
 
 	private void runLateChecks() {

@@ -4,7 +4,7 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.inventory.GUIManager;
 
 /**
- * Created by Niklas on 13.04.2017.
+ * @author Niklas Eicker
  *
  * save a shop page
  */

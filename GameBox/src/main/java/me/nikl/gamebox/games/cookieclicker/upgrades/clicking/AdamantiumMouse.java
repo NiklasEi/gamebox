@@ -7,7 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.material.MaterialData;
 
 /**
- * Created by Niklas on 09.07.2017.
+ * @author Niklas Eicker
  *
  */
 public class AdamantiumMouse extends Upgrade{

@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by Niklas on 17.02.2017.
+ * @author Niklas Eicker
  *
  */
 public class ToggleButton extends AButton {

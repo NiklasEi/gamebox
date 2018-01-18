@@ -1,7 +1,7 @@
 package me.nikl.gamebox;
 
 import me.nikl.gamebox.games.Game;
-import me.nikl.gamebox.util.FileUtil;
+import me.nikl.gamebox.utility.FileUtil;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

@@ -6,7 +6,7 @@ import me.nikl.gamebox.games.GameRule;
 import java.util.HashSet;
 
 /**
- * Created by Niklas on 16.02.2017.
+ * @author Niklas Eicker
  *
  * This class stores settings for a game mode
  */

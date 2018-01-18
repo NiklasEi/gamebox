@@ -1,7 +1,7 @@
-package me.nikl.gamebox.util;
+package me.nikl.gamebox.utility;
 
 /**
- * Created by Niklas on 07.07.2017.
+ * @author Niklas Eicker
  *
  */
 public class NumberUtil {

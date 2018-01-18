@@ -9,10 +9,10 @@ import me.nikl.gamebox.inventory.timer.TitleTimer;
 import me.nikl.gamebox.input.HandleInvitations;
 import me.nikl.gamebox.input.HandleInviteInput;
 import me.nikl.gamebox.nms.NMSUtil;
-import me.nikl.gamebox.util.ItemStackUtil;
-import me.nikl.gamebox.util.Permission;
-import me.nikl.gamebox.util.Sound;
-import me.nikl.gamebox.util.StringUtil;
+import me.nikl.gamebox.utility.ItemStackUtil;
+import me.nikl.gamebox.utility.Permission;
+import me.nikl.gamebox.utility.Sound;
+import me.nikl.gamebox.utility.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -96,10 +96,10 @@ public class PluginManager implements Listener {
     private Map<UUID, GBPlayer> gbPlayers = new HashMap<>();
 
     // hot bar stuff
-	private static int exitButtonSlot = 4;
-    private static int toMainButtonSlot = 0;
-    private static int toGameButtonSlot = 8;
-    private static int emptyHotBarSlotToHold = 1;
+	public static int exitButtonSlot = 4;
+    public static int toMainButtonSlot = 0;
+    public static int toGameButtonSlot = 8;
+    public static int emptyHotBarSlotToHold = 1;
     private static List<Integer> slotsToKeep = new ArrayList<>();
 	private Map<Integer, ItemStack> hotbarButtons = new HashMap<>();
 
@@ -127,7 +127,7 @@ public class PluginManager implements Listener {
 
         setHotBar();
 
-		if(GameBoxSettings.hubMode) getHub();
+		if(GameBoxSettings.hubModeEnabled) getHub();
 
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
@@ -230,7 +230,7 @@ public class PluginManager implements Listener {
         ConfigurationSection hubSec = config.getConfigurationSection("hubMode");
         if(!hubSec.isString("item.materialData") || !hubSec.isString("item.displayName")){
             Bukkit.getLogger().log(Level.WARNING, " missing configuration in the 'hubMode' section");
-            GameBoxSettings.hubMode = false;
+            GameBoxSettings.hubModeEnabled = false;
             return;
         }
         String matString = hubSec.getString("item.materialData");
@@ -238,7 +238,7 @@ public class PluginManager implements Listener {
         Material mat = Material.getMaterial(matStrings[0]);
         if(mat == null){
             Bukkit.getLogger().log(Level.WARNING, " invalid material in the 'hubMode' section");
-            GameBoxSettings.hubMode = false;
+            GameBoxSettings.hubModeEnabled = false;
             return;
         }
         hubItem = new ItemStack(mat);
@@ -247,7 +247,7 @@ public class PluginManager implements Listener {
                 Short.parseShort(matStrings[1]);
             } catch (NumberFormatException exception) {
                 exception.printStackTrace();
-                GameBoxSettings.hubMode = false;
+                GameBoxSettings.hubModeEnabled = false;
                 return;
             }
             hubItem.setDurability(Short.parseShort(matStrings[1]));
@@ -273,7 +273,7 @@ public class PluginManager implements Listener {
         // save inventory contents
 		savedContents.putIfAbsent(player.getUniqueId(), player.getInventory().getContents().clone());
 
-        if(GameBoxSettings.keepArmor){
+        if(GameBoxSettings.keepArmorWhileInGame){
             ItemStack[] content = savedContents.get(player.getUniqueId()).clone();
 
             // remove all non armor items from array. This works for newer versions (with shields) and old ones
@@ -419,7 +419,7 @@ public class PluginManager implements Listener {
             }
 
             // hub stuff
-            if(GameBoxSettings.hubMode && hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName()) && setOnWorldJoin){
+            if(GameBoxSettings.hubModeEnabled && hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName()) && setOnWorldJoin){
                 GameBox.debug("in the hub world!");
                 giveHubItem(event.getPlayer());
             }
@@ -457,7 +457,7 @@ public class PluginManager implements Listener {
         if(!blockedWorlds.contains(event.getPlayer().getLocation().getWorld().getName())){
             gbPlayers.putIfAbsent(event.getPlayer().getUniqueId(), new GBPlayer(plugin, event.getPlayer().getUniqueId()));
         }
-        if(GameBoxSettings.hubMode && hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName()) && setOnWorldJoin){
+        if(GameBoxSettings.hubModeEnabled && hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName()) && setOnWorldJoin){
             GameBox.debug("in the hub world!");
             giveHubItem(event.getPlayer());
         }
@@ -534,7 +534,7 @@ public class PluginManager implements Listener {
 
     @EventHandler
     public void onInteractEvent(PlayerInteractEvent event){
-        if(!GameBoxSettings.hubMode) return;
+        if(!GameBoxSettings.hubModeEnabled) return;
         if(event.getItem() == null || event.getItem().getType() != hubItem.getType() || event.getItem().getItemMeta() == null || event.getItem().getItemMeta().getDisplayName() == null) return;
         if(event.getItem().getItemMeta().getDisplayName().equals(hubItem.getItemMeta().getDisplayName())){
             event.setCancelled(true);

@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
- * Created by Niklas on 16.02.2017.
+ * @author Niklas Eicker
  */
 public class TitleTimer extends BukkitRunnable {
     private String title;

@@ -5,7 +5,7 @@ import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.Language;
 import me.nikl.gamebox.data.DataBase;
 import me.nikl.gamebox.data.GBPlayer;
-import me.nikl.gamebox.util.Permission;
+import me.nikl.gamebox.utility.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -22,7 +22,7 @@ import java.util.List;
 
 
 /**
- * Created by Niklas on 05.05.2017.
+ * @author Niklas Eicker
  *
  *
  */

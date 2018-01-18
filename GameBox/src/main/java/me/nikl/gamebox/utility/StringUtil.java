@@ -1,4 +1,4 @@
-package me.nikl.gamebox.util;
+package me.nikl.gamebox.utility;
 
 import org.bukkit.ChatColor;
 

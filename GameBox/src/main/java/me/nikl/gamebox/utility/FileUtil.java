@@ -1,4 +1,4 @@
-package me.nikl.gamebox.util;
+package me.nikl.gamebox.utility;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.Module;

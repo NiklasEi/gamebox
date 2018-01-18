@@ -2,7 +2,7 @@ package me.nikl.gamebox.games.cookieclicker.buildings;
 
 import me.nikl.gamebox.games.cookieclicker.CCLanguage;
 import me.nikl.gamebox.games.cookieclicker.CookieClicker;
-import me.nikl.gamebox.util.NumberUtil;
+import me.nikl.gamebox.utility.NumberUtil;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Niklas on 05.07.2017.
+ * @author Niklas Eicker
  */
 public class Building {
     protected int count = 0;

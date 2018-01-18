@@ -113,7 +113,7 @@ public abstract class Language {
         if(!languageFile.exists()){
             String path = moduleID.equals(GameBox.MODULE_GAMEBOX) ? "'config.yml'"
                     : "'games" + "/" + moduleID + "/config.yml'";
-            plugin.getLogger().warning("The in '" + path + "' as 'langFile' configured file '" + fileName + "' does not exist!");
+            plugin.getLogger().warning("The in " + path + " as 'langFile' configured file '" + fileName + "' does not exist!");
             plugin.getLogger().warning("Falling back to the default file...");
             language = defaultLanguage;
             return;

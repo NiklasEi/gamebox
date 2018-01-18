@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
 /**
- * Created by Niklas on 07.07.2017.
+ * @author Niklas Eicker
  */
 public class Grandma extends Building {
 

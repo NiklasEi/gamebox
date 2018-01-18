@@ -9,31 +9,49 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 /**
- * Created by Niklas on 19.02.2017.
+ * @author Niklas Eicker
  *
  *
  */
 public abstract class DataBase {
-
     protected static final String GAMES_STATISTICS_NODE = "gameStatistics";
-
     protected static final String PLAYER_PLAY_SOUNDS = "playSounds";
     protected static final String PLAYER_ALLOW_INVITATIONS = "allowInvitations";
     protected static final String PLAYER_TOKEN_PATH = "tokens";
-
     protected static final String PLAYER_UUID = "uuid";
     protected static final String PLAYER_NAME = "name";
-
     protected static final String PLAYER_TABLE = "GBPlayers";
 
-    protected BukkitRunnable autoSave;
-
+    private BukkitRunnable autoSave;
     protected GameBox plugin;
-
 
     public DataBase(GameBox plugin){
         this.plugin = plugin;
+        createAutoSaveRunnable();
+        if(GameBoxSettings.autoSaveInterval > 0){
+            autoSave.runTaskTimerAsynchronously(plugin
+                    , GameBoxSettings.autoSaveInterval * 60 * 20
+                    , GameBoxSettings.autoSaveInterval * 60 * 20);
+        }
+    }
 
+    public abstract boolean load(boolean async);
+
+    public abstract void save(boolean async);
+
+    public abstract void addStatistics(UUID uuid, String gameID, String gameTypeID, double value, SaveType saveType);
+
+    public abstract ArrayList<Stat> getTopList(String gameID, String gameTypeID, SaveType saveType, int maxNumber);
+
+    public abstract void loadPlayer(GBPlayer player, boolean async);
+
+    public abstract void savePlayer(GBPlayer player, boolean async);
+
+    public abstract void getToken(UUID uuid, final Callback<Integer> callback);
+
+    public abstract void setToken(UUID uuid, int token);
+
+    private void createAutoSaveRunnable() {
         this.autoSave = new BukkitRunnable() {
             @Override
             public void run() {
@@ -50,37 +68,13 @@ public abstract class DataBase {
                 GameBox.debug(" done!");
             }
         };
-
-        int interval = GameBoxSettings.autoSaveInterval;
-        if(interval > 0){
-            autoSave.runTaskTimerAsynchronously(plugin
-                    , interval * 60 * 20, interval * 60 * 20);
-        }
     }
-
-    public abstract boolean load(boolean async);
-
-    public abstract void save(boolean async);
-
-    public abstract void addStatistics(UUID uuid, String gameID, String gameTypeID, double value, SaveType saveType);
-
-    public abstract ArrayList<Stat> getTopList(String gameID, String gameTypeID, SaveType saveType, int maxNumber);
-
-    public abstract void loadPlayer(GBPlayer player, boolean async);
-
-    public abstract void savePlayer(GBPlayer player, boolean async);
-
-    public abstract void set(UUID uuid, String path, Object value);
 
     public void onShutDown(){
         if(autoSave != null)
             autoSave.cancel();
         save(false);
     }
-
-    public abstract void getToken(UUID uuid, final Callback<Integer> callback);
-
-    public abstract void setToken(UUID uuid, int token);
 
     public class Stat{
         private double value;

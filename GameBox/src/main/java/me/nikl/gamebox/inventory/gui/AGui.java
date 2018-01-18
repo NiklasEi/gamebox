@@ -11,9 +11,9 @@ import me.nikl.gamebox.inventory.gui.game.GameGui;
 import me.nikl.gamebox.inventory.gui.game.StartMultiplayerGamePage;
 import me.nikl.gamebox.inventory.shop.Shop;
 import me.nikl.gamebox.inventory.shop.ShopItem;
-import me.nikl.gamebox.util.ClickAction;
-import me.nikl.gamebox.util.InventoryUtil;
-import me.nikl.gamebox.util.Permission;
+import me.nikl.gamebox.inventory.ClickAction;
+import me.nikl.gamebox.utility.InventoryUtil;
+import me.nikl.gamebox.utility.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -102,7 +102,6 @@ public abstract class AGui {
 		
 		if(GameBox.debug) Bukkit.getConsoleSender().sendMessage("action called: " + action.toString() + " with the args: " + (args == null?"": Arrays.asList(args)));
 		switch (action){
-			case CHANGE_GAME_GUI:
 			case OPEN_GAME_GUI:
 				if(args.length != 2){
 					Bukkit.getConsoleSender().sendMessage("wrong number of arguments to open a game gui: " + args.length);

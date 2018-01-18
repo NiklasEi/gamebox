@@ -6,8 +6,8 @@ import me.nikl.gamebox.games.Game;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.button.AButton;
 import me.nikl.gamebox.inventory.gui.AGui;
-import me.nikl.gamebox.util.ClickAction;
-import me.nikl.gamebox.util.ItemStackUtil;
+import me.nikl.gamebox.inventory.ClickAction;
+import me.nikl.gamebox.utility.ItemStackUtil;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Niklas on 13.02.2017.
+ * @author Niklas Eicker
  *
  */
 public class GameGui extends AGui {

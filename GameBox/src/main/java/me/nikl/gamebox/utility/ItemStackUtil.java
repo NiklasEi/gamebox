@@ -1,4 +1,4 @@
-package me.nikl.gamebox.util;
+package me.nikl.gamebox.utility;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -9,7 +9,7 @@ import org.bukkit.material.MaterialData;
 import java.util.List;
 
 /**
- * Created by Niklas on 13.04.2017.
+ * @author Niklas Eicker
  *
  * Utility class for ItemStacks
  */

@@ -11,7 +11,7 @@ import java.lang.reflect.Field;
 /**
  * Created by niklas on 10/17/16.
  *
- * nms util for 1.9.R1
+ * nms utility for 1.9.R1
  */
 public class NMSUtil_1_9_R1 implements NMSUtil {
 	@Override

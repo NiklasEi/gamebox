@@ -3,8 +3,8 @@ package me.nikl.gamebox.inventory.gui.game;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.button.AButton;
-import me.nikl.gamebox.util.ClickAction;
-import me.nikl.gamebox.util.InventoryUtil;
+import me.nikl.gamebox.inventory.ClickAction;
+import me.nikl.gamebox.utility.InventoryUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Created by Niklas on 22.02.2017.
+ * @author Niklas Eicker
  *
  * GUI
  */

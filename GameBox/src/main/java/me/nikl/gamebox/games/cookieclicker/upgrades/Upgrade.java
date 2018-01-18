@@ -5,7 +5,7 @@ import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.games.cookieclicker.CCGame;
 import me.nikl.gamebox.games.cookieclicker.CCLanguage;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
-import me.nikl.gamebox.util.NumberUtil;
+import me.nikl.gamebox.utility.NumberUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 /**
- * Created by Niklas on 09.07.2017.
+ * @author Niklas Eicker
  *
  *
  */
