@@ -175,9 +175,85 @@ items:
     # material data of the item
     materialData: "358"
     # optional custom display name
-    displayName: "&1Map"
+    displayName: "&1Treasure map"
     lore:
     - ""
     - "I wonder where it leads to..."
+  '15':
+    materialData: "35:13"
+    displayName: "&1Green wool"
+  '16':
+    materialData: "35:14"
+    displayName: "&1Red wool"
+  '17':
+    materialData: "38"
+    displayName: "&1Poppy"
+    lore:
+    - ""
+    - "Beautiful!"
+  '18':
+    materialData: "40"
+    displayName: "&1Red mushroom"
+    lore:
+    - ""
+    - "Don't eat that!"
+  '19':
+    materialData: "tnt"
+    displayName: "&1TNT"
+    lore:
+    - ""
+    - "Cause I'm TNT, I'm dynamite!"
+    - "   Watch me explooooode!!"
+  '20':
+    materialData: "jukebox"
+    displayName: "&1A jukebox"
+    lore:
+    - ""
+    - "There's music in the air"
+  '21':
+    materialData: "dragon_egg"
+    displayName: "&1Dragon egg"
+  '22':
+    materialData: "anvil"
+    displayName: "&1An anvil"
+  '23':
+    materialData: "111"
+    displayName: "&1Lily Pad"
+  '24':
+    materialData: "116"
+    displayName: "&1Enchanting table"
+    lore:
+    - ""
+    - "It's voodoo!"
+  '25':
+    materialData: "double_plant"
+    displayName: "&1Sunflower"
+  '26':
+    materialData: "288"
+    displayName: "&1Feather"
+  '27':
+    materialData: "315"
+    displayName: "&1Golden Chestplate"
+    lore:
+    - ""
+    - "Fancy!"
+  '28':
+    materialData: "bookshelf"
+    displayName: "&1Bookshelf"
+    lore:
+    - ""
+    - "Read all and you are a pro ;)"
+  '29':
+    materialData: "cactus"
+    displayName: "&1Cactus"
+  '30':
+    materialData: "170"
+    displayName: "&1Hay Bale"
+  '31':
+    materialData: "267"
+    displayName: "&1Sword"
+    lore:
+    - ""
+    - "Plain iron sword."
 
 
