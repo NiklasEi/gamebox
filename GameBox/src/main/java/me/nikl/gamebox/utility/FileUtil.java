@@ -6,9 +6,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.JarURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -22,19 +27,17 @@ import java.util.logging.Level;
 public class FileUtil {
 
     /**
-     * Copy all default language files to the plugin folder
+     * Copy all default language files to the plugin folder.
      *
      * This method checks for every .yml in the language folder
      * whether it is already present in the plugins language folder.
      * If not it is copied.
      */
-    public static void copyDefaultLanguageFiles(){
+    public static void copyDefaultLanguageFiles() {
         URL main = GameBox.class.getResource("GameBox.class");
-
         try {
             JarURLConnection connection = (JarURLConnection) main.openConnection();
-
-            JarFile jar = new JarFile(connection.getJarFileURL().getFile());
+            JarFile jar = new JarFile(URLDecoder.decode( connection.getJarFileURL().getFile(), "UTF-8" ));
             Plugin gameBox = Bukkit.getPluginManager().getPlugin("GameBox");
             for (Enumeration list = jar.entries(); list.hasMoreElements(); ) {
                 JarEntry entry = (JarEntry) list.nextElement();
@@ -60,65 +63,50 @@ public class FileUtil {
     }
 
 
-    public static boolean copyExternalResources(GameBox gameBox, Module module){
+    public static boolean copyExternalResources(GameBox gameBox, Module module) {
         JavaPlugin external = module.getExternalPlugin();
         if(external == null) return false;
         URL main = external.getClass().getResource(module.getClassPath()
                 .split("\\.")[module.getClassPath().split("\\.").length - 1] + ".class");
-
         try {
             JarURLConnection connection = (JarURLConnection) main.openConnection();
-
-            JarFile jar = new JarFile(connection.getJarFileURL().getFile());
-
+            JarFile jar = new JarFile(URLDecoder.decode( connection.getJarFileURL().getFile(), "UTF-8" ));
             boolean foundDefaultLang = false;
             boolean foundConfig = false;
 
             for (Enumeration list = jar.entries(); list.hasMoreElements(); ) {
                 JarEntry entry = (JarEntry) list.nextElement();
-
                 String[] pathParts = entry.getName().split("/");
                 String folderName = pathParts[0];
-
                 if(folderName.equals("language")) {
-
                     if (pathParts.length < 3 || !entry.getName().endsWith(".yml")){
                         continue;
                     }
-
                     // subfolder in language folder
                     if(!pathParts[1].equalsIgnoreCase(module.getModuleID())) continue;
-
                     String fileName = pathParts[pathParts.length - 1];
-
                     if(fileName.equals("lang_en.yml")){
                         foundDefaultLang = true;
                     }
-
                     String gbPath = gameBox.getDataFolder().toString() + File.separatorChar
                             + "language" + File.separatorChar
                             + module.getModuleID() + File.separatorChar + fileName;
                     File file = new File(gbPath);
-
                     if (!file.exists()) {
                         file.getParentFile().mkdirs();
                         saveResourceToGBFolder(entry.getName(), gbPath, external);
                     }
-
                 } else if(folderName.equalsIgnoreCase("games")){
                     if(entry.isDirectory()) continue;
-
                     // only take resources from module folders
                     if(pathParts.length < 3){
                         continue;
                     }
-
                     // check module folder
                     if(!pathParts[1].equalsIgnoreCase(module.getModuleID())){
                         // resource of other module
                         continue;
                     }
-
                     StringBuilder builder = new StringBuilder();
                     for(int i = 2; i < pathParts.length; i++){
                         builder.append(pathParts[i]);
@@ -127,16 +115,13 @@ public class FileUtil {
                         }
                     }
                     String fileName = builder.toString();
-
                     if(fileName.equals("config.yml")){
                         foundConfig = true;
                     }
-
                     String gbPath = gameBox.getDataFolder().toString() + File.separatorChar
                             + "games" + File.separatorChar
                             + module.getModuleID() + File.separatorChar + fileName;
                     File file = new File(gbPath);
-
                     if (!file.exists()) {
                         file.getParentFile().mkdirs();
                         saveResourceToGBFolder(entry.getName(), gbPath, external);
@@ -187,9 +172,7 @@ public class FileUtil {
         if(!outDir.exists()) {
             outDir.mkdirs();
         }
-
         if(outFile.exists()) return;
-
         try {
             OutputStream out = new FileOutputStream(outFile);
             byte[] buf = new byte[1024];
@@ -198,7 +181,6 @@ public class FileUtil {
             while((len = in.read(buf)) > 0) {
                 out.write(buf, 0, len);
             }
-
             out.close();
             in.close();
         } catch (IOException var10) {
