@@ -118,14 +118,10 @@ public class MainCommand implements CommandExecutor{
 					sender.sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
 					return true;
 				}
-				sender.sendMessage(lang.PREFIX + " version " + plugin.getDescription().getVersion() + " by " + ChatColor.GOLD + "Nikl");
-				sender.sendMessage(lang.PREFIX);
-
 				// send info header
 				for(String message : lang.CMD_INFO_HEADER){
 					sender.sendMessage(lang.PREFIX + message);
 				}
-
 				String allSubCommands;
 				Game game;
 				for(String gameID : plugin.getGameRegistry().getModuleIDs()) {

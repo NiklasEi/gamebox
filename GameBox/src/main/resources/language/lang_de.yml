@@ -39,15 +39,13 @@ commandMessages:
   info:
     header:
     - ' &6&lListe aller installierten Spiele:'
-    - ''
     - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
     # use %name% for the game name
     # %shorts will be replaced by all available shortcut commands%
     # %playerNum% will give the number of players needed per game
     perGame:
-    - ' &3&l%name%:'
+    - ' &3&l%name% (Spielerzahl: %playerNum%):'
     - '   &2/gb <%shorts%>'
-    - '   Spieler: %playerNum%'
     footer:
     - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
   tokenInfo: ' &2%player% hat %token% Token.'
