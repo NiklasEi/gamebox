@@ -78,15 +78,15 @@ public class MIGameManager implements GameManager {
     public void loadGameRules(ConfigurationSection buttonSec, String buttonID) {
         double cost = buttonSec.getDouble("cost", 0.);
         boolean saveStats = buttonSec.getBoolean("saveStats", false);
+        double timeVisible = buttonSec.getDouble("timeVisible", 1.5);
         MatchIt.GridSize gridSize;
-
         try {
             gridSize = MatchIt.GridSize.valueOf(buttonSec.getString("size", "medium").toUpperCase());
         } catch (IllegalArgumentException exception){
             gridSize = MatchIt.GridSize.MIDDLE;
         }
 
-        gameRules.put(buttonID, new MIGameRule(saveStats, cost, buttonID, gridSize));
+        gameRules.put(buttonID, new MIGameRule(saveStats, cost, buttonID, gridSize, timeVisible));
     }
 
     @Override

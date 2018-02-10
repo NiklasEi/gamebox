@@ -26,7 +26,6 @@ import java.util.List;
  */
 public class MatchIt extends Game{
     private List<ItemStack> pairItems;
-
     private ItemStack cover, border;
 
     public MatchIt(GameBox gameBox) {
@@ -34,7 +33,6 @@ public class MatchIt extends Game{
     }
 
     private void setDefaultItems() {
-        // load default language
         try {
             String defaultConfigName = "games/matchit/config.yml";
             FileConfiguration defaultConfig = YamlConfiguration.loadConfiguration(
@@ -66,17 +64,14 @@ public class MatchIt extends Game{
             warn(" missing or invalid 'matData' config-key: " + itemSection.getName());
             return null;
         }
-
         if(itemSection.isBoolean("glow")){
             toReturn = nms.addGlow(toReturn);
         }
-
         if(!GameBoxSettings.version1_8){
             ItemMeta meta = toReturn.getItemMeta();
             meta.addItemFlags(ItemFlag.values());
             toReturn.setItemMeta(meta);
         }
-
         return toReturn;
     }
 

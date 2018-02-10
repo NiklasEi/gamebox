@@ -19,42 +19,28 @@ import java.util.*;
  *
  */
 public class MIGame extends BukkitRunnable {
-
     private Player player;
     private MatchIt matchIt;
-
     private MILanguage language;
-
     private NMSUtil nms;
-
     private int time = 0;
-
     private int firstOpen = -1
             , secondOpen = -1;
-
     private long startMilli, secondMilli;
-
     private Inventory inventory;
     private boolean started = false;
-
     private Map<Integer, Pair> pairs;
-
     private ItemStack cover, border;
-
     private MatchIt.GridSize gridSize = MatchIt.GridSize.SMALL;
-
     private boolean playSounds;
-    private org.bukkit.Sound click = Sound.CLICK.bukkitSound();
-    private org.bukkit.Sound match = Sound.VILLAGER_YES.bukkitSound();
-    private org.bukkit.Sound nomatch = Sound.VILLAGER_NO.bukkitSound();
-    private org.bukkit.Sound win = Sound.LEVEL_UP.bukkitSound();
+    private Sound click = Sound.CLICK;
+    private Sound match = Sound.VILLAGER_YES;
+    private Sound nomatch = Sound.VILLAGER_NO;
+    private Sound win = Sound.LEVEL_UP;
     private float volume = 0.5f;
     private float pitch = 10f;
-
     private int matched = 0, nrPairs;
-
     private boolean over = false;
-
     private MIGameRule rule;
 
     public MIGame(MatchIt matchIt, Player player, boolean playSounds, MIGameRule rule){
@@ -90,6 +76,7 @@ public class MIGame extends BukkitRunnable {
         if(!pairs.containsKey(inventoryToGrid(slot))) return;
 
         if(firstOpen < 0){
+            playSound(click);
             show(slot);
             firstOpen = slot;
             return;
@@ -106,14 +93,17 @@ public class MIGame extends BukkitRunnable {
                 pairs.remove(inventoryToGrid(firstOpen));
                 matched++;
                 if(matched == nrPairs){
+                    playSound(win);
                     over = true;
                     nms.updateInventoryTitle(player, language.INV_TITLE_WON
                             .replace("%time%", StringUtil.formatTime(time)));
                     onGameEnd();
                 } else {
+                    playSound(match);
                     updateTitle();
                 }
             } else {
+                playSound(nomatch);
                 secondOpen = slot;
                 secondMilli = System.currentTimeMillis();
             }
@@ -131,7 +121,7 @@ public class MIGame extends BukkitRunnable {
     private void startGame(){
         startMilli = System.currentTimeMillis();
         updateTitle();
-        runTaskTimerAsynchronously(matchIt.getGameBox(), 5, 5);
+        runTaskTimerAsynchronously(matchIt.getGameBox(), 3, 3);
     }
 
     private void generateGame() {
@@ -187,19 +177,16 @@ public class MIGame extends BukkitRunnable {
     }
 
     private int inventoryToGrid(int inventorySlot){
-
         switch (this.gridSize){
             default:
             case BIG:
                 return inventorySlot;
-
             case SMALL:
                 if(inventorySlot < 20 || (inventorySlot > 24 && inventorySlot < 29) || inventorySlot > 33)
                     return -1;
                 if(inventorySlot > 19 && inventorySlot < 25)
                     return inventorySlot - 20;
                 return inventorySlot - 24;
-
             case MIDDLE:
                 if(inventorySlot < 10
                         || (inventorySlot > 16 && inventorySlot < 19)
@@ -237,7 +224,7 @@ public class MIGame extends BukkitRunnable {
     @Override
     public void run() {
         if(secondOpen >= 0 && firstOpen >= 0){
-            if(secondMilli + 2500 < System.currentTimeMillis()){
+            if(secondMilli + (rule.getTimeVisible()*1000) < System.currentTimeMillis()){
                 hide(firstOpen, secondOpen);
                 firstOpen = -1;
                 secondOpen = -1;
@@ -249,6 +236,10 @@ public class MIGame extends BukkitRunnable {
 
     public void onGameEnd() {
         cancel();
+    }
+
+    private void playSound(Sound sound){
+        if(playSounds) player.playSound(player.getLocation(), sound.bukkitSound(), volume, pitch);
     }
 
     private class Pair {

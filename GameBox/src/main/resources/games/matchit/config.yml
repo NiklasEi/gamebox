@@ -41,6 +41,8 @@ gameBox:
       size: "small"
       # if true the best score of this button is saved
       saveStats: true
+      # time in seconds until a mismatched pair is covered again (default 1.5)
+      timeVisible: 1.5
     medium:
       materialData: "95:11"
       displayName: "&aMedium game"
