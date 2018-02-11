@@ -3,7 +3,7 @@ package me.nikl.gamebox.commands;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.Language;
-import me.nikl.gamebox.data.DataBase;
+import me.nikl.gamebox.data.database.DataBase;
 import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.utility.Permission;
 import org.bukkit.Bukkit;

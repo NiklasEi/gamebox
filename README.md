@@ -1,11 +1,11 @@
-# GameBox
+# GameBox v2
 
-Give access to several inventory games through one clean GUI.
+Collection of several inventory games with nice GUIs and high configurability. Games can be added by additional plugins in the form of modules ([see example project][example-project]).
 
 ## Features
 
-* Customize the GUI, messages, titles and game modes.
 * A growing number of single and multiplayer games. For a complete list of games please refer to the [list of all GameBox games][GameBox-games].
+* Customize the GUI, messages, titles and game modes.
 * Gives access to a token system with configurable shop (see [shop](#shop))
 
 GameBox uses language files for messages and inventory titles. You can add your own file or use one of the default files (german, english, spanish and mandarin) that are included in the plugin. The name of the used language file is specified in the configuration file of GameBox.
@@ -16,7 +16,7 @@ All games have their own language files. The system for the games is the same as
 
 Token are a currency provided by GameBox. They can be awarded for won games and can be used to sell items or other things in the [GameBox shop](#shop). 
 
-They can be accessed and manipulated through the [API](#api) and through admin commands.
+They can be accessed and given/taken through the [API](#api) and through admin commands.
 
 ### Shop
 
@@ -52,3 +52,4 @@ Please refer to the plugins page for a detailed list of commands and permissions
 [GameBox-games]: https://www.nikl.me/projects/gamebox/#games
 [GameBox-cmds]: https://www.nikl.me/projects/gamebox/#commands
 [GameBox-perms]: https://www.nikl.me/projects/gamebox/#permissions
+[example-project]: https://github.com/NiklasEi/GameBox_Template

@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class StringUtil {
 
-    public static ArrayList<String> color(List<String> list){
+    public static List<String> color(List<String> list){
         ArrayList<String> toReturn = new ArrayList(list);
         for(int i = 0; i < list.size(); i++){
             toReturn.set(i, color(toReturn.get(i)));

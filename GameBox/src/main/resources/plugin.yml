@@ -28,7 +28,7 @@ permissions:
       gamebox.admin: true
   gamebox.admin:
     description: Gives permission to use admin commands
-    default: op
+    default: false
   gamebox.use:
     description: Allows the player to use /gamebox and the hub item
     default: true

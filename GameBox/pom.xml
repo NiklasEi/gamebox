@@ -10,12 +10,11 @@
         <version>2.0.0-BETA</version>
     </parent>
 
-    <groupId>me.nikl.gamebox</groupId>
     <artifactId>GameBox</artifactId>
     <name>GameBox</name>
     <packaging>jar</packaging>
     <version>2.0.0-BETA</version>
-    <description>One GUI for several inventory games</description>
+    <description>Collection of inventory games</description>
 
     <build>
         <defaultGoal>clean package</defaultGoal>
@@ -199,6 +198,4 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
-
-
 </project>

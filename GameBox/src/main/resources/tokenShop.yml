@@ -25,11 +25,12 @@ shop:
       # material data of the button for the category
       materialData: "159:1"
       # display name of the button
-      displayName: "&3&lBlock section with several pages"
+      displayName: "&3&lExample Block section with several pages"
       # lore of the button
       lore:
       - ""
-      - "&1Buy useless blocks"
+      - "&1Useless blocks"
+      - "&1Just for demonstration, you should change this!"
       # should it glow?
       glow: false
       # items in the pages of the shop
@@ -250,10 +251,10 @@ shop:
           money: 0
     food:
       materialData: "wheat"
-      displayName: "&3&lFood section"
+      displayName: "&3&lExample Food section"
       lore:
       - ""
-      - "&1Buy food"
+      - "&6Buy food"
       glow: false
       items:
         blueClay:
@@ -266,7 +267,7 @@ shop:
           money: 1
     glow:
       materialData: "159:1"
-      displayName: "&1&lThe mysterious glowing section"
+      displayName: "&1&lMysterious glowing example section"
       lore:
       - ""
       - "&1Buy Stuff"
@@ -277,7 +278,3 @@ shop:
           materialData: "GOLD_INGOT"
           tokens: 1000
           money: 0
-        yellowClay:
-          materialData: "CHEST"
-          tokens: 10
-          money: 150

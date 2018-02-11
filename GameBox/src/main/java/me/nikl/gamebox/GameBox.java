@@ -2,9 +2,9 @@ package me.nikl.gamebox;
 
 import me.nikl.gamebox.commands.AdminCommand;
 import me.nikl.gamebox.commands.MainCommand;
-import me.nikl.gamebox.data.DataBase;
-import me.nikl.gamebox.data.FileDB;
-import me.nikl.gamebox.data.MysqlDB;
+import me.nikl.gamebox.data.database.DataBase;
+import me.nikl.gamebox.data.database.FileDB;
+import me.nikl.gamebox.data.database.MysqlDB;
 import me.nikl.gamebox.games.Game;
 import me.nikl.gamebox.games.GameLanguage;
 import me.nikl.gamebox.input.HandleInvitations;
@@ -41,99 +41,52 @@ import java.util.logging.Level;
  * Main class of the plugin GameBox
  */
 public class GameBox extends JavaPlugin{
-
-	// the module id of gamebox itself
 	public static final String MODULE_GAMEBOX = "gamebox";
-
-	// game module ids
 	public static final String MODULE_CONNECTFOUR = "connectfour";
 	public static final String MODULE_COOKIECLICKER = "cookieclicker";
 	public static final String MODULE_MATCHIT = "matchit";
-
-	// enable debug mode (print debug messages)
 	public static boolean debug = false;
-
 	// toggle to stop inventory contents to be restored when a new gui is opened
 	public static boolean openingNewGUI = false;
-
 	// return values for GameManagers when a new game is started/failed to start
 	public static final int GAME_STARTED = 1, GAME_NOT_STARTED_ERROR = 0,
 			GAME_NOT_ENOUGH_MONEY = 2, GAME_NOT_ENOUGH_MONEY_1 = 3, GAME_NOT_ENOUGH_MONEY_2 = 4;
-	
-	// plugin configuration
-	private FileConfiguration config;
-	
-	// nms utility
-	private NMSUtil nms;
-
-	// API
-	private GameBoxAPI api;
-	
-	// economy
 	public static Economy econ = null;
 
-	// main language obj
+	private FileConfiguration config;
+	private NMSUtil nms;
+	private GameBoxAPI api;
 	public GameBoxLanguage lang;
-
-	// Plugin manager that manages all game managers and listens to bukkit events.
 	private PluginManager pManager;
-
-	// Commands
-	private MainCommand mainCommand;
-	private AdminCommand adminCommand;
-
-	// database wrapper
 	private DataBase dataBase;
-
-	// bStats metrics
 	private Metrics metrics;
-
-	// listeners for GameBox events
-	private LeftGameBoxListener leftGameBoxListener;
-	private EnterGameBoxListener enterGameBoxListener;
-
-	// GameRegistry manages the registration of modules
 	private GameRegistry gameRegistry;
 
+	private MainCommand mainCommand;
+	private AdminCommand adminCommand;
+	private LeftGameBoxListener leftGameBoxListener;
+	private EnterGameBoxListener enterGameBoxListener;
 
 	@Override
 	public void onEnable(){
 		// get the version and set up nms
 		if (!setUpNMS()) {
-			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
-			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " Your server version is not compatible with this plugin!");
-			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "   You should get the newest version on Spigot:");
-			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "   https://www.spigotmc.org/resources/37273/");
-			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
-
+			sendVersionError();
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
 		}
 
 		this.gameRegistry = new GameRegistry(this);
-		// GameBox module
 		new Module(this, MODULE_GAMEBOX, null, null);
 
 		if (!reload()) {
 			getLogger().severe(" Problem while loading the plugin! Plugin was disabled!");
-
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
 		}
-
+		// At this point all managers are set up and games can be registered
 		registerGames();
-
-		if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
-			new PlaceholderAPIHook(this, MODULE_GAMEBOX);
-			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Hooked into PlaceholderAPI");
-		}
-
-		// send data with bStats if not opt out
-		if(GameBoxSettings.bStatsMetrics) {
-			setupMetrics();
-		} else {
-			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " You have opt out bStats... That's sad!");
-		}
+		establishHooksAndMetric();
 	}
 
 	private void setupMetrics() {
@@ -225,62 +178,21 @@ public class GameBox extends JavaPlugin{
 
 	/**
 	 * Reload method called onEnable and on the reload command
-	 *
-	 * get the configuration
-	 * set up economy if enabled
 	 */
 	public boolean reload(){
-
-		if(!reloadConfiguration()){
-			getLogger().severe(" Failed to load config file!");
-			return false;
-		}
-
-		// copy default language file from jar to language folders
-		FileUtil.copyDefaultLanguageFiles();
-
-		// get gamebox language file
-		this.lang = new GameBoxLanguage(this);
-
-		this.api = new GameBoxAPI(this);
-
-		// load all settings from config
-		GameBoxSettings.loadSettings(this);
-
-		// if it's not null disable first then get a new manager
+		if(!prepareForReload()) return false;
 		if(pManager != null){
 			pManager.shutDown();
 			HandlerList.unregisterAll(pManager);
 			pManager = null;
 		}
-
-		// here try connecting to database when option set in config (for later)
 		if(GameBoxSettings.useMysql){
-			// on reload the old dataBase have to be saved before loading the new one
-			if(dataBase != null) dataBase.save(false);
-
-			// get and load a new statistic
-			this.dataBase = new MysqlDB(this);
-			if (!dataBase.load(false)) {
-				getLogger().log(Level.SEVERE, " Falling back to file storage...");
-				GameBoxSettings.useMysql = false;
-				dataBase = null;
-			}
+			setUpMySQL();
 		}
-
-		// if connecting to the database failed useMysql will be set to false
-		// and the plugin should fall back to file storage
+		// if connecting to the database failed, the setting will be set to false
+		// and the plugin falls back to file storage
 		if(!GameBoxSettings.useMysql) {
-
-			// on reload the old dataBase have to be saved before loading the new one
-			if(dataBase != null) dataBase.save(false);
-
-			// get and load a new file dataBase
-			this.dataBase = new FileDB(this);
-			if (!dataBase.load(false)) {
-				getLogger().log(Level.SEVERE, " Something went wrong with the data file");
-				return false;
-			}
+			if(!setUpFileDB()) return false;
 		}
 
 		if(GameBoxSettings.econEnabled){
@@ -291,40 +203,64 @@ public class GameBox extends JavaPlugin{
 				return false;
 			}
 		}
-
-		// renew the GameBox listeners
 		reloadListeners();
 
 		// get a new plugin manager and set the other managers and handlers
 		pManager = new PluginManager(this);
 		pManager.setGuiManager(new GUIManager(this));
-
 		pManager.setHandleInviteInput(new HandleInviteInput(this));
 		pManager.setHandleInvitations(new HandleInvitations(this));
 
-		// set cmd executors
 		mainCommand = new MainCommand(this);
 		adminCommand = new AdminCommand(this);
 		this.getCommand("gamebox").setExecutor(mainCommand);
 		this.getCommand("gameboxadmin").setExecutor(adminCommand);
-
 		// load players that are already online (otherwise done on join)
 		pManager.loadPlayers();
-
 		// load all already registered games from the Registry
 		//    on first startup this will do nothing...
 		gameRegistry.loadGames();
-
-		// check for registered games
-		// running as a bukkit runnable ensures that the task is run as soon as all plugins are loaded.
 		new BukkitRunnable(){
 			@Override
 			public void run() {
-				debug(" running late check in GameBox");
+				debug(" running late checks in GameBox");
 				runLateChecks();
 			}
 		}.runTask(this);
+		return true;
+	}
 
+	private boolean setUpFileDB() {
+		if(dataBase != null) dataBase.save(false);
+
+		this.dataBase = new FileDB(this);
+		if (!dataBase.load(false)) {
+			getLogger().log(Level.SEVERE, " Something went wrong with the data file");
+			return false;
+		}
+		return true;
+	}
+
+	private void setUpMySQL() {
+		if(dataBase != null) dataBase.save(false);
+
+		this.dataBase = new MysqlDB(this);
+		if (!dataBase.load(false)) {
+			getLogger().log(Level.SEVERE, " Falling back to file storage...");
+			GameBoxSettings.useMysql = false;
+			dataBase = null;
+		}
+	}
+
+	private boolean prepareForReload() {
+		if(!reloadConfiguration()){
+			getLogger().severe(" Failed to load config file!");
+			return false;
+		}
+		FileUtil.copyDefaultLanguageFiles();
+		this.lang = new GameBoxLanguage(this);
+		this.api = new GameBoxAPI(this);
+		GameBoxSettings.loadSettings(this);
 		return true;
 	}
 
@@ -342,11 +278,9 @@ public class GameBox extends JavaPlugin{
 		enterGameBoxListener = new EnterGameBoxListener(this);
 	}
 
-
 	public DataBase getDataBase(){
 		return this.dataBase;
 	}
-
 
 	private boolean setupEconomy() {
 		if (getServer().getPluginManager().getPlugin("Vault") == null) {
@@ -360,50 +294,39 @@ public class GameBox extends JavaPlugin{
 		return econ != null;
 	}
 
-
 	private boolean setUpNMS() {
 		String version;
-		
 		try {
 			version = Bukkit.getServer().getClass().getPackage().getName().replace(".",  ",").split(",")[3];
 		} catch (ArrayIndexOutOfBoundsException e) {
 			return false;
 		}
-		
 		debug("Your server is running version " + version);
-		
 		switch (version) {
 			case "v1_8_R1":
 				nms = new NMSUtil_1_8_R1();
 				GameBoxSettings.version1_8 = true;
 				break;
-
 			case "v1_8_R2":
 				nms = new NMSUtil_1_8_R2();
 				GameBoxSettings.version1_8 = true;
 				break;
-
 			case "v1_8_R3":
 				nms = new NMSUtil_1_8_R3();
 				GameBoxSettings.version1_8 = true;
 				break;
-
 			case "v1_9_R1":
 				nms = new NMSUtil_1_9_R1();
 				break;
-
 			case "v1_9_R2":
 				nms = new NMSUtil_1_9_R2();
 				break;
-
 			case "v1_10_R1":
 				nms = new NMSUtil_1_10_R1();
 				break;
-
 			case "v1_11_R1":
 				nms = new NMSUtil_1_11_R1();
 				break;
-
 			case "v1_12_R1":
 				nms = new NMSUtil_1_12_R1();
 				break;
@@ -411,49 +334,34 @@ public class GameBox extends JavaPlugin{
 		return nms != null;
 	}
 
-
 	@Override
 	public void onDisable(){
 		if(pManager != null) pManager.shutDown();
 		if(dataBase != null) dataBase.onShutDown();
 	}
 
-
 	@Override
 	public FileConfiguration getConfig() {
 		return config;
 	}
 
-
 	public PluginManager getPluginManager() {
 		return pManager;
 	}
-
 
 	public NMSUtil getNMS() {
 		return nms;
 	}
 
-
 	public static void debug(String message){
 		if(debug) Bukkit.getConsoleSender().sendMessage(message);
 	}
 
-
-	public MainCommand getMainCommand(){
-		return this.mainCommand;
-	}
-
-
 	public boolean reloadConfiguration(){
-
-		// save the default configuration file if the file does not exist
 		File con = new File(this.getDataFolder().toString() + File.separatorChar + "config.yml");
 		if(!con.exists()){
 			this.saveResource("config.yml", false);
 		}
-
-		// reload config
 		try {
 			this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(con), "UTF-8"));
 		} catch (UnsupportedEncodingException | FileNotFoundException e) {
@@ -463,10 +371,30 @@ public class GameBox extends JavaPlugin{
 		return true;
 	}
 
-
 	public boolean wonTokens(UUID player, int tokens, String gameID){
 		if(!GameBoxSettings.tokensEnabled) return false;
 		return this.pManager.wonTokens(player, tokens, gameID);
+	}
+
+	private void establishHooksAndMetric() {
+		if(Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
+			new PlaceholderAPIHook(this, MODULE_GAMEBOX);
+			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Hooked into PlaceholderAPI");
+		}
+		// send data with bStats if not opt out
+		if(GameBoxSettings.bStatsMetrics) {
+			setupMetrics();
+		} else {
+			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " You have opt out bStats... That's sad!");
+		}
+	}
+
+	private void sendVersionError() {
+		Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
+		Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " Your server version is not compatible with this plugin!");
+		Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "   Make sure you have the newest version:");
+		Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "   https://www.spigotmc.org/resources/37273/");
+		Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
 	}
 
 	public GameBoxAPI getApi(){

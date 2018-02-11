@@ -2,10 +2,10 @@ package me.nikl.gamebox.utility;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.Module;
-import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.logging.Level;
 
 /**
  * Created by niklas on 10/27/16.
@@ -14,6 +14,7 @@ import java.util.logging.Level;
  * just change the permission nodes here
  */
 public enum Permission {
+	// ToDo: remove all * perms. Support for those is added in #hasPermission
 	PLAY_SPECIFIC_GAME("play", true), PLAY_ALL_GAMES("play.*")
 	, OPEN_GAME_GUI("gamegui", true), OPEN_ALL_GAME_GUI("gamegui.*")
 	, USE("use"), ADMIN("admin"), CMD_INFO("info"), CMD_HELP("help")
@@ -34,20 +35,14 @@ public enum Permission {
 		this(perm, false);
 	}
 
-	/**
-	 * Get the permission corresponding to the enum for the
-	 * specified game.
-	 * @param gameID ID of the game
-	 * @return Permission
-	 */
+
+	// ToDO: make private (and remove) and change usage to #hasPermission
 	public String getPermission(String gameID){
-		if(!gameIDs.contains(gameID)) Bukkit.getLogger().log(Level.WARNING, "Permission could not find the game: " + gameID);
-		if(!perGame) Bukkit.getLogger().log(Level.WARNING, "accessing a per game permission without a gameID");
 		return perm.replace("%gameID%", gameID);
 	}
-	
+
+	// ToDO: make private (and remove) and change usage to #hasPermission
 	public String getPermission(){
-		if(perGame) Bukkit.getLogger().log(Level.WARNING, "accessing a per game permission without a gameID");
 		return perm;
 	}
 
@@ -59,4 +54,21 @@ public enum Permission {
     public String getPermission(Module module) {
 		return getPermission(module.getModuleID());
     }
+
+    public boolean hasPermission(CommandSender sender, @Nullable String gameID){
+		if(gameID == null){
+			return hasPermission(sender);
+		} else {
+			if (!gameIDs.contains(gameID)) {
+				throw new IllegalArgumentException("Unknown gameID: " + gameID);
+			}
+			return ( sender.hasPermission(perm.replace("%gameID%", gameID))
+					|| sender.hasPermission(perm.replace("%gameID%", "*")));
+		}
+	}
+
+	public boolean hasPermission(CommandSender sender){
+		if(perGame) throw new IllegalArgumentException("Accessing a per-game permission without a gameID");
+		return sender.hasPermission(perm);
+	}
 }

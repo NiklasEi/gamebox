@@ -1,6 +1,6 @@
 package me.nikl.gamebox;
 
-import me.nikl.gamebox.data.DataBase;
+import me.nikl.gamebox.data.database.DataBase;
 import me.nikl.gamebox.data.GBPlayer;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
