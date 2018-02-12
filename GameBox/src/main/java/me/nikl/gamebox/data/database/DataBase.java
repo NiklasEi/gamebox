@@ -1,11 +1,17 @@
-package me.nikl.gamebox.data;
+package me.nikl.gamebox.data.database;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
+import me.nikl.gamebox.data.GBPlayer;
+import me.nikl.gamebox.data.PlayerScore;
+import me.nikl.gamebox.data.SaveType;
+import me.nikl.gamebox.data.TopList;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -24,6 +30,7 @@ public abstract class DataBase {
 
     private BukkitRunnable autoSave;
     protected GameBox plugin;
+    protected Map<String, TopList> cachedTopLists = new HashMap<>();
 
     public DataBase(GameBox plugin){
         this.plugin = plugin;
@@ -41,7 +48,7 @@ public abstract class DataBase {
 
     public abstract void addStatistics(UUID uuid, String gameID, String gameTypeID, double value, SaveType saveType);
 
-    public abstract ArrayList<Stat> getTopList(String gameID, String gameTypeID, SaveType saveType, int maxNumber);
+    public abstract TopList getTopList(String gameID, String gameTypeID, SaveType saveType);
 
     public abstract void loadPlayer(GBPlayer player, boolean async);
 
@@ -76,28 +83,10 @@ public abstract class DataBase {
         save(false);
     }
 
-    public class Stat{
-        private double value;
-        private UUID uuid;
-
-        private SaveType saveType;
-
-        Stat(UUID uuid, double value){
-            this.uuid = uuid;
-            this.value = value;
-        }
-
-        public double getValue() {
-            return value;
-        }
-
-        public UUID getUuid() {
-            return uuid;
-        }
-
-        public SaveType getSaveType() {
-            return saveType;
-        }
+    protected void updateCachedTopList(String topListIdentifier, PlayerScore playerScore) {
+        TopList cachedTopList =  cachedTopLists.get(topListIdentifier);
+        if(cachedTopList == null) return;
+        cachedTopList.update(playerScore);
     }
 
     public interface Callback<T> {

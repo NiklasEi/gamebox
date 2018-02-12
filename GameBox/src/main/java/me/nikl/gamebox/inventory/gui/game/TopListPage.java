@@ -34,6 +34,7 @@ public class TopListPage extends GameGuiPage{
         this.skullLore = skullLore;
         this.topList = plugin.getDataBase().getTopList(args[0], args[1].replace(GUIManager.TOP_LIST_KEY_ADDON, ""), saveType);
         this.topList.registerTopListPage(this);
+        update();
     }
 
     @Override
@@ -68,7 +69,7 @@ public class TopListPage extends GameGuiPage{
                 continue;
             }
 
-            skullLore = getSkullLoreForScore(stat);
+            List<String> skullLore = getSkullLoreForScore(stat);
             // chat color is already handled in the game while loading the lore from config
             for(int i = 0; i < skullLore.size(); i++){
                 skullLore.set(i, skullLore.get(i).replace("%player%", player.getName()).replace("%rank%", String.valueOf(rank)));

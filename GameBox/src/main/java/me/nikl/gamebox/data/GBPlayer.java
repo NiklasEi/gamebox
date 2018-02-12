@@ -1,7 +1,7 @@
 package me.nikl.gamebox.data;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.GameBoxSettings;
+import me.nikl.gamebox.data.database.DataBase;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

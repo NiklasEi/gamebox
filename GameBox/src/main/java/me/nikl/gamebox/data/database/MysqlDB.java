@@ -1,8 +1,12 @@
-package me.nikl.gamebox.data;
+package me.nikl.gamebox.data.database;
 
 import com.zaxxer.hikari.HikariDataSource;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
+import me.nikl.gamebox.data.GBPlayer;
+import me.nikl.gamebox.data.PlayerScore;
+import me.nikl.gamebox.data.SaveType;
+import me.nikl.gamebox.data.TopList;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -20,30 +24,21 @@ import java.util.UUID;
  * Created by Niklas
  */
 public class MysqlDB extends DataBase {
-
-
     private static final String INSERT = "INSERT INTO " + PLAYER_TABLE + " VALUES(?,?,?,?,?) ON DUPLICATE KEY UPDATE " + PLAYER_NAME + "=?";
     private static final String SELECT = "SELECT * FROM " + PLAYER_TABLE + " WHERE " + PLAYER_UUID + "=?";
     private static final String SELECT_TOKEN = "SELECT " + PLAYER_TOKEN_PATH + " FROM " + PLAYER_TABLE + " WHERE " + PLAYER_UUID + "=?";
-    private static final String SAVE = "UPDATE " + PLAYER_TABLE + " SET "
-            + PLAYER_TOKEN_PATH + "=?, "
-            + PLAYER_PLAY_SOUNDS + "=?, "
-            + PLAYER_ALLOW_INVITATIONS
-            + "=? WHERE " + PLAYER_UUID + "=?";
-    private static final String SET_TOKEN = "UPDATE " + PLAYER_TABLE + " SET "
-            + PLAYER_TOKEN_PATH
-            + "=? WHERE " + PLAYER_UUID + "=?";
+    private static final String SAVE = "UPDATE " + PLAYER_TABLE + " SET " + PLAYER_TOKEN_PATH + "=?, " + PLAYER_PLAY_SOUNDS + "=?, " + PLAYER_ALLOW_INVITATIONS + "=? WHERE " + PLAYER_UUID + "=?";
+    private static final String SET_TOKEN = "UPDATE " + PLAYER_TABLE + " SET " + PLAYER_TOKEN_PATH + "=? WHERE " + PLAYER_UUID + "=?";
 
-    private String host, database, username, password;
+    private String host;
+    private String database;
+    private String username;
+    private String password;
     private int port;
-
-
     private HikariDataSource hikari;
-
 
     public MysqlDB(GameBox plugin) {
         super(plugin);
-
         FileConfiguration config = plugin.getConfig();
         host = config.getString("mysql.host");
         port = config.getInt("mysql.port");
@@ -87,13 +82,16 @@ public class MysqlDB extends DataBase {
 
     @Override
     public void addStatistics(UUID uuid, String gameID, String gameTypeID, double value, SaveType saveType) {
-        // Todo!
+        String hash = String.valueOf(String.valueOf(gameID.hashCode() + gameTypeID.hashCode() + saveType.hashCode()).hashCode());
+        GameBox.debug("Hash for top list (" + hash.length() + "): " + hash);
+
+
     }
 
     @Override
-    public ArrayList<Stat> getTopList(String gameID, String gameTypeID, SaveType saveType, int maxNumber) {
+    public TopList getTopList(String gameID, String gameTypeID, SaveType saveType) {
         // Todo!
-        return new ArrayList<>();
+        return null;
     }
 
     @Override

@@ -1,6 +1,10 @@
-package me.nikl.gamebox.data;
+package me.nikl.gamebox.data.database;
 
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.data.GBPlayer;
+import me.nikl.gamebox.data.PlayerScore;
+import me.nikl.gamebox.data.SaveType;
+import me.nikl.gamebox.data.TopList;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -25,6 +29,7 @@ import java.util.logging.Level;
 public class FileDB extends DataBase {
     private File dataFile;
     private FileConfiguration data;
+
     public FileDB(GameBox plugin) {
         super(plugin);
         this.dataFile = new File(plugin.getDataFolder().toString() + File.separatorChar + "data.yml");
@@ -82,93 +87,96 @@ public class FileDB extends DataBase {
 
     @Override
     public void addStatistics(UUID uuid, String gameID, String gameTypeID, double value, SaveType saveType) {
-
-        GameBox.debug("Adding statistics '" +uuid.toString()+"."+gameID+"."+gameTypeID+ "." + saveType.toString().toLowerCase()+"' with the value: " + value);
+        String topListIdentifier = buildTopListIdentifier(gameID, gameTypeID, saveType);
+        GameBox.debug("Adding statistics '" +uuid.toString()+"." + topListIdentifier +"' with the value: " + value);
         double oldScore;
         switch (saveType){
             case SCORE:
             case TIME_HIGH:
             case HIGH_NUMBER_SCORE:
-                oldScore = data.getDouble(uuid.toString() + "."+ GAMES_STATISTICS_NODE+"." + gameID +"."+gameTypeID + "." + saveType.toString().toLowerCase(), 0.);
+                oldScore = data.getDouble(uuid.toString() + "."+ GAMES_STATISTICS_NODE+"." + topListIdentifier, 0.);
                 if(oldScore >= value) return;
-                data.set(uuid.toString() + "."+ GAMES_STATISTICS_NODE+"." + gameID +"."+gameTypeID + "." + saveType.toString().toLowerCase(), value);
+                data.set(uuid.toString() + "."+ GAMES_STATISTICS_NODE+"." +topListIdentifier, value);
                 break;
-
             case TIME_LOW:
-                oldScore = data.getDouble(uuid.toString() + "."+ GAMES_STATISTICS_NODE+"." + gameID +"."+gameTypeID + "." + saveType.toString().toLowerCase(), Double.MAX_VALUE);
+                oldScore = data.getDouble(uuid.toString() + "."+ GAMES_STATISTICS_NODE+"." + topListIdentifier, Double.MAX_VALUE);
                 if(oldScore <= value) return;
-                data.set(uuid.toString() + "."+ GAMES_STATISTICS_NODE+"." + gameID +"."+gameTypeID + "." + saveType.toString().toLowerCase(), value);
+                data.set(uuid.toString() + "."+ GAMES_STATISTICS_NODE+"." + topListIdentifier, value);
                 break;
-
             case WINS:
-                oldScore = data.getDouble(uuid.toString() + "."+ GAMES_STATISTICS_NODE+"." + gameID +"."+gameTypeID + "." + saveType.toString().toLowerCase(), 0.);
-                data.set(uuid.toString() + "."+ GAMES_STATISTICS_NODE+"." + gameID +"."+gameTypeID + "." + saveType.toString().toLowerCase(), value + oldScore);
+                oldScore = data.getDouble(uuid.toString() + "."+ GAMES_STATISTICS_NODE+"." + topListIdentifier, 0.);
+                data.set(uuid.toString() + "."+ GAMES_STATISTICS_NODE+"." + topListIdentifier, value + oldScore);
                 break;
-
             default:
                 Bukkit.getLogger().log(Level.WARNING, "trying to save unsupported statistics: " + saveType.toString());
         }
+        // top value of player was corrected
+        updateCachedTopList(topListIdentifier, new PlayerScore(uuid, value, saveType));
+    }
+
+    private String buildTopListIdentifier(String gameID, String gameTypeID, SaveType saveType){
+        return gameID + "." + gameTypeID + "." + saveType.toString().toLowerCase();
     }
 
     @Override
-    public ArrayList<Stat> getTopList(String gameID, String gameTypeID, SaveType saveType, int maxNumber) {
-        ArrayList<Stat> toReturn = new ArrayList<>();
-        Map<UUID, Double> valuesMap = new HashMap<>();
-        for(String uuid : data.getKeys(false)){
-            if(!data.isSet(uuid.toString() + "."+ GAMES_STATISTICS_NODE+"." + gameID +"."+gameTypeID + "." + saveType.toString().toLowerCase())) continue;
-            try{
-                UUID uuid1 = UUID.fromString(uuid);
-                valuesMap.put(uuid1, data.getDouble(uuid.toString() + "."+ GAMES_STATISTICS_NODE+"." + gameID +"."+gameTypeID + "." + saveType.toString().toLowerCase()));
-            } catch (IllegalArgumentException exception){
-                exception.printStackTrace();
-                Bukkit.getLogger().log(Level.WARNING, "failed to load a statistic for a player due to a malformed UUID");
-                continue;
-            }
-        }
+    public TopList getTopList(String gameID, String gameTypeID, SaveType saveType) {
+        String topListIdentifier = buildTopListIdentifier(gameID, gameTypeID, saveType);
+        if(cachedTopLists.containsKey(topListIdentifier)) return cachedTopLists.get(topListIdentifier);
+        ArrayList<PlayerScore> playerScores = getTopPlayerScores(topListIdentifier, saveType);
+        TopList newTopList = new TopList(topListIdentifier, playerScores);
+        cachedTopLists.put(topListIdentifier, newTopList);
+        return newTopList;
+    }
 
-        boolean higher;
-        switch (saveType){
-            case TIME_LOW:
-                higher = false;
-                break;
-            case WINS:
-            case TIME_HIGH:
-            case SCORE:
-            case HIGH_NUMBER_SCORE:
-                higher = true;
-                break;
-
-            default:
-                higher = true;
-                Bukkit.getLogger().log(Level.SEVERE, "not supported SaveType found while loading a top list");
-        }
-        UUID currentBestUuid = null;
-        double currentBestScore;
-
-
+    private ArrayList<PlayerScore> getTopPlayerScores(String topListIdentifier, SaveType saveType) {
+        ArrayList<PlayerScore> toReturn = new ArrayList<>();
+        Map<UUID, Double> valuesMap = createValuesMap(topListIdentifier);
+        boolean higher = saveType.isHigherScore();
+        UUID currentBestUuid;
         int number = 0;
-        while(number < maxNumber && !valuesMap.keySet().isEmpty()){
-            currentBestScore = higher?0.:Double.MAX_VALUE;
-            for(Iterator<Map.Entry<UUID, Double>> entries = valuesMap.entrySet().iterator(); entries.hasNext(); ) {
-                Map.Entry<UUID, Double> entry = entries.next();
-                if(higher){
-                    if(entry.getValue() > currentBestScore){
-                        currentBestScore = entry.getValue();
-                        currentBestUuid = entry.getKey();
-                    }
-                } else {
-                    if(entry.getValue() < currentBestScore){
-                        currentBestScore = entry.getValue();
-                        currentBestUuid = entry.getKey();
-                    }
-                }
-            }
-            GameBox.debug("Found rank " + (number + 1) + " with time: " + currentBestScore + "      higher: " + higher);
-            toReturn.add(new Stat(currentBestUuid, valuesMap.get(currentBestUuid)));
+        while(number < TopList.TOP_LIST_LENGTH && !valuesMap.keySet().isEmpty()){
+            currentBestUuid = getBestScore(valuesMap, higher);
+            GameBox.debug("Found rank " + (number + 1) + " with time: " + valuesMap.get(currentBestUuid) + "      higher: " + higher);
+            toReturn.add(new PlayerScore(currentBestUuid, valuesMap.get(currentBestUuid), saveType));
             number++;
             valuesMap.remove(currentBestUuid);
         }
         return toReturn;
+    }
+
+    private UUID getBestScore(Map<UUID, Double> valuesMap, boolean higher) {
+        double currentBestScore = higher ? 0. : Double.MAX_VALUE;
+        UUID currentBestUuid = null;
+        for(Iterator<Map.Entry<UUID, Double>> entries = valuesMap.entrySet().iterator(); entries.hasNext(); ) {
+            Map.Entry<UUID, Double> entry = entries.next();
+            if(higher){
+                if(entry.getValue() > currentBestScore){
+                    currentBestScore = entry.getValue();
+                    currentBestUuid = entry.getKey();
+                }
+            } else {
+                if(entry.getValue() < currentBestScore){
+                    currentBestScore = entry.getValue();
+                    currentBestUuid = entry.getKey();
+                }
+            }
+        }
+        return currentBestUuid;
+    }
+
+    private Map<UUID,Double> createValuesMap(String topListIdentifier) {
+        Map<UUID, Double> valuesMap = new HashMap<>();
+        for(String uuid : data.getKeys(false)){
+            if(!data.isSet(uuid.toString() + "."+ GAMES_STATISTICS_NODE+"." + topListIdentifier)) continue;
+            try{
+                UUID uuid1 = UUID.fromString(uuid);
+                valuesMap.put(uuid1, data.getDouble(uuid.toString() + "."+ GAMES_STATISTICS_NODE + "." + topListIdentifier));
+            } catch (IllegalArgumentException exception){
+                Bukkit.getLogger().log(Level.WARNING, "failed to load a player score due to a malformed UUID (" + topListIdentifier + ")");
+                continue;
+            }
+        }
+        return valuesMap;
     }
 
     @Override
