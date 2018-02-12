@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker;
 
-import me.nikl.gamebox.data.SaveType;
+import me.nikl.gamebox.data.toplist.SaveType;
 import me.nikl.gamebox.games.GameRule;
 
 import java.util.HashSet;

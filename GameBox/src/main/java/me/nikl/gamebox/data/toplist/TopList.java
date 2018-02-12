@@ -1,6 +1,7 @@
-package me.nikl.gamebox.data;
+package me.nikl.gamebox.data.toplist;
 
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.data.toplist.PlayerScore;
 import me.nikl.gamebox.inventory.gui.game.TopListPage;
 
 import java.util.ArrayList;

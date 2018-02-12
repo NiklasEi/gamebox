@@ -2,7 +2,7 @@ package me.nikl.gamebox.games.cookieclicker;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.data.database.DataBase;
-import me.nikl.gamebox.data.SaveType;
+import me.nikl.gamebox.data.toplist.SaveType;
 import me.nikl.gamebox.games.GameManager;
 import me.nikl.gamebox.games.GameRule;
 import org.bukkit.Bukkit;

@@ -4,7 +4,7 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.Module;
-import me.nikl.gamebox.data.SaveType;
+import me.nikl.gamebox.data.toplist.SaveType;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.button.AButton;

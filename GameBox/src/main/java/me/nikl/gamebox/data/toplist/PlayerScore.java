@@ -1,4 +1,4 @@
-package me.nikl.gamebox.data;
+package me.nikl.gamebox.data.toplist;
 
 import java.util.UUID;
 

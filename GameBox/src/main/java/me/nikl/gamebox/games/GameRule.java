@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games;
 
-import me.nikl.gamebox.data.SaveType;
+import me.nikl.gamebox.data.toplist.SaveType;
 
 import java.util.HashSet;
 

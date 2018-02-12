@@ -3,13 +3,12 @@ package me.nikl.gamebox.data.database;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.data.GBPlayer;
-import me.nikl.gamebox.data.PlayerScore;
-import me.nikl.gamebox.data.SaveType;
-import me.nikl.gamebox.data.TopList;
+import me.nikl.gamebox.data.toplist.PlayerScore;
+import me.nikl.gamebox.data.toplist.SaveType;
+import me.nikl.gamebox.data.toplist.TopList;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;

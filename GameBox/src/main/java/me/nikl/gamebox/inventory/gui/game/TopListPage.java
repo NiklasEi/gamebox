@@ -1,9 +1,9 @@
 package me.nikl.gamebox.inventory.gui.game;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.data.PlayerScore;
-import me.nikl.gamebox.data.SaveType;
-import me.nikl.gamebox.data.TopList;
+import me.nikl.gamebox.data.toplist.PlayerScore;
+import me.nikl.gamebox.data.toplist.SaveType;
+import me.nikl.gamebox.data.toplist.TopList;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.utility.NumberUtil;
 import me.nikl.gamebox.utility.StringUtil;
