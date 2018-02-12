@@ -1,7 +1,6 @@
 package me.nikl.gamebox.data.toplist;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.data.toplist.PlayerScore;
 import me.nikl.gamebox.inventory.gui.game.TopListPage;
 
 import java.util.ArrayList;
@@ -19,12 +18,12 @@ public class TopList {
     public static final int TOP_LIST_LENGTH = 25;
     private String identifier;
     private List<PlayerScore> playerScores = new ArrayList<>();
-    private Set<TopListPage> topListPages;
+    private Set<TopListUser> topListUsers;
 
     public TopList(String identifier, List<PlayerScore> playerScores){
         this.identifier = identifier;
         this.playerScores = playerScores;
-        topListPages = new HashSet<>();
+        topListUsers = new HashSet<>();
     }
 
     public void update(PlayerScore playerScore){
@@ -36,8 +35,8 @@ public class TopList {
             GameBox.debug("updating existing score");
             handleUpdatePlayerScore(playerScore);
         }
-        for (TopListPage topListPage : topListPages){
-            topListPage.update();
+        for (TopListUser topListUser : topListUsers){
+            topListUser.update();
         }
     }
 
@@ -91,7 +90,11 @@ public class TopList {
         return false;
     }
 
-    public void registerTopListPage(TopListPage topListPage) {
-        topListPages.add(topListPage);
+    public void registerTopListUser(TopListUser topListUser) {
+        topListUsers.add(topListUser);
+    }
+
+    public String getIdentifier() {
+        return identifier;
     }
 }

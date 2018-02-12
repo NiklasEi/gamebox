@@ -4,6 +4,7 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.data.toplist.PlayerScore;
 import me.nikl.gamebox.data.toplist.SaveType;
 import me.nikl.gamebox.data.toplist.TopList;
+import me.nikl.gamebox.data.toplist.TopListUser;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.utility.NumberUtil;
 import me.nikl.gamebox.utility.StringUtil;
@@ -22,7 +23,7 @@ import java.util.List;
  * @author Niklas Eicker
  *
  */
-public class TopListPage extends GameGuiPage{
+public class TopListPage extends GameGuiPage implements TopListUser {
 
     private SaveType saveType;
     private List<String> skullLore;
@@ -33,7 +34,7 @@ public class TopListPage extends GameGuiPage{
         this.saveType = saveType;
         this.skullLore = skullLore;
         this.topList = plugin.getDataBase().getTopList(args[0], args[1].replace(GUIManager.TOP_LIST_KEY_ADDON, ""), saveType);
-        this.topList.registerTopListPage(this);
+        this.topList.registerTopListUser(this);
         update();
     }
 
@@ -42,6 +43,7 @@ public class TopListPage extends GameGuiPage{
         return super.open(player);
     }
 
+    @Override
     public void update(){
         List<PlayerScore> topListScores = this.topList.getPlayerScores();
 
