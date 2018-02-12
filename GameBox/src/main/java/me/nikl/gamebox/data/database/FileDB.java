@@ -46,7 +46,6 @@ public class FileDB extends DataBase {
                return false;
             }
         }
-
         // load stats file
         try {
             this.data = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(this.dataFile), "UTF-8"));
@@ -61,7 +60,7 @@ public class FileDB extends DataBase {
     @Override
     public void save(boolean async) {
         if(async) {
-            BukkitRunnable runnable = new BukkitRunnable() {
+            new BukkitRunnable() {
                 @Override
                 public void run() {
                     GameBox.debug(" saving to file async...");
@@ -73,8 +72,7 @@ public class FileDB extends DataBase {
                     }
                     GameBox.debug(" ...done");
                 }
-            };
-            runnable.runTaskAsynchronously(plugin);
+            }.runTaskAsynchronously(plugin);
         } else {
             try {
                 this.data.save(dataFile);
@@ -210,5 +208,13 @@ public class FileDB extends DataBase {
     @Override
     public void onShutDown(){
         super.onShutDown();
+    }
+
+    @Override
+    public void resetHighScores() {
+        for(String uuid : data.getKeys(false)){
+            if(!data.isConfigurationSection(uuid + "." + DataBase.GAMES_STATISTICS_NODE)) continue;
+            data.set(uuid + "." + DataBase.GAMES_STATISTICS_NODE, null);
+        }
     }
 }

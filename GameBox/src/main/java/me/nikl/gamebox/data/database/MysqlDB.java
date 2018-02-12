@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.data.GBPlayer;
+import me.nikl.gamebox.data.toplist.PlayerScore;
 import me.nikl.gamebox.data.toplist.SaveType;
 import me.nikl.gamebox.data.toplist.TopList;
 import org.bukkit.Bukkit;
@@ -16,6 +17,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -34,6 +39,7 @@ public class MysqlDB extends DataBase {
     private String password;
     private int port;
     private HikariDataSource hikari;
+    private Map<String, String> knownHighScoreColumns = new HashMap<>();
 
     public MysqlDB(GameBox plugin) {
         super(plugin);
@@ -57,12 +63,15 @@ public class MysqlDB extends DataBase {
 
         try(Connection connection = hikari.getConnection()){
             Statement statement = connection.createStatement();
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS " + PLAYER_TABLE + "(" +
-                    PLAYER_UUID + " varchar(36), " +
-                    PLAYER_NAME + " VARCHAR(16), " +
-                    PLAYER_TOKEN_PATH + " int, " +
-                    PLAYER_PLAY_SOUNDS + " BOOL, " +
-                    PLAYER_ALLOW_INVITATIONS + " BOOL, " +
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS `" + PLAYER_TABLE + "`(`" +
+                    PLAYER_UUID + "` varchar(36), `" +
+                    PLAYER_NAME + "` VARCHAR(16), `" +
+                    PLAYER_TOKEN_PATH + "` int, `" +
+                    PLAYER_PLAY_SOUNDS + "` BOOL, `" +
+                    PLAYER_ALLOW_INVITATIONS + "` BOOL, " +
+                    "PRIMARY KEY (`" + PLAYER_UUID + "`))");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS `" + HIGH_SCORES_TABLE + "`(`" +
+                    PLAYER_UUID + "` varchar(36), " +
                     "PRIMARY KEY (`" + PLAYER_UUID + "`))");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -80,16 +89,43 @@ public class MysqlDB extends DataBase {
 
     @Override
     public void addStatistics(UUID uuid, String gameID, String gameTypeID, double value, SaveType saveType) {
-        String hash = String.valueOf(String.valueOf(gameID.hashCode() + gameTypeID.hashCode() + saveType.hashCode()).hashCode());
-        GameBox.debug("Hash for top list (" + hash.length() + "): " + hash);
+        GameBox.debug("Add stats...");
+        String columnName = getHighScoreColumnName(gameID, gameTypeID, saveType);
+    }
 
+    private String getHighScoreColumnName(String gameID, String gameTypeID, SaveType saveType){
+        String columnName = knownHighScoreColumns.get(gameID + gameTypeID + saveType.toString());
+        if(columnName != null) return columnName;
 
+        // first time this column is used in this server session... better check it exists
+        columnName = String.valueOf(String.valueOf(gameID.hashCode() * gameTypeID.hashCode() * saveType.hashCode()).hashCode());
+        GameBox.debug("Hash for top list (" + columnName.length() + "): " + columnName);
+        try(Connection connection = hikari.getConnection()){
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement
+                    .executeQuery("SELECT * FROM information_schema.COLUMNS " +
+                            "WHERE TABLE_SCHEMA = '" + database + "'" +
+                            "AND TABLE_NAME = '" + HIGH_SCORES_TABLE + "'" +
+                            "AND COLUMN_NAME = '" + columnName + "'");
+            GameBox.debug(resultSet.toString() + "next: " + resultSet.next());
+
+            // add new column:
+            statement.executeUpdate("ALTER TABLE `" + HIGH_SCORES_TABLE + "` ADD `" + columnName + "` DOUBLE NULL");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        knownHighScoreColumns.put(gameID + gameTypeID + saveType.toString(), columnName);
+        return columnName;
     }
 
     @Override
     public TopList getTopList(String gameID, String gameTypeID, SaveType saveType) {
-        // Todo!
-        return null;
+        String topListIdentifier = gameID + gameTypeID + saveType.toString();
+        if(cachedTopLists.containsKey(topListIdentifier)) return cachedTopLists.get(topListIdentifier);
+        ArrayList<PlayerScore> playerScores = new ArrayList<>();
+        TopList newTopList = new TopList(topListIdentifier, playerScores);
+        cachedTopLists.put(topListIdentifier, newTopList);
+        return newTopList;
     }
 
     @Override
@@ -239,6 +275,16 @@ public class MysqlDB extends DataBase {
     public void onShutDown(){
         super.onShutDown();
         hikari.close();
+    }
+
+    @Override
+    public void resetHighScores() {
+        try (Connection connection = hikari.getConnection();
+             Statement statement = connection.createStatement()){
+            statement.executeUpdate("TRUNCATE TABLE `" + HIGH_SCORES_TABLE + "`");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

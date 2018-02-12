@@ -26,6 +26,7 @@ public abstract class DataBase {
     protected static final String PLAYER_UUID = "uuid";
     protected static final String PLAYER_NAME = "name";
     protected static final String PLAYER_TABLE = "GBPlayers";
+    protected static final String HIGH_SCORES_TABLE = "GBHighScores";
 
     private BukkitRunnable autoSave;
     protected GameBox plugin;
@@ -61,17 +62,13 @@ public abstract class DataBase {
         this.autoSave = new BukkitRunnable() {
             @Override
             public void run() {
-                GameBox.debug(" auto saving...");
                 if(plugin == null || plugin.getDataBase() == null)
                     this.cancel();
-                GameBox.debug("    saving all players...");
                 for(GBPlayer player : plugin.getPluginManager().getGbPlayers().values()){
                     player.save(true);
                 }
-                GameBox.debug("    saving database...");
                 // already async, no need to create a second async task
                 save(false);
-                GameBox.debug(" done!");
             }
         };
     }
@@ -87,6 +84,8 @@ public abstract class DataBase {
         if(cachedTopList == null) return;
         cachedTopList.update(playerScore);
     }
+
+    public abstract void resetHighScores();
 
     public interface Callback<T> {
         void onSuccess(T done);

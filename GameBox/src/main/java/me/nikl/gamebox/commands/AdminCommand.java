@@ -231,6 +231,8 @@ public class AdminCommand implements CommandExecutor {
             GameBox.debug = !GameBox.debug;
             sender.sendMessage(lang.PREFIX + " Set debug mode to: " + GameBox.debug);
             return true;
+        } else if(args[0].equalsIgnoreCase("resetHighScores")){
+            plugin.getDataBase().resetHighScores();
         }
         sendHelpMessages(sender);
         return true;
