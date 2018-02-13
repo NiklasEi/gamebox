@@ -9,9 +9,9 @@ import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.button.AButton;
 import me.nikl.gamebox.inventory.gui.AGui;
 import me.nikl.gamebox.inventory.ClickAction;
-import me.nikl.gamebox.utility.ItemStackUtil;
+import me.nikl.gamebox.utility.ItemStackUtility;
 import me.nikl.gamebox.utility.Permission;
-import me.nikl.gamebox.utility.StringUtil;
+import me.nikl.gamebox.utility.StringUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -69,16 +69,16 @@ public class ShopManager {
 
         this.closed = !shop.getBoolean("open");
 
-        ItemStack mainItem = ItemStackUtil.getItemStack(shop.getString("shop.button.materialData", Material.STORAGE_MINECART.toString()));
+        ItemStack mainItem = ItemStackUtility.getItemStack(shop.getString("shop.button.materialData", Material.STORAGE_MINECART.toString()));
         if (shop.getBoolean("shop.button.glow")) mainItem = plugin.getNMS().addGlow(mainItem);
         mainButton = new AButton(mainItem);
         ItemMeta meta = mainItem.getItemMeta();
         if (shop.isString("shop.button.displayName")) {
-            meta.setDisplayName(StringUtil.color(shop.getString("shop.button.displayName")));
+            meta.setDisplayName(StringUtility.color(shop.getString("shop.button.displayName")));
         }
 
         if (shop.isList("shop.button.lore")) {
-            meta.setLore(StringUtil.color(shop.getStringList("shop.button.lore")));
+            meta.setLore(StringUtility.color(shop.getStringList("shop.button.lore")));
         }
 
         mainButton.setItemMeta(meta);

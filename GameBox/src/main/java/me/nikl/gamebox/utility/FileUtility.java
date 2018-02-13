@@ -24,7 +24,7 @@ import java.util.logging.Level;
  *
  * Utility class for language related stuff
  */
-public class FileUtil {
+public class FileUtility {
 
     /**
      * Copy all default language files to the plugin folder.

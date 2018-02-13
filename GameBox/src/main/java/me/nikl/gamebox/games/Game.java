@@ -117,7 +117,7 @@ public abstract class Game {
             GameBox.debug(" default config missing in GB folder (" + module.getModuleID() + ")");
             configFile.getParentFile().mkdirs();
             if(module.getExternalPlugin() != null){
-                FileUtil.copyExternalResources(gameBox, module);
+                FileUtility.copyExternalResources(gameBox, module);
             } else {
                 gameBox.saveResource("games"
                         + File.separator + getGameID()
@@ -155,7 +155,7 @@ public abstract class Game {
                     Bukkit.getLogger().log(Level.WARNING, " missing material data under: gameBox.gameButtons." + buttonID + "        can not load the button");
                     continue;
                 }
-                ItemStack mat = ItemStackUtil.getItemStack(buttonSec.getString("materialData"));
+                ItemStack mat = ItemStackUtility.getItemStack(buttonSec.getString("materialData"));
                 if (mat == null) {
                     Bukkit.getLogger().log(Level.WARNING, " error loading: gameBox.gameButtons." + buttonID);
                     Bukkit.getLogger().log(Level.WARNING, "     invalid material data");
@@ -164,11 +164,11 @@ public abstract class Game {
                 AButton button = new AButton(mat);
                 ItemMeta meta = button.getItemMeta();
                 if (buttonSec.isString("displayName")) {
-                    displayName = StringUtil.color(buttonSec.getString("displayName"));
+                    displayName = StringUtility.color(buttonSec.getString("displayName"));
                     meta.setDisplayName(displayName);
                 }
                 if (buttonSec.isList("lore")) {
-                    lore = StringUtil.color(buttonSec.getStringList("lore"));
+                    lore = StringUtility.color(buttonSec.getStringList("lore"));
                     meta.setLore(lore);
                 }
                 switch (gameSettings.getGameType()){
@@ -178,7 +178,7 @@ public abstract class Game {
                     case TWO_PLAYER:
                         guiManager.registerGameGUI(new StartMultiplayerGamePage(gameBox, guiManager
                                 , gameSettings.getGameGuiSize()
-                                , getGameID(), buttonID, StringUtil.color(buttonSec
+                                , getGameID(), buttonID, StringUtility.color(buttonSec
                                 .getString("inviteGuiTitle","&4title not set in config"))));
                         button.setAction(ClickAction.OPEN_GAME_GUI);
                         break;
@@ -210,14 +210,14 @@ public abstract class Game {
             if (!mainButtonSec.isString("materialData")){
                 break getMainButton;
             }
-            ItemStack gameButton = ItemStackUtil.getItemStack(mainButtonSec.getString("materialData"));
+            ItemStack gameButton = ItemStackUtility.getItemStack(mainButtonSec.getString("materialData"));
             if (gameButton == null) {
                 gameButton = (new ItemStack(Material.STAINED_CLAY));
             }
             ItemMeta meta = gameButton.getItemMeta();
-            meta.setDisplayName(StringUtil.color(mainButtonSec.getString("displayName", gameLang.PLAIN_NAME)));
+            meta.setDisplayName(StringUtility.color(mainButtonSec.getString("displayName", gameLang.PLAIN_NAME)));
             if (mainButtonSec.isList("lore")) {
-                meta.setLore(StringUtil.color(mainButtonSec.getStringList("lore")));
+                meta.setLore(StringUtility.color(mainButtonSec.getStringList("lore")));
             }
             gameButton.setItemMeta(meta);
             guiManager.registerMainGameGUI(gameGui, gameButton);
@@ -252,7 +252,7 @@ public abstract class Game {
                     gameBox.getLogger().log(Level.WARNING, " missing material data: 'gameBox.topListButtons." + buttonID + "'. Cannot load the button!");
                     continue;
                 }
-                ItemStack mat = ItemStackUtil.getItemStack(buttonSec.getString("materialData"));
+                ItemStack mat = ItemStackUtility.getItemStack(buttonSec.getString("materialData"));
                 if (mat == null) {
                     gameBox.getLogger().log(Level.WARNING, " error loading: gameBox.topListButtons." + buttonID);
                     gameBox.getLogger().log(Level.WARNING, "     invalid material data");
@@ -261,10 +261,10 @@ public abstract class Game {
                 AButton button = new AButton(mat);
                 ItemMeta meta = button.getItemMeta();
                 if (buttonSec.isString("displayName")) {
-                    meta.setDisplayName(StringUtil.color(buttonSec.getString("displayName")));
+                    meta.setDisplayName(StringUtility.color(buttonSec.getString("displayName")));
                 }
                 if (buttonSec.isList("lore")) {
-                    lore = StringUtil.color(buttonSec.getStringList("lore"));
+                    lore = StringUtility.color(buttonSec.getStringList("lore"));
                     meta.setLore(lore);
                 }
                 button.setItemMeta(meta);
@@ -285,13 +285,13 @@ public abstract class Game {
                 }
                 // get skull lore and pass on to the top list page
                 if (buttonSec.isList("skullLore")) {
-                    lore = StringUtil.color(buttonSec.getStringList("skullLore"));
+                    lore = StringUtility.color(buttonSec.getStringList("skullLore"));
                 } else {
                     lore = new ArrayList<>(Arrays.asList("", "No lore specified in the config!"));
                 }
                 SaveType saveType = gameRules.get(buttonID).getSaveTypes().iterator().next();
                 TopListPage topListPage = new TopListPage(gameBox, guiManager, 54, getGameID(), buttonID + GUIManager.TOP_LIST_KEY_ADDON,
-                        StringUtil.color(buttonSec.getString("inventoryTitle", "Title missing in config")), saveType, lore);
+                        StringUtility.color(buttonSec.getString("inventoryTitle", "Title missing in config")), saveType, lore);
                 guiManager.registerGameGUI(topListPage);
             }
         }
@@ -352,13 +352,13 @@ public abstract class Game {
             if (GameBox.econ.getBalance(player) >= cost) {
                 if(withdraw) {
                     GameBox.econ.withdrawPlayer(player, cost);
-                    player.sendMessage(StringUtil.color(gameLang.PREFIX
+                    player.sendMessage(StringUtility.color(gameLang.PREFIX
                             + gameLang.GAME_PAYED
                             .replaceAll("%cost%", String.valueOf(cost))));
                 }
                 return true;
             } else {
-                player.sendMessage(StringUtil.color(gameLang.PREFIX
+                player.sendMessage(StringUtility.color(gameLang.PREFIX
                         + gameLang.GAME_NOT_ENOUGH_MONEY
                         .replaceAll("%cost%", String.valueOf(cost))));
                 return false;

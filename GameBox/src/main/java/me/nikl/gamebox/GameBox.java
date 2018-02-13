@@ -13,7 +13,7 @@ import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.listeners.EnterGameBoxListener;
 import me.nikl.gamebox.listeners.LeftGameBoxListener;
 import me.nikl.gamebox.nms.*;
-import me.nikl.gamebox.utility.FileUtil;
+import me.nikl.gamebox.utility.FileUtility;
 import net.milkbowl.vault.economy.Economy;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
@@ -257,7 +257,7 @@ public class GameBox extends JavaPlugin{
 			getLogger().severe(" Failed to load config file!");
 			return false;
 		}
-		FileUtil.copyDefaultLanguageFiles();
+		FileUtility.copyDefaultLanguageFiles();
 		this.lang = new GameBoxLanguage(this);
 		this.api = new GameBoxAPI(this);
 		GameBoxSettings.loadSettings(this);
@@ -427,11 +427,8 @@ public class GameBox extends JavaPlugin{
 	public FileConfiguration getConfig(String moduleId) {
 		if(moduleId.equals(MODULE_GAMEBOX))
 			return getConfig();
-
 		Game game = getPluginManager().getGame(moduleId);
-
 		if(game == null) return null;
-
 		return game.getConfig();
 	}
 
@@ -442,11 +439,8 @@ public class GameBox extends JavaPlugin{
 	public Language getLanguage(String moduleID) {
 		if(moduleID.equals(MODULE_GAMEBOX))
 			return lang;
-
 		Game game = getPluginManager().getGame(moduleID);
-
 		if(game == null) return null;
-
 		return game.getGameLang();
 	}
 

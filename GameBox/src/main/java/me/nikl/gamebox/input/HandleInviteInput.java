@@ -7,7 +7,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * @author Niklas Eicker
@@ -45,52 +50,40 @@ public class HandleInviteInput extends BukkitRunnable{
 
     public void onChat(AsyncPlayerChatEvent event){
         if(!waitings.keySet().contains(event.getPlayer().getUniqueId())) return;
-
         String message = event.getMessage();
-
         event.setCancelled(true);
-
         Player player = event.getPlayer();
-
         // go back on main thread from the async event
         new BukkitRunnable(){
             @Override
             public void run() {
-                if(message == null || player == null || !player.isOnline()) return;
-
+                if(message == null || player == null || !player.isOnline() || !waitings.containsKey(player.getUniqueId())) return;
                 if(message.contains("%")){
                     player.sendMessage(plugin.lang.PREFIX + plugin.lang.INPUT_CLOSED);
                     waitings.remove(player.getUniqueId());
                     return;
                 }
-
                 if(message.split(" ").length > 1){
                     player.sendMessage(plugin.lang.INVITATION_NOT_VALID_PLAYER_NAME.replace("%player%", message));
                     return;
                 }
-
+                // color strip only for compatibility with plugins that color player names in chat
                 Player player2 = Bukkit.getPlayer(ChatColor.stripColor(message));
-
                 if(player2 == null){
                     player.sendMessage(plugin.lang.INVITATION_NOT_ONLINE.replace("%player%", message));
                     return;
                 }
-
                 UUID uuid = player.getUniqueId();
                 if(player2.getUniqueId().equals(uuid)){
                     player.sendMessage(plugin.lang.INVITATION_NOT_YOURSELF);
                     return;
                 }
-
-                if(!waitings.containsKey(uuid)) return;
-
                 Waiting waiting = waitings.get(uuid);
                 // invite successful
                 if(plugin.getPluginManager().getHandleInvitations().addInvite(uuid, player2.getUniqueId(), System.currentTimeMillis() + 15*1000, waiting.args)){
                     player.sendMessage(plugin.lang.PREFIX + plugin.lang.INVITATION_SUCCESSFUL.replace("%player%", player2.getName()));
                     waitings.remove(uuid);
                 }
-
             }
         }.runTask(plugin);
     }
@@ -111,7 +104,6 @@ public class HandleInviteInput extends BukkitRunnable{
             this.uuid = player;
             this.timestamp = timestampUntil;
             this.args = args;
-
             waitings.put(player, this);
         }
     }

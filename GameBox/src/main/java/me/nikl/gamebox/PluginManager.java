@@ -9,10 +9,10 @@ import me.nikl.gamebox.inventory.timer.TitleTimer;
 import me.nikl.gamebox.input.HandleInvitations;
 import me.nikl.gamebox.input.HandleInviteInput;
 import me.nikl.gamebox.nms.NMSUtil;
-import me.nikl.gamebox.utility.ItemStackUtil;
+import me.nikl.gamebox.utility.ItemStackUtility;
 import me.nikl.gamebox.utility.Permission;
 import me.nikl.gamebox.utility.Sound;
-import me.nikl.gamebox.utility.StringUtil;
+import me.nikl.gamebox.utility.StringUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -160,9 +160,9 @@ public class PluginManager implements Listener {
             toGameButtonSlot = -999;
         }
 
-        ItemStack toMainItem = ItemStackUtil.getItemStack(config.getString("guiSettings.hotBarNavigation.mainMenuMaterial"))
-                , toGameItem = ItemStackUtil.getItemStack(config.getString("guiSettings.hotBarNavigation.gameMenuMaterial"))
-                , exitItem = ItemStackUtil.getItemStack(config.getString("guiSettings.hotBarNavigation.exitMaterial"));
+        ItemStack toMainItem = ItemStackUtility.getItemStack(config.getString("guiSettings.hotBarNavigation.mainMenuMaterial"))
+                , toGameItem = ItemStackUtility.getItemStack(config.getString("guiSettings.hotBarNavigation.gameMenuMaterial"))
+                , exitItem = ItemStackUtility.getItemStack(config.getString("guiSettings.hotBarNavigation.exitMaterial"));
 
         if(toMainItem == null) {
             toMainItem = new ItemStack(Material.DARK_OAK_DOOR_ITEM);
@@ -184,9 +184,9 @@ public class PluginManager implements Listener {
         toGameItem.setAmount(1); toMainItem.setAmount(1); exitItem.setAmount(1);
 
         // set display name
-        ItemMeta meta = toMainItem.getItemMeta(); meta.setDisplayName(StringUtil.color(lang.BUTTON_TO_MAIN_MENU)); toMainItem.setItemMeta(meta);
-        meta = toGameItem.getItemMeta(); meta.setDisplayName(StringUtil.color(lang.BUTTON_TO_GAME_MENU)); toGameItem.setItemMeta(meta);
-        meta = exitItem.getItemMeta(); meta.setDisplayName(StringUtil.color(lang.BUTTON_EXIT)); exitItem.setItemMeta(meta);
+        ItemMeta meta = toMainItem.getItemMeta(); meta.setDisplayName(StringUtility.color(lang.BUTTON_TO_MAIN_MENU)); toMainItem.setItemMeta(meta);
+        meta = toGameItem.getItemMeta(); meta.setDisplayName(StringUtility.color(lang.BUTTON_TO_GAME_MENU)); toGameItem.setItemMeta(meta);
+        meta = exitItem.getItemMeta(); meta.setDisplayName(StringUtility.color(lang.BUTTON_EXIT)); exitItem.setItemMeta(meta);
 
         if(toMainButtonSlot >= 0)hotbarButtons.put(toMainButtonSlot, toMainItem);
         if(exitButtonSlot >= 0)hotbarButtons.put(exitButtonSlot, exitItem);
@@ -253,9 +253,9 @@ public class PluginManager implements Listener {
             hubItem.setDurability(Short.parseShort(matStrings[1]));
         }
         ItemMeta meta = hubItem.getItemMeta();
-        meta.setDisplayName(StringUtil.color(hubSec.getString("item.displayName")));
+        meta.setDisplayName(StringUtility.color(hubSec.getString("item.displayName")));
         if(hubSec.isList("item.lore")){
-            meta.setLore(StringUtil.color(hubSec.getStringList("item.lore")));
+            meta.setLore(StringUtility.color(hubSec.getStringList("item.lore")));
         }
         hubItem.setItemMeta(meta);
         hubWorlds = new ArrayList<>(hubSec.getStringList("enabledWorlds"));

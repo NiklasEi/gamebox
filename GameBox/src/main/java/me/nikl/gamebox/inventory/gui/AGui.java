@@ -12,7 +12,7 @@ import me.nikl.gamebox.inventory.gui.game.StartMultiplayerGamePage;
 import me.nikl.gamebox.inventory.shop.Shop;
 import me.nikl.gamebox.inventory.shop.ShopItem;
 import me.nikl.gamebox.inventory.ClickAction;
-import me.nikl.gamebox.utility.InventoryUtil;
+import me.nikl.gamebox.utility.InventoryUtility;
 import me.nikl.gamebox.utility.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -76,7 +76,7 @@ public abstract class AGui {
 			title = title.replace("%game%", pluginManager.getGame(args[0]).getGameLang().PLAIN_NAME);
 		}
 
-		this.inventory = InventoryUtil.createInventory(null, slots, title);
+		this.inventory = InventoryUtility.createInventory(null, slots, title);
 	}
 	
 	public boolean open(Player player){

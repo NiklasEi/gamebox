@@ -8,8 +8,8 @@ import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.button.AButton;
 import me.nikl.gamebox.inventory.button.ToggleButton;
 import me.nikl.gamebox.inventory.ClickAction;
-import me.nikl.gamebox.utility.InventoryUtil;
-import me.nikl.gamebox.utility.ItemStackUtil;
+import me.nikl.gamebox.utility.InventoryUtility;
+import me.nikl.gamebox.utility.ItemStackUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -43,7 +43,7 @@ public class MainGui extends AGui{
 
 
 
-		AButton help = new AButton(plugin.getNMS().addGlow(ItemStackUtil.createBookWithText(plugin.lang.BUTTON_MAIN_MENU_INFO)));
+		AButton help = new AButton(plugin.getNMS().addGlow(ItemStackUtility.createBookWithText(plugin.lang.BUTTON_MAIN_MENU_INFO)));
 		help.setAction(ClickAction.NOTHING);
 		setButton(help, 53);
 
@@ -126,7 +126,7 @@ public class MainGui extends AGui{
 
 		String title = this.title.replace("%player%", Bukkit.getPlayer(player.getUuid()).getName());
 
-		Inventory inventory = InventoryUtil.createInventory(null, this.inventory.getSize(), title);
+		Inventory inventory = InventoryUtility.createInventory(null, this.inventory.getSize(), title);
 
 		inventory.setContents(this.inventory.getContents().clone());
 

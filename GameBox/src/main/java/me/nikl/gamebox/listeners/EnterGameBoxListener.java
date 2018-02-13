@@ -19,26 +19,21 @@ public class EnterGameBoxListener implements Listener {
 
     public EnterGameBoxListener(GameBox plugin){
         this.plugin = plugin;
-
         if(plugin.getConfig().isSet("listeners.enteringGameBox")){
             ConfigurationSection listener = plugin.getConfig().getConfigurationSection("listeners.enteringGameBox");
             if(listener.isList("commands")){
                 this.commands = listener.getStringList("commands");
             }
         }
-
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-
     @EventHandler
     public void onEnteringGameBox(EnterGameBoxEvent event){
-
         if(commands != null) {
             for (String cmd : commands) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", event.getPlayer().getName()));
             }
         }
-
     }
 }

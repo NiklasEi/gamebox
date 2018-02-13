@@ -6,8 +6,8 @@ import me.nikl.gamebox.data.toplist.SaveType;
 import me.nikl.gamebox.data.toplist.TopList;
 import me.nikl.gamebox.data.toplist.TopListUser;
 import me.nikl.gamebox.inventory.GUIManager;
-import me.nikl.gamebox.utility.NumberUtil;
-import me.nikl.gamebox.utility.StringUtil;
+import me.nikl.gamebox.utility.NumberUtility;
+import me.nikl.gamebox.utility.StringUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -90,7 +90,7 @@ public class TopListPage extends GameGuiPage implements TopListUser {
         switch (saveType){
             case TIME_LOW:
             case TIME_HIGH:
-                String time = StringUtil.formatTime((int) stat.getValue());
+                String time = StringUtility.formatTime((int) stat.getValue());
                 for(int i = 0; i < skullLore.size(); i++){
                     skullLore.set(i, skullLore.get(i).replace("%time%", time));
                 }
@@ -102,7 +102,7 @@ public class TopListPage extends GameGuiPage implements TopListUser {
                 break;
             case HIGH_NUMBER_SCORE:
                 for(int i = 0; i < skullLore.size(); i++){
-                    skullLore.set(i, skullLore.get(i).replace("%score%", NumberUtil.convertHugeNumber(stat.getValue())));
+                    skullLore.set(i, skullLore.get(i).replace("%score%", NumberUtility.convertHugeNumber(stat.getValue())));
                 }
                 break;
             case WINS:

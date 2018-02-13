@@ -20,7 +20,6 @@ public enum Permission {
 	, USE("use"), ADMIN("admin"), CMD_INFO("info"), CMD_HELP("help")
 	, BYPASS_ALL("bypass"), BYPASS_GAME("bypass", true), OPEN_SHOP("shop");
 	
-	
 	private static ArrayList<String> gameIDs  = new ArrayList<>();
 	private boolean perGame;
 	private String perm;
@@ -34,7 +33,6 @@ public enum Permission {
 	Permission(String perm){
 		this(perm, false);
 	}
-
 
 	// ToDO: make private (and remove) and change usage to #hasPermission
 	public String getPermission(String gameID){

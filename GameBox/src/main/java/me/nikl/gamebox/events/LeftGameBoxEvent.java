@@ -13,12 +13,10 @@ import org.bukkit.event.HandlerList;
  */
 public class LeftGameBoxEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
-
     private Player player;
 
     public LeftGameBoxEvent(Player player){
         this.player = player;
-
         Bukkit.getPluginManager().callEvent(this);
     }
 

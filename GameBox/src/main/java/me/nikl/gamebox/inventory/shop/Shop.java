@@ -8,7 +8,7 @@ import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.button.AButton;
 import me.nikl.gamebox.inventory.gui.AGui;
 import me.nikl.gamebox.inventory.ClickAction;
-import me.nikl.gamebox.utility.InventoryUtil;
+import me.nikl.gamebox.utility.InventoryUtility;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -90,7 +90,7 @@ public class Shop extends AGui{
             tokenButtons.put(player.getUuid(), tokens);
         }
 
-        Inventory inventory = InventoryUtil.createInventory(null, this.inventory.getSize(), "GameBox gui");
+        Inventory inventory = InventoryUtility.createInventory(null, this.inventory.getSize(), "GameBox gui");
         inventory.setContents(this.inventory.getContents().clone());
 
         openInventories.putIfAbsent(player.getUuid(),inventory);

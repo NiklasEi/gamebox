@@ -4,8 +4,8 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.games.Game;
 import me.nikl.gamebox.games.GameSettings;
-import me.nikl.gamebox.utility.ItemStackUtil;
-import me.nikl.gamebox.utility.StringUtil;
+import me.nikl.gamebox.utility.ItemStackUtility;
+import me.nikl.gamebox.utility.StringUtility;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -59,7 +59,7 @@ public class MatchIt extends Game{
     }
 
     private ItemStack loadItem(ConfigurationSection itemSection){
-        ItemStack toReturn = ItemStackUtil.loadItem(itemSection);
+        ItemStack toReturn = ItemStackUtility.loadItem(itemSection);
         if(toReturn == null){
             warn(" missing or invalid 'matData' config-key: " + itemSection.getName());
             return null;
@@ -116,7 +116,7 @@ public class MatchIt extends Game{
             warn("    falling back to default...");
             cover = new MaterialData(Material.STAINED_GLASS_PANE, (byte) 3).toItemStack(1);
             ItemMeta meta = cover.getItemMeta();
-            meta.setDisplayName(StringUtil.color("&1Click to uncover"));
+            meta.setDisplayName(StringUtility.color("&1Click to uncover"));
             cover.setItemMeta(meta);
         }
 
@@ -129,7 +129,7 @@ public class MatchIt extends Game{
             warn("    falling back to default...");
             border = new MaterialData(Material.STAINED_GLASS_PANE, (byte) 15).toItemStack(1);
             ItemMeta meta = border.getItemMeta();
-            meta.setDisplayName(StringUtil.color("&r"));
+            meta.setDisplayName(StringUtility.color("&r"));
             border.setItemMeta(meta);
         }
     }

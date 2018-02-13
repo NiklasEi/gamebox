@@ -5,7 +5,7 @@ import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.games.cookieclicker.CCGame;
 import me.nikl.gamebox.games.cookieclicker.CCLanguage;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
-import me.nikl.gamebox.utility.NumberUtil;
+import me.nikl.gamebox.utility.NumberUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
@@ -101,8 +101,8 @@ public abstract class Upgrade {
 
         lore = new ArrayList<>();
         for(String line : lang.upgradeLore.get(upgradeType)){
-            line = line.replace("%cost%", NumberUtil.convertHugeNumber(cost)
-                    .replace("%cost_long%", NumberUtil.convertHugeNumber(cost, false)));
+            line = line.replace("%cost%", NumberUtility.convertHugeNumber(cost)
+                    .replace("%cost_long%", NumberUtility.convertHugeNumber(cost, false)));
 
             if(buildings != null && buildings.length > 0){
                 line = line.replace("%building%", lang.buildingName.get(buildings[0]).toLowerCase())

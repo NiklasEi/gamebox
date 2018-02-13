@@ -36,21 +36,16 @@ import java.util.UUID;
  */
 public class GUIManager {
 	public static final String TOP_LIST_KEY_ADDON = "topList";
+
 	private GameBox plugin;
 	private Map<String, Map<String, GameGui>> gameGuis;
 	private NMSUtil nms;
 	private GameBoxLanguage lang;
-	
 	private MainGui mainGui;
-
 	private int titleMessageSeconds = 3;
-
 	private ShopManager shopManager;
-
 	public static final String MAIN_GAME_GUI = "main";
-
 	private AButton tokenButton;
-
 
 	public GUIManager(GameBox plugin){
 		this.plugin = plugin;
@@ -58,10 +53,8 @@ public class GUIManager {
 		this.lang = plugin.lang;
 		this.gameGuis = new HashMap<>();
 		loadTokenButton();
-
 		this.mainGui = new MainGui(plugin, this);
 		shopManager = new ShopManager(plugin, this);
-
 		if(GameBoxSettings.tokensEnabled) mainGui.registerShop();
 	}
 
@@ -169,7 +162,7 @@ public class GUIManager {
 			if(!enterEvent.isCancelled()){
 				plugin.getPluginManager().saveInventory(whoClicked);
 			} else {
-				whoClicked.sendMessage("A game was canceled with the reason: " + enterEvent.getCancelMessage());
+				whoClicked.sendMessage(enterEvent.getCancelMessage());
 			}
 		}
 
@@ -230,18 +223,15 @@ public class GUIManager {
 				return false;
 			}
 		}
-
 		GameBox.openingNewGUI = true;
 		boolean open = mainGui.open(whoClicked);
 		GameBox.openingNewGUI = false;
 		if(open) return true;
-
 		// the gui didn't open. Make sure to restore all inventory content
 		if(whoClicked.getOpenInventory() != null){
 			whoClicked.closeInventory();
 		}
 		plugin.getPluginManager().restoreInventory(whoClicked);
-
 		return false;
 	}
 
@@ -258,18 +248,14 @@ public class GUIManager {
 			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED + "   missing args");
 			return;
 		}
-
 		String[] args = gui.getArgs();
-
 		gameGuis.computeIfAbsent(args[0], k -> new HashMap<>());
-
 		gameGuis.get(args[0]).put(args[1], gui);
 		GameBox.debug("registered gamegui: " + args[0] + ", " + args[1]);
 	}
 
 	/**
 	 * Register the main GUI of a game
-	 *
 	 *
 	 * @param gui game gui to register
 	 * @param button button in the main gui that will open the game gui
@@ -280,11 +266,8 @@ public class GUIManager {
 			Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED + "   missing args");
 			return;
 		}
-
 		String[] args = gui.getArgs();
-
 		gameGuis.computeIfAbsent(args[0], k -> new HashMap<>());
-
 		gameGuis.get(args[0]).put(args[1], gui);
 		GameBox.debug("registered gamegui: " + args[0] + ", " + args[1]);
 		AButton gameButton = new AButton(button);
@@ -313,16 +296,13 @@ public class GUIManager {
 	}
 
 	public void removePlayer(UUID uuid){
-
 		for(String gameID : gameGuis.keySet()){
 			Map<String, GameGui> guis = gameGuis.get(gameID);
 			for(GameGui gui : guis.values()){
 				gui.removePlayer(uuid);
 			}
 		}
-
 		this.mainGui.removePlayer(uuid);
-
 	}
 
 	public AGui getGameGui(String gameID, String key){

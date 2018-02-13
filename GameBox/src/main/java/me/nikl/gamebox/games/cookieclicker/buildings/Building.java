@@ -2,7 +2,7 @@ package me.nikl.gamebox.games.cookieclicker.buildings;
 
 import me.nikl.gamebox.games.cookieclicker.CCLanguage;
 import me.nikl.gamebox.games.cookieclicker.CookieClicker;
-import me.nikl.gamebox.utility.NumberUtil;
+import me.nikl.gamebox.utility.NumberUtility;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -94,12 +94,12 @@ public class Building {
         List<String> newLore = new ArrayList<>();
         for (String line : lore) {
             newLore.add(line.replace("%count%", String.valueOf(count))
-                    .replace("%cost%", NumberUtil.convertHugeNumber(getCost()))
-                    .replace("%cookies_per_second_per_item%", NumberUtil.convertHugeNumber(getProductionPerSecondPerItem()))
-                    .replace("%cookies_per_second%", NumberUtil.convertHugeNumber(getAllInAllProductionPerSecond()))
-                    .replace("%cost_long%", NumberUtil.convertHugeNumber(getCost(), false))
-                    .replace("%cookies_per_second_per_item_long%", NumberUtil.convertHugeNumber(getProductionPerSecondPerItem(), false))
-                    .replace("%cookies_per_second_long%", NumberUtil.convertHugeNumber(getAllInAllProductionPerSecond(), false)));
+                    .replace("%cost%", NumberUtility.convertHugeNumber(getCost()))
+                    .replace("%cookies_per_second_per_item%", NumberUtility.convertHugeNumber(getProductionPerSecondPerItem()))
+                    .replace("%cookies_per_second%", NumberUtility.convertHugeNumber(getAllInAllProductionPerSecond()))
+                    .replace("%cost_long%", NumberUtility.convertHugeNumber(getCost(), false))
+                    .replace("%cookies_per_second_per_item_long%", NumberUtility.convertHugeNumber(getProductionPerSecondPerItem(), false))
+                    .replace("%cookies_per_second_long%", NumberUtility.convertHugeNumber(getAllInAllProductionPerSecond(), false)));
         }
         ItemMeta meta = icon.getItemMeta();
         meta.setLore(newLore);

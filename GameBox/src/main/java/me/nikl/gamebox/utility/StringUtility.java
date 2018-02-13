@@ -10,7 +10,7 @@ import java.util.List;
  *
  * String related utility functions
  */
-public class StringUtil {
+public class StringUtility {
 
     public static List<String> color(List<String> list){
         ArrayList<String> toReturn = new ArrayList(list);
@@ -24,11 +24,18 @@ public class StringUtil {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 
-    public static String shorten(String str, int length) {
-        if(str != null && str.length() > length) {
-            return str.substring(0, length - 3) + "...";
+    /**
+     * Shorten a passed String to the given length.
+     * The last three characters of the new String will be dots.
+     * @param string
+     * @param length
+     * @return shortened String
+     */
+    public static String shorten(String string, int length) {
+        if(string != null && string.length() > length) {
+            return string.substring(0, length - 3) + "...";
         } else {
-            return str;
+            return string;
         }
     }
 

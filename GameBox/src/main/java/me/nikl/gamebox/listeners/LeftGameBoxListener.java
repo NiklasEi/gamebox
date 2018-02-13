@@ -20,26 +20,21 @@ public class LeftGameBoxListener implements Listener {
 
     public LeftGameBoxListener(GameBox plugin){
         this.plugin = plugin;
-
         if(plugin.getConfig().isSet("listeners.leftGameBox")){
             ConfigurationSection listener = plugin.getConfig().getConfigurationSection("listeners.leftGameBox");
             if(listener.isList("commands")){
                 this.commands = listener.getStringList("commands");
             }
         }
-
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-
     @EventHandler
     public void onLeftGameBox(LeftGameBoxEvent event){
-
         if(commands != null) {
             for (String cmd : commands) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", event.getPlayer().getName()));
             }
         }
-
     }
 }

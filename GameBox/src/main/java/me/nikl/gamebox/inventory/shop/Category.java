@@ -6,8 +6,8 @@ import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.button.AButton;
 import me.nikl.gamebox.inventory.gui.AGui;
 import me.nikl.gamebox.inventory.ClickAction;
-import me.nikl.gamebox.utility.ItemStackUtil;
-import me.nikl.gamebox.utility.StringUtil;
+import me.nikl.gamebox.utility.ItemStackUtility;
+import me.nikl.gamebox.utility.StringUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -78,7 +78,7 @@ public class Category {
         for(String itemKey : pageSection.getKeys(false)){
 
             // if null no item will be given
-            itemStack = ItemStackUtil.getItemStack(pageSection.getString(itemKey+".materialData"));
+            itemStack = ItemStackUtility.getItemStack(pageSection.getString(itemKey+".materialData"));
 
             // load the prices of the item
             if(pageSection.isSet(itemKey+".tokens") && pageSection.isInt(itemKey+".tokens")){
@@ -112,14 +112,14 @@ public class Category {
 
                 meta = itemStack.getItemMeta();
                 if(pageSection.isString(itemKey + ".displayName")){
-                    meta.setDisplayName(StringUtil.color(pageSection.getString(itemKey + ".displayName")));
+                    meta.setDisplayName(StringUtility.color(pageSection.getString(itemKey + ".displayName")));
                 }
 
                 if(pageSection.isList(itemKey + ".lore")){
                     lore = new ArrayList<>(pageSection.getStringList(itemKey + ".lore"));
 
                     for (int i = 0; i < lore.size(); i++) {
-                        lore.set(i, StringUtil.color(lore.get(i)));
+                        lore.set(i, StringUtility.color(lore.get(i)));
                     }
                     meta.setLore(lore);
                 }
@@ -220,7 +220,7 @@ public class Category {
 
     private ItemStack getButtonItem(ItemStack itemStack, ConfigurationSection pageSection, String itemKey) {
         String path = itemKey + ".buttonItem";
-        ItemStack presentItem = ItemStackUtil.getItemStack(pageSection.getString(path+".materialData"));
+        ItemStack presentItem = ItemStackUtility.getItemStack(pageSection.getString(path+".materialData"));
         if(presentItem == null && itemStack == null){
             return null;
         }
@@ -240,7 +240,7 @@ public class Category {
         ItemMeta meta = presentItem.getItemMeta();
 
         if(pageSection.isString(path + ".displayName")){
-            meta.setDisplayName(StringUtil.color(pageSection.getString(path + ".displayName")));
+            meta.setDisplayName(StringUtility.color(pageSection.getString(path + ".displayName")));
         }
 
         if(pageSection.isList(path + ".additionalLore")){
@@ -249,7 +249,7 @@ public class Category {
 
             List<String> addLore = new ArrayList<>(pageSection.getStringList(path + ".additionalLore"));
             for (int i = 0; i < addLore.size(); i++) {
-                addLore.set(i, StringUtil.color(addLore.get(i)));
+                addLore.set(i, StringUtility.color(addLore.get(i)));
             }
             lore.addAll(addLore);
             meta.setLore(lore);

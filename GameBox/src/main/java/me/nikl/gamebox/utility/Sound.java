@@ -213,20 +213,16 @@ public enum Sound {
 	}
 
 	/**
-	 * Gets the bukkit sound
+	 * Get the bukkit sound for current server version
 	 *
-	 * caches sound on first use
-	 * @return corresponding org.bukkit.Sound
+	 * Caches sound on first call
+	 * @return corresponding {@link org.bukkit.Sound}
 	 */
 	public org.bukkit.Sound bukkitSound() {
-		// check for already cached sound
 		if (cached != null) return cached;
-
-		// cache the sound
 		try {
 			return cached = org.bukkit.Sound.valueOf(postSound);
-		} catch (IllegalArgumentException e) {
-			//1.8 sound
+		} catch (IllegalArgumentException ignore) {
 			return cached = org.bukkit.Sound.valueOf(preSound);
 		}
 	}

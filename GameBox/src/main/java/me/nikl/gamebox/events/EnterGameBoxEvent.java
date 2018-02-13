@@ -18,17 +18,13 @@ public class EnterGameBoxEvent extends Event implements Cancellable{
     private boolean cancelled = false;
     private String cancelMessage = "none";
     private String[] args;
-
     private Player player;
 
     public EnterGameBoxEvent(Player player, String... args){
         this.player = player;
         this.args = args;
-
-
         Bukkit.getPluginManager().callEvent(this);
     }
-
 
     @Override
     public HandlerList getHandlers() {

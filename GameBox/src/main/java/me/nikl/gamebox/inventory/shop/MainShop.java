@@ -4,8 +4,8 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.button.AButton;
 import me.nikl.gamebox.inventory.ClickAction;
-import me.nikl.gamebox.utility.ItemStackUtil;
-import me.nikl.gamebox.utility.StringUtil;
+import me.nikl.gamebox.utility.ItemStackUtility;
+import me.nikl.gamebox.utility.StringUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
@@ -35,7 +35,7 @@ class MainShop extends Shop {
         ItemStack buttonItem;
         for(String cat : shop.getConfigurationSection("shop.categories").getKeys(false)){
             ConfigurationSection category = shop.getConfigurationSection("shop.categories." + cat);
-            buttonItem = ItemStackUtil.getItemStack(category.getString("materialData"));
+            buttonItem = ItemStackUtility.getItemStack(category.getString("materialData"));
 
             if(buttonItem == null){
                 Bukkit.getLogger().log(Level.WARNING, " error loading:   shop.categories." + cat);
@@ -49,13 +49,13 @@ class MainShop extends Shop {
             ItemMeta meta = button.getItemMeta();
 
             if(category.isString("displayName")){
-                meta.setDisplayName(StringUtil.color(category.getString("displayName")));
+                meta.setDisplayName(StringUtility.color(category.getString("displayName")));
             }
 
             if(category.isList("lore")){
                 lore = new ArrayList<>(category.getStringList("lore"));
                 for(int i = 0; i < lore.size();i++){
-                    lore.set(i, StringUtil.color(lore.get(i)));
+                    lore.set(i, StringUtility.color(lore.get(i)));
                 }
                 meta.setLore(lore);
             }

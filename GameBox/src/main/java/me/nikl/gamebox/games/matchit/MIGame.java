@@ -1,9 +1,9 @@
 package me.nikl.gamebox.games.matchit;
 
 import me.nikl.gamebox.nms.NMSUtil;
-import me.nikl.gamebox.utility.InventoryUtil;
+import me.nikl.gamebox.utility.InventoryUtility;
 import me.nikl.gamebox.utility.Sound;
-import me.nikl.gamebox.utility.StringUtil;
+import me.nikl.gamebox.utility.StringUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -57,7 +57,7 @@ public class MIGame extends BukkitRunnable {
 
         nrPairs = gridSize.getSize()/2;
 
-        this.inventory = InventoryUtil.createInventory(null, 54, language.INV_TITLE_START);
+        this.inventory = InventoryUtility.createInventory(null, 54, language.INV_TITLE_START);
         generateGame();
 
         player.openInventory(inventory);
@@ -96,7 +96,7 @@ public class MIGame extends BukkitRunnable {
                     playSound(win);
                     over = true;
                     nms.updateInventoryTitle(player, language.INV_TITLE_WON
-                            .replace("%time%", StringUtil.formatTime(time)));
+                            .replace("%time%", StringUtility.formatTime(time)));
                     onGameEnd();
                 } else {
                     playSound(match);
@@ -216,7 +216,7 @@ public class MIGame extends BukkitRunnable {
 
     private void updateTitle(){
         nms.updateInventoryTitle(player, language.INV_TITLE_GAME
-                .replace("%time%", StringUtil.formatTime(time))
+                .replace("%time%", StringUtility.formatTime(time))
                 .replace("%matched%", String.valueOf(matched))
                 .replace("%pairs%", String.valueOf(nrPairs)));
     }

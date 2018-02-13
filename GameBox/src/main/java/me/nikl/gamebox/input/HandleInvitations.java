@@ -10,18 +10,21 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * @author Niklas Eicker
  *
- *
+ * Handle Invitations for multi player games
  */
 public class HandleInvitations extends BukkitRunnable{
     private Set<Invitation> invitations = new HashSet<>();
     private PluginManager pluginManager;
     private GameBox plugin;
-
     private GameBoxLanguage lang;
 
     public HandleInvitations(GameBox plugin){
@@ -47,7 +50,6 @@ public class HandleInvitations extends BukkitRunnable{
         }
     }
 
-
     public boolean addInvite(UUID player1, UUID player2, long timeStamp, String... args){
         for(Invitation inv : invitations){
             if(inv.player1.equals(player1) && inv.player2.equals(player2)){
@@ -60,36 +62,35 @@ public class HandleInvitations extends BukkitRunnable{
                 // for now just continue and allow it
             }
         }
-
         Player first = Bukkit.getPlayer(player1);
         Player second = Bukkit.getPlayer(player2);
-
         if(first != null && second != null){
             for(String message : plugin.lang.INVITE_MESSAGE) {
                 second.sendMessage(plugin.lang.PREFIX + message.replace("%player%", first.getName()).replace("%game%", pluginManager.getGame(args[0]).getGameLang().PLAIN_NAME));
             }
-
             boolean boldClick = false;
-
             if(GameBoxSettings.sendInviteClickMessage) {
                 Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "tellraw "
                         + second.getName()
-                        + " [{\"text\":\"" + lang.JSON_PREFIX_PRE_TEXT + "\",\"color\":\"" + lang.JSON_PREFIX_PRE_COLOR + "\"},{\"text\":\"" + lang.JSON_PREFIX_TEXT + "\",\"color\":\""
-                        + lang.JSON_PREFIX_COLOR + "\"},{\"text\":\"" + lang.JSON_PREFIX_AFTER_TEXT + "\",\"color\":\"" + lang.JSON_PREFIX_AFTER_COLOR + "\"}" +
-                        ",{\"text\":\"" + lang.INVITATION_PRE_TEXT + "\",\"color\":\""
-                        + lang.INVITATION_PRE_COLOR + "\"},{\"text\":\"" + lang.INVITATION_CLICK_TEXT + "\",\"color\":\""
-                        + lang.INVITATION_CLICK_COLOR + "\",\"bold\":" + boldClick + ",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/gb "
-                        + MainCommand.INVITE_CLICK_COMMAND + " " + args[0] + " " + args[1]
-                        + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + lang.INVITATION_HOVER_TEXT + "\",\"color\":\""
-                        + lang.INVITATION_HOVER_COLOR + "\"}}}, {\"text\":\"" + lang.INVITATION_AFTER_TEXT + "\",\"color\":\"" + lang.INVITATION_AFTER_COLOR + "\"}]");
+                        + buildClickMessage(args, boldClick));
             }
         } else {
             return false;
         }
-
         new Invitation(player1, player2, timeStamp, args);
         ((StartMultiplayerGamePage)pluginManager.getGuiManager().getGameGui(args[0], args[1])).addInvite(player1, player2);
         return true;
+    }
+
+    private String buildClickMessage(String[] args, boolean boldClick) {
+        return " [{\"text\":\"" + lang.JSON_PREFIX_PRE_TEXT + "\",\"color\":\"" + lang.JSON_PREFIX_PRE_COLOR + "\"},{\"text\":\"" + lang.JSON_PREFIX_TEXT + "\",\"color\":\""
+                + lang.JSON_PREFIX_COLOR + "\"},{\"text\":\"" + lang.JSON_PREFIX_AFTER_TEXT + "\",\"color\":\"" + lang.JSON_PREFIX_AFTER_COLOR + "\"}" +
+                ",{\"text\":\"" + lang.INVITATION_PRE_TEXT + "\",\"color\":\""
+                + lang.INVITATION_PRE_COLOR + "\"},{\"text\":\"" + lang.INVITATION_CLICK_TEXT + "\",\"color\":\""
+                + lang.INVITATION_CLICK_COLOR + "\",\"bold\":" + boldClick + ",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/gb "
+                + MainCommand.INVITE_CLICK_COMMAND + " " + args[0] + " " + args[1]
+                + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + lang.INVITATION_HOVER_TEXT + "\",\"color\":\""
+                + lang.INVITATION_HOVER_COLOR + "\"}}}, {\"text\":\"" + lang.INVITATION_AFTER_TEXT + "\",\"color\":\"" + lang.INVITATION_AFTER_COLOR + "\"}]";
     }
 
     public class Invitation{

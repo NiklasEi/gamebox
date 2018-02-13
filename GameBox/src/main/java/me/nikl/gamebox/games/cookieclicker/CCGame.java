@@ -18,8 +18,8 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.temple.*;
 import me.nikl.gamebox.games.cookieclicker.upgrades.timemachine.*;
 import me.nikl.gamebox.games.cookieclicker.upgrades.wizardtower.*;
 import me.nikl.gamebox.nms.NMSUtil;
-import me.nikl.gamebox.utility.InventoryUtil;
-import me.nikl.gamebox.utility.NumberUtil;
+import me.nikl.gamebox.utility.InventoryUtility;
+import me.nikl.gamebox.utility.NumberUtility;
 import me.nikl.gamebox.utility.Sound;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -321,7 +321,7 @@ public class CCGame extends BukkitRunnable {
         String title = lang.GAME_TITLE
                 .replace("%score%", String.valueOf((int) cookies));
 
-        this.inventory = InventoryUtil.createInventory(null, 54, title);
+        this.inventory = InventoryUtility.createInventory(null, 54, title);
 
         if(save != null){
             //load the game
@@ -358,10 +358,10 @@ public class CCGame extends BukkitRunnable {
     private void updateOven() {
         ArrayList<String> lore = new ArrayList<>();
         for(String line : lang.GAME_OVEN_LORE){
-            lore.add(line.replace("%cookies_per_second%", NumberUtil.convertHugeNumber(cookiesPerSecond))
-                    .replace("%cookies_per_click%", NumberUtil.convertHugeNumber(cookiesPerClick))
-                    .replace("%cookies_per_second_long%", NumberUtil.convertHugeNumber(cookiesPerSecond, false))
-                    .replace("%cookies_per_click_long%", NumberUtil.convertHugeNumber(cookiesPerClick, false)));
+            lore.add(line.replace("%cookies_per_second%", NumberUtility.convertHugeNumber(cookiesPerSecond))
+                    .replace("%cookies_per_click%", NumberUtility.convertHugeNumber(cookiesPerClick))
+                    .replace("%cookies_per_second_long%", NumberUtility.convertHugeNumber(cookiesPerSecond, false))
+                    .replace("%cookies_per_click_long%", NumberUtility.convertHugeNumber(cookiesPerClick, false)));
         }
         ItemMeta meta = oven.getItemMeta();
         meta.setLore(lore);
@@ -556,7 +556,7 @@ public class CCGame extends BukkitRunnable {
 
 
     public void onGameEnd() {
-        player.sendMessage(lang.PREFIX + lang.GAME_CLOSED.replace("%score%", NumberUtil.convertHugeNumber(Math.floor(totalCookiesProduced))));
+        player.sendMessage(lang.PREFIX + lang.GAME_CLOSED.replace("%score%", NumberUtility.convertHugeNumber(Math.floor(totalCookiesProduced))));
 
         Map<String, Double> cookies = new HashMap<>();
         cookies.put("current", this.cookies);
@@ -623,8 +623,8 @@ public class CCGame extends BukkitRunnable {
         lastTimeStamp = newTimeStamp;
 
         nms.updateInventoryTitle(player, lang.GAME_TITLE
-                .replace("%score%", NumberUtil.convertHugeNumber(cookies))
-                .replace("%score_long%", NumberUtil.convertHugeNumber(cookies, false)));
+                .replace("%score%", NumberUtility.convertHugeNumber(cookies))
+                .replace("%score_long%", NumberUtility.convertHugeNumber(cookies, false)));
         checkUpgrades();
     }
 

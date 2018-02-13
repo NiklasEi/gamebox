@@ -63,6 +63,7 @@ settings:
     # Default: 30
     inviteInputDuration: 30
 
+    # Clickable message send on invitation by a player
     clickMessage:
       # Switch for click messages.
       # The click message provides an easy and fast way to navigate to the invitation.
@@ -133,12 +134,12 @@ mysql:
   host: "localhost"
   port: 3306
   database: "Database"
-  username: "user"
-  password: "password"
+  username: "User"
+  password: "Password"
 
 
 # HubMode makes playing GameBox games easier.
-# It can give players an item they can click with to open the GUI.
+# It can give players an item they can click with to open the main menu.
 hubMode:
 
   # HubMode switch.
@@ -150,14 +151,14 @@ hubMode:
   - "world"
 
   # Whenever a player joins one of the enabled worlds his inventory is checked for the hubitem.
-  # If he doesn't have it it will be added to his inventory.
+  # If he doesn't have the item, it will be added to his inventory.
   giveItemOnWorldJoin: true
 
-  # Preferred slot for the hubitem.
-  # If the slot is taken the plugin will try to find another one.
+  # Preferred slot for the hubitem
+  # If the slot is taken by another item, the plugin will try to find an empty slot.
   slot: 0
 
-  # Configuration for the hubitem itself.
+  # Configuration for the hubitem
   item:
      # Material and data of the item (format: 'material:data')
      materialData: "CHEST"
@@ -166,7 +167,7 @@ hubMode:
      # Lore of the item (optional).
      lore:
      - ""
-     - "&1Click with this item to open the menu"
+     - "&1Click with this to play awesome games"
 
 
 # Plugin intern listeners are able to run some basic code during GameBox events for you.

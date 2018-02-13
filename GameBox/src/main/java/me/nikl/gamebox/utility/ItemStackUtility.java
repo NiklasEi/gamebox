@@ -13,7 +13,7 @@ import java.util.List;
  *
  * Utility class for ItemStacks
  */
-public class ItemStackUtil {
+public class ItemStackUtility {
     public static final String MAT = "materialData";
     public static final String LORE = "lore";
     public static final String NAME = "displayName";
@@ -80,10 +80,10 @@ public class ItemStackUtil {
         ItemMeta meta = toReturn.getItemMeta();
 
         if(section.isString(NAME)){
-            meta.setDisplayName(StringUtil.color(section.getString(NAME)));
+            meta.setDisplayName(StringUtility.color(section.getString(NAME)));
         }
         if(section.isList(LORE)){
-            meta.setLore(StringUtil.color(section.getStringList(LORE)));
+            meta.setLore(StringUtility.color(section.getStringList(LORE)));
         }
         toReturn.setItemMeta(meta);
 

@@ -1,7 +1,7 @@
 package me.nikl.gamebox;
 
 import me.nikl.gamebox.games.Game;
-import me.nikl.gamebox.utility.FileUtil;
+import me.nikl.gamebox.utility.FileUtility;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -46,7 +46,7 @@ public class GameRegistry {
         modules.put(module.getModuleID(), module);
 
         if(module.getExternalPlugin() != null){
-            if(!FileUtil.copyExternalResources(gameBox, module)){
+            if(!FileUtility.copyExternalResources(gameBox, module)){
                 gameBox.info(" Failed to completely load the external module '" + module.getModuleID() + "'");
                 modules.remove(module.getModuleID());
                 return false;
