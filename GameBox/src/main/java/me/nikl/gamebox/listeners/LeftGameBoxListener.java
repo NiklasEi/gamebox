@@ -14,19 +14,17 @@ import java.util.List;
  *
  *
  */
-public class LeftGameBoxListener implements Listener {
-    private GameBox plugin;
+public class LeftGameBoxListener extends GameBoxListener {
     private List<String > commands;
 
-    public LeftGameBoxListener(GameBox plugin){
-        this.plugin = plugin;
-        if(plugin.getConfig().isSet("listeners.leftGameBox")){
-            ConfigurationSection listener = plugin.getConfig().getConfigurationSection("listeners.leftGameBox");
+    public LeftGameBoxListener(GameBox gameBox){
+        super(gameBox);
+        if(gameBox.getConfig().isSet("listeners.leftGameBox")){
+            ConfigurationSection listener = gameBox.getConfig().getConfigurationSection("listeners.leftGameBox");
             if(listener.isList("commands")){
                 this.commands = listener.getStringList("commands");
             }
         }
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler

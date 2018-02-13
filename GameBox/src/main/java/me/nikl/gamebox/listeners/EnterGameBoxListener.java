@@ -13,19 +13,17 @@ import java.util.List;
  * Created by Niklas
  *
  */
-public class EnterGameBoxListener implements Listener {
-    private GameBox plugin;
+public class EnterGameBoxListener extends GameBoxListener {
     private List<String > commands;
 
-    public EnterGameBoxListener(GameBox plugin){
-        this.plugin = plugin;
-        if(plugin.getConfig().isSet("listeners.enteringGameBox")){
-            ConfigurationSection listener = plugin.getConfig().getConfigurationSection("listeners.enteringGameBox");
+    public EnterGameBoxListener(GameBox gameBox){
+        super(gameBox);
+        if(gameBox.getConfig().isSet("listeners.enteringGameBox")){
+            ConfigurationSection listener = gameBox.getConfig().getConfigurationSection("listeners.enteringGameBox");
             if(listener.isList("commands")){
                 this.commands = listener.getStringList("commands");
             }
         }
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler
