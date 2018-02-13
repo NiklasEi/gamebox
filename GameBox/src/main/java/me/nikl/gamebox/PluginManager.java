@@ -8,7 +8,7 @@ import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.timer.TitleTimer;
 import me.nikl.gamebox.input.HandleInvitations;
 import me.nikl.gamebox.input.HandleInviteInput;
-import me.nikl.gamebox.nms.NMSUtil;
+import me.nikl.gamebox.nms.NmsUtility;
 import me.nikl.gamebox.utility.ItemStackUtility;
 import me.nikl.gamebox.utility.Permission;
 import me.nikl.gamebox.utility.Sound;
@@ -74,7 +74,7 @@ public class PluginManager implements Listener {
 	// plugin configuration
 	private FileConfiguration config;
 	
-	private NMSUtil nms;
+	private NmsUtility nms;
 	
 	private GUIManager guiManager;
 

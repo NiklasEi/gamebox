@@ -12,7 +12,7 @@ import me.nikl.gamebox.inventory.gui.game.GameGui;
 import me.nikl.gamebox.inventory.gui.game.GameGuiPage;
 import me.nikl.gamebox.inventory.shop.Page;
 import me.nikl.gamebox.inventory.shop.ShopManager;
-import me.nikl.gamebox.nms.NMSUtil;
+import me.nikl.gamebox.nms.NmsUtility;
 import me.nikl.gamebox.utility.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -39,7 +39,7 @@ public class GUIManager {
 
 	private GameBox plugin;
 	private Map<String, Map<String, GameGui>> gameGuis;
-	private NMSUtil nms;
+	private NmsUtility nms;
 	private GameBoxLanguage lang;
 	private MainGui mainGui;
 	private int titleMessageSeconds = 3;

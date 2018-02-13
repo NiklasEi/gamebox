@@ -17,7 +17,7 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.shipment.*;
 import me.nikl.gamebox.games.cookieclicker.upgrades.temple.*;
 import me.nikl.gamebox.games.cookieclicker.upgrades.timemachine.*;
 import me.nikl.gamebox.games.cookieclicker.upgrades.wizardtower.*;
-import me.nikl.gamebox.nms.NMSUtil;
+import me.nikl.gamebox.nms.NmsUtility;
 import me.nikl.gamebox.utility.InventoryUtility;
 import me.nikl.gamebox.utility.NumberUtility;
 import me.nikl.gamebox.utility.Sound;
@@ -45,7 +45,7 @@ public class CCGame extends BukkitRunnable {
 
     private CCLanguage lang;
 
-    private NMSUtil nms;
+    private NmsUtility nms;
 
     private CookieClicker plugin;
 

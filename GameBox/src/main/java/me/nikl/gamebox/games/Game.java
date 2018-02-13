@@ -11,7 +11,7 @@ import me.nikl.gamebox.inventory.button.AButton;
 import me.nikl.gamebox.inventory.gui.game.GameGui;
 import me.nikl.gamebox.inventory.gui.game.StartMultiplayerGamePage;
 import me.nikl.gamebox.inventory.gui.game.TopListPage;
-import me.nikl.gamebox.nms.NMSUtil;
+import me.nikl.gamebox.nms.NmsUtility;
 import me.nikl.gamebox.utility.*;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
@@ -50,7 +50,7 @@ public abstract class Game {
     protected GameSettings gameSettings;
     protected GameLanguage gameLang;
     protected GameBoxLanguage gbLang;
-    protected NMSUtil nms;
+    protected NmsUtility nms;
 
     protected Game(GameBox gameBox, String gameID){
         this.module = gameBox.getGameRegistry().getModule(gameID);

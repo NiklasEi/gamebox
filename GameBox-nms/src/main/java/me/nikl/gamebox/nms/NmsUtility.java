@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
  *
  * interface for nms utils
  */
-public interface NMSUtil {
+public interface NmsUtility {
 	
 	void updateInventoryTitle(Player player, String newTitle);
 	

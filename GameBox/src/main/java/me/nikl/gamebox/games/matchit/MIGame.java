@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.matchit;
 
-import me.nikl.gamebox.nms.NMSUtil;
+import me.nikl.gamebox.nms.NmsUtility;
 import me.nikl.gamebox.utility.InventoryUtility;
 import me.nikl.gamebox.utility.Sound;
 import me.nikl.gamebox.utility.StringUtility;
@@ -22,7 +22,7 @@ public class MIGame extends BukkitRunnable {
     private Player player;
     private MatchIt matchIt;
     private MILanguage language;
-    private NMSUtil nms;
+    private NmsUtility nms;
     private int time = 0;
     private int firstOpen = -1
             , secondOpen = -1;

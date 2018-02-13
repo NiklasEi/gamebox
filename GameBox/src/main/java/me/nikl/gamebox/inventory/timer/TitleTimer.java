@@ -2,7 +2,7 @@ package me.nikl.gamebox.inventory.timer;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.PluginManager;
-import me.nikl.gamebox.nms.NMSUtil;
+import me.nikl.gamebox.nms.NmsUtility;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -13,7 +13,7 @@ public class TitleTimer extends BukkitRunnable {
     private String title;
     private long timestamp;
     private Player player;
-    private NMSUtil nms;
+    private NmsUtility nms;
     private PluginManager pluginManager;
 
     public TitleTimer(GameBox plugin, String title, Player player, long timestamp){

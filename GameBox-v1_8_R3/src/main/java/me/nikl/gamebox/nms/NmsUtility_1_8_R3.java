@@ -1,25 +1,58 @@
 package me.nikl.gamebox.nms;
 
-import net.minecraft.server.v1_9_R2.*;
+import io.netty.handler.codec.DecoderException;
+import net.minecraft.server.v1_8_R3.*;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_9_R2.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_9_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
 import java.lang.reflect.Field;
 
 /**
  * Created by niklas on 10/17/16.
  *
- * nms utility for 1.9.R2
+ * nms utility for 1.8.R3
  */
-public class NMSUtil_1_9_R2 implements NMSUtil {
+public class NmsUtility_1_8_R3 implements NmsUtility {
+
+
+	private boolean checkInventoryTitleLength = false;
+
+	public NmsUtility_1_8_R3(){
+		try {
+			Inventory inventory = Bukkit.createInventory(null, 27, "This title is longer then 32 characters!");
+		} catch (Exception e){
+			checkInventoryTitleLength = true;
+		}
+	}
+
 	@Override
 	public void updateInventoryTitle(Player player, String newTitle) {
 		EntityPlayer ep = ((CraftPlayer)player).getHandle();
-		PacketPlayOutOpenWindow packet = new PacketPlayOutOpenWindow(ep.activeContainer.windowId, "minecraft:chest", new ChatMessage(ChatColor.translateAlternateColorCodes('&',newTitle)), player.getOpenInventory().getTopInventory().getSize());
-		ep.playerConnection.sendPacket(packet);
-		ep.updateInventory(ep.activeContainer);
+		newTitle = ChatColor.translateAlternateColorCodes('&',newTitle);
+
+		if(checkInventoryTitleLength && newTitle.length() > 32){
+			newTitle = newTitle.substring(0, 28) + "...";
+		}
+
+		PacketPlayOutOpenWindow packet = new PacketPlayOutOpenWindow(ep.activeContainer.windowId
+				, "minecraft:chest", new ChatMessage(newTitle)
+				, player.getOpenInventory().getTopInventory().getSize());
+
+		try {
+			ep.playerConnection.sendPacket(packet);
+			ep.updateInventory(ep.activeContainer);
+		} catch (DecoderException ex){
+			if(!checkInventoryTitleLength){
+				checkInventoryTitleLength = true;
+				updateInventoryTitle(player, newTitle);
+			} else {
+				Bukkit.getConsoleSender().sendMessage("DecoderException while trying to send new title < 32 chars O.o");
+			}
+		}
 	}
 	
 	@Override
@@ -38,7 +71,6 @@ public class NMSUtil_1_9_R2 implements NMSUtil {
 		}
 		PacketPlayOutTitle length = new PacketPlayOutTitle(5, 20, 5);
 		((CraftPlayer) player).getHandle().playerConnection.sendPacket(length);
-		
 	}
 	
 	@Override
@@ -49,7 +81,6 @@ public class NMSUtil_1_9_R2 implements NMSUtil {
 		PacketPlayOutChat bar = new PacketPlayOutChat(icbc, (byte) 2);
 		
 		((CraftPlayer) p).getHandle().playerConnection.sendPacket(bar);
-		
 	}
 	
 	
@@ -91,6 +122,8 @@ public class NMSUtil_1_9_R2 implements NMSUtil {
 		}
 		((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
 	}
+	
+	
 	
 	
 	

@@ -5,7 +5,7 @@ import me.nikl.gamebox.data.database.DataBase;
 import me.nikl.gamebox.data.toplist.SaveType;
 import me.nikl.gamebox.games.GameManager;
 import me.nikl.gamebox.games.GameRule;
-import me.nikl.gamebox.nms.NMSUtil;
+import me.nikl.gamebox.nms.NmsUtility;
 import me.nikl.gamebox.utility.ItemStackUtility;
 import me.nikl.gamebox.utility.Permission;
 import me.nikl.gamebox.utility.StringUtility;
@@ -36,7 +36,7 @@ public class CFGameManager implements GameManager {
     private Map<UUID, CFGame> games = new HashMap<>();
     private CFLanguage lang;
 
-    private NMSUtil nms;
+    private NmsUtility nms;
 
     private DataBase statistics;
 

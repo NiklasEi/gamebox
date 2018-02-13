@@ -54,7 +54,7 @@ public class GameBox extends JavaPlugin{
 	public static Economy econ = null;
 
 	private FileConfiguration config;
-	private NMSUtil nms;
+	private NmsUtility nms;
 	private GameBoxAPI api;
 	public GameBoxLanguage lang;
 	private PluginManager pManager;
@@ -69,8 +69,7 @@ public class GameBox extends JavaPlugin{
 
 	@Override
 	public void onEnable(){
-		// get the version and set up nms
-		if (!setUpNMS()) {
+		if ((nms = NmsFactory.getNmsUtility()) == null) {
 			sendVersionError();
 			Bukkit.getPluginManager().disablePlugin(this);
 			return;
@@ -294,46 +293,6 @@ public class GameBox extends JavaPlugin{
 		return econ != null;
 	}
 
-	private boolean setUpNMS() {
-		String version;
-		try {
-			version = Bukkit.getServer().getClass().getPackage().getName().replace(".",  ",").split(",")[3];
-		} catch (ArrayIndexOutOfBoundsException e) {
-			return false;
-		}
-		debug("Your server is running version " + version);
-		switch (version) {
-			case "v1_8_R1":
-				nms = new NMSUtil_1_8_R1();
-				GameBoxSettings.version1_8 = true;
-				break;
-			case "v1_8_R2":
-				nms = new NMSUtil_1_8_R2();
-				GameBoxSettings.version1_8 = true;
-				break;
-			case "v1_8_R3":
-				nms = new NMSUtil_1_8_R3();
-				GameBoxSettings.version1_8 = true;
-				break;
-			case "v1_9_R1":
-				nms = new NMSUtil_1_9_R1();
-				break;
-			case "v1_9_R2":
-				nms = new NMSUtil_1_9_R2();
-				break;
-			case "v1_10_R1":
-				nms = new NMSUtil_1_10_R1();
-				break;
-			case "v1_11_R1":
-				nms = new NMSUtil_1_11_R1();
-				break;
-			case "v1_12_R1":
-				nms = new NMSUtil_1_12_R1();
-				break;
-		}
-		return nms != null;
-	}
-
 	@Override
 	public void onDisable(){
 		if(pManager != null) pManager.shutDown();
@@ -349,7 +308,7 @@ public class GameBox extends JavaPlugin{
 		return pManager;
 	}
 
-	public NMSUtil getNMS() {
+	public NmsUtility getNMS() {
 		return nms;
 	}
 

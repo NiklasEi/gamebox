@@ -1,7 +1,7 @@
 package me.nikl.gamebox.games.connectfour;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.nms.NMSUtil;
+import me.nikl.gamebox.nms.NmsUtility;
 import me.nikl.gamebox.utility.InventoryUtility;
 import me.nikl.gamebox.utility.Permission;
 import me.nikl.gamebox.utility.Sound;
@@ -51,7 +51,7 @@ public class CFGame extends BukkitRunnable{
 
     private int playedChips = 0;
 
-    private NMSUtil nms;
+    private NmsUtility nms;
     private CFLanguage lang;
 
     CFGame(CFGameRules rule, ConnectFour connectFour, boolean playSounds, Player[] players, Map<Integer, ItemStack> chips){

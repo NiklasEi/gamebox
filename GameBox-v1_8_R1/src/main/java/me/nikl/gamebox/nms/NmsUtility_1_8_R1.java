@@ -1,41 +1,70 @@
 package me.nikl.gamebox.nms;
 
-import com.google.gson.stream.JsonReader;
-import net.minecraft.server.v1_10_R1.*;
+import io.netty.handler.codec.DecoderException;
+import net.minecraft.server.v1_8_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_10_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
-import java.io.StringReader;
 import java.lang.reflect.Field;
 
 /**
  * Created by niklas on 10/17/16.
  *
- * nms utility for 1.10.R1
+ * nms utility for 1.8.R1
  */
-public class NMSUtil_1_10_R1 implements NMSUtil {
+public class NmsUtility_1_8_R1 implements NmsUtility {
+
+	private boolean checkInventoryTitleLength = false;
+
+	public NmsUtility_1_8_R1(){
+		try {
+			Inventory inventory = Bukkit.createInventory(null, 27, "This title is longer then 32 characters!");
+		} catch (Exception e){
+			checkInventoryTitleLength = true;
+		}
+	}
+
 	@Override
 	public void updateInventoryTitle(Player player, String newTitle) {
 		EntityPlayer ep = ((CraftPlayer)player).getHandle();
-		PacketPlayOutOpenWindow packet = new PacketPlayOutOpenWindow(ep.activeContainer.windowId, "minecraft:chest", new ChatMessage(ChatColor.translateAlternateColorCodes('&',newTitle)), player.getOpenInventory().getTopInventory().getSize());
-		ep.playerConnection.sendPacket(packet);
-		ep.updateInventory(ep.activeContainer);
+		newTitle = ChatColor.translateAlternateColorCodes('&',newTitle);
+
+		if(checkInventoryTitleLength && newTitle.length() > 32){
+			newTitle = newTitle.substring(0, 28) + "...";
+		}
+
+		PacketPlayOutOpenWindow packet = new PacketPlayOutOpenWindow(ep.activeContainer.windowId
+				, "minecraft:chest", new ChatMessage(newTitle)
+				, player.getOpenInventory().getTopInventory().getSize());
+
+		try {
+			ep.playerConnection.sendPacket(packet);
+			ep.updateInventory(ep.activeContainer);
+		} catch (DecoderException ex){
+			if(!checkInventoryTitleLength){
+				checkInventoryTitleLength = true;
+				updateInventoryTitle(player, newTitle);
+			} else {
+				Bukkit.getConsoleSender().sendMessage("DecoderException while trying to send new title < 32 chars O.o");
+			}
+		}
 	}
 	
 	@Override
-	public void sendTitle(Player player, String title, String subTitle){
+	public void sendTitle(Player player, String title, String subTitle) {
 		if(title != null){
-			IChatBaseComponent chatTitle = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + ChatColor.translateAlternateColorCodes('&',title + "\"}"));
-			PacketPlayOutTitle pTitle = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE, chatTitle);
+			IChatBaseComponent chatTitle = ChatSerializer.a("{\"text\": \"" + title + "\",color:" + ChatColor.GOLD.name().toLowerCase() + "}");
+			PacketPlayOutTitle pTitle = new PacketPlayOutTitle(EnumTitleAction.TITLE, chatTitle);
 			((CraftPlayer) player).getHandle().playerConnection.sendPacket(pTitle);
 			
 		}
 		if(subTitle != null){
-			IChatBaseComponent chatSubTitle = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + ChatColor.translateAlternateColorCodes('&',subTitle + "\"}"));
-			PacketPlayOutTitle pSubTitle = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.SUBTITLE, chatSubTitle);
+			IChatBaseComponent chatSubTitle = ChatSerializer.a("{\"text\": \"" + subTitle + "\",color:" + ChatColor.GOLD.name().toLowerCase() + "}");
+			PacketPlayOutTitle pSubTitle = new PacketPlayOutTitle(EnumTitleAction.SUBTITLE, chatSubTitle);
 			((CraftPlayer) player).getHandle().playerConnection.sendPacket(pSubTitle);
 			
 		}
@@ -46,16 +75,18 @@ public class NMSUtil_1_10_R1 implements NMSUtil {
 	@Override
 	public void sendActionbar(Player p, String message) {
 		
-		IChatBaseComponent icbc = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + ChatColor.translateAlternateColorCodes('&',message + "\"}"));
+		IChatBaseComponent icbc = ChatSerializer.a("{\"text\": \"" + ChatColor.translateAlternateColorCodes('&',message) + "\"}");
 		
 		PacketPlayOutChat bar = new PacketPlayOutChat(icbc, (byte) 2);
 		
 		((CraftPlayer) p).getHandle().playerConnection.sendPacket(bar);
 	}
 	
+	
+	
 	@Override
 	public void sendListFooter(Player player, String footer){
-		IChatBaseComponent bottom = IChatBaseComponent.ChatSerializer.a("{\"text\": \"" + footer + "\"}");
+		IChatBaseComponent bottom = ChatSerializer.a("{text: '" + ChatColor.translateAlternateColorCodes('&', footer) + "'}");
 		
 		PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter();
 		
@@ -73,18 +104,8 @@ public class NMSUtil_1_10_R1 implements NMSUtil {
 	}
 	
 	@Override
-	public void sendListHeader(Player player, String header){//ChatColor.translateAlternateColorCodes('&', header)
-		//"{\"text\":\"" + header + "\"}"
-		JsonReader reader = new JsonReader(new StringReader("{\"text\": \"" + header + "\"}"));
-		reader.setLenient(true);
-		Bukkit.getConsoleSender().sendMessage("reader null? " + (reader == null )+"   toString() null? " + (reader.toString() == null));
-		if(reader != null)Bukkit.getConsoleSender().sendMessage(reader.toString());
-		reader.setLenient(true);
-		reader = new JsonReader(new StringReader("{'text': '" + header + "'}"));
-		Bukkit.getConsoleSender().sendMessage("reader null? " + (reader == null));
-		Bukkit.getConsoleSender().sendMessage(reader.toString());
-		reader.setLenient(true);
-		IChatBaseComponent bottom = IChatBaseComponent.ChatSerializer.a((reader.toString()));
+	public void sendListHeader(Player player, String header){
+		IChatBaseComponent bottom = ChatSerializer.a("{text: '" + ChatColor.translateAlternateColorCodes('&', header) + "'}");
 		
 		PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter();
 		
