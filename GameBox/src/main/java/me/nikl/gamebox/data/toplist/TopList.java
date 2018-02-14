@@ -28,21 +28,53 @@ public class TopList {
 
     public void update(PlayerScore playerScore){
         GameBox.debug("score: " + playerScore.getValue());
-        if(!isInList(playerScore.getUuid())){
-            GameBox.debug("new player score");
-            handleNewPlayerScore(playerScore);
-        } else {
-            GameBox.debug("updating existing score");
-            handleUpdatePlayerScore(playerScore);
+        if(updateSingleScore(playerScore)) updateUsers();
+    }
+
+    public void updatePlayerScores(List<PlayerScore> playerScores){
+        boolean changed = false;
+        for(PlayerScore playerScore : playerScores){
+            if(updateSingleScore(playerScore)) changed = true;
         }
+        if(changed) updateUsers();
+    }
+
+    private boolean updateSingleScore(PlayerScore playerScore) {
+        if(updateIfInList(playerScore)) return false;
+        if(playerScores.size() >= TOP_LIST_LENGTH && !playerScore.isBetterThen(playerScores.get(TOP_LIST_LENGTH - 1))) return false;
+        addNewScoreEntry(playerScore);
+        if(playerScores.size() >= TOP_LIST_LENGTH){
+            playerScores = playerScores.subList(0, TOP_LIST_LENGTH);
+        }
+        return true;
+    }
+
+    private boolean updateIfInList(PlayerScore playerScore) {
+        PlayerScore oldScore = getPlayerScoreFromTopList(playerScore.getUuid());
+        if(oldScore == null) return false;
+        if(playerScore.isBetterThen(oldScore)) {
+            removePlayerScore(playerScore.getUuid());
+            addNewScoreEntry(playerScore);
+            updateUsers();
+        }
+        return true;
+    }
+
+    private void updateUsers(){
         for (TopListUser topListUser : topListUsers){
             topListUser.update();
         }
     }
 
-    private void handleUpdatePlayerScore(PlayerScore playerScore) {
-        removePlayerScore(playerScore.getUuid());
-        addNewScoreEntry(playerScore);
+    private PlayerScore getPlayerScoreFromTopList(UUID uuid){
+        Iterator<PlayerScore> playerScoreIterator = playerScores.iterator();
+        PlayerScore current;
+        while (playerScoreIterator.hasNext()){
+            current = playerScoreIterator.next();
+            if(!current.getUuid().equals(uuid)) continue;
+            return current;
+        }
+        return null;
     }
 
     private void removePlayerScore(UUID uuid) {
@@ -52,15 +84,6 @@ public class TopList {
                 playerScoreIterator.remove();
                 return;
             }
-        }
-    }
-
-    private void handleNewPlayerScore(PlayerScore playerScore) {
-        if(playerScores.size() < TOP_LIST_LENGTH){
-            addNewScoreEntry(playerScore);
-        } else {
-            playerScores.add(getNewScorePosition(playerScore), playerScore);
-            playerScores.remove(TOP_LIST_LENGTH);
         }
     }
 

@@ -18,9 +18,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -92,18 +91,27 @@ public class MysqlDB extends DataBase {
     public void addStatistics(UUID uuid, String gameID, String gameTypeID, double value, SaveType saveType) {
         GameBox.debug("Add stats...");
         String columnName = buildColumnName(gameID, gameTypeID, saveType);
-        checkHighScoreColumnName(columnName);
-        try (Connection connection = hikari.getConnection();
-             PreparedStatement statement = connection.prepareStatement(UPDATE_HIGH_SCORE.replace("%column%", columnName))){
-            statement.setString(1, uuid.toString());
-            statement.setDouble(2, value);
-            statement.execute();
-            GameBox.debug("High score added!");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        // ToDo: this also puts worse values in the top list atm
-        getTopList(gameID, gameTypeID, saveType).update(new PlayerScore(uuid, value, saveType));
+        new BukkitRunnable(){
+            @Override
+            public void run() {
+                checkHighScoreColumnName(columnName);
+                try (Connection connection = hikari.getConnection();
+                     PreparedStatement statement = connection.prepareStatement(UPDATE_HIGH_SCORE.replace("%column%", columnName))){
+                    statement.setString(1, uuid.toString());
+                    statement.setDouble(2, value);
+                    statement.execute();
+                    GameBox.debug("High score added!");
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                new BukkitRunnable(){
+                    @Override
+                    public void run() {
+                        getTopList(gameID, gameTypeID, saveType).update(new PlayerScore(uuid, value, saveType));
+                    }
+                }.runTask(plugin);
+            }
+        }.runTaskAsynchronously(plugin);
     }
 
     private void checkHighScoreColumnName(String columnName){
@@ -141,8 +149,7 @@ public class MysqlDB extends DataBase {
     public TopList getTopList(String gameID, String gameTypeID, SaveType saveType) {
         String topListIdentifier = buildColumnName(gameID, gameTypeID, saveType);
         if(cachedTopLists.containsKey(topListIdentifier)) return cachedTopLists.get(topListIdentifier);
-        ArrayList<PlayerScore> playerScores = new ArrayList<>();
-        TopList newTopList = new TopList(topListIdentifier, playerScores);
+        TopList newTopList = new TopList(topListIdentifier, new ArrayList<>());
         cachedTopLists.put(topListIdentifier, newTopList);
         initialiseNewTopList(newTopList, saveType);
         return newTopList;
@@ -156,14 +163,19 @@ public class MysqlDB extends DataBase {
                 try (Connection connection = hikari.getConnection();
                      PreparedStatement select = connection.prepareStatement(COLLECT_TOP_SCORES.replace("%column%", newTopList.getIdentifier()).replace("%order%", saveType.isHigherScore()?"DESC":"ASC"))) {
                     ResultSet result = select.executeQuery();
+                    List<PlayerScore> scores = new ArrayList<>();
                     while (result.next()) {
                         final UUID uuid = UUID.fromString(result.getString(PLAYER_UUID));
                         final double value = result.getDouble(newTopList.getIdentifier());
-
-                        // back to main thread and update score
-                        Bukkit.getScheduler().runTask(plugin, () ->
-                                newTopList.update(new PlayerScore(uuid, value, saveType)));
+                        scores.add(new PlayerScore(uuid, value, saveType));
                     }
+                    // back to main thread and update score
+                    new BukkitRunnable(){
+                        @Override
+                        public void run() {
+                            newTopList.updatePlayerScores(scores);
+                        }
+                    }.runTask(plugin);
                     try {
                         result.close();
                     } catch (SQLException e) {
@@ -334,5 +346,4 @@ public class MysqlDB extends DataBase {
             e.printStackTrace();
         }
     }
-
 }
