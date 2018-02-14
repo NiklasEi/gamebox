@@ -230,7 +230,9 @@ public class GameBox extends JavaPlugin{
 	}
 
 	private boolean setUpFileDB() {
-		if(dataBase != null) dataBase.save(false);
+		if(dataBase != null) {
+			dataBase.onShutDown();
+		}
 
 		this.dataBase = new FileDB(this);
 		if (!dataBase.load(false)) {
@@ -241,7 +243,9 @@ public class GameBox extends JavaPlugin{
 	}
 
 	private void setUpMySQL() {
-		if(dataBase != null) dataBase.save(false);
+		if(dataBase != null) {
+			dataBase.onShutDown();
+		}
 
 		this.dataBase = new MysqlDB(this);
 		if (!dataBase.load(false)) {

@@ -206,11 +206,6 @@ public class FileDB extends DataBase {
     }
 
     @Override
-    public void onShutDown(){
-        super.onShutDown();
-    }
-
-    @Override
     public void resetHighScores() {
         for(String uuid : data.getKeys(false)){
             if(!data.isConfigurationSection(uuid + "." + DataBase.GAMES_STATISTICS_NODE)) continue;
