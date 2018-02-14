@@ -60,6 +60,7 @@ public class AdminCommand implements CommandExecutor {
         } else if(args[0].equalsIgnoreCase("token")){
             return getTokenCountCommand(sender, args);
         } else if(args[0].equalsIgnoreCase("reload")){
+            sender.sendMessage(lang.PREFIX + ChatColor.GREEN + " Reloading...");
             if(plugin.reload()){
                 sender.sendMessage(lang.PREFIX + lang.RELOAD_SUCCESS);
                 return true;
@@ -79,6 +80,8 @@ public class AdminCommand implements CommandExecutor {
             return true;
         } else if(args[0].equalsIgnoreCase("resetHighScores")){
             plugin.getDataBase().resetHighScores();
+            plugin.reload();
+            return true;
         }
         sendHelpMessages(sender);
         return true;
