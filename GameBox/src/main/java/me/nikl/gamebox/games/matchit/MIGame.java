@@ -97,7 +97,7 @@ public class MIGame extends BukkitRunnable {
                     over = true;
                     nms.updateInventoryTitle(player, language.INV_TITLE_WON
                             .replace("%time%", StringUtility.formatTime(time)));
-                    onGameEnd();
+                    won();
                 } else {
                     playSound(match);
                     updateTitle();
@@ -116,6 +116,11 @@ public class MIGame extends BukkitRunnable {
             secondOpen = -1;
             onClick(event);
         }
+    }
+
+    private void won() {
+        onGameEnd();
+        if(rule.isSaveStats()) matchIt.getGameBox().getDataBase().addStatistics(player.getUniqueId(), matchIt.getGameID(), rule.getKey(), time, rule.getSaveTypes().iterator().next());
     }
 
     private void startGame(){

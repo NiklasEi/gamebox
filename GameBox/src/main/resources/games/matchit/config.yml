@@ -12,7 +12,6 @@ rules:
   # enable/disable sound
   playSounds: true
 
-
 # requires vault and an economy plugin
 #   to enable economy do not forget to enable it for GameBox too
 economy:
@@ -39,8 +38,6 @@ gameBox:
       slot: 11
       cost: 0
       size: "small"
-      # if true the best score of this button is saved
-      saveStats: true
       # time in seconds until a mismatched pair is covered again (default 1.5)
       timeVisible: 1.5
     medium:
@@ -52,8 +49,6 @@ gameBox:
       slot: 20
       cost: 0
       size: "medium"
-      # if true the best score of this button is saved
-      saveStats: true
     big:
       materialData: "95:11"
       displayName: "&aBig game"
@@ -67,8 +62,6 @@ gameBox:
       size: "big"
       # if true the best score of this button is saved
       saveStats: true
-
-
 
   topListButtons:
     # use the same key as the game you want to display the top list for
@@ -244,7 +237,8 @@ items:
     displayName: "&1Bookshelf"
     lore:
     - ""
-    - "Read all and you are a pro ;)"
+    - "Read all those books, build a rocket"
+    - "   and fly to the moon ;)"
   '29':
     materialData: "cactus"
     displayName: "&1Cactus"
@@ -257,5 +251,6 @@ items:
     lore:
     - ""
     - "Plain iron sword."
+    - "Kinda boring..."
 
 
