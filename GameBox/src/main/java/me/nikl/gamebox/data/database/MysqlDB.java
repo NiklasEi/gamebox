@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -28,18 +29,19 @@ import java.util.UUID;
  */
 public class MysqlDB extends DataBase {
     private static final String INSERT = "INSERT INTO " + PLAYER_TABLE + " VALUES(?,?,?,?,?) ON DUPLICATE KEY UPDATE " + PLAYER_NAME + "=?";
-    private static final String SELECT = "SELECT * FROM " + PLAYER_TABLE + " WHERE " + PLAYER_UUID + "=?";
+    private static final String SELECT = "SELECT * FROM `" + PLAYER_TABLE + "` WHERE " + PLAYER_UUID + "=?";
     private static final String SELECT_TOKEN = "SELECT " + PLAYER_TOKEN_PATH + " FROM " + PLAYER_TABLE + " WHERE " + PLAYER_UUID + "=?";
     private static final String SAVE = "UPDATE " + PLAYER_TABLE + " SET " + PLAYER_TOKEN_PATH + "=?, " + PLAYER_PLAY_SOUNDS + "=?, " + PLAYER_ALLOW_INVITATIONS + "=? WHERE " + PLAYER_UUID + "=?";
     private static final String SET_TOKEN = "UPDATE " + PLAYER_TABLE + " SET " + PLAYER_TOKEN_PATH + "=? WHERE " + PLAYER_UUID + "=?";
-
+    private static final String UPDATE_HIGH_SCORE = "INSERT INTO `" + HIGH_SCORES_TABLE + "` (`" + PLAYER_UUID + "`,`%column%`) VALUES(?,?) ON DUPLICATE KEY UPDATE `%column%`=GREATEST(`%column%`, VALUES(`%column%`))";
+    private static final String COLLECT_TOP_SCORES = "SELECT e1.* FROM (SELECT DISTINCT `%column%` FROM `" + HIGH_SCORES_TABLE + "` ORDER BY `%column%` %order% LIMIT " + TopList.TOP_LIST_LENGTH + ") s1 JOIN `" + HIGH_SCORES_TABLE + "` e1 ON e1.`%column%` = s1.`%column%` ORDER BY e1.`%column%` %order%";
     private String host;
     private String database;
     private String username;
     private String password;
     private int port;
     private HikariDataSource hikari;
-    private Map<String, String> knownHighScoreColumns = new HashMap<>();
+    private Set<String> knownHighScoreColumns = new HashSet<>();
 
     public MysqlDB(GameBox plugin) {
         super(plugin);
@@ -78,28 +80,39 @@ public class MysqlDB extends DataBase {
             GameBoxSettings.useMysql = false;
             return false;
         }
-
         return true;
     }
 
     @Override
     public void save(boolean async) {
-        // nothing to do here
+        // nothing to do here since all players are saved before and the database is synchronised already
     }
 
     @Override
     public void addStatistics(UUID uuid, String gameID, String gameTypeID, double value, SaveType saveType) {
         GameBox.debug("Add stats...");
-        String columnName = getHighScoreColumnName(gameID, gameTypeID, saveType);
+        String columnName = buildColumnName(gameID, gameTypeID, saveType);
+        checkHighScoreColumnName(columnName);
+        try (Connection connection = hikari.getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_HIGH_SCORE.replace("%column%", columnName))){
+            statement.setString(1, uuid.toString());
+            statement.setDouble(2, value);
+            statement.execute();
+            GameBox.debug("High score added!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        // ToDo: this also puts worse values in the top list atm
+        getTopList(gameID, gameTypeID, saveType).update(new PlayerScore(uuid, value, saveType));
     }
 
-    private String getHighScoreColumnName(String gameID, String gameTypeID, SaveType saveType){
-        String columnName = knownHighScoreColumns.get(gameID + gameTypeID + saveType.toString());
-        if(columnName != null) return columnName;
-
+    private void checkHighScoreColumnName(String columnName){
+        if(knownHighScoreColumns.contains(columnName)) {
+            GameBox.debug("  Found known high score column!");
+            return;
+        }
         // first time this column is used in this server session... better check it exists
-        columnName = String.valueOf(String.valueOf(gameID.hashCode() * gameTypeID.hashCode() * saveType.hashCode()).hashCode());
-        GameBox.debug("Hash for top list (" + columnName.length() + "): " + columnName);
+        GameBox.debug("  Column name (length = " + columnName.length() + "): " + columnName);
         try(Connection connection = hikari.getConnection()){
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement
@@ -107,30 +120,65 @@ public class MysqlDB extends DataBase {
                             "WHERE TABLE_SCHEMA = '" + database + "'" +
                             "AND TABLE_NAME = '" + HIGH_SCORES_TABLE + "'" +
                             "AND COLUMN_NAME = '" + columnName + "'");
-            GameBox.debug(resultSet.toString() + "next: " + resultSet.next());
-
-            // add new column:
-            statement.executeUpdate("ALTER TABLE `" + HIGH_SCORES_TABLE + "` ADD `" + columnName + "` DOUBLE NULL");
+            if(!resultSet.next()) {
+                GameBox.debug("  Adding the column " + columnName);
+                statement.executeUpdate("ALTER TABLE `" + HIGH_SCORES_TABLE + "` ADD `" + columnName + "` DOUBLE NULL");
+            } else {
+                GameBox.debug("  Column already exists");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        knownHighScoreColumns.put(gameID + gameTypeID + saveType.toString(), columnName);
-        return columnName;
+        knownHighScoreColumns.add(columnName);
+        return;
+    }
+
+    private String buildColumnName(String gameID, String gameTypeID, SaveType saveType) {
+        return gameID + gameTypeID + saveType.toString().replace("_", "");
     }
 
     @Override
     public TopList getTopList(String gameID, String gameTypeID, SaveType saveType) {
-        String topListIdentifier = gameID + gameTypeID + saveType.toString();
+        String topListIdentifier = buildColumnName(gameID, gameTypeID, saveType);
         if(cachedTopLists.containsKey(topListIdentifier)) return cachedTopLists.get(topListIdentifier);
         ArrayList<PlayerScore> playerScores = new ArrayList<>();
         TopList newTopList = new TopList(topListIdentifier, playerScores);
         cachedTopLists.put(topListIdentifier, newTopList);
+        initialiseNewTopList(newTopList, saveType);
         return newTopList;
+    }
+
+    private void initialiseNewTopList(TopList newTopList, SaveType saveType) {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                checkHighScoreColumnName(newTopList.getIdentifier());
+                try (Connection connection = hikari.getConnection();
+                     PreparedStatement select = connection.prepareStatement(COLLECT_TOP_SCORES.replace("%column%", newTopList.getIdentifier()).replace("%order%", saveType.isHigherScore()?"DESC":"ASC"))) {
+                    ResultSet result = select.executeQuery();
+                    while (result.next()) {
+                        final UUID uuid = UUID.fromString(result.getString(PLAYER_UUID));
+                        final double value = result.getDouble(newTopList.getIdentifier());
+
+                        // back to main thread and update score
+                        Bukkit.getScheduler().runTask(plugin, () ->
+                                newTopList.update(new PlayerScore(uuid, value, saveType)));
+                    }
+                    try {
+                        result.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.runTaskAsynchronously(plugin);
     }
 
     @Override
     public void loadPlayer(GBPlayer player, boolean async) {
-        // i am going to ignore the async bool here, since I don't want any sync database calls...
+        // i am going to ignore the async bool here, since I don't want sync database calls for player loading...
         if(!async) plugin.warning(" plugin tried to load player from MySQL sync...");
 
         // load player from database and set the results in the player class
