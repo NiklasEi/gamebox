@@ -6,6 +6,7 @@ import me.nikl.gamebox.data.toplist.PlayerScore;
 import me.nikl.gamebox.data.toplist.SaveType;
 import me.nikl.gamebox.data.toplist.TopList;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -211,5 +212,45 @@ public class FileDB extends DataBase {
             if(!data.isConfigurationSection(uuid + "." + DataBase.GAMES_STATISTICS_NODE)) continue;
             data.set(uuid + "." + DataBase.GAMES_STATISTICS_NODE, null);
         }
+    }
+
+    public void convertToMySQL(){
+        MysqlDB toDb = (MysqlDB) plugin.getDataBase();
+        plugin.getLogger().info("Starting file to MySQL conversion...");
+        int playerCount = 0;
+        UUID uuid;
+        boolean playSounds;
+        boolean allowInvitations;
+        int token;
+        for(String uuidString : data.getKeys(false)){
+            playSounds = data.getBoolean(uuidString + "." +  DataBase.PLAYER_PLAY_SOUNDS, true);
+            allowInvitations = data.getBoolean(uuidString + "." +  DataBase.PLAYER_ALLOW_INVITATIONS, true);
+            token = data.getInt(uuidString + "." +  DataBase.PLAYER_TOKEN_PATH, 0);
+            try {
+                uuid = UUID.fromString(uuidString);
+            } catch (IllegalArgumentException ignore) {
+                plugin.getLogger().warning("failed to convert a UUID");
+                continue;
+            }
+            playerCount ++;
+            toDb.savePlayer(new GBPlayer(plugin, uuid, token, playSounds, allowInvitations), true);
+            if(!data.isConfigurationSection(uuidString + "." + GAMES_STATISTICS_NODE)) continue;
+            ConfigurationSection statisticsSection = data.getConfigurationSection(uuidString + "." + GAMES_STATISTICS_NODE);
+            for(String key : statisticsSection.getKeys(true)){
+                if(!statisticsSection.isDouble(key)) continue;
+                String[] parts = key.split("\\.");
+                if(parts.length != 3) continue;
+                double value = statisticsSection.getDouble(key);
+                SaveType saveType;
+                try {
+                    saveType = SaveType.valueOf(parts[2].toUpperCase());
+                } catch (IllegalArgumentException exception) {
+                    plugin.getLogger().warning("failed to recognise the save-type of a high score");
+                    continue;
+                }
+                toDb.addStatistics(uuid, parts[0], parts[1], value, saveType);
+            }
+        }
+        plugin.getLogger().info("Player data of " + playerCount + " players has been added to your MySQL database.");
     }
 }

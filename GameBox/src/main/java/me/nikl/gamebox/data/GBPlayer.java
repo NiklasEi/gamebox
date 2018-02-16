@@ -30,6 +30,18 @@ public class GBPlayer {
         loadData();
     }
 
+    public GBPlayer(GameBox plugin, UUID uuid, int token, boolean playSounds, boolean allowInvites){
+        this.uuid = uuid;
+        this.plugin = plugin;
+        this.dataBase = plugin.getDataBase();
+
+        this.tokens = token;
+        this.allowInvites = allowInvites;
+        this.playSounds = playSounds;
+
+        this.loaded = true;
+    }
+
     private void loadData() {
         dataBase.loadPlayer(this, true);
     }

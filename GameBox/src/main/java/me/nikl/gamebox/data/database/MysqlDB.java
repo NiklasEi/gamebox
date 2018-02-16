@@ -8,6 +8,7 @@ import me.nikl.gamebox.data.toplist.PlayerScore;
 import me.nikl.gamebox.data.toplist.SaveType;
 import me.nikl.gamebox.data.toplist.TopList;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -34,6 +35,7 @@ public class MysqlDB extends DataBase {
     private static final String SET_TOKEN = "UPDATE " + PLAYER_TABLE + " SET " + PLAYER_TOKEN_PATH + "=? WHERE " + PLAYER_UUID + "=?";
     private static final String UPDATE_HIGH_SCORE = "INSERT INTO `" + HIGH_SCORES_TABLE + "` (`" + PLAYER_UUID + "`,`%column%`) VALUES(?,?) ON DUPLICATE KEY UPDATE `%column%`=GREATEST(`%column%`, VALUES(`%column%`))";
     private static final String COLLECT_TOP_SCORES = "SELECT e1.* FROM (SELECT DISTINCT `%column%` FROM `" + HIGH_SCORES_TABLE + "` ORDER BY `%column%` %order% LIMIT " + TopList.TOP_LIST_LENGTH + ") s1 JOIN `" + HIGH_SCORES_TABLE + "` e1 ON e1.`%column%` = s1.`%column%` ORDER BY e1.`%column%` %order%";
+
     private String host;
     private String database;
     private String username;
@@ -345,5 +347,21 @@ public class MysqlDB extends DataBase {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public void convertFromFile(CommandSender sender){
+        FileDB fromDB = new FileDB(plugin);
+        new BukkitRunnable(){
+
+            @Override
+            public void run() {
+                sender.sendMessage(plugin.getLanguage(GameBox.MODULE_GAMEBOX).PREFIX + " Starting async conversion.");
+                sender.sendMessage(plugin.getLanguage(GameBox.MODULE_GAMEBOX).PREFIX + " Additional output in the console!");
+                fromDB.load(false);
+                fromDB.convertToMySQL();
+                fromDB.onShutDown();
+                sender.sendMessage(plugin.getLanguage(GameBox.MODULE_GAMEBOX).PREFIX + " Conversion is completed.");
+            }
+        }.runTaskAsynchronously(plugin);
     }
 }

@@ -5,6 +5,8 @@ import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.Language;
 import me.nikl.gamebox.data.database.DataBase;
 import me.nikl.gamebox.data.GBPlayer;
+import me.nikl.gamebox.data.database.MysqlDB;
+import me.nikl.gamebox.data.toplist.SaveType;
 import me.nikl.gamebox.utility.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -19,6 +21,8 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 
 /**
@@ -81,6 +85,23 @@ public class AdminCommand implements CommandExecutor {
         } else if(args[0].equalsIgnoreCase("resetHighScores")){
             plugin.getDataBase().resetHighScores();
             plugin.reload();
+            return true;
+        } else if(args[0].equalsIgnoreCase("filetomysql")){
+            DataBase dataBase = plugin.getDataBase();
+            if(!(dataBase instanceof MysqlDB)) {
+                sender.sendMessage(lang.PREFIX + ChatColor.RED + " You must have MySQL enabled to do this!");
+                return true;
+            }
+            ((MysqlDB) dataBase).convertFromFile(sender);
+            return true;
+        } else if(args[0].equalsIgnoreCase("hundredrandom")){
+            DataBase dataBase = plugin.getDataBase();
+            Random random = new Random();
+            for(int i = 0; i < 100; i++){
+                UUID uuid = UUID.randomUUID();
+                dataBase.savePlayer(new GBPlayer(plugin, uuid, 0, true, true), true);
+                dataBase.addStatistics(uuid, GameBox.MODULE_COOKIECLICKER, "weekly", random.nextInt(5000), SaveType.HIGH_NUMBER_SCORE);
+            }
             return true;
         }
         sendHelpMessages(sender);
