@@ -46,7 +46,6 @@ public class TopListPage extends GameGuiPage implements TopListUser {
     @Override
     public void update(){
         List<PlayerScore> topListScores = this.topList.getPlayerScores();
-
         PlayerScore stat;
         ItemStack skull;
         SkullMeta skullMeta;
@@ -56,30 +55,20 @@ public class TopListPage extends GameGuiPage implements TopListUser {
             rank ++;
             skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
             skullMeta = (SkullMeta) skull.getItemMeta();
-
             player = Bukkit.getOfflinePlayer(stat.getUuid());
-
-            if(player == null){
-                GameBox.debug(" UUID could not be matched to a player while loading a top list");
+            // checking for name == null is important to prevent NPEs after player data reset on server
+            if(player == null || player.getName() == null){
                 continue;
             }
-
-            // without the following check top lists cause NPEs after server owners
-            //   delete their player data
-            // ToDo: check whether second case is not already covered by first case
-            if(!player.hasPlayedBefore() || player.getName() == null){
-                continue;
-            }
-
+            String name = player.getName();
             List<String> skullLore = getSkullLoreForScore(stat);
-            // chat color is already handled in the game while loading the lore from config
+            // chat color is already handled when loading the lore from the configuration file
             for(int i = 0; i < skullLore.size(); i++){
-                skullLore.set(i, skullLore.get(i).replace("%player%", player.getName()).replace("%rank%", String.valueOf(rank)));
+                skullLore.set(i, skullLore.get(i).replace("%player%", name).replace("%rank%", String.valueOf(rank)));
             }
-
-            skullMeta.setOwner(player.getName());
+            skullMeta.setOwner(name);
             skullMeta.setLore(skullLore);
-            skullMeta.setDisplayName(ChatColor.BLUE + player.getName());
+            skullMeta.setDisplayName(ChatColor.BLUE + name);
             skull.setItemMeta(skullMeta);
             inventory.setItem(getSlotByRank(rank), skull);
         }
