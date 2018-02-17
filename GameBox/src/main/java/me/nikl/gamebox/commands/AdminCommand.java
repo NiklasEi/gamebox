@@ -103,6 +103,13 @@ public class AdminCommand implements CommandExecutor {
                 dataBase.addStatistics(uuid, GameBox.MODULE_COOKIECLICKER, "weekly", random.nextInt(5000), SaveType.HIGH_NUMBER_SCORE);
             }
             return true;
+        } else if(args[0].equalsIgnoreCase("findcolumns")){
+            if(args.length < 2) return true;
+            DataBase dataBase = plugin.getDataBase();
+            if(!(dataBase instanceof MysqlDB)) return true;
+            List<String> columns = ((MysqlDB) dataBase).getHighScoreColumnsBeginningWith(args[1]);
+            sender.sendMessage(String.join(", ", columns));
+            return true;
         }
         sendHelpMessages(sender);
         return true;

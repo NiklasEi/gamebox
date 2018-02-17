@@ -35,6 +35,7 @@ public class MysqlDB extends DataBase {
     private static final String SET_TOKEN = "UPDATE " + PLAYER_TABLE + " SET " + PLAYER_TOKEN_PATH + "=? WHERE " + PLAYER_UUID + "=?";
     private static final String UPDATE_HIGH_SCORE = "INSERT INTO `" + HIGH_SCORES_TABLE + "` (`" + PLAYER_UUID + "`,`%column%`) VALUES(?,?) ON DUPLICATE KEY UPDATE `%column%`=GREATEST(`%column%`, VALUES(`%column%`))";
     private static final String COLLECT_TOP_SCORES = "SELECT e1.* FROM (SELECT DISTINCT `%column%` FROM `" + HIGH_SCORES_TABLE + "` ORDER BY `%column%` %order% LIMIT " + TopList.TOP_LIST_LENGTH + ") s1 JOIN `" + HIGH_SCORES_TABLE + "` e1 ON e1.`%column%` = s1.`%column%` ORDER BY e1.`%column%` %order%";
+    private static final String COLLECT_COLUMNS_STARTING_WITH = "SELECT column_name FROM INFORMATION_SCHEMA.columns WHERE table_schema = ? AND table_name = `" + HIGH_SCORES_TABLE + "` AND LEFT(column_name, %length%) =?";
 
     private String host;
     private String database;
@@ -363,5 +364,26 @@ public class MysqlDB extends DataBase {
                 sender.sendMessage(plugin.getLanguage(GameBox.MODULE_GAMEBOX).PREFIX + " Conversion is completed.");
             }
         }.runTaskAsynchronously(plugin);
+    }
+
+    public List<String> getHighScoreColumnsBeginningWith(String beginningOfColumnName){
+        ArrayList<String> toReturn = new ArrayList<>();
+        try (Connection connection = hikari.getConnection();
+             PreparedStatement select = connection.prepareStatement(COLLECT_COLUMNS_STARTING_WITH.replace("%length%", String.valueOf(beginningOfColumnName.length())))) {
+            select.setString(1, database);
+            select.setString(2, "`" + beginningOfColumnName + "`");
+            ResultSet result = select.executeQuery();
+            while (result.next()) {
+                toReturn.add(result.getString("column_name"));
+            }
+            try {
+                result.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return toReturn;
     }
 }
