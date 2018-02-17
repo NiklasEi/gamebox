@@ -203,7 +203,8 @@ public abstract class Language {
         // load from default file if path is not valid
         if(!language.isList(path)){
             toReturn = defaultLanguage.getStringList(path);
-            if(color && toReturn != null){
+            if(toReturn == null) throw new IllegalArgumentException("The language key '" + path + "' is not a valid list!");
+            if(color){
                 for(int i = 0; i<toReturn.size(); i++){
                     toReturn.set(i, ChatColor.translateAlternateColorCodes('&',toReturn.get(i)));
                 }
@@ -240,7 +241,8 @@ public abstract class Language {
         String toReturn;
         if(!language.isString(path)){
             toReturn = defaultLanguage.getString(path);
-            if(color && toReturn != null){
+            if(toReturn == null) throw new IllegalArgumentException("The language key '" + path + "' is not a valid string!");
+            if(color){
                 return ChatColor.translateAlternateColorCodes('&', defaultLanguage.getString(path));
             }
             return toReturn;
