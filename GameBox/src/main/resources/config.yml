@@ -77,7 +77,7 @@ settings:
   # Set to 0 or any negative value to disable auto save.
   # Interval is given in minutes!
   # Default: 10
-  autoSaveInterval: 10
+  autoSaveIntervalInMinutes: 10
 
   # Send plugin/server data to bStats.
   # This does not affect your server's performance in any noticeable way!

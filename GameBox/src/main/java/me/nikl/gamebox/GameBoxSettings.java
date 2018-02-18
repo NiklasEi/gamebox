@@ -25,7 +25,7 @@ public class GameBoxSettings {
     public static boolean bStatsMetrics = true;
     public static boolean hubModeEnabled = false;
     public static boolean closeInventoryOnDamage = true; // what to do on player damage
-    public static int autoSaveInterval = 10;
+    public static int autoSaveIntervalInMinutes = 10;
 
     public static void loadSettings(GameBox plugin) {
         FileConfiguration config = plugin.getConfig();
@@ -40,7 +40,7 @@ public class GameBoxSettings {
         exceptInvitesWithoutPlayPermission = config.getBoolean("settings.exceptInvitesWithoutPlayPermission", false);
         bStatsMetrics = config.getBoolean("settings.bStats", true);
         closeInventoryOnDamage = config.getBoolean("settings.closeInventoryOnDamage", true);
-        autoSaveInterval = config.getInt("settings.autoSaveInterval", 10);
+        autoSaveIntervalInMinutes = config.getInt("settings.autoSaveIntervalInMinutes", 10);
         keepArmorWhileInGame = config.getBoolean("settings.keepArmor", false);
         try {
             successfulClick = Sound.valueOf(config.getString("guiSettings.standardSounds.successfulClick", "CLICK"));

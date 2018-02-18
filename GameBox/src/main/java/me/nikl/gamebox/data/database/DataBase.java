@@ -32,10 +32,10 @@ public abstract class DataBase {
     public DataBase(GameBox plugin) {
         this.plugin = plugin;
         createAutoSaveRunnable();
-        if (GameBoxSettings.autoSaveInterval > 0) {
+        if (GameBoxSettings.autoSaveIntervalInMinutes > 0) {
             autoSave.runTaskTimerAsynchronously(plugin
-                    , GameBoxSettings.autoSaveInterval * 60 * 20
-                    , GameBoxSettings.autoSaveInterval * 60 * 20);
+                    , GameBoxSettings.autoSaveIntervalInMinutes * 60 * 20
+                    , GameBoxSettings.autoSaveIntervalInMinutes * 60 * 20);
         }
     }
 
