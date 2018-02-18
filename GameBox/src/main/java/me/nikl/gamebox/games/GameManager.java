@@ -1,5 +1,6 @@
 package me.nikl.gamebox.games;
 
+import me.nikl.gamebox.games.exceptions.GameStartException;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -45,9 +46,8 @@ public interface GameManager {
 	 * Start a game for a player or players
 	 * @param players players to start the game with
 	 * @param args additional arguments
-	 * @return return whether the game was started or not
 	 */
-	int startGame(Player[] players, boolean playSounds, String... args);
+	void startGame(Player[] players, boolean playSounds, String... args) throws GameStartException;
 
 
 	/**

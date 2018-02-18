@@ -5,6 +5,8 @@ import me.nikl.gamebox.data.database.DataBase;
 import me.nikl.gamebox.data.toplist.SaveType;
 import me.nikl.gamebox.games.GameManager;
 import me.nikl.gamebox.games.GameRule;
+import me.nikl.gamebox.games.exceptions.GameStartException;
+import me.nikl.gamebox.nms.NmsFactory;
 import me.nikl.gamebox.nms.NmsUtility;
 import me.nikl.gamebox.utility.ItemStackUtility;
 import me.nikl.gamebox.utility.Permission;
@@ -32,31 +34,19 @@ import java.util.UUID;
 
 public class CFGameManager implements GameManager {
     private ConnectFour connectFour;
-
     private Map<UUID, CFGame> games = new HashMap<>();
     private CFLanguage lang;
-
     private NmsUtility nms;
-
     private DataBase statistics;
-
     private Map<Integer, ItemStack> chips = new HashMap<>();
-
-
     private Map<String, CFGameRules> gameRules;
-
-
 
     public CFGameManager(ConnectFour connectFour){
         this.connectFour = connectFour;
         this.lang = (CFLanguage) connectFour.getGameLang();
-
-        this.nms = connectFour.getGameBox().getNMS();
-
+        this.nms = NmsFactory.getNmsUtility();
         this.statistics = connectFour.getGameBox().getDataBase();
-
         this.gameRules = new HashMap<>();
-
         loadChips();
     }
 
@@ -84,74 +74,56 @@ public class CFGameManager implements GameManager {
         if(!connectFour.getConfig().isConfigurationSection("chips")){
             Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED +" the configuration section 'chips' can not be found!");
             Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED +" using two default chips");
-
             chips.put(0, new ItemStack(Material.BLAZE_POWDER));
             chips.put(1, new ItemStack(Material.DIAMOND));
             return;
         }
-
         ItemMeta meta;
         String displayName;
-        List<String> lore;
         ItemStack chipStack;
-
         ConfigurationSection chipsSection = connectFour.getConfig().getConfigurationSection("chips");
-
         int count = 0;
         for(String key: chipsSection.getKeys(false)){
-
             chipStack = ItemStackUtility.getItemStack(chipsSection.getString(key + ".materialData"));
-
             if(chipStack == null){
                 Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED +" problem loading chip: "+key);
                 continue;
             }
             meta = chipStack.getItemMeta();
-
             if(chipsSection.isString(key + ".displayName")){
                 displayName = StringUtility.color(chipsSection.getString(key + ".displayName"));
                 meta.setDisplayName(displayName);
             }
-
             if(chipsSection.isList(key + ".lore")){
                 meta.setLore(StringUtility.color(chipsSection.getStringList(key + ".lore")));
             }
-
             chipStack.setItemMeta(meta);
-
             chips.put(count, chipStack.clone());
             count++;
         }
         if (count < 2){
             Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED +" not enough chips set in config!");
             Bukkit.getConsoleSender().sendMessage(lang.PREFIX + ChatColor.RED +" define at least 2! Using two defaults now.");
-
             chips.put(0, new ItemStack(Material.BLAZE_POWDER));
             chips.put(1, new ItemStack(Material.DIAMOND));
             return;
         }
     }
 
-
     @Override
     public boolean onInventoryClick(InventoryClickEvent inventoryClickEvent) {
         CFGame game = getGame(inventoryClickEvent.getWhoClicked().getUniqueId());
         if(game == null) return false;
-
         if(inventoryClickEvent.getCurrentItem() != null && inventoryClickEvent.getCurrentItem().getType() != Material.AIR) return false;
-
         game.onClick(inventoryClickEvent);
-
         return true;
     }
 
     @Override
     public boolean onInventoryClose(InventoryCloseEvent inventoryCloseEvent) {
-
         if(!isInGame(inventoryCloseEvent.getPlayer().getUniqueId())){
             return false;
         }
-
         CFGame game = getGame(inventoryCloseEvent.getPlayer().getUniqueId());
         boolean firstClosed = inventoryCloseEvent.getPlayer().getUniqueId().equals(game.getFirstUUID());
         Player winner = firstClosed?game.getSecond():game.getFirst();
@@ -167,17 +139,13 @@ public class CFGameManager implements GameManager {
     private void removeFromGame(boolean firstClosed, Player winner, Player loser, CFGame game) {
         // make sure the player is not counted as in connectFour anymore
         if(game.getState() != CFGameState.FINISHED) game.onRemove(firstClosed);
-
         if(firstClosed){
             game.setFirst(null);
         } else {
             game.setSecond(null);
         }
-
-
         if(game.getState() != CFGameState.FINISHED) {
             game.cancel();
-
             if(this.connectFour.getSettings().isEconEnabled() && game.getPlayedChips() >= game.getRule().getMinNumberOfPlayedChips()){
                 if(!winner.hasPermission(Permission.BYPASS_ALL.getPermission()) && !winner.hasPermission(Permission.BYPASS_GAME.getPermission(connectFour.getGameID()))){
                     GameBox.econ.depositPlayer(winner, game.getRule().getReward());
@@ -195,13 +163,9 @@ public class CFGameManager implements GameManager {
             } else {
                 winner.sendMessage(StringUtility.color(lang.PREFIX + lang.GAME_OTHER_GAVE_UP.replaceAll("%loser%", loser.getName())));
             }
-
             loser.sendMessage(StringUtility.color(lang.PREFIX + lang.GAME_GAVE_UP));
-
-
             nms.updateInventoryTitle(winner, lang.TITLE_WON);
             game.setState(CFGameState.FINISHED);
-
             // pay out token and save stats in enabled
             onGameEnd(winner, loser, game.getRule().getKey(), game.getPlayedChips());
         }
@@ -218,61 +182,25 @@ public class CFGameManager implements GameManager {
     }
 
     @Override
-    public int startGame(Player[] players, boolean playSounds, String... args) {
+    public void startGame(Player[] players, boolean playSounds, String... args) throws GameStartException {
 
         CFGameRules rule = gameRules.get(args[0]);
         if(rule == null){
-            return GameBox.GAME_NOT_STARTED_ERROR;
+            throw new GameStartException(GameStartException.Reason.ERROR);
         }
-
         double cost = rule.getCost();
-
-        boolean firstCanPay = true;
-
-        if (connectFour.getSettings().isEconEnabled() && !players[0].hasPermission(Permission.BYPASS_ALL.getPermission()) && !players[0].hasPermission(Permission.BYPASS_GAME.getPermission(connectFour.getGameID())) && cost > 0.0) {
-            if (GameBox.econ.getBalance(players[0]) >= cost) {
-
-            } else {
-                players[0].sendMessage(StringUtility.color(lang.PREFIX + lang.GAME_NOT_ENOUGH_MONEY));
-                firstCanPay = false;
-            }
+        boolean firstCanPay = true, secondCanPay = true;
+        if (!connectFour.payIfNecessary(players[0], cost, false)) firstCanPay = false;
+        if (!connectFour.payIfNecessary(players[1], cost, false)) {
+            secondCanPay = false;
+            if(firstCanPay) throw new GameStartException(GameStartException.Reason.NOT_ENOUGH_MONEY_SECOND_PLAYER);
         }
-
-
-        if (connectFour.getSettings().isEconEnabled() && !players[1].hasPermission(Permission.BYPASS_ALL.getPermission()) && !players[1].hasPermission(Permission.BYPASS_GAME.getPermission(connectFour.getGameID())) && cost > 0.0) {
-            if (GameBox.econ.getBalance(players[1]) >= cost) {
-
-            } else {
-                players[1].sendMessage(StringUtility.color(lang.PREFIX + lang.GAME_NOT_ENOUGH_MONEY));
-                if(firstCanPay){
-                    // only second player cannot pay
-                    return GameBox.GAME_NOT_ENOUGH_MONEY_2;
-                } else {
-                    // both players cannot pay
-                    return GameBox.GAME_NOT_ENOUGH_MONEY;
-                }
-            }
-        }
-
-        if(!firstCanPay){
-            // only first player cannot pay
-            return GameBox.GAME_NOT_ENOUGH_MONEY_1;
-        }
+        if(!firstCanPay && !secondCanPay) throw new GameStartException(GameStartException.Reason.NOT_ENOUGH_MONEY);
+        if(!firstCanPay) throw new GameStartException(GameStartException.Reason.NOT_ENOUGH_MONEY_FIRST_PLAYER);
 
         // both players can pay!
-
-
-        if (connectFour.getSettings().isEconEnabled()) {
-            GameBox.econ.withdrawPlayer(players[0], cost);
-            players[0].sendMessage(StringUtility.color(lang.PREFIX + lang.GAME_PAYED.replaceAll("%cost%", String.valueOf(cost))));
-
-
-            GameBox.econ.withdrawPlayer(players[1], cost);
-            players[1].sendMessage(StringUtility.color(lang.PREFIX + lang.GAME_PAYED.replaceAll("%cost%", String.valueOf(cost))));
-        }
-
+        connectFour.payIfNecessary(players, cost);
         games.put(players[0].getUniqueId(), new CFGame(gameRules.get(args[0]), connectFour, playSounds && connectFour.getSettings().isPlaySounds(), players, chips));
-        return GameBox.GAME_STARTED;
     }
 
     @Override

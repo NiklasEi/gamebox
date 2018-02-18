@@ -340,31 +340,51 @@ public abstract class Game {
         }
     }
 
-    public boolean pay(Player player, double cost){
+    private boolean pay(Player player, double cost){
         return pay(player, cost, true);
     }
 
-    public boolean pay(Player player, double cost, boolean withdraw) {
-        if (GameBoxSettings.econEnabled
+    /**
+     * Withdraw the specified cost from the players balance,
+     * only if economy is enabled (for GameBox and the game) and the
+     * player does not have a bypass permission.
+     * @param player
+     * @param cost
+     * @param withdraw
+     * @return whether player can enter the game now
+     */
+    public boolean payIfNecessary(Player player, double cost, boolean withdraw) {
+        if (GameBoxSettings.econEnabled && gameSettings.isEconEnabled()
                 && !player.hasPermission(Permission.BYPASS_ALL.getPermission())
                 && !player.hasPermission(Permission.BYPASS_GAME.getPermission(getGameID()))
                 && cost > 0.0) {
-            if (GameBox.econ.getBalance(player) >= cost) {
-                if(withdraw) {
-                    GameBox.econ.withdrawPlayer(player, cost);
-                    player.sendMessage(StringUtility.color(gameLang.PREFIX
-                            + gameLang.GAME_PAYED
-                            .replaceAll("%cost%", String.valueOf(cost))));
-                }
-                return true;
-            } else {
+            return pay(player, cost, withdraw);
+        }
+        return true;
+    }
+
+    public boolean payIfNecessary(Player player, double cost) {
+        return payIfNecessary(player, cost, true);
+    }
+
+    public void payIfNecessary(Player[] players, double cost) {
+        for (Player player : players) payIfNecessary(player, cost, true);
+    }
+
+    public boolean pay(Player player, double cost, boolean withdraw) {
+        if (GameBox.econ.getBalance(player) >= cost) {
+            if(withdraw) {
+                GameBox.econ.withdrawPlayer(player, cost);
                 player.sendMessage(StringUtility.color(gameLang.PREFIX
-                        + gameLang.GAME_NOT_ENOUGH_MONEY
+                        + gameLang.GAME_PAYED
                         .replaceAll("%cost%", String.valueOf(cost))));
-                return false;
             }
-        } else {
             return true;
+        } else {
+            player.sendMessage(StringUtility.color(gameLang.PREFIX
+                    + gameLang.GAME_NOT_ENOUGH_MONEY
+                    .replaceAll("%cost%", String.valueOf(cost))));
+            return false;
         }
     }
 

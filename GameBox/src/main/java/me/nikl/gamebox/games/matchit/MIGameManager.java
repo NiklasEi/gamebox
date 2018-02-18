@@ -1,8 +1,11 @@
 package me.nikl.gamebox.games.matchit;
 
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.games.Game;
 import me.nikl.gamebox.games.GameManager;
 import me.nikl.gamebox.games.GameRule;
+import me.nikl.gamebox.games.exceptions.GameStartException;
+import me.nikl.gamebox.utility.Permission;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -52,14 +55,17 @@ public class MIGameManager implements GameManager {
     }
 
     @Override
-    public int startGame(Player[] players, boolean playSounds, String... args) {
+    public void startGame(Player[] players, boolean playSounds, String... args) throws GameStartException {
         MIGameRule rule = gameRules.get(args[0]);
-        if(rule == null) return GameBox.GAME_NOT_STARTED_ERROR;
+        if(rule == null) throw new GameStartException(GameStartException.Reason.ERROR);
+        if(!matchIt.payIfNecessary(players[0], rule.getCost())) {
+            throw new GameStartException(GameStartException.Reason.NOT_ENOUGH_MONEY);
+        }
         games.put(players[0].getUniqueId(),
                 new MIGame(matchIt, players[0]
                         , playSounds && matchIt.getSettings().isPlaySounds()
                         , rule));
-        return GameBox.GAME_STARTED;
+        return;
     }
 
     @Override

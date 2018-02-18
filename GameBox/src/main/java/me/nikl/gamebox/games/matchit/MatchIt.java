@@ -35,19 +35,14 @@ public class MatchIt extends Game{
     private void setDefaultItems() {
         try {
             String defaultConfigName = "games/matchit/config.yml";
-            FileConfiguration defaultConfig = YamlConfiguration.loadConfiguration(
-                    new InputStreamReader(gameBox.getResource(defaultConfigName)
-                            , "UTF-8"));
-
+            FileConfiguration defaultConfig = YamlConfiguration
+                    .loadConfiguration(new InputStreamReader(gameBox.getResource(defaultConfigName), "UTF-8"));
             // load default items from file
-
             ConfigurationSection itemsSec = defaultConfig.getConfigurationSection("items");
             ItemStack itemStack;
-
             for(String key : itemsSec.getKeys(false)){
                 if(!itemsSec.isConfigurationSection(key))
                     continue;
-
                 itemStack = loadItem(itemsSec.getConfigurationSection(key));
                 if(itemStack != null && !pairItems.contains(itemStack))
                     pairItems.add(itemStack.clone());
@@ -83,7 +78,6 @@ public class MatchIt extends Game{
     @Override
     public void init() {
         pairItems = new ArrayList<>();
-
         if(!config.isConfigurationSection("items")){
             gameBox.warning(" there are no items defined for this game...");
             gameBox.warning(" falling back to default...");
@@ -107,7 +101,6 @@ public class MatchIt extends Game{
                 // ToDo or deregister the game!
             }
         }
-
         if(config.isConfigurationSection("coverItem")){
             cover = loadItem(config.getConfigurationSection("coverItem"));
         }
@@ -119,8 +112,6 @@ public class MatchIt extends Game{
             meta.setDisplayName(StringUtility.color("&1Click to uncover"));
             cover.setItemMeta(meta);
         }
-
-
         if(config.isConfigurationSection("borderItem")){
             border = loadItem(config.getConfigurationSection("borderItem"));
         }
@@ -151,15 +142,15 @@ public class MatchIt extends Game{
         this.gameManager = new MIGameManager(this);
     }
 
-    public List<ItemStack> getPairItems() {
+    List<ItemStack> getPairItems() {
         return pairItems;
     }
 
-    public ItemStack getCover() {
+    ItemStack getCover() {
         return cover;
     }
 
-    public ItemStack getBorder() {
+    ItemStack getBorder() {
         return border;
     }
 

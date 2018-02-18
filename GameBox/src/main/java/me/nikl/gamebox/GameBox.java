@@ -10,6 +10,7 @@ import me.nikl.gamebox.games.GameLanguage;
 import me.nikl.gamebox.input.HandleInvitations;
 import me.nikl.gamebox.input.HandleInviteInput;
 import me.nikl.gamebox.inventory.GUIManager;
+import me.nikl.gamebox.inventory.InventoryTitleMessenger;
 import me.nikl.gamebox.listeners.EnterGameBoxListener;
 import me.nikl.gamebox.listeners.LeftGameBoxListener;
 import me.nikl.gamebox.nms.*;
@@ -48,9 +49,6 @@ public class GameBox extends JavaPlugin{
 	public static boolean debug = false;
 	// toggle to stop inventory contents to be restored when a new gui is opened
 	public static boolean openingNewGUI = false;
-	// return values for GameManagers when a new game is started/failed to start
-	public static final int GAME_STARTED = 1, GAME_NOT_STARTED_ERROR = 0,
-			GAME_NOT_ENOUGH_MONEY = 2, GAME_NOT_ENOUGH_MONEY_1 = 3, GAME_NOT_ENOUGH_MONEY_2 = 4;
 	public static Economy econ = null;
 
 	private FileConfiguration config;
@@ -61,6 +59,7 @@ public class GameBox extends JavaPlugin{
 	private DataBase dataBase;
 	private Metrics metrics;
 	private GameRegistry gameRegistry;
+	private InventoryTitleMessenger inventoryTitleMessenger;
 
 	private MainCommand mainCommand;
 	private AdminCommand adminCommand;
@@ -203,7 +202,7 @@ public class GameBox extends JavaPlugin{
 			}
 		}
 		reloadListeners();
-
+		this.inventoryTitleMessenger = new InventoryTitleMessenger(this);
 		// get a new plugin manager and set the other managers and handlers
 		pManager = new PluginManager(this);
 		pManager.setGuiManager(new GUIManager(this));
@@ -314,6 +313,7 @@ public class GameBox extends JavaPlugin{
 		return pManager;
 	}
 
+	@Deprecated //move to NmsFactory
 	public NmsUtility getNMS() {
 		return nms;
 	}
@@ -322,6 +322,7 @@ public class GameBox extends JavaPlugin{
 		if(debug) Bukkit.getConsoleSender().sendMessage(message);
 	}
 
+	@Deprecated // to config manager
 	public boolean reloadConfiguration(){
 		File con = new File(this.getDataFolder().toString() + File.separatorChar + "config.yml");
 		if(!con.exists()){
@@ -336,6 +337,7 @@ public class GameBox extends JavaPlugin{
 		return true;
 	}
 
+	@Deprecated // use api implementation
 	public boolean wonTokens(UUID player, int tokens, String gameID){
 		if(!GameBoxSettings.tokensEnabled) return false;
 		return this.pManager.wonTokens(player, tokens, gameID);
@@ -385,10 +387,12 @@ public class GameBox extends JavaPlugin{
 		return "Other (custom game)";
 	}
 
+	@Deprecated // to config manager
 	public FileConfiguration getConfig(Module module) {
 		return getConfig(module.getModuleID());
 	}
 
+	@Deprecated // to config manager
 	public FileConfiguration getConfig(String moduleId) {
 		if(moduleId.equals(MODULE_GAMEBOX))
 			return getConfig();
@@ -397,10 +401,12 @@ public class GameBox extends JavaPlugin{
 		return game.getConfig();
 	}
 
+	@Deprecated // to language manager
 	public Language getLanguage(Module module) {
 		return getLanguage(module.getModuleID());
 	}
 
+	@Deprecated // to language manager
 	public Language getLanguage(String moduleID) {
 		if(moduleID.equals(MODULE_GAMEBOX))
 			return lang;
@@ -420,4 +426,8 @@ public class GameBox extends JavaPlugin{
     public void warning(String message) {
 		getLogger().warning(message);
     }
+
+	public InventoryTitleMessenger getInventoryTitleMessenger() {
+		return inventoryTitleMessenger;
+	}
 }

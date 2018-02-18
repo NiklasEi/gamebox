@@ -7,13 +7,9 @@ import me.nikl.gamebox.GameBoxSettings;
  */
 public class GameSettings {
     private boolean handleClicksOnHotbar;
-
     private boolean playSounds;
-
     private boolean econEnabled;
-
     private GameType gameType;
-
     private int gameGuiSize;
 
     public GameSettings(){
