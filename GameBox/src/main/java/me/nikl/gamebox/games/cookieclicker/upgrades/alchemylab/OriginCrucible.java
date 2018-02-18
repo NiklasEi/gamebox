@@ -7,9 +7,8 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class OriginCrucible extends Upgrade{
+public class OriginCrucible extends Upgrade {
 
     public OriginCrucible(CCGame game) {
         super(game, 197);

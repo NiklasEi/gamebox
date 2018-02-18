@@ -10,7 +10,6 @@ import java.util.List;
 
 /**
  * @author Niklas Eicker
- *
  */
 public class ToggleButton extends AButton {
     private boolean toggled = false;
@@ -27,7 +26,7 @@ public class ToggleButton extends AButton {
     }
 
     @SuppressWarnings("deprecation")
-    public ToggleButton toggle(){
+    public ToggleButton toggle() {
         toggled = !toggled;
         MaterialData mat = toggleData;
         ItemMeta meta = getItemMeta();
@@ -48,7 +47,7 @@ public class ToggleButton extends AButton {
         return this;
     }
 
-    public void setToggleDisplayName(String toggleDisplayName){
+    public void setToggleDisplayName(String toggleDisplayName) {
         this.toggleDisplayName = toggleDisplayName;
     }
 

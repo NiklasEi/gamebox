@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class CarpalTunnelPreventionCream extends Upgrade{
+public class CarpalTunnelPreventionCream extends Upgrade {
 
     public CarpalTunnelPreventionCream(CCGame game) {
         super(game, 1);

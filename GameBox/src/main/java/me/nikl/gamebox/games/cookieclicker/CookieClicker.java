@@ -17,7 +17,7 @@ public class CookieClicker extends Game {
 
     @Override
     public void onDisable() {
-        ((CCGameManager)gameManager).onShutDown();
+        ((CCGameManager) gameManager).onShutDown();
     }
 
     @Override

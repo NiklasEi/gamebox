@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class InsaneOatlingWorkers extends Upgrade{
+public class InsaneOatlingWorkers extends Upgrade {
 
     public InsaneOatlingWorkers(CCGame game) {
         super(game, 26);

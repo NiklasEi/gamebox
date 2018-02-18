@@ -8,9 +8,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class EludiumMouse extends Upgrade{
+public class EludiumMouse extends Upgrade {
 
     public EludiumMouse(CCGame game) {
         super(game, 190);

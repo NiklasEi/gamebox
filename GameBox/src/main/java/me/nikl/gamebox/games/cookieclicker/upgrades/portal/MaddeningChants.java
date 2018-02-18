@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class MaddeningChants extends Upgrade{
+public class MaddeningChants extends Upgrade {
 
     public MaddeningChants(CCGame game) {
         super(game, 316);

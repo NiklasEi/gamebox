@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * @author Niklas Eicker
  *
- * Utility class for ItemStacks
+ *         Utility class for ItemStacks
  */
 public class ItemStackUtility {
     public static final String MAT = "materialData";
@@ -19,9 +19,10 @@ public class ItemStackUtility {
     public static final String NAME = "displayName";
     public static final String GLOW = "glow";
 
-    public static ItemStack getItemStack(String matDataString){
-        Material mat; short data;
-        if(matDataString == null) return null;
+    public static ItemStack getItemStack(String matDataString) {
+        Material mat;
+        short data;
+        if (matDataString == null) return null;
         String[] obj = matDataString.split(":");
 
         if (obj.length == 2) {
@@ -39,7 +40,7 @@ public class ItemStackUtility {
             }
 
             //noinspection deprecation
-            if(mat == null) return null;
+            if (mat == null) return null;
             ItemStack stack = new ItemStack(mat, 1);
             stack.setDurability(data);
             return stack;
@@ -63,9 +64,9 @@ public class ItemStackUtility {
         ItemStack helpItem = materialData.toItemStack(1);
 
         ItemMeta meta = helpItem.getItemMeta();
-        if(text != null) {
-            if(text.size() > 0)meta.setDisplayName(text.get(0));
-            if(text.size() > 1){
+        if (text != null) {
+            if (text.size() > 0) meta.setDisplayName(text.get(0));
+            if (text.size() > 1) {
                 text.remove(0);
                 meta.setLore(text);
             }
@@ -74,15 +75,15 @@ public class ItemStackUtility {
         return helpItem;
     }
 
-    public static ItemStack loadItem(ConfigurationSection section){
+    public static ItemStack loadItem(ConfigurationSection section) {
         ItemStack toReturn = getItemStack(section.getString(MAT));
-        if(toReturn == null) return null;
+        if (toReturn == null) return null;
         ItemMeta meta = toReturn.getItemMeta();
 
-        if(section.isString(NAME)){
+        if (section.isString(NAME)) {
             meta.setDisplayName(StringUtility.color(section.getString(NAME)));
         }
-        if(section.isList(LORE)){
+        if (section.isList(LORE)) {
             meta.setLore(StringUtility.color(section.getStringList(LORE)));
         }
         toReturn.setItemMeta(meta);

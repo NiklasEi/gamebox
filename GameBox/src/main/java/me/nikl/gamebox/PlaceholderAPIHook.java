@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
  *
  * Provide GameBox placeholders through Placeholder API
  */
-public class PlaceholderAPIHook extends EZPlaceholderHook{
+public class PlaceholderAPIHook extends EZPlaceholderHook {
 
     private GameBox plugin;
 
@@ -24,24 +24,19 @@ public class PlaceholderAPIHook extends EZPlaceholderHook{
     public String onPlaceholderRequest(Player player, String identifier) {
         String gameID;
 
-        if(plugin.getPluginManager().getGames().containsKey(identifier.split("_")[identifier.split("_").length - 1])){
+        if (plugin.getPluginManager().getGames().containsKey(identifier.split("_")[identifier.split("_").length - 1])) {
             gameID = identifier.split("_")[identifier.split("_").length - 1];
 
             identifier = identifier.replace("_" + gameID, "");
         }
 
-        switch (identifier){
+        switch (identifier) {
             // return the name of the game that the player is currently playing
             case "game_name":
-                if(player == null) return null;
+                if (player == null) return null;
                 Game game = plugin.getPluginManager().getGame(player.getUniqueId());
-                if(game == null) return null;
+                if (game == null) return null;
                 return game.getGameLang().PLAIN_NAME;
-
-
-
-
-
 
 
         }

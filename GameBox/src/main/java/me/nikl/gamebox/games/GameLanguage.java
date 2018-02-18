@@ -17,8 +17,7 @@ public abstract class GameLanguage extends Language {
 
     public List<String> GAME_HELP = new ArrayList<>(Arrays.asList("Have fun playing"));
 
-    public String GAME_PAYED = " You payed %cost%"
-            , GAME_NOT_ENOUGH_MONEY = " Not enough money (%cost%)";
+    public String GAME_PAYED = " You payed %cost%", GAME_NOT_ENOUGH_MONEY = " Not enough money (%cost%)";
 
     public GameLanguage(GameBox plugin, Module module) {
         super(plugin, module);

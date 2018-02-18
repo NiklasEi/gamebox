@@ -10,9 +10,9 @@ import org.bukkit.material.MaterialData;
 /**
  * @author Niklas Eicker
  *
- * Custom upgrade replacing 'Sweatshop'
+ *         Custom upgrade replacing 'Sweatshop'
  */
-public class Recombobulators extends Upgrade{
+public class Recombobulators extends Upgrade {
 
     public Recombobulators(CCGame game) {
         super(game, 112);

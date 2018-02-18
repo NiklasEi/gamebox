@@ -8,18 +8,17 @@ import org.bukkit.inventory.InventoryHolder;
 
 /**
  * Created by nikl on 30.11.17.
- * 
  */
 public class InventoryUtility {
-    public static Inventory createInventory(InventoryHolder owner, int size, String title){
-        if(GameBoxSettings.checkInventoryLength && title.length() > 32){
+    public static Inventory createInventory(InventoryHolder owner, int size, String title) {
+        if (GameBoxSettings.checkInventoryLength && title.length() > 32) {
             title = StringUtility.shorten(title, 32);
         }
         return Bukkit.createInventory(owner, size, title);
     }
 
-    public static Inventory createInventory(InventoryHolder owner, InventoryType inventoryType, String title){
-        if(GameBoxSettings.checkInventoryLength && title.length() > 32){
+    public static Inventory createInventory(InventoryHolder owner, InventoryType inventoryType, String title) {
+        if (GameBoxSettings.checkInventoryLength && title.length() > 32) {
             title = StringUtility.shorten(title, 32);
         }
         return Bukkit.createInventory(owner, inventoryType, title);

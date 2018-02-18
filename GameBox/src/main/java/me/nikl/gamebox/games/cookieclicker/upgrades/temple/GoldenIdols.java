@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class GoldenIdols extends Upgrade{
+public class GoldenIdols extends Upgrade {
 
     public GoldenIdols(CCGame game) {
         super(game, 238);

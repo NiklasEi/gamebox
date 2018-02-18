@@ -8,9 +8,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class NevercrackMouse extends Upgrade{
+public class NevercrackMouse extends Upgrade {
 
     public NevercrackMouse(CCGame game) {
         super(game, 367);

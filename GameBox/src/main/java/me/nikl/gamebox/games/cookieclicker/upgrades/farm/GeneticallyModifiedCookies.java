@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class GeneticallyModifiedCookies extends Upgrade{
+public class GeneticallyModifiedCookies extends Upgrade {
 
     public GeneticallyModifiedCookies(CCGame game) {
         super(game, 45);

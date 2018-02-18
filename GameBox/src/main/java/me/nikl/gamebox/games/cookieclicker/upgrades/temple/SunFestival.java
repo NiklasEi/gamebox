@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class SunFestival extends Upgrade{
+public class SunFestival extends Upgrade {
 
     public SunFestival(CCGame game) {
         super(game, 241);

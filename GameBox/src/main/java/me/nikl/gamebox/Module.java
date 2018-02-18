@@ -3,13 +3,11 @@ package me.nikl.gamebox;
 import org.apache.commons.lang.Validate;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * Created by nikl on 21.11.17.
- *
  */
 public class Module {
 
@@ -21,14 +19,14 @@ public class Module {
 
     private List<String> subCommands;
 
-    public Module(GameBox gameBox, String moduleID, String classPath, JavaPlugin plugin, String... subCommands){
+    public Module(GameBox gameBox, String moduleID, String classPath, JavaPlugin plugin, String... subCommands) {
         Validate.isTrue(moduleID != null && !moduleID.isEmpty()
                 , " moduleID cannot be null or empty!");
-        if(classPath != null && !classPath.isEmpty()) {
+        if (classPath != null && !classPath.isEmpty()) {
             this.isGame = true;
         }
 
-        if(subCommands != null && !(subCommands.length < 1)) {
+        if (subCommands != null && !(subCommands.length < 1)) {
             this.subCommands = Arrays.asList(subCommands);
         }
 
@@ -52,8 +50,8 @@ public class Module {
     }
 
     @Override
-    public boolean equals(Object module){
-        if(!(module instanceof Module)){
+    public boolean equals(Object module) {
+        if (!(module instanceof Module)) {
             return false;
         }
 

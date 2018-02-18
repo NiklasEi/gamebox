@@ -9,7 +9,7 @@ import org.bukkit.material.MaterialData;
 /**
  * @author Niklas Eicker
  */
-public class IronMouse extends Upgrade{
+public class IronMouse extends Upgrade {
 
     public IronMouse(CCGame game) {
         super(game, 76);

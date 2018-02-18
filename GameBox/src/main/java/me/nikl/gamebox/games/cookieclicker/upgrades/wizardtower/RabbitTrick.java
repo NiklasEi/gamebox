@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class RabbitTrick extends Upgrade{
+public class RabbitTrick extends Upgrade {
 
     public RabbitTrick(CCGame game) {
         super(game, 313);

@@ -10,9 +10,9 @@ import org.bukkit.material.MaterialData;
 /**
  * @author Niklas Eicker
  *
- * Custom upgrade replacing 'Sweatshop'
+ *         Custom upgrade replacing 'Sweatshop'
  */
-public class CyborgWorkforce extends Upgrade{
+public class CyborgWorkforce extends Upgrade {
 
     public CyborgWorkforce(CCGame game) {
         super(game, 297);

@@ -65,7 +65,7 @@ public class MysqlDB extends DataBase {
         hikari.addDataSourceProperty("user", username);
         hikari.addDataSourceProperty("password", password);
 
-        try(Connection connection = hikari.getConnection()){
+        try (Connection connection = hikari.getConnection()) {
             Statement statement = connection.createStatement();
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS `" + PLAYER_TABLE + "`(`" +
                     PLAYER_UUID + "` varchar(36), `" +
@@ -94,12 +94,12 @@ public class MysqlDB extends DataBase {
     public void addStatistics(UUID uuid, String gameID, String gameTypeID, double value, SaveType saveType) {
         GameBox.debug("Add stats...");
         String columnName = buildColumnName(gameID, gameTypeID, saveType);
-        new BukkitRunnable(){
+        new BukkitRunnable() {
             @Override
             public void run() {
                 checkHighScoreColumnName(columnName);
                 try (Connection connection = hikari.getConnection();
-                     PreparedStatement statement = connection.prepareStatement(UPDATE_HIGH_SCORE.replace("%column%", columnName))){
+                     PreparedStatement statement = connection.prepareStatement(UPDATE_HIGH_SCORE.replace("%column%", columnName))) {
                     statement.setString(1, uuid.toString());
                     statement.setDouble(2, value);
                     statement.execute();
@@ -107,7 +107,7 @@ public class MysqlDB extends DataBase {
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
-                new BukkitRunnable(){
+                new BukkitRunnable() {
                     @Override
                     public void run() {
                         getTopList(gameID, gameTypeID, saveType).update(new PlayerScore(uuid, value, saveType));
@@ -117,21 +117,21 @@ public class MysqlDB extends DataBase {
         }.runTaskAsynchronously(plugin);
     }
 
-    private void checkHighScoreColumnName(String columnName){
-        if(knownHighScoreColumns.contains(columnName)) {
+    private void checkHighScoreColumnName(String columnName) {
+        if (knownHighScoreColumns.contains(columnName)) {
             GameBox.debug("  Found known high score column!");
             return;
         }
         // first time this column is used in this server session... better check it exists
         GameBox.debug("  Column name (length = " + columnName.length() + "): " + columnName);
-        try(Connection connection = hikari.getConnection()){
+        try (Connection connection = hikari.getConnection()) {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement
                     .executeQuery("SELECT * FROM information_schema.COLUMNS " +
                             "WHERE TABLE_SCHEMA = '" + database + "'" +
                             "AND TABLE_NAME = '" + HIGH_SCORES_TABLE + "'" +
                             "AND COLUMN_NAME = '" + columnName + "'");
-            if(!resultSet.next()) {
+            if (!resultSet.next()) {
                 GameBox.debug("  Adding the column " + columnName);
                 statement.executeUpdate("ALTER TABLE `" + HIGH_SCORES_TABLE + "` ADD `" + columnName + "` DOUBLE NULL");
             } else {
@@ -151,7 +151,7 @@ public class MysqlDB extends DataBase {
     @Override
     public TopList getTopList(String gameID, String gameTypeID, SaveType saveType) {
         String topListIdentifier = buildColumnName(gameID, gameTypeID, saveType);
-        if(cachedTopLists.containsKey(topListIdentifier)) return cachedTopLists.get(topListIdentifier);
+        if (cachedTopLists.containsKey(topListIdentifier)) return cachedTopLists.get(topListIdentifier);
         TopList newTopList = new TopList(topListIdentifier, new ArrayList<>());
         cachedTopLists.put(topListIdentifier, newTopList);
         initialiseNewTopList(newTopList, saveType);
@@ -164,7 +164,7 @@ public class MysqlDB extends DataBase {
             public void run() {
                 checkHighScoreColumnName(newTopList.getIdentifier());
                 try (Connection connection = hikari.getConnection();
-                     PreparedStatement select = connection.prepareStatement(COLLECT_TOP_SCORES.replace("%column%", newTopList.getIdentifier()).replace("%order%", saveType.isHigherScore()?"DESC":"ASC"))) {
+                     PreparedStatement select = connection.prepareStatement(COLLECT_TOP_SCORES.replace("%column%", newTopList.getIdentifier()).replace("%order%", saveType.isHigherScore() ? "DESC" : "ASC"))) {
                     ResultSet result = select.executeQuery();
                     List<PlayerScore> scores = new ArrayList<>();
                     while (result.next()) {
@@ -173,7 +173,7 @@ public class MysqlDB extends DataBase {
                         scores.add(new PlayerScore(uuid, value, saveType));
                     }
                     // back to main thread and update score
-                    new BukkitRunnable(){
+                    new BukkitRunnable() {
                         @Override
                         public void run() {
                             newTopList.updatePlayerScores(scores);
@@ -194,7 +194,7 @@ public class MysqlDB extends DataBase {
     @Override
     public void loadPlayer(GBPlayer player, boolean async) {
         // i am going to ignore the async bool here, since I don't want sync database calls for player loading...
-        if(!async) plugin.warning(" plugin tried to load player from MySQL sync...");
+        if (!async) plugin.warning(" plugin tried to load player from MySQL sync...");
 
         // load player from database and set the results in the player class
         BukkitRunnable task = new BukkitRunnable() {
@@ -228,7 +228,7 @@ public class MysqlDB extends DataBase {
                             e.printStackTrace();
                         }
                     } else {
-                        plugin.warning( " empty result set when loading player " + p.getName());
+                        plugin.warning(" empty result set when loading player " + p.getName());
                         try {
                             result.close();
                         } catch (SQLException e) {
@@ -246,10 +246,10 @@ public class MysqlDB extends DataBase {
     @Override
     public void savePlayer(final GBPlayer player, boolean async) {
         // must work async and sync since sync is needed on server shutdown
-        if(async){
-            new BukkitRunnable(){
+        if (async) {
+            new BukkitRunnable() {
                 @Override
-                public void run(){
+                public void run() {
                     savePlayer(player);
                 }
             }.runTaskAsynchronously(plugin);
@@ -258,9 +258,9 @@ public class MysqlDB extends DataBase {
         }
     }
 
-    private void savePlayer(final GBPlayer player){
+    private void savePlayer(final GBPlayer player) {
         try (Connection connection = hikari.getConnection();
-             PreparedStatement statement = connection.prepareStatement(SAVE)){
+             PreparedStatement statement = connection.prepareStatement(SAVE)) {
             statement.setInt(1, player.getTokens());
             statement.setBoolean(2, player.isPlaySounds());
             statement.setBoolean(3, player.allowsInvites());
@@ -280,7 +280,6 @@ public class MysqlDB extends DataBase {
             public void run() {
                 try (Connection connection = hikari.getConnection();
                      PreparedStatement select = connection.prepareStatement(SELECT_TOKEN)) {
-
                     select.setString(1, uuid.toString());
                     ResultSet result = select.executeQuery();
                     if (result.next()) {
@@ -305,7 +304,7 @@ public class MysqlDB extends DataBase {
                             }
                         }.runTask(plugin);
                     } else {
-                        plugin.warning( " empty result set trying to get token for " +uuid.toString());
+                        plugin.warning(" empty result set trying to get token for " + uuid.toString());
                         try {
                             result.close();
                         } catch (SQLException e) {
@@ -324,7 +323,7 @@ public class MysqlDB extends DataBase {
     public void setToken(UUID uuid, int token) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try (Connection connection = hikari.getConnection();
-                 PreparedStatement statement = connection.prepareStatement(SET_TOKEN)){
+                 PreparedStatement statement = connection.prepareStatement(SET_TOKEN)) {
                 statement.setInt(1, token);
                 statement.setString(2, uuid.toString());
                 statement.execute();
@@ -335,7 +334,7 @@ public class MysqlDB extends DataBase {
     }
 
     @Override
-    public void onShutDown(){
+    public void onShutDown() {
         super.onShutDown();
         hikari.close();
     }
@@ -343,16 +342,16 @@ public class MysqlDB extends DataBase {
     @Override
     public void resetHighScores() {
         try (Connection connection = hikari.getConnection();
-             Statement statement = connection.createStatement()){
+             Statement statement = connection.createStatement()) {
             statement.executeUpdate("TRUNCATE TABLE `" + HIGH_SCORES_TABLE + "`");
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void convertFromFile(CommandSender sender){
+    public void convertFromFile(CommandSender sender) {
         FileDB fromDB = new FileDB(plugin);
-        new BukkitRunnable(){
+        new BukkitRunnable() {
 
             @Override
             public void run() {
@@ -366,7 +365,7 @@ public class MysqlDB extends DataBase {
         }.runTaskAsynchronously(plugin);
     }
 
-    public List<String> getHighScoreColumnsBeginningWith(String beginningOfColumnName){
+    public List<String> getHighScoreColumnsBeginningWith(String beginningOfColumnName) {
         ArrayList<String> toReturn = new ArrayList<>();
         try (Connection connection = hikari.getConnection();
              PreparedStatement select = connection.prepareStatement(COLLECT_COLUMNS_STARTING_WITH.replace("%length%", String.valueOf(beginningOfColumnName.length())))) {

@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class CanolaOilWells extends Upgrade{
+public class CanolaOilWells extends Upgrade {
 
     public CanolaOilWells(CCGame game) {
         super(game, 309);

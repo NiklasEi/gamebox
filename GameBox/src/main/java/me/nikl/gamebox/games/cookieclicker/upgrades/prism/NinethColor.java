@@ -7,9 +7,8 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class NinethColor extends Upgrade{
+public class NinethColor extends Upgrade {
 
     public NinethColor(CCGame game) {
         super(game, 176);

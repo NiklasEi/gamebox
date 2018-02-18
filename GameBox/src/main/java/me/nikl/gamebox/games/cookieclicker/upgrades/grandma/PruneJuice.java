@@ -11,7 +11,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 /**
  * @author Niklas Eicker
  */
-public class PruneJuice extends Upgrade{
+public class PruneJuice extends Upgrade {
 
     public PruneJuice(CCGame game) {
         super(game, 44);

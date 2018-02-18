@@ -7,9 +7,8 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class TheoryOfAtomicFluidity extends Upgrade{
+public class TheoryOfAtomicFluidity extends Upgrade {
 
     public TheoryOfAtomicFluidity(CCGame game) {
         super(game, 302);

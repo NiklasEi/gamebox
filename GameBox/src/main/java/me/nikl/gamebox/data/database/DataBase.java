@@ -15,8 +15,6 @@ import java.util.UUID;
 
 /**
  * @author Niklas Eicker
- *
- *
  */
 public abstract class DataBase {
     protected static final String GAMES_STATISTICS_NODE = "gameStatistics";
@@ -27,19 +25,45 @@ public abstract class DataBase {
     protected static final String PLAYER_NAME = "name";
     protected static final String PLAYER_TABLE = "GBPlayers";
     protected static final String HIGH_SCORES_TABLE = "GBHighScores";
-
-    private BukkitRunnable autoSave;
     protected GameBox plugin;
     protected Map<String, TopList> cachedTopLists = new HashMap<>();
+    private BukkitRunnable autoSave;
 
-    public DataBase(GameBox plugin){
+    public DataBase(GameBox plugin) {
         this.plugin = plugin;
         createAutoSaveRunnable();
-        if(GameBoxSettings.autoSaveInterval > 0){
+        if (GameBoxSettings.autoSaveInterval > 0) {
             autoSave.runTaskTimerAsynchronously(plugin
                     , GameBoxSettings.autoSaveInterval * 60 * 20
                     , GameBoxSettings.autoSaveInterval * 60 * 20);
         }
+    }
+
+    private void createAutoSaveRunnable() {
+        this.autoSave = new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (plugin == null || plugin.getDataBase() == null)
+                    this.cancel();
+                for (GBPlayer player : plugin.getPluginManager().getGbPlayers().values()) {
+                    player.save(true);
+                }
+                // already async, no need to create a second async task
+                save(false);
+            }
+        };
+    }
+
+    public void onShutDown() {
+        if (autoSave != null)
+            autoSave.cancel();
+        save(false);
+    }
+
+    protected void updateCachedTopList(String topListIdentifier, PlayerScore playerScore) {
+        TopList cachedTopList = cachedTopLists.get(topListIdentifier);
+        if (cachedTopList == null) return;
+        cachedTopList.update(playerScore);
     }
 
     public abstract boolean load(boolean async);
@@ -58,37 +82,11 @@ public abstract class DataBase {
 
     public abstract void setToken(UUID uuid, int token);
 
-    private void createAutoSaveRunnable() {
-        this.autoSave = new BukkitRunnable() {
-            @Override
-            public void run() {
-                if(plugin == null || plugin.getDataBase() == null)
-                    this.cancel();
-                for(GBPlayer player : plugin.getPluginManager().getGbPlayers().values()){
-                    player.save(true);
-                }
-                // already async, no need to create a second async task
-                save(false);
-            }
-        };
-    }
-
-    public void onShutDown(){
-        if(autoSave != null)
-            autoSave.cancel();
-        save(false);
-    }
-
-    protected void updateCachedTopList(String topListIdentifier, PlayerScore playerScore) {
-        TopList cachedTopList =  cachedTopLists.get(topListIdentifier);
-        if(cachedTopList == null) return;
-        cachedTopList.update(playerScore);
-    }
-
     public abstract void resetHighScores();
 
     public interface Callback<T> {
         void onSuccess(T done);
+
         void onFailure(@Nullable Throwable throwable, @Nullable T value);
     }
 }

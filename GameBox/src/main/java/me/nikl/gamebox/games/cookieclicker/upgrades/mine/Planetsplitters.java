@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class Planetsplitters extends Upgrade{
+public class Planetsplitters extends Upgrade {
 
     public Planetsplitters(CCGame game) {
         super(game, 296);

@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class CookietopianMomentsOfMaybe extends Upgrade{
+public class CookietopianMomentsOfMaybe extends Upgrade {
 
     public CookietopianMomentsOfMaybe(CCGame game) {
         super(game, 317);

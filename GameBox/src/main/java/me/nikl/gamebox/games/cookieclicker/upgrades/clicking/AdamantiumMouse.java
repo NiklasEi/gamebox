@@ -8,9 +8,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class AdamantiumMouse extends Upgrade{
+public class AdamantiumMouse extends Upgrade {
 
     public AdamantiumMouse(CCGame game) {
         super(game, 78);

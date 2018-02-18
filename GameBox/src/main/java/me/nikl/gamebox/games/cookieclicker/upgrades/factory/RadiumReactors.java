@@ -10,9 +10,9 @@ import org.bukkit.material.MaterialData;
 /**
  * @author Niklas Eicker
  *
- * Custom upgrade replacing 'Sweatshop'
+ *         Custom upgrade replacing 'Sweatshop'
  */
-public class RadiumReactors extends Upgrade{
+public class RadiumReactors extends Upgrade {
 
     public RadiumReactors(CCGame game) {
         super(game, 46);

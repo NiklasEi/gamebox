@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class CookieTrees extends Upgrade{
+public class CookieTrees extends Upgrade {
 
     public CookieTrees(CCGame game) {
         super(game, 12);

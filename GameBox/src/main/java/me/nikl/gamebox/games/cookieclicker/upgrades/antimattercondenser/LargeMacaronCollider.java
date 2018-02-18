@@ -7,9 +7,8 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class LargeMacaronCollider extends Upgrade{
+public class LargeMacaronCollider extends Upgrade {
 
     public LargeMacaronCollider(CCGame game) {
         super(game, 101);

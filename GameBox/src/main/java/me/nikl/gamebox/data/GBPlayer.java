@@ -9,7 +9,6 @@ import java.util.UUID;
 
 /**
  * @author Niklas Eicker
- *
  */
 public class GBPlayer {
     private UUID uuid;
@@ -22,7 +21,7 @@ public class GBPlayer {
 
     private boolean loaded = false;
 
-    public GBPlayer(GameBox plugin, UUID uuid){
+    public GBPlayer(GameBox plugin, UUID uuid) {
         this.uuid = uuid;
         this.plugin = plugin;
         this.dataBase = plugin.getDataBase();
@@ -30,7 +29,7 @@ public class GBPlayer {
         loadData();
     }
 
-    public GBPlayer(GameBox plugin, UUID uuid, int token, boolean playSounds, boolean allowInvites){
+    public GBPlayer(GameBox plugin, UUID uuid, int token, boolean playSounds, boolean allowInvites) {
         this.uuid = uuid;
         this.plugin = plugin;
         this.dataBase = plugin.getDataBase();
@@ -46,7 +45,7 @@ public class GBPlayer {
         dataBase.loadPlayer(this, true);
     }
 
-    public void setPlayerData(int token, boolean playSounds, boolean allowInvites){
+    public void setPlayerData(int token, boolean playSounds, boolean allowInvites) {
         this.tokens = token;
         this.allowInvites = allowInvites;
         this.playSounds = playSounds;
@@ -66,15 +65,15 @@ public class GBPlayer {
         this.playSounds = playSounds;
     }
 
-    public void toggleSound(){
+    public void toggleSound() {
         this.playSounds = !playSounds;
     }
 
-    public int getTokens(){
+    public int getTokens() {
         return this.tokens;
     }
 
-    public void setTokens(int newTokens){
+    public void setTokens(int newTokens) {
         this.tokens = newTokens;
         plugin.getPluginManager().getGuiManager().updateTokens(this);
     }
@@ -86,11 +85,11 @@ public class GBPlayer {
         save(async);
     }
 
-    public void remove(){
+    public void remove() {
         remove(false);
     }
 
-    public void save(){
+    public void save() {
         save(false);
     }
 
@@ -107,7 +106,7 @@ public class GBPlayer {
     }
 
     public Player getPlayer() {
-        if(player == null){
+        if (player == null) {
             this.player = Bukkit.getPlayer(uuid);
         }
         return player;

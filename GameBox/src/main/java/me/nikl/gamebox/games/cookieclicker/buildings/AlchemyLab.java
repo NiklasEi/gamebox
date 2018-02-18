@@ -16,9 +16,9 @@ public class AlchemyLab extends Building {
 
         // old minecraft versions are missing the material SPLASH_POTION
         Material mat;
-        try{
+        try {
             mat = Material.SPLASH_POTION;
-        } catch (NoSuchFieldError tooOldVersion){
+        } catch (NoSuchFieldError tooOldVersion) {
             mat = Material.POTION;
         }
 

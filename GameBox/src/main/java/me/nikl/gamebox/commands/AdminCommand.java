@@ -3,8 +3,8 @@ package me.nikl.gamebox.commands;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.Language;
-import me.nikl.gamebox.data.database.DataBase;
 import me.nikl.gamebox.data.GBPlayer;
+import me.nikl.gamebox.data.database.DataBase;
 import me.nikl.gamebox.data.database.MysqlDB;
 import me.nikl.gamebox.data.toplist.SaveType;
 import me.nikl.gamebox.utility.Permission;
@@ -28,18 +28,18 @@ import java.util.UUID;
 /**
  * @author Niklas Eicker
  *
- * Commands for server administrators
+ *         Commands for server administrators
  */
 public class AdminCommand implements CommandExecutor {
     private GameBox plugin;
     private GameBoxLanguage lang;
     private HashMap<String, HashMap<String, List<String>>> missingLanguageKeys;
 
-    public AdminCommand(GameBox plugin){
+    public AdminCommand(GameBox plugin) {
         this.plugin = plugin;
         this.lang = plugin.lang;
         missingLanguageKeys = new HashMap<>();
-        new BukkitRunnable(){
+        new BukkitRunnable() {
             @Override
             public void run() {
                 GameBox.debug(" running late check in Admin command");
@@ -50,22 +50,22 @@ public class AdminCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if(!sender.hasPermission(Permission.ADMIN.getPermission())){
+        if (!sender.hasPermission(Permission.ADMIN.getPermission())) {
             sender.sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
             return true;
         }
-        if(args.length == 0 || (args.length == 1 && args[0].equalsIgnoreCase("help"))) {
+        if (args.length == 0 || (args.length == 1 && args[0].equalsIgnoreCase("help"))) {
             sendHelpMessages(sender);
             return true;
         }
 
-        if(args[0].equalsIgnoreCase("givetoken") || args[0].equalsIgnoreCase("taketoken") || args[0].equalsIgnoreCase("settoken")) {
+        if (args[0].equalsIgnoreCase("givetoken") || args[0].equalsIgnoreCase("taketoken") || args[0].equalsIgnoreCase("settoken")) {
             return manipulateTokenCommand(sender, args);
-        } else if(args[0].equalsIgnoreCase("token")){
+        } else if (args[0].equalsIgnoreCase("token")) {
             return getTokenCountCommand(sender, args);
-        } else if(args[0].equalsIgnoreCase("reload")){
+        } else if (args[0].equalsIgnoreCase("reload")) {
             sender.sendMessage(lang.PREFIX + ChatColor.GREEN + " Reloading...");
-            if(plugin.reload()){
+            if (plugin.reload()) {
                 sender.sendMessage(lang.PREFIX + lang.RELOAD_SUCCESS);
                 return true;
             } else {
@@ -73,40 +73,40 @@ public class AdminCommand implements CommandExecutor {
                 Bukkit.getPluginManager().disablePlugin(plugin);
                 return true;
             }
-        } else if(args[0].equalsIgnoreCase("language")){
+        } else if (args[0].equalsIgnoreCase("language")) {
             return languageCommand(sender, args);
-        } else if(args[0].equalsIgnoreCase("debug")){
-            if(sender instanceof Player){
+        } else if (args[0].equalsIgnoreCase("debug")) {
+            if (sender instanceof Player) {
                 return true;
             }
             GameBox.debug = !GameBox.debug;
             sender.sendMessage(lang.PREFIX + " Set debug mode to: " + GameBox.debug);
             return true;
-        } else if(args[0].equalsIgnoreCase("resetHighScores")){
+        } else if (args[0].equalsIgnoreCase("resetHighScores")) {
             plugin.getDataBase().resetHighScores();
             plugin.reload();
             return true;
-        } else if(args[0].equalsIgnoreCase("filetomysql")){
+        } else if (args[0].equalsIgnoreCase("filetomysql")) {
             DataBase dataBase = plugin.getDataBase();
-            if(!(dataBase instanceof MysqlDB)) {
+            if (!(dataBase instanceof MysqlDB)) {
                 sender.sendMessage(lang.PREFIX + ChatColor.RED + " You must have MySQL enabled to do this!");
                 return true;
             }
             ((MysqlDB) dataBase).convertFromFile(sender);
             return true;
-        } else if(args[0].equalsIgnoreCase("hundredrandom")){
+        } else if (args[0].equalsIgnoreCase("hundredrandom")) {
             DataBase dataBase = plugin.getDataBase();
             Random random = new Random();
-            for(int i = 0; i < 100; i++){
+            for (int i = 0; i < 100; i++) {
                 UUID uuid = UUID.randomUUID();
                 dataBase.savePlayer(new GBPlayer(plugin, uuid, 0, true, true), true);
                 dataBase.addStatistics(uuid, GameBox.MODULE_COOKIECLICKER, "weekly", random.nextInt(5000), SaveType.HIGH_NUMBER_SCORE);
             }
             return true;
-        } else if(args[0].equalsIgnoreCase("findcolumns")){
-            if(args.length < 2) return true;
+        } else if (args[0].equalsIgnoreCase("findcolumns")) {
+            if (args.length < 2) return true;
             DataBase dataBase = plugin.getDataBase();
-            if(!(dataBase instanceof MysqlDB)) return true;
+            if (!(dataBase instanceof MysqlDB)) return true;
             List<String> columns = ((MysqlDB) dataBase).getHighScoreColumnsBeginningWith(args[1]);
             sender.sendMessage(String.join(", ", columns));
             return true;
@@ -117,8 +117,8 @@ public class AdminCommand implements CommandExecutor {
 
     private boolean languageCommand(CommandSender sender, String[] args) {
         // args length is min. 1
-        if(args.length == 1){
-            if(missingLanguageKeys.isEmpty()){
+        if (args.length == 1) {
+            if (missingLanguageKeys.isEmpty()) {
                 plugin.info(ChatColor.GREEN + " You have no missing messages in your language files :)");
                 return true;
             } else {
@@ -126,8 +126,8 @@ public class AdminCommand implements CommandExecutor {
                 printIncompleteLangFilesInfo();
                 return true;
             }
-        } else if(args.length == 2){
-            switch (args[1].toLowerCase()){
+        } else if (args.length == 2) {
+            switch (args[1].toLowerCase()) {
                 case "all":
                     printMissingKeys(sender);
                     return true;
@@ -142,21 +142,21 @@ public class AdminCommand implements CommandExecutor {
     }
 
     private boolean getTokenCountCommand(CommandSender sender, String[] args) {
-        if(args.length != 2){
+        if (args.length != 2) {
             sender.sendMessage(lang.PREFIX + " /gba token [player name]");
             return true;
         }
         OfflinePlayer player = Bukkit.getOfflinePlayer(args[1]);
-        if(player == null || !player.hasPlayedBefore()){
+        if (player == null || !player.hasPlayedBefore()) {
             sender.sendMessage(lang.PREFIX + ChatColor.RED + " can't find player " + args[1]);
             return true;
         }
 
         // handle cached players
         cachedPlayer:
-        if(player.isOnline()){
+        if (player.isOnline()) {
             GBPlayer gbPlayer = plugin.getPluginManager().getPlayer(player.getUniqueId());
-            if(gbPlayer == null){
+            if (gbPlayer == null) {
                 break cachedPlayer;
             }
             sender.sendMessage(lang.PREFIX + lang.CMD_TOKEN_INFO.replace("%player%", player.getName()).replace("%token%", String.valueOf(gbPlayer.getTokens())));
@@ -174,30 +174,30 @@ public class AdminCommand implements CommandExecutor {
             @Override
             public void onFailure(@Nullable Throwable throwable, @Nullable Integer value) {
                 sender.sendMessage(lang.PREFIX + " Failed to get token for player: " + player.getName());
-                if(throwable != null) throwable.printStackTrace();
+                if (throwable != null) throwable.printStackTrace();
             }
         });
         return true;
     }
 
     private boolean manipulateTokenCommand(CommandSender sender, String[] args) {
-        if(args.length != 3){
+        if (args.length != 3) {
             sender.sendMessage(lang.PREFIX + " /gba [givetoken:taketoken:settoken] [player name] [count (integer)]");
             return true;
         }
         OfflinePlayer player = Bukkit.getOfflinePlayer(args[1]);
-        if(player == null || !player.hasPlayedBefore()){
+        if (player == null || !player.hasPlayedBefore()) {
             sender.sendMessage(lang.PREFIX + ChatColor.RED + " can't find player " + args[1]);
             return true;
         }
         int count;
-        try{
+        try {
             count = Integer.parseInt(args[2]);
-        } catch (NumberFormatException exception){
+        } catch (NumberFormatException exception) {
             sender.sendMessage(lang.PREFIX + ChatColor.RED + " last argument has to be an integer!");
             return true;
         }
-        if(count < 0){
+        if (count < 0) {
             sender.sendMessage(lang.PREFIX + ChatColor.RED + " the number can't be negative!");
             return true;
         }
@@ -206,15 +206,15 @@ public class AdminCommand implements CommandExecutor {
 
         // handle cached online players
         GBPlayer gbPlayer = plugin.getPluginManager().getPlayer(player.getUniqueId());
-        if(gbPlayer != null && gbPlayer.isLoaded()){
-            switch (args[0].toLowerCase()){
+        if (gbPlayer != null && gbPlayer.isLoaded()) {
+            switch (args[0].toLowerCase()) {
                 case "givetoken":
                     gbPlayer.setTokens(gbPlayer.getTokens() + count);
                     sender.sendMessage(lang.PREFIX + lang.CMD_GAVE_TOKEN.replace("%player%", player.getName()).replace("%token%", String.valueOf(count)));
                     return true;
 
                 case "taketoken":
-                    if(gbPlayer.getTokens() >= count){
+                    if (gbPlayer.getTokens() >= count) {
                         gbPlayer.setTokens(gbPlayer.getTokens() - count);
                         sender.sendMessage(lang.PREFIX + lang.CMD_TOOK_TOKEN.replace("%player%", player.getName()).replace("%token%", String.valueOf(count)));
                         return true;
@@ -235,7 +235,7 @@ public class AdminCommand implements CommandExecutor {
         }
 
         // handle offline or not cached players
-        switch (args[0].toLowerCase()){
+        switch (args[0].toLowerCase()) {
             case "givetoken":
                 plugin.getApi().giveToken(player, count);
                 sender.sendMessage(lang.PREFIX + lang.CMD_GAVE_TOKEN.replace("%player%", player.getName()).replace("%token%", String.valueOf(count)));
@@ -250,11 +250,11 @@ public class AdminCommand implements CommandExecutor {
 
                     @Override
                     public void onFailure(@Nullable Throwable throwable, @Nullable Integer value) {
-                        if(value != null){
+                        if (value != null) {
                             sender.sendMessage(lang.PREFIX + lang.CMD_NOT_ENOUGH_TOKEN.replace("%player%", player.getName()).replace("%token%", String.valueOf(value)));
                         } else {
                             sender.sendMessage(lang.PREFIX + " Error...");
-                            if(throwable != null){
+                            if (throwable != null) {
                                 throwable.printStackTrace();
                             }
                         }
@@ -282,7 +282,7 @@ public class AdminCommand implements CommandExecutor {
         plugin.info("");
         Iterator<String> iterator = missingLanguageKeys.keySet().iterator();
         String moduleID;
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             moduleID = iterator.next();
             plugin.info(ChatColor.RED + "   -> " + ChatColor.RESET + plugin.getLanguage(moduleID).DEFAULT_PLAIN_NAME);
         }
@@ -305,18 +305,18 @@ public class AdminCommand implements CommandExecutor {
         plugin.info(ChatColor.DARK_GREEN + " /gba language");
     }
 
-    private void printMissingKeys(CommandSender sender){
-        if(missingLanguageKeys.isEmpty()) return;
+    private void printMissingKeys(CommandSender sender) {
+        if (missingLanguageKeys.isEmpty()) return;
 
         plugin.info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
         Iterator<String> iterator = missingLanguageKeys.keySet().iterator();
         String moduleID;
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
             moduleID = iterator.next();
 
             printMissingModuleKeys(sender, moduleID);
 
-            if(iterator.hasNext()) {
+            if (iterator.hasNext()) {
                 plugin.info(" ");
                 plugin.info(" ");
             } else {
@@ -331,20 +331,20 @@ public class AdminCommand implements CommandExecutor {
         plugin.info(" Missing from " + ChatColor.BLUE + plugin.getLanguage(moduleID).DEFAULT_PLAIN_NAME
                 + ChatColor.RESET + " language file:");
 
-        if(currentKeys.keySet().contains("string")){
+        if (currentKeys.keySet().contains("string")) {
             plugin.info(" ");
             plugin.info(ChatColor.BOLD + "   Strings:");
             keys = currentKeys.get("string");
-            for(String key : keys){
+            for (String key : keys) {
                 plugin.info(ChatColor.RED + "   -> " + ChatColor.RESET + key);
             }
         }
 
-        if(currentKeys.keySet().contains("list")){
+        if (currentKeys.keySet().contains("list")) {
             plugin.info(" ");
             plugin.info(ChatColor.BOLD + "   Lists:");
             keys = currentKeys.get("list");
-            for(String key : keys){
+            for (String key : keys) {
                 plugin.info(ChatColor.RED + "   -> " + ChatColor.RESET + key);
             }
         }
@@ -352,20 +352,20 @@ public class AdminCommand implements CommandExecutor {
 
 
     private void checkLanguageFiles() {
-		/*
+        /*
 		ToDo: check for missing keys in all used language files and add some support for creating
 		Files that contain all customized messages and the default ones for previously unset keys
 		*/
         HashMap<String, List<String>> currentKeys;
-        for(String moduleID : plugin.getGameRegistry().getModuleIDs()){
+        for (String moduleID : plugin.getGameRegistry().getModuleIDs()) {
             currentKeys = collectMissingKeys(moduleID);
-            if(!currentKeys.isEmpty()){
+            if (!currentKeys.isEmpty()) {
                 missingLanguageKeys.put(moduleID, currentKeys);
             }
         }
     }
 
-    private HashMap<String, List<String>> collectMissingKeys(String moduleID){
+    private HashMap<String, List<String>> collectMissingKeys(String moduleID) {
         Language language = plugin.getLanguage(moduleID);
 
         List<String> missingStringKeys = language.findMissingStringMessages();
@@ -373,23 +373,23 @@ public class AdminCommand implements CommandExecutor {
 
         HashMap<String, List<String>> toReturn = new HashMap<>();
 
-        if(!missingListKeys.isEmpty()){
+        if (!missingListKeys.isEmpty()) {
             toReturn.put("list", missingListKeys);
         }
 
-        if(!missingStringKeys.isEmpty()){
+        if (!missingStringKeys.isEmpty()) {
             toReturn.put("string", missingStringKeys);
         }
 
         return toReturn;
     }
 
-    public HashMap<String, HashMap<String, List<String>>> getMissingLanguageKeys(){
+    public HashMap<String, HashMap<String, List<String>>> getMissingLanguageKeys() {
         return this.missingLanguageKeys;
     }
 
     // Todo (method in language)
-    private void createDiffFile(String moduleID){
+    private void createDiffFile(String moduleID) {
 
     }
 }

@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class WheatTriffids extends Upgrade{
+public class WheatTriffids extends Upgrade {
 
     public WheatTriffids(CCGame game) {
         super(game, 308);

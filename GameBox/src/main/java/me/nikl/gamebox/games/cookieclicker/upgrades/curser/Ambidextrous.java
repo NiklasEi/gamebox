@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class Ambidextrous extends Upgrade{
+public class Ambidextrous extends Upgrade {
 
     public Ambidextrous(CCGame game) {
         super(game, 2);

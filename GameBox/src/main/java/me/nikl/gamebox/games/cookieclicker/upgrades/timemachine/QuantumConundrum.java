@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class QuantumConundrum extends Upgrade{
+public class QuantumConundrum extends Upgrade {
 
     public QuantumConundrum(CCGame game) {
         super(game, 30);

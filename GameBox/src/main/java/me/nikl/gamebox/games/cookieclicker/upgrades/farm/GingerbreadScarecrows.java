@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class GingerbreadScarecrows extends Upgrade{
+public class GingerbreadScarecrows extends Upgrade {
 
     public GingerbreadScarecrows(CCGame game) {
         super(game, 111);

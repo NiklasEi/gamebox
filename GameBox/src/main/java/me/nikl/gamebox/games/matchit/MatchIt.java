@@ -22,9 +22,8 @@ import java.util.List;
 
 /**
  * Created by nikl on 02.12.17.
- *
  */
-public class MatchIt extends Game{
+public class MatchIt extends Game {
     private List<ItemStack> pairItems;
     private ItemStack cover, border;
 
@@ -40,11 +39,11 @@ public class MatchIt extends Game{
             // load default items from file
             ConfigurationSection itemsSec = defaultConfig.getConfigurationSection("items");
             ItemStack itemStack;
-            for(String key : itemsSec.getKeys(false)){
-                if(!itemsSec.isConfigurationSection(key))
+            for (String key : itemsSec.getKeys(false)) {
+                if (!itemsSec.isConfigurationSection(key))
                     continue;
                 itemStack = loadItem(itemsSec.getConfigurationSection(key));
-                if(itemStack != null && !pairItems.contains(itemStack))
+                if (itemStack != null && !pairItems.contains(itemStack))
                     pairItems.add(itemStack.clone());
             }
         } catch (UnsupportedEncodingException e2) {
@@ -53,16 +52,16 @@ public class MatchIt extends Game{
         }
     }
 
-    private ItemStack loadItem(ConfigurationSection itemSection){
+    private ItemStack loadItem(ConfigurationSection itemSection) {
         ItemStack toReturn = ItemStackUtility.loadItem(itemSection);
-        if(toReturn == null){
+        if (toReturn == null) {
             warn(" missing or invalid 'matData' config-key: " + itemSection.getName());
             return null;
         }
-        if(itemSection.isBoolean("glow")){
+        if (itemSection.isBoolean("glow")) {
             toReturn = nms.addGlow(toReturn);
         }
-        if(!GameBoxSettings.version1_8){
+        if (!GameBoxSettings.version1_8) {
             ItemMeta meta = toReturn.getItemMeta();
             meta.addItemFlags(ItemFlag.values());
             toReturn.setItemMeta(meta);
@@ -78,7 +77,7 @@ public class MatchIt extends Game{
     @Override
     public void init() {
         pairItems = new ArrayList<>();
-        if(!config.isConfigurationSection("items")){
+        if (!config.isConfigurationSection("items")) {
             gameBox.warning(" there are no items defined for this game...");
             gameBox.warning(" falling back to default...");
             setDefaultItems();
@@ -86,25 +85,25 @@ public class MatchIt extends Game{
         } else {
             ConfigurationSection itemsSec = config.getConfigurationSection("items");
             ItemStack itemStack;
-            for(String key : itemsSec.getKeys(false)){
-                if(!itemsSec.isConfigurationSection(key))
+            for (String key : itemsSec.getKeys(false)) {
+                if (!itemsSec.isConfigurationSection(key))
                     continue;
 
                 itemStack = loadItem(itemsSec.getConfigurationSection(key));
 
-                if(itemStack != null) pairItems.add(itemStack.clone());
+                if (itemStack != null) pairItems.add(itemStack.clone());
             }
-            if(getPairItems().isEmpty()){
+            if (getPairItems().isEmpty()) {
                 warn(" there are no items defined!");
                 warn("    falling back to default...");
                 setDefaultItems();
                 // ToDo or deregister the game!
             }
         }
-        if(config.isConfigurationSection("coverItem")){
+        if (config.isConfigurationSection("coverItem")) {
             cover = loadItem(config.getConfigurationSection("coverItem"));
         }
-        if(cover == null){
+        if (cover == null) {
             warn(" missing or invalid cover item in %config%");
             warn("    falling back to default...");
             cover = new MaterialData(Material.STAINED_GLASS_PANE, (byte) 3).toItemStack(1);
@@ -112,10 +111,10 @@ public class MatchIt extends Game{
             meta.setDisplayName(StringUtility.color("&1Click to uncover"));
             cover.setItemMeta(meta);
         }
-        if(config.isConfigurationSection("borderItem")){
+        if (config.isConfigurationSection("borderItem")) {
             border = loadItem(config.getConfigurationSection("borderItem"));
         }
-        if(border == null){
+        if (border == null) {
             warn(" missing or invalid border item in %config%");
             warn("    falling back to default...");
             border = new MaterialData(Material.STAINED_GLASS_PANE, (byte) 15).toItemStack(1);
@@ -154,15 +153,16 @@ public class MatchIt extends Game{
         return border;
     }
 
-    public enum GridSize{
-        BIG(54), MIDDLE(4*7), SMALL(2*5);
+    public enum GridSize {
+        BIG(54), MIDDLE(4 * 7), SMALL(2 * 5);
 
         private int size;
-        GridSize(int size){
+
+        GridSize(int size) {
             this.size = size;
         }
 
-        int getSize(){
+        int getSize() {
             return size;
         }
     }

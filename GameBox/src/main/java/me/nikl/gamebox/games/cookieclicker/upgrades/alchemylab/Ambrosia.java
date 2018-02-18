@@ -7,9 +7,8 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class Ambrosia extends Upgrade{
+public class Ambrosia extends Upgrade {
 
     public Ambrosia(CCGame game) {
         super(game, 49);

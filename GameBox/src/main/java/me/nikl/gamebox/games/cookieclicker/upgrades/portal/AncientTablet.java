@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class AncientTablet extends Upgrade{
+public class AncientTablet extends Upgrade {
 
     public AncientTablet(CCGame game) {
         super(game, 25);

@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class ReinforcedIndexFinger extends Upgrade{
+public class ReinforcedIndexFinger extends Upgrade {
 
     public ReinforcedIndexFinger(CCGame game) {
         super(game, 0);

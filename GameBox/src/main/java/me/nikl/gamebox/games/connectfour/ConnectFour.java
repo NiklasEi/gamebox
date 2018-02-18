@@ -7,7 +7,7 @@ import me.nikl.gamebox.games.GameSettings;
 /**
  * @author Niklas Eicker
  *
- * Main class for the GameBox game 2048
+ *         Main class for the GameBox game 2048
  */
 public class ConnectFour extends Game {
 

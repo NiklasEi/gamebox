@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class ChocolateMonoliths extends Upgrade{
+public class ChocolateMonoliths extends Upgrade {
 
     public ChocolateMonoliths(CCGame game) {
         super(game, 114);

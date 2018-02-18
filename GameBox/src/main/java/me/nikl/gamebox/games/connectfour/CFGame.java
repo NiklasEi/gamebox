@@ -14,14 +14,16 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * @author Niklas Eicker
- *
- *
  */
-public class CFGame extends BukkitRunnable{
+public class CFGame extends BukkitRunnable {
 
     private CFGameRules rule;
     private boolean playSounds;
@@ -34,13 +36,9 @@ public class CFGame extends BukkitRunnable{
 
     private Inventory inv;
 
-    private org.bukkit.Sound falling = Sound.WOOD_CLICK.bukkitSound()
-            , insert = Sound.CLICK.bukkitSound()
-            , turn = Sound.NOTE_PLING.bukkitSound()
-            , won = Sound.VILLAGER_YES.bukkitSound()
-            , lose = Sound.VILLAGER_NO.bukkitSound();
+    private org.bukkit.Sound falling = Sound.WOOD_CLICK.bukkitSound(), insert = Sound.CLICK.bukkitSound(), turn = Sound.NOTE_PLING.bukkitSound(), won = Sound.VILLAGER_YES.bukkitSound(), lose = Sound.VILLAGER_NO.bukkitSound();
 
-    private float volume = 0.5f, pitch= 1f;
+    private float volume = 0.5f, pitch = 1f;
 
     private double time;
     private String timeStr = "";
@@ -54,7 +52,7 @@ public class CFGame extends BukkitRunnable{
     private NmsUtility nms;
     private CFLanguage lang;
 
-    CFGame(CFGameRules rule, ConnectFour connectFour, boolean playSounds, Player[] players, Map<Integer, ItemStack> chips){
+    CFGame(CFGameRules rule, ConnectFour connectFour, boolean playSounds, Player[] players, Map<Integer, ItemStack> chips) {
         this.connectFour = connectFour;
         this.lang = (CFLanguage) connectFour.getGameLang();
         this.nms = connectFour.getGameBox().getNMS();
@@ -74,7 +72,7 @@ public class CFGame extends BukkitRunnable{
         int first, second;
         first = rand.nextInt(chips.size());
         second = rand.nextInt(chips.size());
-        while (first == second){
+        while (first == second) {
             second = rand.nextInt(chips.size());
         }
 
@@ -88,7 +86,7 @@ public class CFGame extends BukkitRunnable{
         meta.setDisplayName(meta.getDisplayName().replace("%player%", this.second.getName()));
         secondChip.setItemMeta(meta);
 
-        if(rand.nextDouble() < 0.5){
+        if (rand.nextDouble() < 0.5) {
             this.state = CFGameState.FIRST_TURN;
         } else {
             this.state = CFGameState.SECOND_TURN;
@@ -103,15 +101,15 @@ public class CFGame extends BukkitRunnable{
     }
 
     private void updateStatus() {
-        switch (this.state){
+        switch (this.state) {
             case FIRST_TURN:
-                if(first!=null && second!=null){
+                if (first != null && second != null) {
                     nms.updateInventoryTitle(first, lang.TITLE_IN_GAME_YOUR_TURN.replace("%player%", first.getName()).replace("%time%", timeStr));
                     nms.updateInventoryTitle(second, lang.TITLE_IN_GAME_OTHERS_TURN.replace("%player%", first.getName()).replace("%time%", timeStr));
                 }
                 break;
             case SECOND_TURN:
-                if(first!=null && second!=null){
+                if (first != null && second != null) {
                     nms.updateInventoryTitle(first, lang.TITLE_IN_GAME_OTHERS_TURN.replace("%player%", second.getName()).replace("%time%", timeStr));
                     nms.updateInventoryTitle(second, lang.TITLE_IN_GAME_YOUR_TURN.replace("%player%", second.getName()).replace("%time%", timeStr));
                 }
@@ -125,7 +123,7 @@ public class CFGame extends BukkitRunnable{
     @Override
     public void run() {
 
-        if(state == CFGameState.FIRST_TURN || state == CFGameState.SECOND_TURN) {
+        if (state == CFGameState.FIRST_TURN || state == CFGameState.SECOND_TURN) {
             int oldTime = (int) Math.ceil(time);
             // for the wanted 20 ticks per second:
             //   this is not very accurate but sufficient in this case (imho)
@@ -134,10 +132,10 @@ public class CFGame extends BukkitRunnable{
                 // timer has run out!
 
                 state = state == CFGameState.SECOND_TURN ? CFGameState.FIRST_TURN : CFGameState.SECOND_TURN;
-                if(state == CFGameState.FIRST_TURN){
-                    if(playSounds) first.playSound(first.getLocation(), turn, volume, pitch);
+                if (state == CFGameState.FIRST_TURN) {
+                    if (playSounds) first.playSound(first.getLocation(), turn, volume, pitch);
                 } else {
-                    if(playSounds) second.playSound(second.getLocation(), turn, volume, pitch);
+                    if (playSounds) second.playSound(second.getLocation(), turn, volume, pitch);
                 }
                 time = rule.getTimePerMove();
             }
@@ -148,37 +146,37 @@ public class CFGame extends BukkitRunnable{
             }
         }
 
-        switch (state){
+        switch (state) {
             case FINISHED:
             case SECOND_TURN:
             case FIRST_TURN:
                 break;
             case FALLING_FIRST:
-                if(fallingChip /9 < 5 && (inv.getItem(fallingChip +9) == null || inv.getItem(fallingChip +9).getType() == Material.AIR)){
+                if (fallingChip / 9 < 5 && (inv.getItem(fallingChip + 9) == null || inv.getItem(fallingChip + 9).getType() == Material.AIR)) {
                     connectFour.debug("set " + fallingChip + " to null");
                     inv.setItem(fallingChip, null);
-                    fallingChip +=9;
+                    fallingChip += 9;
                     connectFour.debug("set " + fallingChip + " to fallingChip");
                     inv.setItem(fallingChip, firstChip);
-                    if(playSounds) {
-                        first.playSound(first.getLocation(), falling, volume*0.5f, pitch);
-                        second.playSound(second.getLocation(), falling, volume*0.5f, pitch);
+                    if (playSounds) {
+                        first.playSound(first.getLocation(), falling, volume * 0.5f, pitch);
+                        second.playSound(second.getLocation(), falling, volume * 0.5f, pitch);
                     }
                 } else {
-                    if(checkForMatches(fallingChip)){
+                    if (checkForMatches(fallingChip)) {
                         onGameEnd();
                         state = CFGameState.FINISHED;
-                        if(playSounds) {
+                        if (playSounds) {
                             first.playSound(first.getLocation(), won, volume, pitch);
                             second.playSound(second.getLocation(), lose, volume, pitch);
                         }
                         return;
-                    } else if(isDraw()) {
+                    } else if (isDraw()) {
                         state = CFGameState.FINISHED;
-                        if(first!=null && second!=null){
+                        if (first != null && second != null) {
                             nms.updateInventoryTitle(first, lang.TITLE_DRAW);
                             nms.updateInventoryTitle(second, lang.TITLE_DRAW);
-                            if(playSounds) {
+                            if (playSounds) {
                                 first.playSound(first.getLocation(), lose, volume, pitch);
                                 second.playSound(second.getLocation(), lose, volume, pitch);
                             }
@@ -189,37 +187,37 @@ public class CFGame extends BukkitRunnable{
                         time = rule.getTimePerMove();
                         timeStr = String.valueOf((int) time);
                         updateStatus();
-                        if(playSounds) second.playSound(second.getLocation(), turn, volume, pitch);
+                        if (playSounds) second.playSound(second.getLocation(), turn, volume, pitch);
                         return;
                     }
                 }
                 break;
             case FALLING_SECOND:
-                if(fallingChip /9 < 5 && (inv.getItem(fallingChip +9) == null || inv.getItem(fallingChip +9).getType() == Material.AIR)){
+                if (fallingChip / 9 < 5 && (inv.getItem(fallingChip + 9) == null || inv.getItem(fallingChip + 9).getType() == Material.AIR)) {
                     connectFour.debug("set " + fallingChip + " to null");
                     inv.setItem(fallingChip, null);
-                    fallingChip +=9;
+                    fallingChip += 9;
                     connectFour.debug("set " + fallingChip + " to fallingChip");
                     inv.setItem(fallingChip, secondChip);
-                    if(playSounds) {
-                        first.playSound(first.getLocation(), falling, volume*0.5f, pitch);
-                        second.playSound(second.getLocation(), falling, volume*0.5f, pitch);
+                    if (playSounds) {
+                        first.playSound(first.getLocation(), falling, volume * 0.5f, pitch);
+                        second.playSound(second.getLocation(), falling, volume * 0.5f, pitch);
                     }
                 } else {
-                    if(checkForMatches(fallingChip)){
+                    if (checkForMatches(fallingChip)) {
                         onGameEnd();
                         state = CFGameState.FINISHED;
-                        if(playSounds) {
+                        if (playSounds) {
                             first.playSound(first.getLocation(), lose, volume, pitch);
                             second.playSound(second.getLocation(), won, volume, pitch);
                         }
                         return;
-                    } else if(isDraw()) {
+                    } else if (isDraw()) {
                         state = CFGameState.FINISHED;
-                        if(first!=null && second!=null){
+                        if (first != null && second != null) {
                             nms.updateInventoryTitle(first, lang.TITLE_DRAW);
                             nms.updateInventoryTitle(second, lang.TITLE_DRAW);
-                            if(playSounds) {
+                            if (playSounds) {
                                 first.playSound(first.getLocation(), lose, volume, pitch);
                                 second.playSound(second.getLocation(), lose, volume, pitch);
                             }
@@ -231,7 +229,7 @@ public class CFGame extends BukkitRunnable{
                         time = rule.getTimePerMove();
                         timeStr = String.valueOf((int) time);
                         updateStatus();
-                        if(playSounds) first.playSound(first.getLocation(), turn, volume, pitch);
+                        if (playSounds) first.playSound(first.getLocation(), turn, volume, pitch);
                         return;
                     }
                 }
@@ -239,24 +237,24 @@ public class CFGame extends BukkitRunnable{
         }
     }
 
-    private void onGameEnd(){
+    private void onGameEnd() {
         cancel();
 
-        if(state != CFGameState.FALLING_SECOND && state != CFGameState.FALLING_FIRST){
+        if (state != CFGameState.FALLING_SECOND && state != CFGameState.FALLING_FIRST) {
             Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " *** wrong game state on game end ***");
             Bukkit.getConsoleSender().sendMessage(" Please contact Nikl on Spigot and show him this log");
             return;
         }
 
-        Player winner = state == CFGameState.FALLING_SECOND?second:first;
-        Player loser = state == CFGameState.FALLING_SECOND?first:second;
+        Player winner = state == CFGameState.FALLING_SECOND ? second : first;
+        Player loser = state == CFGameState.FALLING_SECOND ? first : second;
 
-        if(winner!=null && loser !=null){
+        if (winner != null && loser != null) {
 
-            if(connectFour.getSettings().isEconEnabled()){
-                if(!winner.hasPermission(Permission.BYPASS_ALL.getPermission()) && !winner.hasPermission(Permission.BYPASS_GAME.getPermission(connectFour.getGameID()))){
+            if (connectFour.getSettings().isEconEnabled()) {
+                if (!winner.hasPermission(Permission.BYPASS_ALL.getPermission()) && !winner.hasPermission(Permission.BYPASS_GAME.getPermission(connectFour.getGameID()))) {
                     GameBox.econ.depositPlayer(winner, rule.getReward());
-                    winner.sendMessage((lang.PREFIX + lang.GAME_WON_MONEY.replaceAll("%reward%", rule.getReward()+"").replaceAll("%loser%", loser.getName())));
+                    winner.sendMessage((lang.PREFIX + lang.GAME_WON_MONEY.replaceAll("%reward%", rule.getReward() + "").replaceAll("%loser%", loser.getName())));
                 } else {
                     winner.sendMessage((lang.PREFIX + lang.GAME_WON.replaceAll("%loser%", loser.getName())));
                 }
@@ -270,13 +268,13 @@ public class CFGame extends BukkitRunnable{
 
 
             // if the game is ended regularly ignore the played chips
-            ((CFGameManager)connectFour.getGameManager()).onGameEnd(winner, loser, rule.getKey(), 999);
+            ((CFGameManager) connectFour.getGameManager()).onGameEnd(winner, loser, rule.getKey(), 999);
         }
     }
 
     private boolean isDraw() {
-        for(ItemStack item : inv.getContents()){
-            if(item == null || item.getType() == Material.AIR){
+        for (ItemStack item : inv.getContents()) {
+            if (item == null || item.getType() == Material.AIR) {
                 return false;
             }
         }
@@ -288,16 +286,16 @@ public class CFGame extends BukkitRunnable{
         toMark.add(chip);
 
         // check to the right
-        for(int newChip = chip + 1; newChip<=53 && newChip%9<=8 && newChip%9!=0 ; newChip++){
-            if(checkEntry(newChip)){
+        for (int newChip = chip + 1; newChip <= 53 && newChip % 9 <= 8 && newChip % 9 != 0; newChip++) {
+            if (checkEntry(newChip)) {
                 toMark.add(newChip);
             } else {
                 break;
             }
         }
         // check to the left
-        for(int newChip = chip - 1; newChip>=0 && newChip%9>=0 && newChip%9 != 8; newChip--){
-            if(checkEntry(newChip)){
+        for (int newChip = chip - 1; newChip >= 0 && newChip % 9 >= 0 && newChip % 9 != 8; newChip--) {
+            if (checkEntry(newChip)) {
                 toMark.add(newChip);
             } else {
                 break;
@@ -305,7 +303,7 @@ public class CFGame extends BukkitRunnable{
         }
 
         // test whether left/right was successful
-        if(mark(toMark)){
+        if (mark(toMark)) {
             return true;
         } else {
             toMark.clear();
@@ -314,16 +312,16 @@ public class CFGame extends BukkitRunnable{
         connectFour.debug("passed left/right check");
 
         // check for up
-        for(int newChip = chip - 9; newChip>=0 && newChip/9>=0 ; newChip-=9){
-            if(checkEntry(newChip)){
+        for (int newChip = chip - 9; newChip >= 0 && newChip / 9 >= 0; newChip -= 9) {
+            if (checkEntry(newChip)) {
                 toMark.add(newChip);
             } else {
                 break;
             }
         }
         // check to the down
-        for(int newChip = chip + 9; newChip<=53 && newChip/9<=5; newChip += 9){
-            if(checkEntry(newChip)){
+        for (int newChip = chip + 9; newChip <= 53 && newChip / 9 <= 5; newChip += 9) {
+            if (checkEntry(newChip)) {
                 toMark.add(newChip);
             } else {
                 break;
@@ -331,7 +329,7 @@ public class CFGame extends BukkitRunnable{
         }
 
         // test whether up/down was successful
-        if(mark(toMark)){
+        if (mark(toMark)) {
             return true;
         } else {
             toMark.clear();
@@ -340,18 +338,17 @@ public class CFGame extends BukkitRunnable{
         connectFour.debug("passed up/down check");
 
 
-
         // check for up-right
-        for(int newChip = chip - 8; newChip>=0 && newChip<=53 && newChip/9>=0 && newChip%9<=8 && newChip%9!=0; newChip-=8){
-            if(checkEntry(newChip)){
+        for (int newChip = chip - 8; newChip >= 0 && newChip <= 53 && newChip / 9 >= 0 && newChip % 9 <= 8 && newChip % 9 != 0; newChip -= 8) {
+            if (checkEntry(newChip)) {
                 toMark.add(newChip);
             } else {
                 break;
             }
         }
         // check to the down-left
-        for(int newChip = chip + 8; newChip>=0 && newChip<=53 && newChip/9<=5 && newChip%9>=0 && newChip%9 != 8; newChip += 8){
-            if(checkEntry(newChip)){
+        for (int newChip = chip + 8; newChip >= 0 && newChip <= 53 && newChip / 9 <= 5 && newChip % 9 >= 0 && newChip % 9 != 8; newChip += 8) {
+            if (checkEntry(newChip)) {
                 toMark.add(newChip);
             } else {
                 break;
@@ -359,7 +356,7 @@ public class CFGame extends BukkitRunnable{
         }
 
         // test whether up-right/down-left was successful
-        if(mark(toMark)){
+        if (mark(toMark)) {
             return true;
         } else {
             toMark.clear();
@@ -368,18 +365,17 @@ public class CFGame extends BukkitRunnable{
         connectFour.debug("passed up-right/down-left check");
 
 
-
         // check for up-left
-        for(int newChip = chip - 10; newChip>=0 && newChip<=53 && newChip/9>=0  && newChip%9>=0 && newChip%9 != 8; newChip-=10){
-            if(checkEntry(newChip)){
+        for (int newChip = chip - 10; newChip >= 0 && newChip <= 53 && newChip / 9 >= 0 && newChip % 9 >= 0 && newChip % 9 != 8; newChip -= 10) {
+            if (checkEntry(newChip)) {
                 toMark.add(newChip);
             } else {
                 break;
             }
         }
         // check to the down-right
-        for(int newChip = chip + 10; newChip>=0 && newChip<=53 && newChip/9<=5 && newChip%9<=8 && newChip%9!=0; newChip += 10){
-            if(checkEntry(newChip)){
+        for (int newChip = chip + 10; newChip >= 0 && newChip <= 53 && newChip / 9 <= 5 && newChip % 9 <= 8 && newChip % 9 != 0; newChip += 10) {
+            if (checkEntry(newChip)) {
                 toMark.add(newChip);
             } else {
                 break;
@@ -387,7 +383,7 @@ public class CFGame extends BukkitRunnable{
         }
 
         // test whether up/down was successful
-        if(mark(toMark)){
+        if (mark(toMark)) {
             return true;
         }
         connectFour.debug("passed all checks");
@@ -395,7 +391,7 @@ public class CFGame extends BukkitRunnable{
     }
 
     private boolean checkEntry(int newChip) {
-        if(inv.getItem(newChip) != null && inv.getItem(newChip).getType() != Material.AIR && inv.getItem(newChip).isSimilar(inv.getItem(fallingChip))){
+        if (inv.getItem(newChip) != null && inv.getItem(newChip).getType() != Material.AIR && inv.getItem(newChip).isSimilar(inv.getItem(fallingChip))) {
             connectFour.debug("found " + newChip);
             return true;
         } else {
@@ -405,16 +401,16 @@ public class CFGame extends BukkitRunnable{
 
     private boolean mark(final Set<Integer> toMark) {
         connectFour.debug("   toMark entries: " + toMark.size());
-        if(toMark.size() > 3){
+        if (toMark.size() > 3) {
 
             connectFour.debug("found match! ");
             ItemStack glowingChip;
-            if(state == CFGameState.FALLING_SECOND){
+            if (state == CFGameState.FALLING_SECOND) {
                 glowingChip = nms.addGlow(secondChip.clone());
             } else {
                 glowingChip = nms.addGlow(firstChip.clone());
             }
-            for(int i : toMark){
+            for (int i : toMark) {
                 inv.setItem(i, glowingChip);
             }
             return true;
@@ -426,39 +422,39 @@ public class CFGame extends BukkitRunnable{
         connectFour.debug("onClick in game called");
         // clicked slot is empty!
         UUID uuid = inventoryClickEvent.getWhoClicked().getUniqueId();
-        if(uuid.equals(firstUUID) && state == CFGameState.FIRST_TURN){
+        if (uuid.equals(firstUUID) && state == CFGameState.FIRST_TURN) {
             inv.setItem(inventoryClickEvent.getSlot() % 9, firstChip);
             fallingChip = inventoryClickEvent.getSlot() % 9;
             state = CFGameState.FALLING_FIRST;
             nms.updateInventoryTitle(first, lang.TITLE_IN_GAME_YOUR_TURN.replace("%player%", first.getName()).replace("%time%", ""));
             nms.updateInventoryTitle(second, lang.TITLE_IN_GAME_OTHERS_TURN.replace("%player%", first.getName()).replace("%time%", ""));
-            if(playSounds) first.playSound(first.getLocation(), insert, volume, pitch);
+            if (playSounds) first.playSound(first.getLocation(), insert, volume, pitch);
             playedChips++;
-        } else if(uuid.equals(secondUUID) && state == CFGameState.SECOND_TURN){
+        } else if (uuid.equals(secondUUID) && state == CFGameState.SECOND_TURN) {
             inv.setItem(inventoryClickEvent.getSlot() % 9, secondChip);
             fallingChip = inventoryClickEvent.getSlot() % 9;
             state = CFGameState.FALLING_SECOND;
             nms.updateInventoryTitle(first, lang.TITLE_IN_GAME_OTHERS_TURN.replace("%player%", first.getName()).replace("%time%", ""));
             nms.updateInventoryTitle(second, lang.TITLE_IN_GAME_YOUR_TURN.replace("%player%", first.getName()).replace("%time%", ""));
-            if(playSounds) second.playSound(second.getLocation(), insert, volume, pitch);
+            if (playSounds) second.playSound(second.getLocation(), insert, volume, pitch);
             playedChips++;
         }
     }
 
     void onRemove(boolean firstClosed) {
-        if(firstClosed){
-            if(first != null){
-                if(playSounds) first.playSound(first.getLocation(), lose, volume, pitch);
+        if (firstClosed) {
+            if (first != null) {
+                if (playSounds) first.playSound(first.getLocation(), lose, volume, pitch);
             }
-            if(second != null){
-                if(playSounds) second.playSound(second.getLocation(), won, volume, pitch);
+            if (second != null) {
+                if (playSounds) second.playSound(second.getLocation(), won, volume, pitch);
             }
         } else {
-            if(first != null){
-                if(playSounds) first.playSound(first.getLocation(), won, volume, pitch);
+            if (first != null) {
+                if (playSounds) first.playSound(first.getLocation(), won, volume, pitch);
             }
-            if(second != null){
-                if(playSounds) second.playSound(second.getLocation(), lose, volume, pitch);
+            if (second != null) {
+                if (playSounds) second.playSound(second.getLocation(), lose, volume, pitch);
             }
         }
     }

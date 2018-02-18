@@ -7,9 +7,8 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class StringTheory extends Upgrade{
+public class StringTheory extends Upgrade {
 
     public StringTheory(CCGame game) {
         super(game, 100);

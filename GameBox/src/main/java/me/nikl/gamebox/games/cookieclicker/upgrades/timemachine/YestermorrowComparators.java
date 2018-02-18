@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class YestermorrowComparators extends Upgrade{
+public class YestermorrowComparators extends Upgrade {
 
     public YestermorrowComparators(CCGame game) {
         super(game, 117);

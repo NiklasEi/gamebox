@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class PulsarSprinklers extends Upgrade{
+public class PulsarSprinklers extends Upgrade {
 
     public PulsarSprinklers(CCGame game) {
         super(game, 193);

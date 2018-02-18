@@ -7,9 +7,8 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class GlowInTheDark extends Upgrade{
+public class GlowInTheDark extends Upgrade {
 
     public GlowInTheDark(CCGame game) {
         super(game, 201);

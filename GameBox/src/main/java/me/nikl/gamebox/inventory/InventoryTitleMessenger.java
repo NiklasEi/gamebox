@@ -24,7 +24,7 @@ public class InventoryTitleMessenger extends BukkitRunnable {
     private Map<UUID, Long> messageTimeStamps = new HashMap<>();
     private Map<UUID, String> resetTitles = new HashMap<>();
 
-    public InventoryTitleMessenger(GameBox gameBox){
+    public InventoryTitleMessenger(GameBox gameBox) {
         this.gameBox = gameBox;
         nmsUtility = NmsFactory.getNmsUtility();
         runTaskTimer(gameBox, 10, 10);
@@ -33,8 +33,8 @@ public class InventoryTitleMessenger extends BukkitRunnable {
     @Override
     public void run() {
         long currentTimeMillis = System.currentTimeMillis();
-        for(UUID uuid : messageTimeStamps.keySet()){
-            if(currentTimeMillis > messageTimeStamps.get(uuid)) {
+        for (UUID uuid : messageTimeStamps.keySet()) {
+            if (currentTimeMillis > messageTimeStamps.get(uuid)) {
                 Player player = Bukkit.getPlayer(uuid);
                 if (player == null) {
                     removeTitleMessage(uuid);
@@ -46,14 +46,14 @@ public class InventoryTitleMessenger extends BukkitRunnable {
         }
     }
 
-    public void removeTitleMessage(UUID uuid){
+    public void removeTitleMessage(UUID uuid) {
         messageTimeStamps.remove(uuid);
         resetTitles.remove(uuid);
     }
 
-    public void sendInventoryTitle(Player player, String message, String title, int duration){
+    public void sendInventoryTitle(Player player, String message, String title, int duration) {
         nmsUtility.updateInventoryTitle(player, message);
-        messageTimeStamps.put(player.getUniqueId(), System.currentTimeMillis() + duration*1000);
+        messageTimeStamps.put(player.getUniqueId(), System.currentTimeMillis() + duration * 1000);
         resetTitles.put(player.getUniqueId(), title);
     }
 
@@ -65,8 +65,8 @@ public class InventoryTitleMessenger extends BukkitRunnable {
                 currentTitle = ((GameGuiPage) gui).getTitle().replace("%player%", player.getName());
             } else if (gui instanceof GameGui) {
                 currentTitle = gameBox.lang.TITLE_GAME_GUI.replace("%game%", gameBox.getPluginManager().getGame(player.getUniqueId()).getGameLang().PLAIN_NAME).replace("%player%", player.getName());
-            } else if (gui instanceof Page){
-                currentTitle = gameBox.lang.SHOP_TITLE_PAGE_SHOP.replace("%page%", String.valueOf(((Page)gui).getPage() + 1));
+            } else if (gui instanceof Page) {
+                currentTitle = gameBox.lang.SHOP_TITLE_PAGE_SHOP.replace("%page%", String.valueOf(((Page) gui).getPage() + 1));
             }
         }
         sendInventoryTitle(player, message, currentTitle, duration);

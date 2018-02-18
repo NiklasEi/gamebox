@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class FinancialZen extends Upgrade{
+public class FinancialZen extends Upgrade {
 
     public FinancialZen(CCGame game) {
         super(game, 237);

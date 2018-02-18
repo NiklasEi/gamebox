@@ -7,9 +7,8 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class SugarBosons extends Upgrade{
+public class SugarBosons extends Upgrade {
 
     public SugarBosons(CCGame game) {
         super(game, 99);

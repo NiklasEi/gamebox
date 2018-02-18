@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class ScissorResistantCreditCards extends Upgrade{
+public class ScissorResistantCreditCards extends Upgrade {
 
     public ScissorResistantCreditCards(CCGame game) {
         super(game, 233);

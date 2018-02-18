@@ -12,7 +12,7 @@ public class GameSettings {
     private GameType gameType;
     private int gameGuiSize;
 
-    public GameSettings(){
+    public GameSettings() {
         // set default values
         this.handleClicksOnHotbar = false;
         this.gameType = GameType.SINGLE_PLAYER;
@@ -62,16 +62,16 @@ public class GameSettings {
         this.econEnabled = econEnabled;
     }
 
-    public enum GameType{
+    public enum GameType {
         SINGLE_PLAYER(1), TWO_PLAYER(2);
 
         int playerNumber;
 
-        GameType(int playerNumber){
+        GameType(int playerNumber) {
             this.playerNumber = playerNumber;
         }
 
-        public int getPlayerNumber(){
+        public int getPlayerNumber() {
             return this.playerNumber;
         }
     }

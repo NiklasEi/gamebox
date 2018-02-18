@@ -7,7 +7,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 /**
  * @author Niklas Eicker
  *
- * class to store global settings
+ *         class to store global settings
  */
 public class GameBoxSettings {
     public static boolean exceptInvitesWithoutPlayPermission = false;
@@ -27,7 +27,7 @@ public class GameBoxSettings {
     public static boolean closeInventoryOnDamage = true; // what to do on player damage
     public static int autoSaveInterval = 10;
 
-    public static void loadSettings(GameBox plugin){
+    public static void loadSettings(GameBox plugin) {
         FileConfiguration config = plugin.getConfig();
 
         sendInviteClickMessage = config.getBoolean("settings.invitations.clickMessage.enabled", true);
@@ -42,12 +42,12 @@ public class GameBoxSettings {
         closeInventoryOnDamage = config.getBoolean("settings.closeInventoryOnDamage", true);
         autoSaveInterval = config.getInt("settings.autoSaveInterval", 10);
         keepArmorWhileInGame = config.getBoolean("settings.keepArmor", false);
-        try{
+        try {
             successfulClick = Sound.valueOf(config.getString("guiSettings.standardSounds.successfulClick", "CLICK"));
         } catch (IllegalArgumentException exception) {
             successfulClick = Sound.CLICK;
         }
-        try{
+        try {
             unsuccessfulClick = Sound.valueOf(config.getString("guiSettings.standardSounds.unsuccessfulClick", "VILLAGER_NO"));
         } catch (IllegalArgumentException exception) {
             unsuccessfulClick = Sound.VILLAGER_NO;
@@ -59,7 +59,7 @@ public class GameBoxSettings {
     private static boolean checkInventoryTitleLength() {
         try {
             Bukkit.createInventory(null, 27, "This title is longer then 32 characters!");
-        } catch (Exception e){
+        } catch (Exception e) {
             return true;
         }
         return false;

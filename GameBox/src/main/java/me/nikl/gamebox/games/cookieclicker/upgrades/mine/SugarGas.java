@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class SugarGas extends Upgrade{
+public class SugarGas extends Upgrade {
 
     public SugarGas(CCGame game) {
         super(game, 16);

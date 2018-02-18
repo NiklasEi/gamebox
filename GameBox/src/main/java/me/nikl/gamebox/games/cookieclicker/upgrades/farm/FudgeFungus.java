@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class FudgeFungus extends Upgrade{
+public class FudgeFungus extends Upgrade {
 
     public FudgeFungus(CCGame game) {
         super(game, 295);

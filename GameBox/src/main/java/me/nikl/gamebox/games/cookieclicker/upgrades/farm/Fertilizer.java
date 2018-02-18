@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class Fertilizer extends Upgrade{
+public class Fertilizer extends Upgrade {
 
     public Fertilizer(CCGame game) {
         super(game, 11);

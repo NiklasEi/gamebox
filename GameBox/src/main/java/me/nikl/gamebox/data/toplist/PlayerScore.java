@@ -11,7 +11,7 @@ public class PlayerScore {
 
     private SaveType saveType;
 
-    public PlayerScore(UUID uuid, double value, SaveType saveType){
+    public PlayerScore(UUID uuid, double value, SaveType saveType) {
         this.uuid = uuid;
         this.value = value;
         this.saveType = saveType;
@@ -29,12 +29,12 @@ public class PlayerScore {
         return saveType;
     }
 
-    public boolean isBetterThen(PlayerScore score){
-        if(saveType.isHigherScore()) return value > score.getValue();
+    public boolean isBetterThen(PlayerScore score) {
+        if (saveType.isHigherScore()) return value > score.getValue();
         return value < score.getValue();
     }
 
-    public void updateValue(double newValue){
+    public void updateValue(double newValue) {
         this.value = newValue;
     }
 }

@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class EnlargedPantheon extends Upgrade{
+public class EnlargedPantheon extends Upgrade {
 
     public EnlargedPantheon(CCGame game) {
         super(game, 242);

@@ -21,7 +21,7 @@ public class GameBoxHolder implements InventoryHolder {
         return inventory;
     }
 
-    public void onClick(InventoryClickEvent event){
+    public void onClick(InventoryClickEvent event) {
 
     }
 

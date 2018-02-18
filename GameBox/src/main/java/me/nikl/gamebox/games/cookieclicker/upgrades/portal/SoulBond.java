@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class SoulBond extends Upgrade{
+public class SoulBond extends Upgrade {
 
     public SoulBond(CCGame game) {
         super(game, 27);

@@ -1,9 +1,9 @@
 package me.nikl.gamebox.inventory.gui.game;
 
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.button.AButton;
-import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.utility.InventoryUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -21,7 +21,7 @@ import java.util.UUID;
 /**
  * @author Niklas Eicker
  *
- * GUI
+ *         GUI
  */
 public class StartMultiplayerGamePage extends GameGuiPage {
     private Map<UUID, ArrayList<UUID>> invitations = new HashMap<>();
@@ -43,12 +43,12 @@ public class StartMultiplayerGamePage extends GameGuiPage {
     }
 
     @Override
-    public boolean open(Player player){
+    public boolean open(Player player) {
         GameBox.debug("open called in StartMultiplayerGamePage");
-        if(!openInventories.containsKey(player.getUniqueId())){
+        if (!openInventories.containsKey(player.getUniqueId())) {
             loadInvites(player.getUniqueId());
         }
-        if(super.open(player)){
+        if (super.open(player)) {
             plugin.getNMS().updateInventoryTitle(player, plugin.lang.TITLE_MAIN_GUI.replace("%player%", player.getName()));
             return true;
         }
@@ -65,12 +65,12 @@ public class StartMultiplayerGamePage extends GameGuiPage {
         openInventories.put(uniqueId, inv);
     }
 
-    public void addInvite(UUID uuid1, UUID uuid2){
+    public void addInvite(UUID uuid1, UUID uuid2) {
         // set maximal 53 invites in the inventory
-        if(!invitations.keySet().contains(uuid2)){
+        if (!invitations.keySet().contains(uuid2)) {
             invitations.put(uuid2, new ArrayList<>());
         }
-        if(!invitationButtons.keySet().contains(uuid2)){
+        if (!invitationButtons.keySet().contains(uuid2)) {
             invitationButtons.put(uuid2, new AButton[inventory.getSize()]);
         }
         invitations.get(uuid2).add(uuid1);
@@ -78,17 +78,17 @@ public class StartMultiplayerGamePage extends GameGuiPage {
     }
 
     private void updateInvitations(UUID uuid2) {
-        if(!openInventories.containsKey(uuid2)){
+        if (!openInventories.containsKey(uuid2)) {
             openInventories.put(uuid2, InventoryUtility.createInventory(null, 54, "Your invite inv."));
         }
         Inventory inv = openInventories.get(uuid2);
         inv.setContents(inventory.getContents().clone());
         int i = 1;
-        for(UUID uuid1 : invitations.get(uuid2)){
-            if(i >= inventory.getSize()) break;
+        for (UUID uuid1 : invitations.get(uuid2)) {
+            if (i >= inventory.getSize()) break;
             Player player1 = Bukkit.getPlayer(uuid1);
-            if(player1 == null) continue;
-            AButton skull =  new AButton(new MaterialData(Material.SKULL_ITEM).toItemStack(1));
+            if (player1 == null) continue;
+            AButton skull = new AButton(new MaterialData(Material.SKULL_ITEM).toItemStack(1));
             skull.setDurability((short) 3);
             SkullMeta meta = (SkullMeta) skull.getItemMeta();
             meta.setOwner(player1.getName());
@@ -104,13 +104,13 @@ public class StartMultiplayerGamePage extends GameGuiPage {
     }
 
     @Override
-    public void removePlayer(UUID uuid){
+    public void removePlayer(UUID uuid) {
         invitations.remove(uuid);
         super.removePlayer(uuid);
     }
 
     public void removeInvite(UUID uuid1, UUID uuid2) {
-        if(!invitations.keySet().contains(uuid2)){
+        if (!invitations.keySet().contains(uuid2)) {
             return;
         }
         invitations.get(uuid2).remove(uuid1);
@@ -118,7 +118,7 @@ public class StartMultiplayerGamePage extends GameGuiPage {
     }
 
     public AButton getButton(UUID uuid, int slot) {
-        if(invitationButtons.containsKey(uuid)){
+        if (invitationButtons.containsKey(uuid)) {
             return invitationButtons.get(uuid)[slot];
         }
         return null;

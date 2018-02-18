@@ -5,10 +5,10 @@ import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.events.EnterGameBoxEvent;
+import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.button.AButton;
 import me.nikl.gamebox.inventory.gui.AGui;
-import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.utility.ItemStackUtility;
 import me.nikl.gamebox.utility.Permission;
 import me.nikl.gamebox.utility.StringUtility;
@@ -22,29 +22,28 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 
 /**
  * @author Niklas Eicker
- *
- *
  */
 public class ShopManager {
     public static final String MAIN = "main" + UUID.randomUUID().toString();
-
-    private File shopFile;
-    FileConfiguration shop;
-
-    private AButton mainButton;
-
     protected Map<String, Category> categories;
-
     protected MainShop mainShop;
-
     protected GUIManager guiManager;
-
+    FileConfiguration shop;
+    private File shopFile;
+    private AButton mainButton;
     private boolean closed;
 
     private GameBox plugin;
@@ -91,12 +90,12 @@ public class ShopManager {
 
     private void loadFile() {
         shopFile = new File(plugin.getDataFolder().toString() + File.separatorChar + "tokenShop.yml");
-        if(!shopFile.exists()){
+        if (!shopFile.exists()) {
             shopFile.getParentFile().mkdirs();
             plugin.saveResource("tokenShop.yml", false);
         }
         try {
-            this.shop =  YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(shopFile), "UTF-8"));
+            this.shop = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(shopFile), "UTF-8"));
         } catch (UnsupportedEncodingException | FileNotFoundException e2) {
             e2.printStackTrace();
         }
@@ -109,9 +108,9 @@ public class ShopManager {
     public boolean openShopPage(Player whoClicked, String[] args) {
         boolean saved = false;
 
-        if(!plugin.getPluginManager().hasSavedContents(whoClicked.getUniqueId())){
+        if (!plugin.getPluginManager().hasSavedContents(whoClicked.getUniqueId())) {
             EnterGameBoxEvent enterEvent = new EnterGameBoxEvent(whoClicked, args[0], args[1]);
-            if(!enterEvent.isCancelled()){
+            if (!enterEvent.isCancelled()) {
                 plugin.getPluginManager().saveInventory(whoClicked);
                 saved = true;
             } else {
@@ -120,31 +119,31 @@ public class ShopManager {
             }
         }
 
-        if(whoClicked.hasPermission(Permission.OPEN_SHOP.getPermission())){
-            if(args[0].equals(ShopManager.MAIN) && args[1].equals("0")) {
+        if (whoClicked.hasPermission(Permission.OPEN_SHOP.getPermission())) {
+            if (args[0].equals(ShopManager.MAIN) && args[1].equals("0")) {
                 GameBox.openingNewGUI = true;
                 mainShop.open(whoClicked);
                 GameBox.openingNewGUI = false;
 
-                if(closed){
+                if (closed) {
                     plugin.getNMS().updateInventoryTitle(whoClicked, plugin.lang.SHOP_IS_CLOSED);
                 } else {
                     plugin.getNMS().updateInventoryTitle(whoClicked, plugin.lang.SHOP_TITLE_MAIN_SHOP.replace("%player%", whoClicked.getDisplayName()));
                 }
                 return true;
-            } else if(categories.containsKey(args[0])) {
+            } else if (categories.containsKey(args[0])) {
                 int page;
                 try {
                     page = Integer.parseInt(args[1]);
-                } catch (NumberFormatException exception){
+                } catch (NumberFormatException exception) {
                     Bukkit.getLogger().log(Level.SEVERE, "failed to open shop page due to corrupted args!");
                     return false;
                 }
                 GameBox.openingNewGUI = true;
                 boolean open = categories.get(args[0]).openPage(whoClicked, page);
                 GameBox.openingNewGUI = false;
-                if(open) {
-                    plugin.getNMS().updateInventoryTitle(whoClicked, plugin.lang.SHOP_TITLE_PAGE_SHOP.replace("%page%",String.valueOf(page+1)));
+                if (open) {
+                    plugin.getNMS().updateInventoryTitle(whoClicked, plugin.lang.SHOP_TITLE_PAGE_SHOP.replace("%page%", String.valueOf(page + 1)));
                     return true;
                 } else {
                     return false;
@@ -154,7 +153,7 @@ public class ShopManager {
             if (saved) plugin.getPluginManager().leaveGameBox(whoClicked);
             whoClicked.sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
 
-            if(guiManager.isInMainGUI(whoClicked.getUniqueId())) {
+            if (guiManager.isInMainGUI(whoClicked.getUniqueId())) {
                 String currentTitle = plugin.lang.TITLE_MAIN_GUI.replace("%player%", whoClicked.getName());
                 plugin.getInventoryTitleMessenger().sendInventoryTitle(whoClicked, plugin.lang.TITLE_NO_PERM, currentTitle, titleMessageSeconds);
             }
@@ -177,26 +176,26 @@ public class ShopManager {
     }
 
     public boolean inShop(UUID uuid) {
-        if(mainShop.isInGui(uuid)) return true;
-        for(Category category : categories.values()){
-            if(category.inCategory(uuid)) return true;
+        if (mainShop.isInGui(uuid)) return true;
+        for (Category category : categories.values()) {
+            if (category.inCategory(uuid)) return true;
         }
         return false;
     }
 
     public void onClick(InventoryClickEvent event) {
         boolean topInv = event.getSlot() == event.getRawSlot();
-        if(mainShop.isInGui(event.getWhoClicked().getUniqueId())){
-            if(topInv){
+        if (mainShop.isInGui(event.getWhoClicked().getUniqueId())) {
+            if (topInv) {
                 mainShop.onInvClick(event);
             } else {
                 mainShop.onBottomInvClick(event);
             }
             return;
         }
-        for(Category category : categories.values()){
-            if(category.inCategory(event.getWhoClicked().getUniqueId())){
-                if(topInv){
+        for (Category category : categories.values()) {
+            if (category.inCategory(event.getWhoClicked().getUniqueId())) {
+                if (topInv) {
                     category.onInvClick(event);
                 } else {
                     category.onBottomInvClick(event);
@@ -206,12 +205,12 @@ public class ShopManager {
     }
 
     public void onInvClose(InventoryCloseEvent event) {
-        if(mainShop.isInGui(event.getPlayer().getUniqueId())){
+        if (mainShop.isInGui(event.getPlayer().getUniqueId())) {
             mainShop.onInvClose(event);
             return;
         }
-        for(Category category : categories.values()){
-            if(category.inCategory(event.getPlayer().getUniqueId())){
+        for (Category category : categories.values()) {
+            if (category.inCategory(event.getPlayer().getUniqueId())) {
                 category.onInvClose(event);
             }
         }
@@ -219,20 +218,20 @@ public class ShopManager {
 
     public void updateTokens(GBPlayer gbPlayer) {
         mainShop.updateTokens(gbPlayer);
-        for (Category category : categories.values()){
+        for (Category category : categories.values()) {
             category.updateTokens(gbPlayer);
         }
     }
 
-    public ItemStack getShopItemStack(String category, String counter){
-        if(categories.get(category) != null){
+    public ItemStack getShopItemStack(String category, String counter) {
+        if (categories.get(category) != null) {
             return categories.get(category).getShopItemStack(counter);
         }
         return null;
     }
 
-    public ShopItem getShopItem(String category, String counter){
-        if(categories.get(category) != null){
+    public ShopItem getShopItem(String category, String counter) {
+        if (categories.get(category) != null) {
             return categories.get(category).getShopItem(counter);
         }
         return null;
@@ -243,11 +242,11 @@ public class ShopManager {
     }
 
     public AGui getShopGui(UUID uuid) {
-        if(mainShop.isInGui(uuid)){
+        if (mainShop.isInGui(uuid)) {
             return mainShop;
         }
-        for(Category category : categories.values()){
-            if(category.inCategory(uuid)){
+        for (Category category : categories.values()) {
+            if (category.inCategory(uuid)) {
                 return category.getShopGui(uuid);
             }
         }

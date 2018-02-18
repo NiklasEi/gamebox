@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class WarpDrive extends Upgrade{
+public class WarpDrive extends Upgrade {
 
     public WarpDrive(CCGame game) {
         super(game, 48);

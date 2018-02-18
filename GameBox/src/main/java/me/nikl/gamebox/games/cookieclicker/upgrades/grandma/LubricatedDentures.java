@@ -11,7 +11,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 /**
  * @author Niklas Eicker
  */
-public class LubricatedDentures extends Upgrade{
+public class LubricatedDentures extends Upgrade {
 
     public LubricatedDentures(CCGame game) {
         super(game, 9);

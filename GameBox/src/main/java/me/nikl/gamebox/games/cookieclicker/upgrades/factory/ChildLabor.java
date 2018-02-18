@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class ChildLabor extends Upgrade{
+public class ChildLabor extends Upgrade {
 
     public ChildLabor(CCGame game) {
         super(game, 14);

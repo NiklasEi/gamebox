@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class AcidProofVaults extends Upgrade{
+public class AcidProofVaults extends Upgrade {
 
     public AcidProofVaults(CCGame game) {
         super(game, 234);

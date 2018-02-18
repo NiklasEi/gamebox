@@ -8,9 +8,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class UnobtainiumMouse extends Upgrade{
+public class UnobtainiumMouse extends Upgrade {
 
     public UnobtainiumMouse(CCGame game) {
         super(game, 119);

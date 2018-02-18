@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class TheStuffRationale extends Upgrade{
+public class TheStuffRationale extends Upgrade {
 
     public TheStuffRationale(CCGame game) {
         super(game, 311);

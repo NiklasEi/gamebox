@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class Wormholes extends Upgrade{
+public class Wormholes extends Upgrade {
 
     public Wormholes(CCGame game) {
         super(game, 20);

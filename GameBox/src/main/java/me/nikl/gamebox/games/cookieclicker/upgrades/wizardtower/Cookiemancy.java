@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class Cookiemancy extends Upgrade{
+public class Cookiemancy extends Upgrade {
 
     public Cookiemancy(CCGame game) {
         super(game, 300);

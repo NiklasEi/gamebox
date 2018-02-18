@@ -7,9 +7,8 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class AquaCrustulae extends Upgrade{
+public class AquaCrustulae extends Upgrade {
 
     public AquaCrustulae(CCGame game) {
         super(game, 115);

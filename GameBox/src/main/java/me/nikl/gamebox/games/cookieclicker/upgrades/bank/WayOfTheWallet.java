@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class WayOfTheWallet extends Upgrade{
+public class WayOfTheWallet extends Upgrade {
 
     public WayOfTheWallet(CCGame game) {
         super(game, 298);

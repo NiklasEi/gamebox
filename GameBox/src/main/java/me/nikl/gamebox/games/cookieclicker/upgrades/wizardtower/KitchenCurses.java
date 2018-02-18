@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class KitchenCurses extends Upgrade{
+public class KitchenCurses extends Upgrade {
 
     public KitchenCurses(CCGame game) {
         super(game, 247);

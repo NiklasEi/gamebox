@@ -10,19 +10,18 @@ import java.util.HashSet;
  *
  * Game rules container for Cookie Clicker
  */
-public class CCGameRules extends GameRule{
+public class CCGameRules extends GameRule {
 
     private double cost;
     private int moveCookieAfterClicks;
 
-    public CCGameRules(String key, double cost, int moveCookieAfterClicks, boolean saveStats){
+    public CCGameRules(String key, double cost, int moveCookieAfterClicks, boolean saveStats) {
         super(saveStats, new HashSet<>(), key);
         this.saveTypes.add(SaveType.HIGH_NUMBER_SCORE);
         this.cost = cost;
         this.saveStats = saveStats;
         this.moveCookieAfterClicks = moveCookieAfterClicks;
     }
-
 
 
     public double getCost() {

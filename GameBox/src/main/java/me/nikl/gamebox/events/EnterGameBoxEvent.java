@@ -15,17 +15,22 @@ import javax.annotation.Nullable;
  *
  * This is called before the player inventory is stored and cleared
  */
-public class EnterGameBoxEvent extends Event implements Cancellable{
+public class EnterGameBoxEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private boolean cancelled = false;
     private String cancelMessage;
     private String[] args;
     private Player player;
 
-    public EnterGameBoxEvent(Player player, String... args){
+    public EnterGameBoxEvent(Player player, String... args) {
         this.player = player;
         this.args = args;
         Bukkit.getPluginManager().callEvent(this);
+    }
+
+    @SuppressWarnings("unused")
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     @Override
@@ -47,20 +52,16 @@ public class EnterGameBoxEvent extends Event implements Cancellable{
         return player;
     }
 
-    public @Nullable String getCancelMessage() {
+    public @Nullable
+    String getCancelMessage() {
         return cancelMessage;
     }
 
-    public void setCancelMessage(String message){
+    public void setCancelMessage(String message) {
         this.cancelMessage = message;
     }
 
     public String[] getArgs() {
         return args;
-    }
-
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList(){
-        return handlers;
     }
 }

@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class Ultimadrill extends Upgrade{
+public class Ultimadrill extends Upgrade {
 
     public Ultimadrill(CCGame game) {
         super(game, 47);

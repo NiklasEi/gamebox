@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class TheFinalFrontier extends Upgrade{
+public class TheFinalFrontier extends Upgrade {
 
     public TheFinalFrontier(CCGame game) {
         super(game, 314);

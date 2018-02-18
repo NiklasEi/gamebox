@@ -8,9 +8,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class TitaniumMouse extends Upgrade{
+public class TitaniumMouse extends Upgrade {
 
     public TitaniumMouse(CCGame game) {
         super(game, 77);

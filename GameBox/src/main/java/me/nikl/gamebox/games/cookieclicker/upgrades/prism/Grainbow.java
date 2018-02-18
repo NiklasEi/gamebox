@@ -7,9 +7,8 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class Grainbow extends Upgrade{
+public class Grainbow extends Upgrade {
 
     public Grainbow(CCGame game) {
         super(game, 178);
