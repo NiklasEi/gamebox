@@ -5,6 +5,7 @@ import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.events.EnterGameBoxEvent;
 import me.nikl.gamebox.games.GameManager;
+import me.nikl.gamebox.games.exceptions.GameStartException;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.button.AButton;
 import me.nikl.gamebox.inventory.gui.game.GameGui;
@@ -51,6 +52,7 @@ public abstract class AGui {
 
 	protected String title;
 	private Sound successfulClick, unsuccessfulClick;
+	private int titleMessageSeconds;
 
 	/**
 	 * Constructor for an AGui
@@ -66,6 +68,7 @@ public abstract class AGui {
 		this.pluginManager = plugin.getPluginManager();
 		this.grid = new AButton[slots];
 		inGui = new HashSet<>();
+		this.titleMessageSeconds = guiManager.getTitleMessageSeconds();
 
 		this.successfulClick = GameBoxSettings.successfulClick.bukkitSound();
 		this.unsuccessfulClick = GameBoxSettings.unsuccessfulClick.bukkitSound();
@@ -134,7 +137,7 @@ public abstract class AGui {
 							break checkPerms;
 						}
 
-						guiManager.sentInventoryTitleMessage(player[0], plugin.lang.TITLE_NO_PERM, gameID);
+						sentInventoryTitleMessage(player[0], plugin.lang.TITLE_NO_PERM);
 
 						// remove flag
 						GameBox.openingNewGUI = false;
@@ -155,22 +158,18 @@ public abstract class AGui {
 						}
 
 						if(pluginManager.isInGame(player[1].getUniqueId())){
-							guiManager.sentInventoryTitleMessage(player[0], plugin.lang.TITLE_ALREADY_IN_ANOTHER_GAME, gameID);
+							sentInventoryTitleMessage(player[0], plugin.lang.TITLE_ALREADY_IN_ANOTHER_GAME);
 							return false;
 						}
 
 						if(!guiManager.isInGUI(player[1].getUniqueId()) && !guiManager.getShopManager().inShop(player[1].getUniqueId())){
-
-							// call enter gamebox event for the second player
-							EnterGameBoxEvent enterEvent = new EnterGameBoxEvent(player[1], args[0], args[1]);
-							if(!enterEvent.isCancelled()){
-								pluginManager.saveInventory(player[1]);
-							} else {
+							// ToDO: the reasons (messages)...
+							if(!pluginManager.enterGameBox(player[1], args[0], args[1])){
 								for(Player playerObj: player) {
 									if(guiManager.isInGUI(playerObj.getUniqueId()) || guiManager.getShopManager().inShop(playerObj.getUniqueId())) {
-										guiManager.sentInventoryTitleMessage(playerObj, enterEvent.getCancelMessage(), gameID);
+										sentInventoryTitleMessage(playerObj, "To do");
 									} else {
-										playerObj.sendMessage("A game was canceled with the reason: " + enterEvent.getCancelMessage());
+										playerObj.sendMessage("A game was canceled");
 									}
 								}
 							}
@@ -178,80 +177,26 @@ public abstract class AGui {
 					}
 
 
-					int returnedCode = manager.startGame(player, (GameBoxSettings.playSounds && pluginManager.getPlayer(player[0].getUniqueId()).isPlaySounds()), args[1]);
-					switch (returnedCode){
-						case GameBox.GAME_STARTED:
-							GameBox.debug("started game "+ args[0]+" for player " + player[0].getName() + (player.length==2?" and " + player[1].getName():"") + " with the arguments: " + Arrays.asList(args));
-							AGui gui;
-							for(Player playerObj : player) {
-								gui = guiManager.getCurrentGui(playerObj.getUniqueId());
-								if(gui != null){
-									gui.removePlayer(playerObj.getUniqueId());
-								}
-								for (int slot : pluginManager.getHotBarButtons().keySet()) {
-									playerObj.getInventory().setItem(slot, pluginManager.getHotBarButtons().get(slot));
-								}
-							}
-							// remove flag
-							GameBox.openingNewGUI = false;
-							return true;
-
-						case  GameBox.GAME_NOT_ENOUGH_MONEY:
-							guiManager.sentInventoryTitleMessage(player[0], plugin.lang.TITLE_NOT_ENOUGH_MONEY, gameID);
-							break;
-
-						case GameBox.GAME_NOT_ENOUGH_MONEY_1:
-							guiManager.sentInventoryTitleMessage(player[0], plugin.lang.TITLE_NOT_ENOUGH_MONEY, gameID);
-
-							if(args.length == 3){
-								if(guiManager.isInGUI(player[1].getUniqueId())) {
-									guiManager.sentInventoryTitleMessage(player[1], plugin.lang.TITLE_OTHER_PLAYER_NOT_ENOUGH_MONEY, gameID);
-								} else {
-									//ToDo
-									player[1].sendMessage(player[0].getName()+" Does not have enough money to start the game!");
-								}
-							}
-							break;
-
-						case GameBox.GAME_NOT_ENOUGH_MONEY_2:
-							if(args.length == 3){
-								if(guiManager.isInGUI(player[1].getUniqueId())) {
-									guiManager.sentInventoryTitleMessage(player[1], plugin.lang.TITLE_NOT_ENOUGH_MONEY, gameID);
-								} else {
-									//ToDo
-									player[1].sendMessage(player[0].getName()+" tried starting a game with you. But you do not have enough money!");
-								}
-							}
-							guiManager.sentInventoryTitleMessage(player[0], plugin.lang.TITLE_OTHER_PLAYER_NOT_ENOUGH_MONEY, gameID);
-							break;
-
-						case GameBox.GAME_NOT_STARTED_ERROR:
-							for(Player playerObj: player) {
-								if(guiManager.isInGUI(playerObj.getUniqueId()) || guiManager.getShopManager().inShop(playerObj.getUniqueId())) {
-									guiManager.sentInventoryTitleMessage(playerObj, plugin.lang.TITLE_ERROR, gameID);
-								} else {
-									playerObj.sendMessage("A game failed to start");
-								}
-							}
-							break;
-
-						default:
-							plugin.getLogger().info(" unknown return code with args: " + Arrays.asList(args));
+					try {
+						manager.startGame(player, (GameBoxSettings.playSounds && pluginManager.getPlayer(player[0].getUniqueId()).isPlaySounds()), args[1]);
+					} catch (GameStartException e) {
+						handleGameStartException(e, player);
+						return false;
 					}
-
-					// remove flag
-					GameBox.openingNewGUI = false;
-
-					for(Player playerObj: player) {
-						if (!guiManager.isInGUI(playerObj.getUniqueId()) && !pluginManager.isInGame(playerObj.getUniqueId())) {
-							pluginManager.restoreInventory(playerObj);
-							playerObj.updateInventory();
+					GameBox.debug("started game "+ args[0]+" for player " + player[0].getName() + (player.length==2?" and " + player[1].getName():"") + " with the arguments: " + Arrays.asList(args));
+					AGui gui;
+					for(Player playerObj : player) {
+						gui = guiManager.getCurrentGui(playerObj.getUniqueId());
+						if(gui != null){
+							gui.removePlayer(playerObj.getUniqueId());
+						}
+						for (int slot : pluginManager.getHotBarButtons().keySet()) {
+							playerObj.getInventory().setItem(slot, pluginManager.getHotBarButtons().get(slot));
 						}
 					}
-					GameBox.debug("did not start a game");
-					return false;
-
-
+					// remove flag
+					GameBox.openingNewGUI = false;
+					return true;
 				}
 				GameBox.debug("Game with id: " + args[0] + " was not found");
 				return false;
@@ -282,7 +227,7 @@ public abstract class AGui {
 					// check for perm in this case and stop invite if necessary
 					if(!event.getWhoClicked().hasPermission(Permission.PLAY_ALL_GAMES.getPermission())
 							&& !event.getWhoClicked().hasPermission(Permission.PLAY_SPECIFIC_GAME.getPermission(args[0]))){
-						guiManager.sentInventoryTitleMessage((Player)event.getWhoClicked(), plugin.lang.TITLE_NO_PERM, args[0]);
+						sentInventoryTitleMessage((Player)event.getWhoClicked(), plugin.lang.TITLE_NO_PERM);
 						return false;
 					}
 				}
@@ -339,7 +284,7 @@ public abstract class AGui {
 
 				// check for closed shop
 				if(guiManager.getShopManager().isClosed()){
-					guiManager.sentInventoryTitleMessage((Player)event.getWhoClicked(), plugin.lang.SHOP_IS_CLOSED, null);
+					sentInventoryTitleMessage((Player)event.getWhoClicked(), plugin.lang.SHOP_IS_CLOSED);
 					return false;
 				}
 
@@ -357,13 +302,13 @@ public abstract class AGui {
 				int hasToken = 0;
 				if(tokens > 0 ){
 					if((hasToken = pluginManager.getPlayer(event.getWhoClicked().getUniqueId()).getTokens()) < tokens){
-						guiManager.sentInventoryTitleMessage((Player)event.getWhoClicked(), plugin.lang.SHOP_TITLE_NOT_ENOUGH_TOKEN, null);
+						sentInventoryTitleMessage((Player)event.getWhoClicked(), plugin.lang.SHOP_TITLE_NOT_ENOUGH_TOKEN);
 						return false;
 					}
 				}
 				if(money > 0){
 					if(!GameBoxSettings.econEnabled || GameBox.econ.getBalance((OfflinePlayer) event.getWhoClicked()) < money){
-						guiManager.sentInventoryTitleMessage((Player)event.getWhoClicked(), plugin.lang.SHOP_TITLE_NOT_ENOUGH_MONEY, null);
+						sentInventoryTitleMessage((Player)event.getWhoClicked(), plugin.lang.SHOP_TITLE_NOT_ENOUGH_MONEY);
 						return false;
 					}
 				}
@@ -379,7 +324,7 @@ public abstract class AGui {
 				if(!shopItem.getPermissions().isEmpty()){
 					for(String permission : shopItem.getPermissions()){
 						if(!event.getWhoClicked().hasPermission(permission)){
-							guiManager.sentInventoryTitleMessage((Player)event.getWhoClicked(), plugin.lang.SHOP_TITLE_REQUIREMENT_NOT_FULFILLED, null);
+							sentInventoryTitleMessage((Player)event.getWhoClicked(), plugin.lang.SHOP_TITLE_REQUIREMENT_NOT_FULFILLED);
 							return false;
 						}
 					}
@@ -388,7 +333,7 @@ public abstract class AGui {
 				if(!shopItem.getNoPermissions().isEmpty()){
 					for(String noPermission : shopItem.getNoPermissions()){
 						if(event.getWhoClicked().hasPermission(noPermission)){
-							guiManager.sentInventoryTitleMessage((Player)event.getWhoClicked(), plugin.lang.SHOP_TITLE_REQUIREMENT_NOT_FULFILLED, null);
+							sentInventoryTitleMessage((Player)event.getWhoClicked(), plugin.lang.SHOP_TITLE_REQUIREMENT_NOT_FULFILLED);
 							return false;
 						}
 					}
@@ -396,10 +341,10 @@ public abstract class AGui {
 
 				if(item != null) {
 					if (!pluginManager.addItem(event.getWhoClicked().getUniqueId(), item)) {
-						guiManager.sentInventoryTitleMessage((Player) event.getWhoClicked(), plugin.lang.SHOP_TITLE_INVENTORY_FULL, null);
+						sentInventoryTitleMessage((Player) event.getWhoClicked(), plugin.lang.SHOP_TITLE_INVENTORY_FULL);
 						return false;
 					} else {
-						guiManager.sentInventoryTitleMessage((Player) event.getWhoClicked(), plugin.lang.SHOP_TITLE_BOUGHT_SUCCESSFULLY, null);
+						sentInventoryTitleMessage((Player) event.getWhoClicked(), plugin.lang.SHOP_TITLE_BOUGHT_SUCCESSFULLY);
 					}
 				}
 
@@ -434,6 +379,57 @@ public abstract class AGui {
 				plugin.warning("Missing case: "+action);
 				return false;
 		}
+	}
+
+	private void sentInventoryTitleMessage(Player player, String message) {
+		plugin.getInventoryTitleMessenger().sendInventoryTitle(player, message, titleMessageSeconds);
+	}
+
+	private void handleGameStartException(GameStartException e, Player[] player){
+		switch (e.getReason()){
+			case  NOT_ENOUGH_MONEY:
+				sentInventoryTitleMessage(player[0], plugin.lang.TITLE_NOT_ENOUGH_MONEY);
+				break;
+			case NOT_ENOUGH_MONEY_FIRST_PLAYER:
+				sentInventoryTitleMessage(player[0], plugin.lang.TITLE_NOT_ENOUGH_MONEY);
+				if(args.length == 3){
+					if(guiManager.isInGUI(player[1].getUniqueId())) {
+						sentInventoryTitleMessage(player[1], plugin.lang.TITLE_OTHER_PLAYER_NOT_ENOUGH_MONEY);
+					} else {
+						//ToDo
+						player[1].sendMessage(player[0].getName()+" Does not have enough money to start the game!");
+					}
+				}
+				break;
+			case NOT_ENOUGH_MONEY_SECOND_PLAYER:
+				if(args.length == 3){
+					if(guiManager.isInGUI(player[1].getUniqueId())) {
+						sentInventoryTitleMessage(player[1], plugin.lang.TITLE_NOT_ENOUGH_MONEY);
+					} else {
+						//ToDo
+						player[1].sendMessage(player[0].getName()+" tried starting a game with you. But you do not have enough money!");
+					}
+				}
+				sentInventoryTitleMessage(player[0], plugin.lang.TITLE_OTHER_PLAYER_NOT_ENOUGH_MONEY);
+				break;
+			case ERROR:
+				for(Player playerObj: player) {
+					if(guiManager.isInGUI(playerObj.getUniqueId()) || guiManager.getShopManager().inShop(playerObj.getUniqueId())) {
+						sentInventoryTitleMessage(playerObj, plugin.lang.TITLE_ERROR);
+					} else {
+						playerObj.sendMessage("A game failed to start");
+					}
+				}
+				break;
+		}
+		// remove flag
+		GameBox.openingNewGUI = false;
+		for(Player playerObj: player) {
+			if (!guiManager.isInGUI(playerObj.getUniqueId()) && !pluginManager.isInGame(playerObj.getUniqueId())) {
+				pluginManager.leaveGameBox(playerObj);
+			}
+		}
+		GameBox.debug("did not start a game");
 	}
 
 	public void onInvClick(InventoryClickEvent event){
@@ -478,8 +474,8 @@ public abstract class AGui {
 		return inGui.contains(uuid);
 	}
 
-	public boolean isInGui(Player uuid){
-		return inGui.contains(uuid.getUniqueId());
+	public boolean isInGui(Player player){
+		return inGui.contains(player.getUniqueId());
 	}
 
 	public void setButton(AButton button, int slot){

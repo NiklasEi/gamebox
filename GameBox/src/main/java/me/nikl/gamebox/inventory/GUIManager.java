@@ -104,7 +104,7 @@ public class GUIManager {
 		UUID uuid = event.getPlayer().getUniqueId();
 		if(mainGui.isInGui(uuid)){
 			mainGui.onInvClose(event);
-			plugin.getPluginManager().restoreInventory((Player)event.getPlayer());
+			plugin.getPluginManager().leaveGameBox((Player)event.getPlayer());
 			return;
 		}
 		for(String gameID : gameGuis.keySet()){
@@ -112,7 +112,7 @@ public class GUIManager {
 			for(GameGui gui : guis.values()){
 				if(gui.isInGui(uuid)){
 					gui.onInvClose(event);
-					plugin.getPluginManager().restoreInventory((Player)event.getPlayer());
+					plugin.getPluginManager().leaveGameBox((Player)event.getPlayer());
 					return;
 				}
 			}
@@ -120,7 +120,7 @@ public class GUIManager {
 		if(GameBox.debug)Bukkit.getConsoleSender().sendMessage("Not in a GameBox GUI, checking shops now");
 		if(shopManager.inShop(event.getPlayer().getUniqueId())){
 			shopManager.onInvClose(event);
-			plugin.getPluginManager().restoreInventory((Player)event.getPlayer());
+			plugin.getPluginManager().leaveGameBox((Player)event.getPlayer());
 			return;
 		}
 		if(GameBox.debug)Bukkit.getConsoleSender().sendMessage("Not in a Shop...");
@@ -158,17 +158,12 @@ public class GUIManager {
 	
 	public boolean openGameGui(Player whoClicked, String... args) {
 		if(!plugin.getPluginManager().hasSavedContents(whoClicked.getUniqueId())){
-			EnterGameBoxEvent enterEvent = new EnterGameBoxEvent(whoClicked, args[0], args[1]);
-			if(!enterEvent.isCancelled()){
-				plugin.getPluginManager().saveInventory(whoClicked);
-			} else {
-				whoClicked.sendMessage(enterEvent.getCancelMessage());
-			}
+			if(!plugin.getPluginManager().enterGameBox(whoClicked, args[0], args[1])) return false;
 		}
 
 		if(args.length != 2) {
 			Bukkit.getConsoleSender().sendMessage("unknown number of arguments in GUIManager.openGameGui");
-			if(!isInGUI(whoClicked.getUniqueId()) && !plugin.getPluginManager().isInGame(whoClicked.getUniqueId())) plugin.getPluginManager().restoreInventory(whoClicked);
+			if(!isInGUI(whoClicked.getUniqueId()) && !plugin.getPluginManager().isInGame(whoClicked.getUniqueId())) plugin.getPluginManager().leaveGameBox(whoClicked);
 			return false;
 		}
 
@@ -184,18 +179,17 @@ public class GUIManager {
 				if(whoClicked.getOpenInventory() != null){
 					whoClicked.closeInventory();
 				}
-				plugin.getPluginManager().restoreInventory(whoClicked);
+				plugin.getPluginManager().leaveGameBox(whoClicked);
 			}
 			return opened;
 		} else {
 			if(isInGUI(whoClicked.getUniqueId())){
-				// player is in main or in a game gui of a multi-player game
-				sentInventoryTitleMessage(whoClicked, plugin.lang.TITLE_NO_PERM, null);
+				plugin.getInventoryTitleMessenger().sendInventoryTitle(whoClicked, plugin.lang.TITLE_NO_PERM, titleMessageSeconds);
 			} else {
 				if(whoClicked.getOpenInventory() != null){
 					whoClicked.closeInventory();
 				}
-				plugin.getPluginManager().restoreInventory(whoClicked);
+				plugin.getPluginManager().leaveGameBox(whoClicked);
 			}
 			whoClicked.sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
 			return false;
@@ -231,7 +225,7 @@ public class GUIManager {
 		if(whoClicked.getOpenInventory() != null){
 			whoClicked.closeInventory();
 		}
-		plugin.getPluginManager().restoreInventory(whoClicked);
+		plugin.getPluginManager().leaveGameBox(whoClicked);
 		return false;
 	}
 
@@ -309,22 +303,6 @@ public class GUIManager {
 		return gameGuis.get(gameID) == null? null : gameGuis.get(gameID).get(key);
 	}
 
-	public void sentInventoryTitleMessage(Player player, String message, String gameID) {
-		String currentTitle = plugin.lang.TITLE_MAIN_GUI.replace("%player%", player.getName());
-		AGui gui = getCurrentGui(player.getUniqueId());
-		if (gui != null) {
-			if (gui instanceof GameGuiPage) {
-				currentTitle = ((GameGuiPage) gui).getTitle().replace("%player%", player.getName());
-			} else if (gui instanceof GameGui) {
-				currentTitle = plugin.lang.TITLE_GAME_GUI.replace("%game%", plugin.getPluginManager().getGame(gameID).getGameLang().PLAIN_NAME).replace("%player%", player.getName());
-			} else if (gui instanceof Page){
-				currentTitle = plugin.lang.SHOP_TITLE_PAGE_SHOP.replace("%page%", String.valueOf(((Page)gui).getPage() + 1));
-			}
-		}
-		plugin.getPluginManager().startTitleTimer(player, currentTitle, titleMessageSeconds);
-		plugin.getNMS().updateInventoryTitle(player, message);
-	}
-
 	public boolean openShopPage(Player whoClicked, String[] args) {
 		return shopManager.openShopPage(whoClicked, args);
 	}
@@ -340,5 +318,9 @@ public class GUIManager {
 
 	public AButton getTokenButton() {
 		return tokenButton.clone();
+	}
+
+	public int getTitleMessageSeconds(){
+		return titleMessageSeconds;
 	}
 }

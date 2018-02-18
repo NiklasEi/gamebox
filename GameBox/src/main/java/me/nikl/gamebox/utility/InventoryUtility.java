@@ -11,7 +11,6 @@ import org.bukkit.inventory.InventoryHolder;
  * 
  */
 public class InventoryUtility {
-
     public static Inventory createInventory(InventoryHolder owner, int size, String title){
         if(GameBoxSettings.checkInventoryLength && title.length() > 32){
             title = StringUtility.shorten(title, 32);

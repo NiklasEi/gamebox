@@ -10,7 +10,6 @@ import org.bukkit.inventory.ItemStack;
  */
 public class AButton extends ItemStack{
 	private ClickAction action;
-	private AGui gui;
 	private String[] args;
 
 
@@ -47,5 +46,4 @@ public class AButton extends ItemStack{
 		clone.setActionAndArgs(this.action, this.args);
 		return clone;
 	}
-	
 }

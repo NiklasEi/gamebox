@@ -1,11 +1,11 @@
 package me.nikl.gamebox;
 
 import me.nikl.gamebox.data.GBPlayer;
+import me.nikl.gamebox.events.EnterGameBoxEvent;
 import me.nikl.gamebox.events.LeftGameBoxEvent;
 import me.nikl.gamebox.games.Game;
 import me.nikl.gamebox.games.GameManager;
 import me.nikl.gamebox.inventory.GUIManager;
-import me.nikl.gamebox.inventory.timer.TitleTimer;
 import me.nikl.gamebox.input.HandleInvitations;
 import me.nikl.gamebox.input.HandleInviteInput;
 import me.nikl.gamebox.nms.NmsUtility;
@@ -88,9 +88,6 @@ public class PluginManager implements Listener {
 	// save the players inventory contents
 	private Map<UUID, ItemStack[]> savedContents  = new HashMap<>();
     private Map<UUID, Integer> hotBarSlot  = new HashMap<>();
-
-    // timer to reset the title after a title message
-    private Map<UUID, TitleTimer> titleTimers  = new HashMap<>();
 
     // players
     private Map<UUID, GBPlayer> gbPlayers = new HashMap<>();
@@ -266,28 +263,18 @@ public class PluginManager implements Listener {
     @SuppressWarnings("deprecation")
     public void saveInventory(Player player){
 		GameBox.debug("saving inventory contents...");
-
-		// save currently hold item slot
         hotBarSlot.putIfAbsent(player.getUniqueId(), player.getInventory().getHeldItemSlot());
-
-        // save inventory contents
 		savedContents.putIfAbsent(player.getUniqueId(), player.getInventory().getContents().clone());
-
         if(GameBoxSettings.keepArmorWhileInGame){
             ItemStack[] content = savedContents.get(player.getUniqueId()).clone();
-
             // remove all non armor items from array. This works for newer versions (with shields) and old ones
             for (int i = 0; i < 36; i++){
                 content[i] = null;
             }
-
-            // overwrite all non armor items
             player.getInventory().setContents(content);
         } else {
             player.getInventory().clear();
         }
-
-        // player will hold an empty slot, which removes the annoying animation when clicking in an inventory with an item in your hand
 		player.getInventory().setHeldItemSlot(emptyHotBarSlotToHold);
 	}
 
@@ -301,21 +288,8 @@ public class PluginManager implements Listener {
 		player.getInventory().setContents(savedContents.get(player.getUniqueId()));
         player.getInventory().setHeldItemSlot(hotBarSlot.get(player.getUniqueId()));
 
-        // in 1.8 there is a short delay necessary to display the restored inventory contents.
-        if(GameBoxSettings.version1_8) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    player.updateInventory();
-                }
-            }.runTaskLater(plugin, 1);
-        } else {
-            player.updateInventory();
-        }
-
 		savedContents.remove(player.getUniqueId());
         hotBarSlot.remove(player.getUniqueId());
-        new LeftGameBoxEvent(player);
 	}
 
 	public boolean hasSavedContents(UUID uuid){
@@ -389,7 +363,7 @@ public class PluginManager implements Listener {
 	@EventHandler
 	public void onInvClose(InventoryCloseEvent event) {
 		if(!(event.getPlayer() instanceof Player)) return;
-		removeTitleTimer(event.getPlayer().getUniqueId());
+		plugin.getInventoryTitleMessenger().removeTitleMessage(event.getPlayer().getUniqueId());
 		if(GameBox.openingNewGUI){
 			GameBox.debug("ignoring close because of flag: GameBox.openingNewGUI");
 			return;
@@ -401,7 +375,7 @@ public class PluginManager implements Listener {
 		    GameManager manager = game.getGameManager();
 			if(manager.isInGame(uuid)){
 				if(manager.onInventoryClose(event) && !manager.isInGame(uuid)){
-					restoreInventory((Player) event.getPlayer());
+					leaveGameBox((Player) event.getPlayer());
 				}
 				return;
 			}
@@ -552,19 +526,9 @@ public class PluginManager implements Listener {
 
 	public void shutDown() {
         for(Player player : Bukkit.getOnlinePlayers()){
-            if(isInGame(player.getUniqueId())){
+            if(isInGame(player.getUniqueId()) || guiManager.isInGUI(player.getUniqueId()) || guiManager.getShopManager().inShop(player.getUniqueId())){
                 player.closeInventory();
-                restoreInventory(player);
-                continue;
-            }
-            if(guiManager.isInGUI(player.getUniqueId())){
-                player.closeInventory();
-                restoreInventory(player);
-                continue;
-            }
-            if(guiManager.getShopManager().inShop(player.getUniqueId())){
-                player.closeInventory();
-                restoreInventory(player);
+                leaveGameBox(player);
             }
         }
 
@@ -662,22 +626,6 @@ public class PluginManager implements Listener {
     public void setGuiManager(GUIManager guiManager) {
         this.guiManager = guiManager;
     }
-
-    public void startTitleTimer(Player player, String title, int seconds){
-        UUID uuid = player.getUniqueId();
-        if(titleTimers.keySet().contains(uuid)){
-            titleTimers.get(uuid).cancel();
-        }
-        titleTimers.put(uuid, new TitleTimer(plugin, title, player, System.currentTimeMillis()+seconds*1000));
-    }
-
-    public void removeTitleTimer(UUID uuid) {
-        if(titleTimers.keySet().contains(uuid)){
-            titleTimers.get(uuid).cancel();
-            titleTimers.remove(uuid);
-        }
-    }
-
 
     private GameManager getGameManager(UUID uuid){
         GameManager manager;
@@ -821,5 +769,33 @@ public class PluginManager implements Listener {
      */
     public Map<UUID, GBPlayer> getGbPlayers(){
         return Collections.unmodifiableMap(this.gbPlayers);
+    }
+
+    public boolean enterGameBox(Player whoClicked, String moduleID, String menuID) {
+        EnterGameBoxEvent enterEvent = new EnterGameBoxEvent(whoClicked, moduleID, menuID);
+        if(!enterEvent.isCancelled()){
+            saveInventory(whoClicked);
+            return true;
+        } else {
+            whoClicked.sendMessage(enterEvent.getCancelMessage());
+            return false;
+        }
+    }
+
+    public void leaveGameBox(Player player) {
+        restoreInventory(player);
+        plugin.getInventoryTitleMessenger().removeTitleMessage(player.getUniqueId());
+        // in 1.8 there is a short delay necessary to display the restored inventory contents.
+        if(GameBoxSettings.version1_8) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    player.updateInventory();
+                }
+            }.runTaskLater(plugin, 1);
+        } else {
+            player.updateInventory();
+        }
+        new LeftGameBoxEvent(player);
     }
 }

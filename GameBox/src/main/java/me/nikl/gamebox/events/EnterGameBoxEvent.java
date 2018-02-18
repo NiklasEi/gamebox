@@ -6,6 +6,8 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
+import javax.annotation.Nullable;
+
 /**
  * Created by Niklas
  *
@@ -16,7 +18,7 @@ import org.bukkit.event.HandlerList;
 public class EnterGameBoxEvent extends Event implements Cancellable{
     private static final HandlerList handlers = new HandlerList();
     private boolean cancelled = false;
-    private String cancelMessage = "none";
+    private String cancelMessage;
     private String[] args;
     private Player player;
 
@@ -45,7 +47,7 @@ public class EnterGameBoxEvent extends Event implements Cancellable{
         return player;
     }
 
-    public String getCancelMessage() {
+    public @Nullable String getCancelMessage() {
         return cancelMessage;
     }
 

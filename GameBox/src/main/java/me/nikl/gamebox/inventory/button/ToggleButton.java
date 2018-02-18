@@ -22,7 +22,7 @@ public class ToggleButton extends AButton {
 
     @Deprecated
     public ToggleButton(MaterialData mat, int count, MaterialData mat2) {
-        super(mat.toItemStack(1));
+        super(mat.toItemStack(count));
         this.toggleData = mat2;
     }
 

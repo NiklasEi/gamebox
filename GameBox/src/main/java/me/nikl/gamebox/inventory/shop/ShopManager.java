@@ -151,18 +151,17 @@ public class ShopManager {
                 }
             }
         } else {
-            if (saved) plugin.getPluginManager().restoreInventory(whoClicked);
+            if (saved) plugin.getPluginManager().leaveGameBox(whoClicked);
             whoClicked.sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
 
             if(guiManager.isInMainGUI(whoClicked.getUniqueId())) {
                 String currentTitle = plugin.lang.TITLE_MAIN_GUI.replace("%player%", whoClicked.getName());
-                plugin.getPluginManager().startTitleTimer(whoClicked, currentTitle, titleMessageSeconds);
-                plugin.getNMS().updateInventoryTitle(whoClicked, plugin.lang.TITLE_NO_PERM);
+                plugin.getInventoryTitleMessenger().sendInventoryTitle(whoClicked, plugin.lang.TITLE_NO_PERM, currentTitle, titleMessageSeconds);
             }
 
             return false;
         }
-        if (saved) plugin.getPluginManager().restoreInventory(whoClicked);
+        if (saved) plugin.getPluginManager().leaveGameBox(whoClicked);
         Bukkit.getLogger().log(Level.SEVERE, "trying to open a shop page failed");
         Bukkit.getLogger().log(Level.SEVERE, "args: " + Arrays.asList(args));
         whoClicked.sendMessage("Error");
