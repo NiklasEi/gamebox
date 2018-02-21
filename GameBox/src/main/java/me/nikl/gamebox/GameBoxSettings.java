@@ -4,6 +4,8 @@ import me.nikl.gamebox.utility.Sound;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.logging.Level;
+
 /**
  * @author Niklas Eicker
  *
@@ -15,7 +17,7 @@ public class GameBoxSettings {
     public static Sound successfulClick, unsuccessfulClick;
     public static boolean checkInventoryLength = false;
     public static boolean useMysql = false;
-    public static boolean version1_8 = false; // is changed in main class
+    public static boolean version1_8 = false;
     public static int inviteInputDuration = 30; // time in seconds for inputs
     public static int inviteValidDuration = 60; // time in seconds for invitations
     public static boolean econEnabled = false;
@@ -26,6 +28,9 @@ public class GameBoxSettings {
     public static boolean hubModeEnabled = false;
     public static boolean closeInventoryOnDamage = true; // what to do on player damage
     public static int autoSaveIntervalInMinutes = 10;
+    public static int exitButtonSlot = 4;
+    public static int toMainButtonSlot = 0;
+    public static int toGameButtonSlot = 8;
 
     public static void loadSettings(GameBox plugin) {
         FileConfiguration config = plugin.getConfig();
@@ -42,6 +47,13 @@ public class GameBoxSettings {
         closeInventoryOnDamage = config.getBoolean("settings.closeInventoryOnDamage", true);
         autoSaveIntervalInMinutes = config.getInt("settings.autoSaveIntervalInMinutes", 10);
         keepArmorWhileInGame = config.getBoolean("settings.keepArmor", false);
+        hubModeEnabled = config.getBoolean("hubMode.enabled", false);
+        checkInventoryLength = checkInventoryTitleLength();
+        loadSounds(config);
+        loadHotBarSlots(config);
+    }
+
+    private static void loadSounds(FileConfiguration config) {
         try {
             successfulClick = Sound.valueOf(config.getString("guiSettings.standardSounds.successfulClick", "CLICK"));
         } catch (IllegalArgumentException exception) {
@@ -52,8 +64,16 @@ public class GameBoxSettings {
         } catch (IllegalArgumentException exception) {
             unsuccessfulClick = Sound.VILLAGER_NO;
         }
-        checkInventoryLength = checkInventoryTitleLength();
-        hubModeEnabled = config.getBoolean("hubMode.enabled", false);
+    }
+
+    private static void loadHotBarSlots(FileConfiguration config) {
+        GameBoxSettings.exitButtonSlot = config.getInt("guiSettings.hotBarNavigation.exitSlot", 4);
+        GameBoxSettings.toMainButtonSlot = config.getInt("guiSettings.hotBarNavigation.mainMenuSlot", 0);
+        GameBoxSettings.toGameButtonSlot = config.getInt("guiSettings.hotBarNavigation.gameMenuSlot", 8);
+
+        if (exitButtonSlot > 8) exitButtonSlot = 4;
+        if (toMainButtonSlot > 8) toMainButtonSlot = 0;
+        if (toGameButtonSlot > 8) toGameButtonSlot = 8;
     }
 
     private static boolean checkInventoryTitleLength() {

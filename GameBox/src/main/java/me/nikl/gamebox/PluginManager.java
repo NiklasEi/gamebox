@@ -64,10 +64,6 @@ public class PluginManager implements Listener {
 
     // count the number of registered games
     public static int gamesRegistered = 0;
-    // hot bar stuff
-    public static int exitButtonSlot = 4;
-    public static int toMainButtonSlot = 0;
-    public static int toGameButtonSlot = 8;
     public static int emptyHotBarSlotToHold = 1;
     private static List<Integer> slotsToKeep = new ArrayList<>();
     // GameBox instance
@@ -129,23 +125,6 @@ public class PluginManager implements Listener {
     }
 
     private void setHotBar() {
-        exitButtonSlot = (config.getInt("guiSettings.hotBarNavigation.exitSlot", 4) >= 0 && config.getInt("guiSettings.hotBarNavigation.exitSlot", 4) < 9) ? config.getInt("guiSettings.hotBarNavigation.exitSlot", 4) : 4;
-        toMainButtonSlot = (config.getInt("guiSettings.hotBarNavigation.mainMenuSlot", 0) >= 0 && config.getInt("guiSettings.hotBarNavigation.mainMenuSlot", 0) < 9) ? config.getInt("guiSettings.hotBarNavigation.mainMenuSlot", 0) : 0;
-        toGameButtonSlot = (config.getInt("guiSettings.hotBarNavigation.gameMenuSlot", 8) >= 0 && config.getInt("guiSettings.hotBarNavigation.gameMenuSlot", 8) < 9) ? config.getInt("guiSettings.hotBarNavigation.gameMenuSlot", 8) : 8;
-
-        if (config.getInt("guiSettings.hotBarNavigation.exitSlot") < 0) {
-            plugin.getLogger().log(Level.WARNING, " The exit button is disabled!");
-            exitButtonSlot = -999;
-        }
-        if (config.getInt("guiSettings.hotBarNavigation.mainMenuSlot") < 0) {
-            plugin.getLogger().log(Level.WARNING, " The back-to-main-menu button is disabled!");
-            toMainButtonSlot = -999;
-        }
-        if (config.getInt("guiSettings.hotBarNavigation.gameMenuSlot") < 0) {
-            plugin.getLogger().log(Level.WARNING, " The back-to-game-menu button is disabled!");
-            toGameButtonSlot = -999;
-        }
-
         ItemStack toMainItem = ItemStackUtility.getItemStack(config.getString("guiSettings.hotBarNavigation.mainMenuMaterial")), toGameItem = ItemStackUtility.getItemStack(config.getString("guiSettings.hotBarNavigation.gameMenuMaterial")), exitItem = ItemStackUtility.getItemStack(config.getString("guiSettings.hotBarNavigation.exitMaterial"));
 
         if (toMainItem == null) {
@@ -180,9 +159,9 @@ public class PluginManager implements Listener {
         meta.setDisplayName(StringUtility.color(lang.BUTTON_EXIT));
         exitItem.setItemMeta(meta);
 
-        if (toMainButtonSlot >= 0) hotbarButtons.put(toMainButtonSlot, toMainItem);
-        if (exitButtonSlot >= 0) hotbarButtons.put(exitButtonSlot, exitItem);
-        if (toGameButtonSlot >= 0) hotbarButtons.put(toGameButtonSlot, toGameItem);
+        if (GameBoxSettings.toMainButtonSlot >= 0) hotbarButtons.put(GameBoxSettings.toMainButtonSlot, toMainItem);
+        if (GameBoxSettings.exitButtonSlot >= 0) hotbarButtons.put(GameBoxSettings.exitButtonSlot, exitItem);
+        if (GameBoxSettings.toGameButtonSlot >= 0) hotbarButtons.put(GameBoxSettings.toGameButtonSlot, toGameItem);
 
 
         // load special hot bar slots which keep their items
@@ -196,17 +175,17 @@ public class PluginManager implements Listener {
 
         while (it.hasNext()) {
             int slot = it.next();
-            if (slot == toMainButtonSlot || slot == exitButtonSlot || slot == toGameButtonSlot) it.remove();
+            if (slot == GameBoxSettings.toMainButtonSlot || slot == GameBoxSettings.exitButtonSlot || slot == GameBoxSettings.toGameButtonSlot) it.remove();
             if (slot < 0 || slot > 8) it.remove();
         }
 
         // try finding an empty hubItemSlot to hold while in GUI/game
         if (hotbarButtons.values().size() + slotsToKeep.size() < 9) {
-            while (emptyHotBarSlotToHold == exitButtonSlot || emptyHotBarSlotToHold == toMainButtonSlot || emptyHotBarSlotToHold == toGameButtonSlot || slotsToKeep.contains(emptyHotBarSlotToHold)) {
+            while (emptyHotBarSlotToHold == GameBoxSettings.exitButtonSlot || emptyHotBarSlotToHold == GameBoxSettings.toMainButtonSlot || emptyHotBarSlotToHold == GameBoxSettings.toGameButtonSlot || slotsToKeep.contains(emptyHotBarSlotToHold)) {
                 emptyHotBarSlotToHold++;
             }
         } else {
-            while (emptyHotBarSlotToHold == exitButtonSlot || emptyHotBarSlotToHold == toMainButtonSlot || emptyHotBarSlotToHold == toGameButtonSlot) {
+            while (emptyHotBarSlotToHold == GameBoxSettings.exitButtonSlot || emptyHotBarSlotToHold == GameBoxSettings.toMainButtonSlot || emptyHotBarSlotToHold == GameBoxSettings.toGameButtonSlot) {
                 emptyHotBarSlotToHold++;
             }
         }
@@ -322,20 +301,20 @@ public class PluginManager implements Listener {
                             GameBox.debug("empty hotbar slot clicked... returning");
                             return;
                         }
-                        if (event.getSlot() == toGameButtonSlot) {
+                        if (event.getSlot() == GameBoxSettings.toGameButtonSlot) {
                             gameManager.removeFromGame(event.getWhoClicked().getUniqueId());
                             guiManager.openGameGui((Player) event.getWhoClicked(), gameID, GUIManager.MAIN_GAME_GUI);
                             if (GameBoxSettings.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
                                 ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.CLICK.bukkitSound(), volume, pitch);
                             }
                             return;
-                        } else if (event.getSlot() == toMainButtonSlot) {
+                        } else if (event.getSlot() == GameBoxSettings.toMainButtonSlot) {
                             gameManager.removeFromGame(event.getWhoClicked().getUniqueId());
                             guiManager.openMainGui((Player) event.getWhoClicked());
                             if (GameBoxSettings.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
                                 ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.CLICK.bukkitSound(), volume, pitch);
                             }
-                        } else if (event.getSlot() == exitButtonSlot) {
+                        } else if (event.getSlot() == GameBoxSettings.exitButtonSlot) {
                             event.getWhoClicked().closeInventory();
                             ((Player) event.getWhoClicked()).updateInventory();
                             if (GameBoxSettings.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
