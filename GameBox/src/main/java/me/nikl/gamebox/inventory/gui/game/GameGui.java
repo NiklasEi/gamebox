@@ -1,7 +1,7 @@
 package me.nikl.gamebox.inventory.gui.game;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.PluginManager;
+import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.games.Game;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
@@ -39,21 +39,21 @@ public class GameGui extends AGui {
 
 
         // set lower grid
-        if (hotBarButtons.containsKey(PluginManager.exitButtonSlot)) {
-            Button exit = new Button(hotBarButtons.get(PluginManager.exitButtonSlot));
-            ItemMeta meta = hotBarButtons.get(PluginManager.exitButtonSlot).getItemMeta();
+        if (hotBarButtons.containsKey(GameBoxSettings.exitButtonSlot)) {
+            Button exit = new Button(hotBarButtons.get(GameBoxSettings.exitButtonSlot));
+            ItemMeta meta = hotBarButtons.get(GameBoxSettings.exitButtonSlot).getItemMeta();
             exit.setItemMeta(meta);
             exit.setAction(ClickAction.CLOSE);
-            setLowerButton(exit, PluginManager.exitButtonSlot);
+            setLowerButton(exit, GameBoxSettings.exitButtonSlot);
         }
 
 
-        if (hotBarButtons.containsKey(PluginManager.toMainButtonSlot)) {
-            Button main = new Button(hotBarButtons.get(PluginManager.toMainButtonSlot));
-            ItemMeta meta = hotBarButtons.get(PluginManager.toMainButtonSlot).getItemMeta();
+        if (hotBarButtons.containsKey(GameBoxSettings.toMainButtonSlot)) {
+            Button main = new Button(hotBarButtons.get(GameBoxSettings.toMainButtonSlot));
+            ItemMeta meta = hotBarButtons.get(GameBoxSettings.toMainButtonSlot).getItemMeta();
             main.setItemMeta(meta);
             main.setAction(ClickAction.OPEN_MAIN_GUI);
-            setLowerButton(main, PluginManager.toMainButtonSlot);
+            setLowerButton(main, GameBoxSettings.toMainButtonSlot);
         }
     }
 

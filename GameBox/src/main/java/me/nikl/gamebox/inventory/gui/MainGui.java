@@ -2,11 +2,9 @@ package me.nikl.gamebox.inventory.gui;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
-import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
-import me.nikl.gamebox.inventory.button.AButton;
 import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.button.ButtonFactory;
 import me.nikl.gamebox.inventory.button.DisplayButton;
@@ -15,13 +13,10 @@ import me.nikl.gamebox.utility.InventoryUtility;
 import me.nikl.gamebox.utility.ItemStackUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.material.MaterialData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -65,12 +60,12 @@ public class MainGui extends AGui {
         Map<Integer, ItemStack> hotBarButtons = plugin.getPluginManager().getHotBarButtons();
 
         // set lower grid
-        if (hotBarButtons.containsKey(PluginManager.exitButtonSlot)) {
-            Button exit = new Button(hotBarButtons.get(PluginManager.exitButtonSlot));
-            ItemMeta meta = hotBarButtons.get(PluginManager.exitButtonSlot).getItemMeta();
+        if (hotBarButtons.containsKey(GameBoxSettings.exitButtonSlot)) {
+            Button exit = new Button(hotBarButtons.get(GameBoxSettings.exitButtonSlot));
+            ItemMeta meta = hotBarButtons.get(GameBoxSettings.exitButtonSlot).getItemMeta();
             exit.setItemMeta(meta);
             exit.setAction(ClickAction.CLOSE);
-            setLowerButton(exit, PluginManager.exitButtonSlot);
+            setLowerButton(exit, GameBoxSettings.exitButtonSlot);
         }
     }
 

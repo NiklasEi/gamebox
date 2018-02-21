@@ -23,6 +23,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
@@ -36,7 +37,7 @@ import java.util.logging.Level;
 /**
  * @author Niklas Eicker
  */
-public abstract class AGui {
+public abstract class AGui implements InventoryHolder {
     protected Inventory inventory;
     protected Map<UUID, Inventory> openInventories = new HashMap<>();
     protected Set<UUID> inGui;
@@ -69,7 +70,7 @@ public abstract class AGui {
             title = title.replace("%game%", pluginManager.getGame(args[0]).getGameLang().PLAIN_NAME);
         }
 
-        this.inventory = InventoryUtility.createInventory(null, slots, title);
+        this.inventory = InventoryUtility.createInventory(this, slots, title);
     }
 
     public boolean open(Player player) {
@@ -524,5 +525,10 @@ public abstract class AGui {
 
     public String getTitle() {
         return title;
+    }
+
+    @Override
+    public Inventory getInventory(){
+        return this.inventory;
     }
 }

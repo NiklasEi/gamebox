@@ -59,7 +59,7 @@ public class StartMultiplayerGamePage extends GameGuiPage {
         GameBox.debug("loading inventory");
         invitations.put(uniqueId, new ArrayList<>());
         invitationButtons.put(uniqueId, new Button[inventory.getSize()]);
-        Inventory inv = InventoryUtility.createInventory(null, 54, "Your invite inv.");
+        Inventory inv = InventoryUtility.createInventory(this, 54, "Your invite inv.");
         inv.setContents(inventory.getContents().clone());
 
         openInventories.put(uniqueId, inv);

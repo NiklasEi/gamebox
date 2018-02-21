@@ -42,21 +42,21 @@ public class Shop extends AGui {
 
 
         // set lower grid
-        if (hotBarButtons.get(PluginManager.exitButtonSlot) != null) {
-            Button exit = new Button(hotBarButtons.get(PluginManager.exitButtonSlot));
-            ItemMeta meta = hotBarButtons.get(PluginManager.exitButtonSlot).getItemMeta();
+        if (hotBarButtons.get(GameBoxSettings.exitButtonSlot) != null) {
+            Button exit = new Button(hotBarButtons.get(GameBoxSettings.exitButtonSlot));
+            ItemMeta meta = hotBarButtons.get(GameBoxSettings.exitButtonSlot).getItemMeta();
             exit.setItemMeta(meta);
             exit.setAction(ClickAction.CLOSE);
-            setLowerButton(exit, PluginManager.exitButtonSlot);
+            setLowerButton(exit, GameBoxSettings.exitButtonSlot);
         }
 
 
-        if (hotBarButtons.get(PluginManager.toMainButtonSlot) != null) {
-            Button main = new Button(hotBarButtons.get(PluginManager.toMainButtonSlot));
-            ItemMeta meta = hotBarButtons.get(PluginManager.toMainButtonSlot).getItemMeta();
+        if (hotBarButtons.get(GameBoxSettings.toMainButtonSlot) != null) {
+            Button main = new Button(hotBarButtons.get(GameBoxSettings.toMainButtonSlot));
+            ItemMeta meta = hotBarButtons.get(GameBoxSettings.toMainButtonSlot).getItemMeta();
             main.setItemMeta(meta);
             main.setAction(ClickAction.OPEN_MAIN_GUI);
-            setLowerButton(main, PluginManager.toMainButtonSlot);
+            setLowerButton(main, GameBoxSettings.toMainButtonSlot);
         }
 
 

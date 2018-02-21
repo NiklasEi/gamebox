@@ -1,7 +1,7 @@
 package me.nikl.gamebox.inventory.gui.game;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.PluginManager;
+import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.button.Button;
@@ -21,13 +21,13 @@ public class GameGuiPage extends GameGui {
         Map<Integer, ItemStack> hotBarButtons = plugin.getPluginManager().getHotBarButtons();
 
         // set lower grid
-        if (hotBarButtons.get(PluginManager.toGameButtonSlot) != null) {
-            Button gameGUI = new Button(hotBarButtons.get(PluginManager.toGameButtonSlot));
-            ItemMeta meta = hotBarButtons.get(PluginManager.toGameButtonSlot).getItemMeta();
+        if (hotBarButtons.get(GameBoxSettings.toGameButtonSlot) != null) {
+            Button gameGUI = new Button(hotBarButtons.get(GameBoxSettings.toGameButtonSlot));
+            ItemMeta meta = hotBarButtons.get(GameBoxSettings.toGameButtonSlot).getItemMeta();
             gameGUI.setItemMeta(meta);
             gameGUI.setAction(ClickAction.OPEN_GAME_GUI);
             gameGUI.setArgs(gameID, GUIManager.MAIN_GAME_GUI);
-            setLowerButton(gameGUI, PluginManager.toGameButtonSlot);
+            setLowerButton(gameGUI, GameBoxSettings.toGameButtonSlot);
         }
     }
 }
