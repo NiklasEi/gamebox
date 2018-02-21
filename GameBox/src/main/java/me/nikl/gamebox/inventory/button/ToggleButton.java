@@ -1,6 +1,7 @@
 package me.nikl.gamebox.inventory.button;
 
 import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 
@@ -20,8 +21,8 @@ public class ToggleButton extends AButton {
     // ToDo: get rid of MaterialData / Data usage for mc 1.13
 
     @Deprecated
-    public ToggleButton(MaterialData mat, int count, MaterialData mat2) {
-        super(mat.toItemStack(count));
+    public ToggleButton(ItemStack item, MaterialData mat2) {
+        super(item);
         this.toggleData = mat2;
     }
 
@@ -53,5 +54,14 @@ public class ToggleButton extends AButton {
 
     public void setToggleLore(List<String> toggleLore) {
         this.toggleLore = toggleLore;
+    }
+
+    @Override
+    public AButton clone() {
+        ToggleButton clone = new ToggleButton(this, toggled?getData():toggleData);
+        clone.setActionAndArgs(this.action, this.args);
+        clone.setToggleDisplayName(toggled?getItemMeta().getDisplayName():toggleDisplayName);
+        clone.setToggleLore(toggled?getItemMeta().getLore():toggleLore);
+        return clone;
     }
 }

@@ -27,6 +27,12 @@ public class DisplayButton extends AButton {
         displays.put(replace, display);
     }
 
+    public DisplayButton update(String replace, Object display) {
+        addDisplay(replace, display);
+        update();
+        return this;
+    }
+
     public void update(){
         List<String > updatedLore = new ArrayList<>(defaultLore);
         String updatedName = displayName;
