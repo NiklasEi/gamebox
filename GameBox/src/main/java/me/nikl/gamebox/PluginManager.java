@@ -600,7 +600,7 @@ public class PluginManager implements Listener {
      */
     public void registerGame(Game game) {
         games.put(game.getGameID(), game);
-        Permission.addGameID(game.getGameID());
+        Permission.registerModuleID(game.getGameID());
         gamesRegistered++;
     }
 

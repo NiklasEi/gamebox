@@ -6,6 +6,8 @@ import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.events.EnterGameBoxEvent;
 import me.nikl.gamebox.inventory.button.Button;
+import me.nikl.gamebox.inventory.button.ButtonFactory;
+import me.nikl.gamebox.inventory.button.DisplayButton;
 import me.nikl.gamebox.inventory.gui.AGui;
 import me.nikl.gamebox.inventory.gui.MainGui;
 import me.nikl.gamebox.inventory.gui.game.GameGui;
@@ -42,7 +44,7 @@ public class GUIManager {
     private MainGui mainGui;
     private int titleMessageSeconds = 3;
     private ShopManager shopManager;
-    private Button tokenButton;
+    private DisplayButton tokenButton;
 
     public GUIManager(GameBox plugin) {
         this.plugin = plugin;
@@ -56,10 +58,7 @@ public class GUIManager {
     }
 
     private void loadTokenButton() {
-        ItemStack tokensItem = new MaterialData(Material.GOLD_NUGGET).toItemStack(1);
-        tokensItem = plugin.getNMS().addGlow(tokensItem);
-        tokenButton = new Button(tokensItem);
-        tokenButton.setAction(ClickAction.NOTHING);
+        tokenButton = ButtonFactory.createTokenButton(plugin.lang, 0);
     }
 
 
@@ -314,7 +313,7 @@ public class GUIManager {
         shopManager.updateTokens(gbPlayer);
     }
 
-    public Button getTokenButton() {
+    public DisplayButton getTokenButton() {
         return tokenButton.clone();
     }
 

@@ -5,6 +5,7 @@ import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
+import me.nikl.gamebox.inventory.button.AButton;
 import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.button.ButtonFactory;
 import me.nikl.gamebox.inventory.menu.PerPlayerMenu;
@@ -83,7 +84,7 @@ public class MainMenu extends PerPlayerMenu {
     }
 
     private void preparePlayerInventory(Player player) {
-        Button[] buttons = upperGrid.clone();
+        AButton[] buttons = upperGrid.clone();
         GBPlayer gbPlayer = pluginManager.getPlayer(player.getUniqueId());
         if(gbPlayer == null){
             playerInventories.put(player.getUniqueId(), getNewInventory(player));

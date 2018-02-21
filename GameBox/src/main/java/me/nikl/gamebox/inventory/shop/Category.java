@@ -29,21 +29,15 @@ import java.util.UUID;
  * @author Niklas Eicker
  */
 public class Category {
-
     private Map<Integer, Page> pages;
     private String key;
     private ShopManager shopManager;
     private GUIManager guiManager;
     private GameBox plugin;
-
     private ItemStack back, forward;
-
     private FileConfiguration shop;
-
     private Map<String, ShopItem> shopItems = new HashMap<>();
-
     private int slots = 27, itemsPerPage = 18, backSlot = 21, forSlot = 23;
-
 
     public Category(GameBox plugin, ShopManager shopManager, GUIManager guiManager, String key) {
         this.key = key;

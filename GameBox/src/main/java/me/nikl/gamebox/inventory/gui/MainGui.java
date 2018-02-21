@@ -6,7 +6,10 @@ import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
+import me.nikl.gamebox.inventory.button.AButton;
 import me.nikl.gamebox.inventory.button.Button;
+import me.nikl.gamebox.inventory.button.ButtonFactory;
+import me.nikl.gamebox.inventory.button.DisplayButton;
 import me.nikl.gamebox.inventory.button.ToggleButton;
 import me.nikl.gamebox.utility.InventoryUtility;
 import me.nikl.gamebox.utility.ItemStackUtility;
@@ -29,7 +32,7 @@ import java.util.UUID;
  */
 public class MainGui extends AGui {
     private Map<UUID, ToggleButton> soundButtons = new HashMap<>();
-    private Map<UUID, Button> tokenButtons = new HashMap<>();
+    private Map<UUID, DisplayButton> tokenButtons = new HashMap<>();
 
 
     private int soundToggleSlot = 52;
@@ -45,23 +48,14 @@ public class MainGui extends AGui {
         setButton(help, 53);
 
 
-        ToggleButton soundToggle = new ToggleButton(new MaterialData(Material.RECORD_6), 1, new MaterialData(Material.RECORD_4));
-        ItemMeta meta = soundToggle.getItemMeta();
-        meta.addItemFlags(ItemFlag.values());
-        meta.setDisplayName(plugin.lang.BUTTON_SOUND_ON_NAME);
-        meta.setLore(plugin.lang.BUTTON_SOUND_ON_LORE);
-        soundToggle.setItemMeta(meta);
-        soundToggle.setToggleDisplayName(plugin.lang.BUTTON_SOUND_OFF_NAME);
-        soundToggle.setToggleLore(plugin.lang.BUTTON_SOUND_OFF_LORE);
-        soundToggle.setAction(ClickAction.TOGGLE);
-        soundToggle.setArgs("sound");
+        ToggleButton soundToggle = ButtonFactory.createToggleButton(plugin.lang);
         setButton(soundToggle, soundToggleSlot);
 
 
         if (GameBoxSettings.tokensEnabled) {
             // set a placeholder in the general main gui
-            Button tokens = guiManager.getTokenButton();
-            meta = tokens.getItemMeta();
+            DisplayButton tokens = guiManager.getTokenButton();
+            ItemMeta meta = tokens.getItemMeta();
             meta.setDisplayName("Placeholder");
             tokens.setItemMeta(meta);
             setButton(tokens, tokenButtonSlot);
@@ -73,7 +67,7 @@ public class MainGui extends AGui {
         // set lower grid
         if (hotBarButtons.containsKey(PluginManager.exitButtonSlot)) {
             Button exit = new Button(hotBarButtons.get(PluginManager.exitButtonSlot));
-            meta = hotBarButtons.get(PluginManager.exitButtonSlot).getItemMeta();
+            ItemMeta meta = hotBarButtons.get(PluginManager.exitButtonSlot).getItemMeta();
             exit.setItemMeta(meta);
             exit.setAction(ClickAction.CLOSE);
             setLowerButton(exit, PluginManager.exitButtonSlot);
@@ -104,20 +98,11 @@ public class MainGui extends AGui {
     }
 
     public void loadMainGui(GBPlayer player) {
-        ToggleButton soundToggle = new ToggleButton(new MaterialData(Material.RECORD_6), 1, new MaterialData(Material.RECORD_4));
-        ItemMeta meta = soundToggle.getItemMeta();
-        meta.addItemFlags(ItemFlag.values());
-        meta.setDisplayName(plugin.lang.BUTTON_SOUND_ON_NAME);
-        meta.setLore(plugin.lang.BUTTON_SOUND_ON_LORE);
-        soundToggle.setItemMeta(meta);
-        soundToggle.setToggleDisplayName(plugin.lang.BUTTON_SOUND_OFF_NAME);
-        soundToggle.setToggleLore(plugin.lang.BUTTON_SOUND_OFF_LORE);
-        soundToggle.setAction(ClickAction.TOGGLE);
-        soundToggle.setArgs("sound");
+        ToggleButton soundToggle = ButtonFactory.createToggleButton(plugin.lang);
         soundButtons.put(player.getUuid(), soundToggle);
 
         if (GameBoxSettings.tokensEnabled) {
-            Button tokens = guiManager.getTokenButton();
+            DisplayButton tokens = guiManager.getTokenButton();
             tokenButtons.put(player.getUuid(), tokens);
         }
 

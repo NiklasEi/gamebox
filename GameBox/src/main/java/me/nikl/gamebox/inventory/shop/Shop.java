@@ -6,7 +6,9 @@ import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
+import me.nikl.gamebox.inventory.button.AButton;
 import me.nikl.gamebox.inventory.button.Button;
+import me.nikl.gamebox.inventory.button.DisplayButton;
 import me.nikl.gamebox.inventory.gui.AGui;
 import me.nikl.gamebox.utility.InventoryUtility;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -26,7 +28,7 @@ import java.util.UUID;
  *         class to extend upon for shop GUIs
  */
 public class Shop extends AGui {
-    protected Map<UUID, Button> tokenButtons = new HashMap<>();
+    protected Map<UUID, AButton> tokenButtons = new HashMap<>();
     protected int tokenButtonSlot;
     FileConfiguration shop;
     ShopManager shopManager;
@@ -62,7 +64,7 @@ public class Shop extends AGui {
 
         if (GameBoxSettings.tokensEnabled) {
             // set a placeholder in the general main gui
-            Button tokens = guiManager.getTokenButton();
+            DisplayButton tokens = guiManager.getTokenButton();
             ItemMeta meta = tokens.getItemMeta();
             meta.setDisplayName("Placeholder");
             tokens.setItemMeta(meta);
@@ -82,7 +84,7 @@ public class Shop extends AGui {
     void loadPlayerShop(GBPlayer player) {
 
         if (GameBoxSettings.tokensEnabled) {
-            Button tokens = guiManager.getTokenButton();
+            DisplayButton tokens = guiManager.getTokenButton();
             tokenButtons.put(player.getUuid(), tokens);
         }
 

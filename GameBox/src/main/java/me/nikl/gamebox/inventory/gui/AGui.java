@@ -7,6 +7,7 @@ import me.nikl.gamebox.games.GameManager;
 import me.nikl.gamebox.games.exceptions.GameStartException;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
+import me.nikl.gamebox.inventory.button.AButton;
 import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.gui.game.GameGui;
 import me.nikl.gamebox.inventory.gui.game.StartMultiplayerGamePage;
@@ -33,43 +34,29 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 /**
- * Created by niklas on 2/5/17.
+ * @author Niklas Eicker
  */
 public abstract class AGui {
-
     protected Inventory inventory;
     protected Map<UUID, Inventory> openInventories = new HashMap<>();
     protected Set<UUID> inGui;
-
     protected GUIManager guiManager;
     protected GameBox plugin;
     protected PluginManager pluginManager;
-
     protected float volume = 0.5f, pitch = 10f;
-
-    protected Button[] grid;
-    protected Button[] lowerGrid = new Button[36];
-
+    protected AButton[] grid;
+    protected AButton[] lowerGrid = new Button[36];
     protected String[] args;
-
     protected String title;
     private Sound successfulClick, unsuccessfulClick;
     private int titleMessageSeconds;
 
-    /**
-     * Constructor for an AGui
-     *
-     * @param plugin     instance
-     * @param guiManager manager instance
-     * @param slots      number of slots in the gui
-     * @param args       keys for the gui
-     */
     public AGui(GameBox plugin, GUIManager guiManager, int slots, String[] args, String title) {
         this.plugin = plugin;
         this.args = args;
         this.guiManager = guiManager;
         this.pluginManager = plugin.getPluginManager();
-        this.grid = new Button[slots];
+        this.grid = new AButton[slots];
         inGui = new HashSet<>();
         this.titleMessageSeconds = guiManager.getTitleMessageSeconds();
 
@@ -438,7 +425,7 @@ public abstract class AGui {
 
     public void onInvClick(InventoryClickEvent event) {
         if (event.getCurrentItem() == null) return;
-        Button button = grid[event.getRawSlot()];
+        AButton button = grid[event.getRawSlot()];
         boolean perInvitation = false;
         StartMultiplayerGamePage mpGui = null;
         if (button == null) {
@@ -483,12 +470,12 @@ public abstract class AGui {
         return inGui.contains(player.getUniqueId());
     }
 
-    public void setButton(Button button, int slot) {
+    public void setButton(AButton button, int slot) {
         grid[slot] = button;
         this.inventory.setItem(slot, button);
     }
 
-    public void setButton(Button button) {
+    public void setButton(AButton button) {
         int i = 0;
         while (grid[i] != null) {
             i++;
@@ -496,11 +483,11 @@ public abstract class AGui {
         setButton(button, i);
     }
 
-    public void setLowerButton(Button button, int slot) {
+    public void setLowerButton(AButton button, int slot) {
         lowerGrid[slot] = button;
     }
 
-    public void setLowerButton(Button button) {
+    public void setLowerButton(AButton button) {
         int i = 0;
         while (lowerGrid[i] != null) {
             i++;

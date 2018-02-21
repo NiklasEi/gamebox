@@ -1,14 +1,15 @@
 package me.nikl.gamebox.inventory.menu;
 
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.inventory.button.AButton;
 import me.nikl.gamebox.inventory.button.Button;
 
 /**
  * Created by nikl on 21.02.18.
  */
 public abstract class StaticMenu extends GameBoxMenu {
-    protected Button[] upperGrid;
-    protected Button[] lowerGrid = new Button[36];
+    protected AButton[] upperGrid;
+    protected AButton[] lowerGrid = new Button[36];
 
     public StaticMenu(GameBox gameBox) {
         super(gameBox);
