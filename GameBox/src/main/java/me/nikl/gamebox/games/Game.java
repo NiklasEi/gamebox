@@ -7,7 +7,7 @@ import me.nikl.gamebox.Module;
 import me.nikl.gamebox.data.toplist.SaveType;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
-import me.nikl.gamebox.inventory.button.AButton;
+import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.gui.game.GameGui;
 import me.nikl.gamebox.inventory.gui.game.StartMultiplayerGamePage;
 import me.nikl.gamebox.inventory.gui.game.TopListPage;
@@ -164,7 +164,7 @@ public abstract class Game {
                     Bukkit.getLogger().log(Level.WARNING, "     invalid material data");
                     continue;
                 }
-                AButton button = new AButton(mat);
+                Button button = new Button(mat);
                 ItemMeta meta = button.getItemMeta();
                 if (buttonSec.isString("displayName")) {
                     displayName = StringUtility.color(buttonSec.getString("displayName"));
@@ -261,7 +261,7 @@ public abstract class Game {
                     gameBox.getLogger().log(Level.WARNING, "     invalid material data");
                     continue;
                 }
-                AButton button = new AButton(mat);
+                Button button = new Button(mat);
                 ItemMeta meta = button.getItemMeta();
                 if (buttonSec.isString("displayName")) {
                     meta.setDisplayName(StringUtility.color(buttonSec.getString("displayName")));

@@ -4,11 +4,11 @@ import me.nikl.gamebox.inventory.ClickAction;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * Created by niklas on 2/5/17.
+ * @author Niklas Eicker
  */
-public class AButton extends ItemStack {
-    private ClickAction action;
-    private String[] args;
+public abstract class AButton extends ItemStack {
+    protected ClickAction action;
+    protected String[] args;
 
 
     public AButton(ItemStack item) {
@@ -38,10 +38,5 @@ public class AButton extends ItemStack {
         this.args = args;
     }
 
-    @Override
-    public AButton clone() {
-        AButton clone = new AButton(this);
-        clone.setActionAndArgs(this.action, this.args);
-        return clone;
-    }
+    public abstract AButton clone();
 }

@@ -4,7 +4,7 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
-import me.nikl.gamebox.inventory.button.AButton;
+import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.gui.AGui;
 import me.nikl.gamebox.utility.ItemStackUtility;
 import me.nikl.gamebox.utility.StringUtility;
@@ -72,7 +72,7 @@ public class Category {
         ConfigurationSection pageSection = shop.getConfigurationSection("shop.categories." + key + ".items");
         if (pageSection == null) return;
 
-        Map<Integer, AButton> allItems = new HashMap<>();
+        Map<Integer, Button> allItems = new HashMap<>();
         ItemStack itemStack;
         ItemMeta meta;
         List<String> lore = new ArrayList<>();
@@ -161,7 +161,7 @@ public class Category {
 
 
             // load button
-            AButton button = new AButton(buttonItem);
+            Button button = new Button(buttonItem);
             button.setAction(ClickAction.BUY);
 
 
@@ -203,13 +203,13 @@ public class Category {
             if ((counter) % itemsPerPage == 0) {
                 pages.put(counter / itemsPerPage, (page = new Page(plugin, guiManager, slots, counter / itemsPerPage, shopManager, new String[]{key, String.valueOf(counter / itemsPerPage)})));
                 if (counter / itemsPerPage == 0) {
-                    page.setButton(new AButton(back).setActionAndArgs(ClickAction.OPEN_SHOP_PAGE, ShopManager.MAIN, "0"), backSlot);
+                    page.setButton(new Button(back).setActionAndArgs(ClickAction.OPEN_SHOP_PAGE, ShopManager.MAIN, "0"), backSlot);
                 } else {
-                    page.setButton(new AButton(back).setActionAndArgs(ClickAction.OPEN_SHOP_PAGE, key, String.valueOf(counter / itemsPerPage - 1)), backSlot);
+                    page.setButton(new Button(back).setActionAndArgs(ClickAction.OPEN_SHOP_PAGE, key, String.valueOf(counter / itemsPerPage - 1)), backSlot);
                 }
 
                 if (pageNum - 1 > counter / itemsPerPage) {
-                    page.setButton(new AButton(forward).setActionAndArgs(ClickAction.OPEN_SHOP_PAGE, key, String.valueOf(counter / itemsPerPage + 1)), forSlot);
+                    page.setButton(new Button(forward).setActionAndArgs(ClickAction.OPEN_SHOP_PAGE, key, String.valueOf(counter / itemsPerPage + 1)), forSlot);
                 }
 
             }

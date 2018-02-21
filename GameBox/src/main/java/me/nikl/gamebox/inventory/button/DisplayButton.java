@@ -48,6 +48,7 @@ public class DisplayButton extends AButton {
         setItemMeta(meta);
     }
 
+    @Override
     public DisplayButton clone(){
         DisplayButton toReturn = new DisplayButton(this, displayName, defaultLore);
         toReturn.displays = new HashMap<>(this.displays);

@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author Niklas Eicker
  */
-public class ToggleButton extends AButton {
+public class ToggleButton extends Button {
     private boolean toggled = false;
     private MaterialData toggleData;
     private String toggleDisplayName = "missing name";
@@ -57,7 +57,7 @@ public class ToggleButton extends AButton {
     }
 
     @Override
-    public AButton clone() {
+    public Button clone() {
         ToggleButton clone = new ToggleButton(this, toggled?getData():toggleData);
         clone.setActionAndArgs(this.action, this.args);
         clone.setToggleDisplayName(toggled?getItemMeta().getDisplayName():toggleDisplayName);

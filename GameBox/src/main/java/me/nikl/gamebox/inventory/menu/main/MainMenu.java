@@ -1,27 +1,19 @@
 package me.nikl.gamebox.inventory.menu.main;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
-import me.nikl.gamebox.inventory.button.AButton;
 import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.button.ButtonFactory;
-import me.nikl.gamebox.inventory.button.DisplayButton;
-import me.nikl.gamebox.inventory.button.ToggleButton;
 import me.nikl.gamebox.inventory.menu.PerPlayerMenu;
-import me.nikl.gamebox.utility.InventoryUtility;
 import me.nikl.gamebox.utility.ItemStackUtility;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.material.MaterialData;
 
 import java.util.Map;
 
@@ -41,7 +33,7 @@ public class MainMenu extends PerPlayerMenu {
         this.pluginManager = gameBox.getPluginManager();
         this.guiManager = pluginManager.getGuiManager();
 
-        AButton help = new Button(gameBox.getNMS().addGlow(ItemStackUtility.createBookWithText(gameBox.lang.BUTTON_MAIN_MENU_INFO)));
+        Button help = new Button(gameBox.getNMS().addGlow(ItemStackUtility.createBookWithText(gameBox.lang.BUTTON_MAIN_MENU_INFO)));
         help.setAction(ClickAction.NOTHING);
         setButton(help, 53);
 
@@ -51,7 +43,7 @@ public class MainMenu extends PerPlayerMenu {
 
         // set lower grid
         if (hotBarButtons.containsKey(pluginManager.exitButtonSlot)) {
-            AButton exit = new Button(hotBarButtons.get(pluginManager.exitButtonSlot));
+            Button exit = new Button(hotBarButtons.get(pluginManager.exitButtonSlot));
             ItemMeta meta = hotBarButtons.get(pluginManager.exitButtonSlot).getItemMeta();
             exit.setItemMeta(meta);
             exit.setAction(ClickAction.CLOSE);
@@ -91,7 +83,7 @@ public class MainMenu extends PerPlayerMenu {
     }
 
     private void preparePlayerInventory(Player player) {
-        AButton[] buttons = upperGrid.clone();
+        Button[] buttons = upperGrid.clone();
         GBPlayer gbPlayer = pluginManager.getPlayer(player.getUniqueId());
         if(gbPlayer == null){
             playerInventories.put(player.getUniqueId(), getNewInventory(player));

@@ -5,7 +5,7 @@ import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.games.Game;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
-import me.nikl.gamebox.inventory.button.AButton;
+import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.gui.AGui;
 import me.nikl.gamebox.utility.ItemStackUtility;
 import org.bukkit.inventory.ItemStack;
@@ -40,7 +40,7 @@ public class GameGui extends AGui {
 
         // set lower grid
         if (hotBarButtons.containsKey(PluginManager.exitButtonSlot)) {
-            AButton exit = new AButton(hotBarButtons.get(PluginManager.exitButtonSlot));
+            Button exit = new Button(hotBarButtons.get(PluginManager.exitButtonSlot));
             ItemMeta meta = hotBarButtons.get(PluginManager.exitButtonSlot).getItemMeta();
             exit.setItemMeta(meta);
             exit.setAction(ClickAction.CLOSE);
@@ -49,7 +49,7 @@ public class GameGui extends AGui {
 
 
         if (hotBarButtons.containsKey(PluginManager.toMainButtonSlot)) {
-            AButton main = new AButton(hotBarButtons.get(PluginManager.toMainButtonSlot));
+            Button main = new Button(hotBarButtons.get(PluginManager.toMainButtonSlot));
             ItemMeta meta = hotBarButtons.get(PluginManager.toMainButtonSlot).getItemMeta();
             main.setItemMeta(meta);
             main.setAction(ClickAction.OPEN_MAIN_GUI);
@@ -78,7 +78,7 @@ public class GameGui extends AGui {
      * @param list text that will be displayed on the button
      */
     public void setHelpButton(List<String> list) {
-        AButton help = new AButton(plugin.getNMS().addGlow(ItemStackUtility.createBookWithText(list)));
+        Button help = new Button(plugin.getNMS().addGlow(ItemStackUtility.createBookWithText(list)));
         help.setAction(ClickAction.NOTHING);
 
         setButton(help, inventory.getSize() - 1);

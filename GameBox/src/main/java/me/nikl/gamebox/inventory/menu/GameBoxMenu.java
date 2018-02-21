@@ -2,16 +2,13 @@ package me.nikl.gamebox.inventory.menu;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.inventory.InventoryTitleMessenger;
-import me.nikl.gamebox.inventory.button.AButton;
 import me.nikl.gamebox.utility.InventoryUtility;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 

@@ -7,7 +7,7 @@ import me.nikl.gamebox.games.GameManager;
 import me.nikl.gamebox.games.exceptions.GameStartException;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
-import me.nikl.gamebox.inventory.button.AButton;
+import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.gui.game.GameGui;
 import me.nikl.gamebox.inventory.gui.game.StartMultiplayerGamePage;
 import me.nikl.gamebox.inventory.shop.Shop;
@@ -47,8 +47,8 @@ public abstract class AGui {
 
     protected float volume = 0.5f, pitch = 10f;
 
-    protected AButton[] grid;
-    protected AButton[] lowerGrid = new AButton[36];
+    protected Button[] grid;
+    protected Button[] lowerGrid = new Button[36];
 
     protected String[] args;
 
@@ -69,7 +69,7 @@ public abstract class AGui {
         this.args = args;
         this.guiManager = guiManager;
         this.pluginManager = plugin.getPluginManager();
-        this.grid = new AButton[slots];
+        this.grid = new Button[slots];
         inGui = new HashSet<>();
         this.titleMessageSeconds = guiManager.getTitleMessageSeconds();
 
@@ -438,7 +438,7 @@ public abstract class AGui {
 
     public void onInvClick(InventoryClickEvent event) {
         if (event.getCurrentItem() == null) return;
-        AButton button = grid[event.getRawSlot()];
+        Button button = grid[event.getRawSlot()];
         boolean perInvitation = false;
         StartMultiplayerGamePage mpGui = null;
         if (button == null) {
@@ -483,12 +483,12 @@ public abstract class AGui {
         return inGui.contains(player.getUniqueId());
     }
 
-    public void setButton(AButton button, int slot) {
+    public void setButton(Button button, int slot) {
         grid[slot] = button;
         this.inventory.setItem(slot, button);
     }
 
-    public void setButton(AButton button) {
+    public void setButton(Button button) {
         int i = 0;
         while (grid[i] != null) {
             i++;
@@ -496,11 +496,11 @@ public abstract class AGui {
         setButton(button, i);
     }
 
-    public void setLowerButton(AButton button, int slot) {
+    public void setLowerButton(Button button, int slot) {
         lowerGrid[slot] = button;
     }
 
-    public void setLowerButton(AButton button) {
+    public void setLowerButton(Button button) {
         int i = 0;
         while (lowerGrid[i] != null) {
             i++;

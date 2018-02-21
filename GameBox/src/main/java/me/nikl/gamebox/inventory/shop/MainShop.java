@@ -3,7 +3,7 @@ package me.nikl.gamebox.inventory.shop;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
-import me.nikl.gamebox.inventory.button.AButton;
+import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.utility.ItemStackUtility;
 import me.nikl.gamebox.utility.StringUtility;
 import org.bukkit.Bukkit;
@@ -44,7 +44,7 @@ class MainShop extends Shop {
             if (category.getBoolean("glow")) {
                 buttonItem = plugin.getNMS().addGlow(buttonItem);
             }
-            AButton button = new AButton(buttonItem);
+            Button button = new Button(buttonItem);
             ItemMeta meta = button.getItemMeta();
 
             if (category.isString("displayName")) {

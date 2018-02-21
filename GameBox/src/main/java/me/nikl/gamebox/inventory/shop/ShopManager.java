@@ -7,7 +7,7 @@ import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.events.EnterGameBoxEvent;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
-import me.nikl.gamebox.inventory.button.AButton;
+import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.gui.AGui;
 import me.nikl.gamebox.utility.ItemStackUtility;
 import me.nikl.gamebox.utility.Permission;
@@ -43,7 +43,7 @@ public class ShopManager {
     protected GUIManager guiManager;
     FileConfiguration shop;
     private File shopFile;
-    private AButton mainButton;
+    private Button mainButton;
     private boolean closed;
 
     private GameBox plugin;
@@ -70,7 +70,7 @@ public class ShopManager {
 
         ItemStack mainItem = ItemStackUtility.getItemStack(shop.getString("shop.button.materialData", Material.STORAGE_MINECART.toString()));
         if (shop.getBoolean("shop.button.glow")) mainItem = plugin.getNMS().addGlow(mainItem);
-        mainButton = new AButton(mainItem);
+        mainButton = new Button(mainItem);
         ItemMeta meta = mainItem.getItemMeta();
         if (shop.isString("shop.button.displayName")) {
             meta.setDisplayName(StringUtility.color(shop.getString("shop.button.displayName")));
@@ -101,7 +101,7 @@ public class ShopManager {
         }
     }
 
-    public AButton getMainButton() {
+    public Button getMainButton() {
         return mainButton;
     }
 

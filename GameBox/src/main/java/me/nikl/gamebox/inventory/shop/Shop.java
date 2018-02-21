@@ -6,7 +6,7 @@ import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
-import me.nikl.gamebox.inventory.button.AButton;
+import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.gui.AGui;
 import me.nikl.gamebox.utility.InventoryUtility;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -26,7 +26,7 @@ import java.util.UUID;
  *         class to extend upon for shop GUIs
  */
 public class Shop extends AGui {
-    protected Map<UUID, AButton> tokenButtons = new HashMap<>();
+    protected Map<UUID, Button> tokenButtons = new HashMap<>();
     protected int tokenButtonSlot;
     FileConfiguration shop;
     ShopManager shopManager;
@@ -41,7 +41,7 @@ public class Shop extends AGui {
 
         // set lower grid
         if (hotBarButtons.get(PluginManager.exitButtonSlot) != null) {
-            AButton exit = new AButton(hotBarButtons.get(PluginManager.exitButtonSlot));
+            Button exit = new Button(hotBarButtons.get(PluginManager.exitButtonSlot));
             ItemMeta meta = hotBarButtons.get(PluginManager.exitButtonSlot).getItemMeta();
             exit.setItemMeta(meta);
             exit.setAction(ClickAction.CLOSE);
@@ -50,7 +50,7 @@ public class Shop extends AGui {
 
 
         if (hotBarButtons.get(PluginManager.toMainButtonSlot) != null) {
-            AButton main = new AButton(hotBarButtons.get(PluginManager.toMainButtonSlot));
+            Button main = new Button(hotBarButtons.get(PluginManager.toMainButtonSlot));
             ItemMeta meta = hotBarButtons.get(PluginManager.toMainButtonSlot).getItemMeta();
             main.setItemMeta(meta);
             main.setAction(ClickAction.OPEN_MAIN_GUI);
@@ -62,7 +62,7 @@ public class Shop extends AGui {
 
         if (GameBoxSettings.tokensEnabled) {
             // set a placeholder in the general main gui
-            AButton tokens = guiManager.getTokenButton();
+            Button tokens = guiManager.getTokenButton();
             ItemMeta meta = tokens.getItemMeta();
             meta.setDisplayName("Placeholder");
             tokens.setItemMeta(meta);
@@ -82,7 +82,7 @@ public class Shop extends AGui {
     void loadPlayerShop(GBPlayer player) {
 
         if (GameBoxSettings.tokensEnabled) {
-            AButton tokens = guiManager.getTokenButton();
+            Button tokens = guiManager.getTokenButton();
             tokenButtons.put(player.getUuid(), tokens);
         }
 

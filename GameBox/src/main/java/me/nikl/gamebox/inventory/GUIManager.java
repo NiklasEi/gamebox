@@ -5,7 +5,7 @@ import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.events.EnterGameBoxEvent;
-import me.nikl.gamebox.inventory.button.AButton;
+import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.gui.AGui;
 import me.nikl.gamebox.inventory.gui.MainGui;
 import me.nikl.gamebox.inventory.gui.game.GameGui;
@@ -42,7 +42,7 @@ public class GUIManager {
     private MainGui mainGui;
     private int titleMessageSeconds = 3;
     private ShopManager shopManager;
-    private AButton tokenButton;
+    private Button tokenButton;
 
     public GUIManager(GameBox plugin) {
         this.plugin = plugin;
@@ -58,7 +58,7 @@ public class GUIManager {
     private void loadTokenButton() {
         ItemStack tokensItem = new MaterialData(Material.GOLD_NUGGET).toItemStack(1);
         tokensItem = plugin.getNMS().addGlow(tokensItem);
-        tokenButton = new AButton(tokensItem);
+        tokenButton = new Button(tokensItem);
         tokenButton.setAction(ClickAction.NOTHING);
     }
 
@@ -262,7 +262,7 @@ public class GUIManager {
         gameGuis.computeIfAbsent(args[0], k -> new HashMap<>());
         gameGuis.get(args[0]).put(args[1], gui);
         GameBox.debug("registered gamegui: " + args[0] + ", " + args[1]);
-        AButton gameButton = new AButton(button);
+        Button gameButton = new Button(button);
         gameButton.setItemMeta(button.getItemMeta());
         gameButton.setAction(ClickAction.OPEN_GAME_GUI);
         gameButton.setArgs(args[0], args[1]);
@@ -314,7 +314,7 @@ public class GUIManager {
         shopManager.updateTokens(gbPlayer);
     }
 
-    public AButton getTokenButton() {
+    public Button getTokenButton() {
         return tokenButton.clone();
     }
 

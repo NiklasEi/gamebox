@@ -3,7 +3,7 @@ package me.nikl.gamebox.inventory.gui.game;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
-import me.nikl.gamebox.inventory.button.AButton;
+import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.utility.InventoryUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -25,13 +25,13 @@ import java.util.UUID;
  */
 public class StartMultiplayerGamePage extends GameGuiPage {
     private Map<UUID, ArrayList<UUID>> invitations = new HashMap<>();
-    private Map<UUID, AButton[]> invitationButtons = new HashMap<>();
+    private Map<UUID, Button[]> invitationButtons = new HashMap<>();
 
     public StartMultiplayerGamePage(GameBox plugin, GUIManager guiManager, int slots, String gameID, String key, String title) {
         super(plugin, guiManager, slots, gameID, key, title);
 
 
-        AButton button = new AButton(new MaterialData(Material.IRON_BLOCK).toItemStack(1));
+        Button button = new Button(new MaterialData(Material.IRON_BLOCK).toItemStack(1));
         button.setAction(ClickAction.START_PLAYER_INPUT);
         button.setArgs(gameID, key);
         ItemMeta meta = button.getItemMeta();
@@ -58,7 +58,7 @@ public class StartMultiplayerGamePage extends GameGuiPage {
     private void loadInvites(UUID uniqueId) {
         GameBox.debug("loading inventory");
         invitations.put(uniqueId, new ArrayList<>());
-        invitationButtons.put(uniqueId, new AButton[inventory.getSize()]);
+        invitationButtons.put(uniqueId, new Button[inventory.getSize()]);
         Inventory inv = InventoryUtility.createInventory(null, 54, "Your invite inv.");
         inv.setContents(inventory.getContents().clone());
 
@@ -71,7 +71,7 @@ public class StartMultiplayerGamePage extends GameGuiPage {
             invitations.put(uuid2, new ArrayList<>());
         }
         if (!invitationButtons.keySet().contains(uuid2)) {
-            invitationButtons.put(uuid2, new AButton[inventory.getSize()]);
+            invitationButtons.put(uuid2, new Button[inventory.getSize()]);
         }
         invitations.get(uuid2).add(uuid1);
         updateInvitations(uuid2);
@@ -88,7 +88,7 @@ public class StartMultiplayerGamePage extends GameGuiPage {
             if (i >= inventory.getSize()) break;
             Player player1 = Bukkit.getPlayer(uuid1);
             if (player1 == null) continue;
-            AButton skull = new AButton(new MaterialData(Material.SKULL_ITEM).toItemStack(1));
+            Button skull = new Button(new MaterialData(Material.SKULL_ITEM).toItemStack(1));
             skull.setDurability((short) 3);
             SkullMeta meta = (SkullMeta) skull.getItemMeta();
             meta.setOwner(player1.getName());
@@ -117,7 +117,7 @@ public class StartMultiplayerGamePage extends GameGuiPage {
         updateInvitations(uuid2);
     }
 
-    public AButton getButton(UUID uuid, int slot) {
+    public Button getButton(UUID uuid, int slot) {
         if (invitationButtons.containsKey(uuid)) {
             return invitationButtons.get(uuid)[slot];
         }

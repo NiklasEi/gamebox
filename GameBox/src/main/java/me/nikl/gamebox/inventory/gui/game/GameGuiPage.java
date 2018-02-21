@@ -4,7 +4,7 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
-import me.nikl.gamebox.inventory.button.AButton;
+import me.nikl.gamebox.inventory.button.Button;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -22,7 +22,7 @@ public class GameGuiPage extends GameGui {
 
         // set lower grid
         if (hotBarButtons.get(PluginManager.toGameButtonSlot) != null) {
-            AButton gameGUI = new AButton(hotBarButtons.get(PluginManager.toGameButtonSlot));
+            Button gameGUI = new Button(hotBarButtons.get(PluginManager.toGameButtonSlot));
             ItemMeta meta = hotBarButtons.get(PluginManager.toGameButtonSlot).getItemMeta();
             gameGUI.setItemMeta(meta);
             gameGUI.setAction(ClickAction.OPEN_GAME_GUI);

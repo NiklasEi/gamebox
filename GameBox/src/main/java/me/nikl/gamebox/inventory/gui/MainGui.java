@@ -6,7 +6,7 @@ import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
-import me.nikl.gamebox.inventory.button.AButton;
+import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.button.ToggleButton;
 import me.nikl.gamebox.utility.InventoryUtility;
 import me.nikl.gamebox.utility.ItemStackUtility;
@@ -29,7 +29,7 @@ import java.util.UUID;
  */
 public class MainGui extends AGui {
     private Map<UUID, ToggleButton> soundButtons = new HashMap<>();
-    private Map<UUID, AButton> tokenButtons = new HashMap<>();
+    private Map<UUID, Button> tokenButtons = new HashMap<>();
 
 
     private int soundToggleSlot = 52;
@@ -40,7 +40,7 @@ public class MainGui extends AGui {
         super(plugin, guiManager, 54, new String[]{}, plugin.lang.TITLE_MAIN_GUI);
 
 
-        AButton help = new AButton(plugin.getNMS().addGlow(ItemStackUtility.createBookWithText(plugin.lang.BUTTON_MAIN_MENU_INFO)));
+        Button help = new Button(plugin.getNMS().addGlow(ItemStackUtility.createBookWithText(plugin.lang.BUTTON_MAIN_MENU_INFO)));
         help.setAction(ClickAction.NOTHING);
         setButton(help, 53);
 
@@ -60,7 +60,7 @@ public class MainGui extends AGui {
 
         if (GameBoxSettings.tokensEnabled) {
             // set a placeholder in the general main gui
-            AButton tokens = guiManager.getTokenButton();
+            Button tokens = guiManager.getTokenButton();
             meta = tokens.getItemMeta();
             meta.setDisplayName("Placeholder");
             tokens.setItemMeta(meta);
@@ -72,7 +72,7 @@ public class MainGui extends AGui {
 
         // set lower grid
         if (hotBarButtons.containsKey(PluginManager.exitButtonSlot)) {
-            AButton exit = new AButton(hotBarButtons.get(PluginManager.exitButtonSlot));
+            Button exit = new Button(hotBarButtons.get(PluginManager.exitButtonSlot));
             meta = hotBarButtons.get(PluginManager.exitButtonSlot).getItemMeta();
             exit.setItemMeta(meta);
             exit.setAction(ClickAction.CLOSE);
@@ -117,7 +117,7 @@ public class MainGui extends AGui {
         soundButtons.put(player.getUuid(), soundToggle);
 
         if (GameBoxSettings.tokensEnabled) {
-            AButton tokens = guiManager.getTokenButton();
+            Button tokens = guiManager.getTokenButton();
             tokenButtons.put(player.getUuid(), tokens);
         }
 
