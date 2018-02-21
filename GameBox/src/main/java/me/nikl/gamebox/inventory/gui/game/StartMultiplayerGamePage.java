@@ -79,7 +79,7 @@ public class StartMultiplayerGamePage extends GameGuiPage {
 
     private void updateInvitations(UUID uuid2) {
         if (!openInventories.containsKey(uuid2)) {
-            openInventories.put(uuid2, InventoryUtility.createInventory(null, 54, "Your invite inv."));
+            openInventories.put(uuid2, InventoryUtility.createInventory(this, 54, "Your invite inv."));
         }
         Inventory inv = openInventories.get(uuid2);
         inv.setContents(inventory.getContents().clone());

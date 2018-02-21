@@ -92,7 +92,7 @@ public class CFGame extends BukkitRunnable {
             this.state = CFGameState.SECOND_TURN;
         }
 
-        inv = InventoryUtility.createInventory(null, 54, "default");
+        inv = connectFour.createInventory(54, "default");
         this.first.openInventory(inv);
         this.second.openInventory(inv);
         updateStatus();

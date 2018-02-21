@@ -413,7 +413,7 @@ public class CCGame extends BukkitRunnable {
         String title = lang.GAME_TITLE
                 .replace("%score%", String.valueOf((int) cookies));
 
-        this.inventory = InventoryUtility.createInventory(null, 54, title);
+        this.inventory = game.createInventory(54, title);
 
         if (save != null) {
             //load the game

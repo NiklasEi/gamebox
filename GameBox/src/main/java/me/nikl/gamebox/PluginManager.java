@@ -8,6 +8,7 @@ import me.nikl.gamebox.games.GameManager;
 import me.nikl.gamebox.input.HandleInvitations;
 import me.nikl.gamebox.input.HandleInviteInput;
 import me.nikl.gamebox.inventory.GUIManager;
+import me.nikl.gamebox.inventory.gui.AGui;
 import me.nikl.gamebox.nms.NmsUtility;
 import me.nikl.gamebox.utility.ItemStackUtility;
 import me.nikl.gamebox.utility.Permission;
@@ -272,21 +273,16 @@ public class PluginManager implements Listener {
 
     @EventHandler
     public void onInvClick(InventoryClickEvent event) {
-        if (event.getSlot() < 0 || event.getInventory() == null || event.getWhoClicked() == null) {
+        if (event.getSlot() < 0 || event.getInventory() == null || event.getInventory().getHolder() == null || event.getWhoClicked() == null) {
             return;
         }
         if (!(event.getWhoClicked() instanceof Player)) {
             return;
         }
-
-        UUID uuid = event.getWhoClicked().getUniqueId();
-
-
         GameBox.debug("checking gameManagers     clicked inv has " + event.getInventory().getSize() + " slots");
-
-        for (String gameID : games.keySet()) {
-            GameManager gameManager = games.get(gameID).getGameManager();
-            if (gameManager.isInGame(uuid)) {
+        if(event.getInventory().getHolder() instanceof GameManager) {
+            GameBox.debug("found Game manager");
+            GameManager gameManager = (GameManager) event.getInventory().getHolder();
                 event.setCancelled(true);
                 if ((event.getRawSlot() - event.getSlot()) < event.getView().getTopInventory().getSize()) {
                     // click in the top or in the upper bottom inventory
@@ -294,7 +290,7 @@ public class PluginManager implements Listener {
                     GameBox.debug("click in top or middle inventory");
                     gameManager.onInventoryClick(event);
                 } else {
-                    if (games.get(gameID).getSettings().isHandleClicksOnHotbar()) {
+                    if (games.get(GameBox.MODULE_CONNECTFOUR /*TODO*/).getSettings().isHandleClicksOnHotbar()) {
                         gameManager.onInventoryClick(event);
                     } else {
                         if (event.getView().getBottomInventory().getItem(event.getSlot()) == null) {
@@ -303,7 +299,7 @@ public class PluginManager implements Listener {
                         }
                         if (event.getSlot() == GameBoxSettings.toGameButtonSlot) {
                             gameManager.removeFromGame(event.getWhoClicked().getUniqueId());
-                            guiManager.openGameGui((Player) event.getWhoClicked(), gameID, GUIManager.MAIN_GAME_GUI);
+                            guiManager.openGameGui((Player) event.getWhoClicked(), GameBox.MODULE_CONNECTFOUR/*TODO*/, GUIManager.MAIN_GAME_GUI);
                             if (GameBoxSettings.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
                                 ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.CLICK.bukkitSound(), volume, pitch);
                             }
@@ -322,7 +318,6 @@ public class PluginManager implements Listener {
                             }
                             return;
                         }
-                    }
                 }
 
 
@@ -330,8 +325,18 @@ public class PluginManager implements Listener {
                 return;
             }
         }
-        GameBox.debug("none found... checking GUIs...");
-        guiManager.onInvClick(event);
+        if(event.getInventory().getHolder() instanceof AGui) {
+            GameBox.debug("found aGui");
+            AGui aGui = (AGui) event.getInventory().getHolder();
+            boolean topInv = event.getSlot() == event.getRawSlot();
+            event.setCancelled(true);
+            if (topInv) aGui.onInvClick(event);
+            else aGui.onBottomInvClick(event);
+            return;
+        }
+
+        GameBox.debug("none found...");
+        //guiManager.onInvClick(event);
     }
 
     @EventHandler

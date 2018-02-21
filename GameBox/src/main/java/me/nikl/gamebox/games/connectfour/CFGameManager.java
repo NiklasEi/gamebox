@@ -18,6 +18,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -244,5 +245,10 @@ public class CFGameManager implements GameManager {
 
     public void addWin(UUID uuid, String key) {
         statistics.addStatistics(uuid, connectFour.getGameID(), key, 1., SaveType.WINS);
+    }
+
+    @Override
+    public Inventory getInventory() {
+        return null;
     }
 }

@@ -88,7 +88,7 @@ public class Shop extends AGui {
             tokenButtons.put(player.getUuid(), tokens);
         }
 
-        Inventory inventory = InventoryUtility.createInventory(null, this.inventory.getSize(), "GameBox gui");
+        Inventory inventory = InventoryUtility.createInventory(this, this.inventory.getSize(), "GameBox gui");
         inventory.setContents(this.inventory.getContents().clone());
 
         openInventories.putIfAbsent(player.getUuid(), inventory);

@@ -59,7 +59,7 @@ public class MIGame extends BukkitRunnable {
 
         nrPairs = gridSize.getSize() / 2;
 
-        this.inventory = InventoryUtility.createInventory(null, 54, language.INV_TITLE_START);
+        this.inventory = matchIt.createInventory(54, language.INV_TITLE_START);
         generateGame();
 
         player.openInventory(inventory);

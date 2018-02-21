@@ -5,6 +5,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.InventoryHolder;
 
 import java.util.Map;
 import java.util.UUID;
@@ -12,7 +13,7 @@ import java.util.UUID;
 /**
  * Created by niklas on 2/4/17.
  */
-public interface GameManager {
+public interface GameManager extends InventoryHolder {
 
     /**
      * Handle a click in the game

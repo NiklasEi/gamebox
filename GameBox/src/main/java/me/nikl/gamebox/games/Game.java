@@ -13,6 +13,7 @@ import me.nikl.gamebox.inventory.gui.game.StartMultiplayerGamePage;
 import me.nikl.gamebox.inventory.gui.game.TopListPage;
 import me.nikl.gamebox.nms.NmsUtility;
 import me.nikl.gamebox.utility.FileUtility;
+import me.nikl.gamebox.utility.InventoryUtility;
 import me.nikl.gamebox.utility.ItemStackUtility;
 import me.nikl.gamebox.utility.Permission;
 import me.nikl.gamebox.utility.StringUtility;
@@ -23,6 +24,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -400,5 +402,9 @@ public abstract class Game {
     public void info(String message) {
         gameBox.getLogger().info(" " + gameLang.PLAIN_PREFIX + message
                 .replace("%config%", "GameBox/games/" + getGameID() + "/config.yml"));
+    }
+
+    public Inventory createInventory(int size, String title){
+        return InventoryUtility.createInventory(gameManager, size, title);
     }
 }

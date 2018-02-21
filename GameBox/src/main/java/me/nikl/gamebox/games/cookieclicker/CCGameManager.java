@@ -12,6 +12,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.Inventory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -179,5 +180,10 @@ public class CCGameManager implements GameManager {
         if (saves.isConfigurationSection(key)) {
             saves.set(key, null);
         }
+    }
+
+    @Override
+    public Inventory getInventory() {
+        return null;
     }
 }

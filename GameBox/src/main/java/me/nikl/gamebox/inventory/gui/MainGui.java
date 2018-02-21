@@ -103,7 +103,7 @@ public class MainGui extends AGui {
 
         String title = this.title.replace("%player%", Bukkit.getPlayer(player.getUuid()).getName());
 
-        Inventory inventory = InventoryUtility.createInventory(null, this.inventory.getSize(), title);
+        Inventory inventory = InventoryUtility.createInventory(this, this.inventory.getSize(), title);
 
         inventory.setContents(this.inventory.getContents().clone());
 
