@@ -46,4 +46,12 @@ public class StringUtility {
         return (minutes < 10 ? "0" + String.valueOf(minutes) : String.valueOf(minutes))
                 + ":" + (sec < 10 ? "0" + String.valueOf(sec) : String.valueOf(sec));
     }
+
+    public static String center(String toCenter, int letterCount) {
+        int addToFront = (letterCount - toCenter.length())/2;
+        StringBuilder builder = new StringBuilder();
+        for(int count = 0; count < addToFront; count++) builder.append(" ");
+        builder.append(toCenter);
+        return builder.toString();
+    }
 }
