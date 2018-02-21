@@ -1,6 +1,7 @@
 package me.nikl.gamebox.inventory.menu.main;
 
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.inventory.ClickAction;
@@ -43,12 +44,12 @@ public class MainMenu extends PerPlayerMenu {
         Map<Integer, ItemStack> hotBarButtons = pluginManager.getHotBarButtons();
 
         // set lower grid
-        if (hotBarButtons.containsKey(pluginManager.exitButtonSlot)) {
-            Button exit = new Button(hotBarButtons.get(pluginManager.exitButtonSlot));
-            ItemMeta meta = hotBarButtons.get(pluginManager.exitButtonSlot).getItemMeta();
+        if (hotBarButtons.containsKey(GameBoxSettings.exitButtonSlot)) {
+            Button exit = new Button(hotBarButtons.get(GameBoxSettings.exitButtonSlot));
+            ItemMeta meta = hotBarButtons.get(GameBoxSettings.exitButtonSlot).getItemMeta();
             exit.setItemMeta(meta);
             exit.setAction(ClickAction.CLOSE);
-            setLowerButton(exit, pluginManager.exitButtonSlot);
+            setLowerButton(exit, GameBoxSettings.exitButtonSlot);
         }
     }
 

@@ -15,11 +15,11 @@ public abstract class StaticMenu extends GameBoxMenu {
         super(gameBox);
     }
 
-    public void setButton(Button button, int slot) {
+    public void setButton(AButton button, int slot) {
         upperGrid[slot] = button;
     }
 
-    public void setButton(Button button) {
+    public void setButton(AButton button) {
         int i = 0;
         while (upperGrid[i] != null) {
             i++;
@@ -27,11 +27,11 @@ public abstract class StaticMenu extends GameBoxMenu {
         setButton(button, i);
     }
 
-    public void setLowerButton(Button button, int slot) {
+    public void setLowerButton(AButton button, int slot) {
         lowerGrid[slot] = button;
     }
 
-    public void setLowerButton(Button button) {
+    public void setLowerButton(AButton button) {
         int i = 0;
         while (lowerGrid[i] != null) {
             i++;
