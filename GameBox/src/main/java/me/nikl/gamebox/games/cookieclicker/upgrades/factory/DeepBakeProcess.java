@@ -10,9 +10,9 @@ import org.bukkit.material.MaterialData;
 /**
  * @author Niklas Eicker
  *
- * Custom upgrade replacing 'Sweatshop'
+ *         Custom upgrade replacing 'Sweatshop'
  */
-public class DeepBakeProcess extends Upgrade{
+public class DeepBakeProcess extends Upgrade {
 
     public DeepBakeProcess(CCGame game) {
         super(game, 194);

@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class ExponentialInterestRates extends Upgrade{
+public class ExponentialInterestRates extends Upgrade {
 
     public ExponentialInterestRates(CCGame game) {
         super(game, 236);

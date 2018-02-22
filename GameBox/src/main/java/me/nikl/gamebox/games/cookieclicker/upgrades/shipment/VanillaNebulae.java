@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class VanillaNebulae extends Upgrade{
+public class VanillaNebulae extends Upgrade {
 
     public VanillaNebulae(CCGame game) {
         super(game, 19);

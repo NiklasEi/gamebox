@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class AncientGrimoires extends Upgrade{
+public class AncientGrimoires extends Upgrade {
 
     public AncientGrimoires(CCGame game) {
         super(game, 246);

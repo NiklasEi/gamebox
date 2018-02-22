@@ -19,15 +19,15 @@ import java.util.UUID;
 /**
  * @author Niklas Eicker
  *
- * Handle Invitations for multi player games
+ *         Handle Invitations for multi player games
  */
-public class HandleInvitations extends BukkitRunnable{
+public class HandleInvitations extends BukkitRunnable {
     private Set<Invitation> invitations = new HashSet<>();
     private PluginManager pluginManager;
     private GameBox plugin;
     private GameBoxLanguage lang;
 
-    public HandleInvitations(GameBox plugin){
+    public HandleInvitations(GameBox plugin) {
         pluginManager = plugin.getPluginManager();
         this.plugin = plugin;
         this.lang = plugin.lang;
@@ -38,38 +38,38 @@ public class HandleInvitations extends BukkitRunnable{
     public void run() {
         Iterator<Invitation> it = invitations.iterator();
         ArrayList<UUID> ranOut = new ArrayList<>();
-        while (it.hasNext()){
+        while (it.hasNext()) {
             Invitation inv = it.next();
             long currentTimeMillis = System.currentTimeMillis();
-            if(currentTimeMillis > inv.timeStamp){
+            if (currentTimeMillis > inv.timeStamp) {
                 ranOut.add(inv.player1);
                 it.remove();
-                ((StartMultiplayerGamePage)pluginManager.getGuiManager().getGameGui(inv.args[0], inv.args[1])).removeInvite(inv.player1, inv.player2);
+                ((StartMultiplayerGamePage) pluginManager.getGuiManager().getGameGui(inv.args[0], inv.args[1])).removeInvite(inv.player1, inv.player2);
                 GameBox.debug("removing old invitation");
             }
         }
     }
 
-    public boolean addInvite(UUID player1, UUID player2, long timeStamp, String... args){
-        for(Invitation inv : invitations){
-            if(inv.player1.equals(player1) && inv.player2.equals(player2)){
+    public boolean addInvite(UUID player1, UUID player2, long timeStamp, String... args) {
+        for (Invitation inv : invitations) {
+            if (inv.player1.equals(player1) && inv.player2.equals(player2)) {
                 Player player = Bukkit.getPlayer(player1);
-                if(player != null) player.sendMessage(plugin.lang.INVITATION_ALREADY_THERE);
+                if (player != null) player.sendMessage(plugin.lang.INVITATION_ALREADY_THERE);
                 return false;
             }
-            if(inv.player1.equals(player2) && inv.player2.equals(player1)){
+            if (inv.player1.equals(player2) && inv.player2.equals(player1)) {
                 //ToDO: accept invite automatically
                 // for now just continue and allow it
             }
         }
         Player first = Bukkit.getPlayer(player1);
         Player second = Bukkit.getPlayer(player2);
-        if(first != null && second != null){
-            for(String message : plugin.lang.INVITE_MESSAGE) {
+        if (first != null && second != null) {
+            for (String message : plugin.lang.INVITE_MESSAGE) {
                 second.sendMessage(plugin.lang.PREFIX + message.replace("%player%", first.getName()).replace("%game%", pluginManager.getGame(args[0]).getGameLang().PLAIN_NAME));
             }
             boolean boldClick = false;
-            if(GameBoxSettings.sendInviteClickMessage) {
+            if (GameBoxSettings.sendInviteClickMessage) {
                 Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "tellraw "
                         + second.getName()
                         + buildClickMessage(args, boldClick));
@@ -78,7 +78,7 @@ public class HandleInvitations extends BukkitRunnable{
             return false;
         }
         new Invitation(player1, player2, timeStamp, args);
-        ((StartMultiplayerGamePage)pluginManager.getGuiManager().getGameGui(args[0], args[1])).addInvite(player1, player2);
+        ((StartMultiplayerGamePage) pluginManager.getGuiManager().getGameGui(args[0], args[1])).addInvite(player1, player2);
         return true;
     }
 
@@ -93,12 +93,12 @@ public class HandleInvitations extends BukkitRunnable{
                 + lang.INVITATION_HOVER_COLOR + "\"}}}, {\"text\":\"" + lang.INVITATION_AFTER_TEXT + "\",\"color\":\"" + lang.INVITATION_AFTER_COLOR + "\"}]";
     }
 
-    public class Invitation{
+    public class Invitation {
         protected long timeStamp;
         protected UUID player1, player2;
         protected String[] args;
 
-        public Invitation(UUID player1, UUID player2, long timeStamp, String... args){
+        public Invitation(UUID player1, UUID player2, long timeStamp, String... args) {
             this.player1 = player1;
             this.player2 = player2;
             this.timeStamp = timeStamp;

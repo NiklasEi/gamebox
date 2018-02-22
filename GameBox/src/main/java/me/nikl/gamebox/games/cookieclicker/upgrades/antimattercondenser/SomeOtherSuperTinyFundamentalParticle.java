@@ -7,9 +7,8 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class SomeOtherSuperTinyFundamentalParticle extends Upgrade{
+public class SomeOtherSuperTinyFundamentalParticle extends Upgrade {
 
     public SomeOtherSuperTinyFundamentalParticle(CCGame game) {
         super(game, 318);

@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class DeitySizedPortals extends Upgrade{
+public class DeitySizedPortals extends Upgrade {
 
     public DeitySizedPortals(CCGame game) {
         super(game, 198);

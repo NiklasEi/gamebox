@@ -7,12 +7,17 @@ import me.nikl.gamebox.Module;
 import me.nikl.gamebox.data.toplist.SaveType;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
-import me.nikl.gamebox.inventory.button.AButton;
+import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.gui.game.GameGui;
 import me.nikl.gamebox.inventory.gui.game.StartMultiplayerGamePage;
 import me.nikl.gamebox.inventory.gui.game.TopListPage;
+import me.nikl.gamebox.nms.NmsFactory;
 import me.nikl.gamebox.nms.NmsUtility;
-import me.nikl.gamebox.utility.*;
+import me.nikl.gamebox.utility.FileUtility;
+import me.nikl.gamebox.utility.InventoryUtility;
+import me.nikl.gamebox.utility.ItemStackUtility;
+import me.nikl.gamebox.utility.Permission;
+import me.nikl.gamebox.utility.StringUtility;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -20,6 +25,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -41,8 +47,6 @@ import java.util.logging.Level;
  */
 public abstract class Game {
     protected static boolean debug = false;
-    private File dataFolder;
-    private File configFile;
     protected GameBox gameBox;
     protected FileConfiguration config;
     protected Module module;
@@ -51,19 +55,21 @@ public abstract class Game {
     protected GameLanguage gameLang;
     protected GameBoxLanguage gbLang;
     protected NmsUtility nms;
+    private File dataFolder;
+    private File configFile;
 
-    protected Game(GameBox gameBox, String gameID){
+    protected Game(GameBox gameBox, String gameID) {
         this.module = gameBox.getGameRegistry().getModule(gameID);
         Validate.notNull(module, " You cannot initialize a game without registering it's module first!");
         this.gameBox = gameBox;
         this.gbLang = gameBox.lang;
-        this.nms = gameBox.getNMS();
+        this.nms = NmsFactory.getNmsUtility();
         this.gameSettings = new GameSettings();
     }
 
     public abstract void onDisable();
 
-    public void onEnable(){
+    public void onEnable() {
         GameBox.debug(" enabling the game: " + module.getModuleID());
         loadConfig();
         // abstract
@@ -107,16 +113,16 @@ public abstract class Game {
      */
     public abstract void loadGameManager();
 
-    public boolean loadConfig(){
+    public boolean loadConfig() {
         GameBox.debug(" load config... (" + module.getModuleID() + ")");
         configFile = new File(gameBox.getDataFolder()
                 + File.separator + "games"
                 + File.separator + getGameID()
                 + File.separator + "config.yml");
-        if(!configFile.exists()){
+        if (!configFile.exists()) {
             GameBox.debug(" default config missing in GB folder (" + module.getModuleID() + ")");
             configFile.getParentFile().mkdirs();
-            if(module.getExternalPlugin() != null){
+            if (module.getExternalPlugin() != null) {
                 FileUtility.copyExternalResources(gameBox, module);
             } else {
                 gameBox.saveResource("games"
@@ -161,7 +167,7 @@ public abstract class Game {
                     Bukkit.getLogger().log(Level.WARNING, "     invalid material data");
                     continue;
                 }
-                AButton button = new AButton(mat);
+                Button button = new Button(mat);
                 ItemMeta meta = button.getItemMeta();
                 if (buttonSec.isString("displayName")) {
                     displayName = StringUtility.color(buttonSec.getString("displayName"));
@@ -171,7 +177,7 @@ public abstract class Game {
                     lore = StringUtility.color(buttonSec.getStringList("lore"));
                     meta.setLore(lore);
                 }
-                switch (gameSettings.getGameType()){
+                switch (gameSettings.getGameType()) {
                     case SINGLE_PLAYER:
                         button.setAction(ClickAction.START_GAME);
                         break;
@@ -179,7 +185,7 @@ public abstract class Game {
                         guiManager.registerGameGUI(new StartMultiplayerGamePage(gameBox, guiManager
                                 , gameSettings.getGameGuiSize()
                                 , getGameID(), buttonID, StringUtility.color(buttonSec
-                                .getString("inviteGuiTitle","&4title not set in config"))));
+                                .getString("inviteGuiTitle", "&4title not set in config"))));
                         button.setAction(ClickAction.OPEN_GAME_GUI);
                         break;
                     default:
@@ -207,7 +213,7 @@ public abstract class Game {
         getMainButton:
         if (config.isConfigurationSection("gameBox.mainButton")) {
             ConfigurationSection mainButtonSec = config.getConfigurationSection("gameBox.mainButton");
-            if (!mainButtonSec.isString("materialData")){
+            if (!mainButtonSec.isString("materialData")) {
                 break getMainButton;
             }
             ItemStack gameButton = ItemStackUtility.getItemStack(mainButtonSec.getString("materialData"));
@@ -225,7 +231,7 @@ public abstract class Game {
             gameBox.getLogger().log(Level.WARNING, " Missing or wrong configured main button for " + gameLang.PLAIN_NAME + "!");
         }
         Map<String, ? extends GameRule> gameRules = gameManager.getGameRules();
-        if(gameRules == null || gameRules.isEmpty()){
+        if (gameRules == null || gameRules.isEmpty()) {
             gameBox.getLogger().log(Level.WARNING, " While loading " + gameLang.DEFAULT_PLAIN_NAME
                     + " the game manager failed to return any valid game rules!");
             return;
@@ -258,7 +264,7 @@ public abstract class Game {
                     gameBox.getLogger().log(Level.WARNING, "     invalid material data");
                     continue;
                 }
-                AButton button = new AButton(mat);
+                Button button = new Button(mat);
                 ItemMeta meta = button.getItemMeta();
                 if (buttonSec.isString("displayName")) {
                     meta.setDisplayName(StringUtility.color(buttonSec.getString("displayName")));
@@ -297,7 +303,7 @@ public abstract class Game {
         }
     }
 
-    public FileConfiguration getConfig(){
+    public FileConfiguration getConfig() {
         return config;
     }
 
@@ -313,11 +319,11 @@ public abstract class Game {
         return gameSettings;
     }
 
-    public GameBox getGameBox(){
+    public GameBox getGameBox() {
         return this.gameBox;
     }
 
-    public File getDataFolder(){
+    public File getDataFolder() {
         return this.dataFolder;
     }
 
@@ -325,56 +331,81 @@ public abstract class Game {
         return gameManager;
     }
 
-    public GameLanguage getGameLang(){
+    public GameLanguage getGameLang() {
         return this.gameLang;
     }
 
-    public void debug(String debugMessage){
-        if(debug) Bukkit.getLogger().info(gameLang.PREFIX + " " + debugMessage);
+    public void debug(String debugMessage) {
+        if (debug) Bukkit.getLogger().info(gameLang.PREFIX + " " + debugMessage);
     }
 
-    public void debug(ArrayList<String> debugMessages){
-        if(!debug) return;
-        for(String message : debugMessages){
+    public void debug(ArrayList<String> debugMessages) {
+        if (!debug) return;
+        for (String message : debugMessages) {
             Bukkit.getLogger().info(gameLang.PREFIX + " " + message);
         }
     }
 
-    public boolean pay(Player player, double cost){
+    private boolean pay(Player player, double cost) {
         return pay(player, cost, true);
     }
 
-    public boolean pay(Player player, double cost, boolean withdraw) {
-        if (GameBoxSettings.econEnabled
+    /**
+     * Withdraw the specified cost from the players balance,
+     * only if economy is enabled (for GameBox and the game) and the
+     * player does not have a bypass permission.
+     *
+     * @param player
+     * @param cost
+     * @param withdraw
+     * @return whether player can enter the game now
+     */
+    public boolean payIfNecessary(Player player, double cost, boolean withdraw) {
+        if (GameBoxSettings.econEnabled && gameSettings.isEconEnabled()
                 && !player.hasPermission(Permission.BYPASS_ALL.getPermission())
                 && !player.hasPermission(Permission.BYPASS_GAME.getPermission(getGameID()))
                 && cost > 0.0) {
-            if (GameBox.econ.getBalance(player) >= cost) {
-                if(withdraw) {
-                    GameBox.econ.withdrawPlayer(player, cost);
-                    player.sendMessage(StringUtility.color(gameLang.PREFIX
-                            + gameLang.GAME_PAYED
-                            .replaceAll("%cost%", String.valueOf(cost))));
-                }
-                return true;
-            } else {
+            return pay(player, cost, withdraw);
+        }
+        return true;
+    }
+
+    public boolean payIfNecessary(Player player, double cost) {
+        return payIfNecessary(player, cost, true);
+    }
+
+    public void payIfNecessary(Player[] players, double cost) {
+        for (Player player : players) payIfNecessary(player, cost, true);
+    }
+
+    public boolean pay(Player player, double cost, boolean withdraw) {
+        if (GameBox.econ.getBalance(player) >= cost) {
+            if (withdraw) {
+                GameBox.econ.withdrawPlayer(player, cost);
                 player.sendMessage(StringUtility.color(gameLang.PREFIX
-                        + gameLang.GAME_NOT_ENOUGH_MONEY
+                        + gameLang.GAME_PAYED
                         .replaceAll("%cost%", String.valueOf(cost))));
-                return false;
             }
-        } else {
             return true;
+        } else {
+            player.sendMessage(StringUtility.color(gameLang.PREFIX
+                    + gameLang.GAME_NOT_ENOUGH_MONEY
+                    .replaceAll("%cost%", String.valueOf(cost))));
+            return false;
         }
     }
 
-    public void warn(String message){
+    public void warn(String message) {
         gameBox.getLogger().warning(" " + gameLang.PLAIN_PREFIX + message
                 .replace("%config%", "GameBox/games/" + getGameID() + "/config.yml"));
     }
 
-    public void info(String message){
+    public void info(String message) {
         gameBox.getLogger().info(" " + gameLang.PLAIN_PREFIX + message
                 .replace("%config%", "GameBox/games/" + getGameID() + "/config.yml"));
+    }
+
+    public Inventory createInventory(int size, String title) {
+        return InventoryUtility.createInventory(gameManager, size, title);
     }
 }

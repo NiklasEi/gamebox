@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class MillionFingers extends Upgrade{
+public class MillionFingers extends Upgrade {
 
     public MillionFingers(CCGame game) {
         super(game, 4);
@@ -27,7 +26,7 @@ public class MillionFingers extends Upgrade{
 
     @Override
     public void onActivation() {
-        for(Buildings buildings : Buildings.values()){
+        for (Buildings buildings : Buildings.values()) {
             if (buildings == Buildings.CURSOR) continue;
             game.addBuildingBonus(Buildings.CURSOR, buildings, 0.5);
             game.addClickBonus(buildings, 0.5);

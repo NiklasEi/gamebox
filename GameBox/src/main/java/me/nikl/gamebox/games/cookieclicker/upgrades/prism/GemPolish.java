@@ -7,9 +7,8 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class GemPolish extends Upgrade{
+public class GemPolish extends Upgrade {
 
     public GemPolish(CCGame game) {
         super(game, 175);

@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class BraneTransplant extends Upgrade{
+public class BraneTransplant extends Upgrade {
 
     public BraneTransplant(CCGame game) {
         super(game, 116);

@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class TallerTellers extends Upgrade{
+public class TallerTellers extends Upgrade {
 
     public TallerTellers(CCGame game) {
         super(game, 232);

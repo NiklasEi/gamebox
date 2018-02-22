@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class DeliciousBlessing extends Upgrade{
+public class DeliciousBlessing extends Upgrade {
 
     public DeliciousBlessing(CCGame game) {
         super(game, 240);

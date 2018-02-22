@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class SturdierConveyorBelts extends Upgrade{
+public class SturdierConveyorBelts extends Upgrade {
 
     public SturdierConveyorBelts(CCGame game) {
         super(game, 13);

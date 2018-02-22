@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class TimeParadoxResolver extends Upgrade{
+public class TimeParadoxResolver extends Upgrade {
 
     public TimeParadoxResolver(CCGame game) {
         super(game, 29);

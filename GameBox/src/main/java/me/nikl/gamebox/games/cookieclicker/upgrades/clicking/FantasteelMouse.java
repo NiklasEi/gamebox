@@ -8,9 +8,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class FantasteelMouse extends Upgrade{
+public class FantasteelMouse extends Upgrade {
 
     public FantasteelMouse(CCGame game) {
         super(game, 366);

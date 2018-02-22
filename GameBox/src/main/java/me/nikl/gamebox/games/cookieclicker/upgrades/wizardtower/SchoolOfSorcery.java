@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class SchoolOfSorcery extends Upgrade{
+public class SchoolOfSorcery extends Upgrade {
 
     public SchoolOfSorcery(CCGame game) {
         super(game, 248);

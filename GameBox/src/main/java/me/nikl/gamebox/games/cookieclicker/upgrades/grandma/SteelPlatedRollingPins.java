@@ -10,9 +10,8 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class SteelPlatedRollingPins extends Upgrade{
+public class SteelPlatedRollingPins extends Upgrade {
 
     public SteelPlatedRollingPins(CCGame game) {
         super(game, 8);

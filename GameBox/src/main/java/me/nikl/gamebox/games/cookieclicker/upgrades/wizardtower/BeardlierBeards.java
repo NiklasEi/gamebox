@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class BeardlierBeards extends Upgrade{
+public class BeardlierBeards extends Upgrade {
 
     public BeardlierBeards(CCGame game) {
         super(game, 245);

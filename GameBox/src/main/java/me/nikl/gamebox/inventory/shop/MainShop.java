@@ -1,9 +1,10 @@
 package me.nikl.gamebox.inventory.shop;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.inventory.GUIManager;
-import me.nikl.gamebox.inventory.button.AButton;
 import me.nikl.gamebox.inventory.ClickAction;
+import me.nikl.gamebox.inventory.GUIManager;
+import me.nikl.gamebox.inventory.button.Button;
+import me.nikl.gamebox.nms.NmsFactory;
 import me.nikl.gamebox.utility.ItemStackUtility;
 import me.nikl.gamebox.utility.StringUtility;
 import org.bukkit.Bukkit;
@@ -18,7 +19,7 @@ import java.util.logging.Level;
 /**
  * @author Niklas Eicker
  *
- * GUI containing all shop categories
+ *         GUI containing all shop categories
  */
 class MainShop extends Shop {
 
@@ -29,32 +30,31 @@ class MainShop extends Shop {
     }
 
 
-
     private void loadCategories() {
         List<String> lore;
         ItemStack buttonItem;
-        for(String cat : shop.getConfigurationSection("shop.categories").getKeys(false)){
+        for (String cat : shop.getConfigurationSection("shop.categories").getKeys(false)) {
             ConfigurationSection category = shop.getConfigurationSection("shop.categories." + cat);
             buttonItem = ItemStackUtility.getItemStack(category.getString("materialData"));
 
-            if(buttonItem == null){
+            if (buttonItem == null) {
                 Bukkit.getLogger().log(Level.WARNING, " error loading:   shop.categories." + cat);
                 Bukkit.getLogger().log(Level.WARNING, "     invalid material data");
                 continue;
             }
-            if(category.getBoolean("glow")){
-                buttonItem = plugin.getNMS().addGlow(buttonItem);
+            if (category.getBoolean("glow")) {
+                buttonItem = NmsFactory.getNmsUtility().addGlow(buttonItem);
             }
-            AButton button =  new AButton(buttonItem);
+            Button button = new Button(buttonItem);
             ItemMeta meta = button.getItemMeta();
 
-            if(category.isString("displayName")){
+            if (category.isString("displayName")) {
                 meta.setDisplayName(StringUtility.color(category.getString("displayName")));
             }
 
-            if(category.isList("lore")){
+            if (category.isList("lore")) {
                 lore = new ArrayList<>(category.getStringList("lore"));
-                for(int i = 0; i < lore.size();i++){
+                for (int i = 0; i < lore.size(); i++) {
                     lore.set(i, StringUtility.color(lore.get(i)));
                 }
                 meta.setLore(lore);

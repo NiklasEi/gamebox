@@ -11,7 +11,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 /**
  * @author Niklas Eicker
  */
-public class ForwardsFromGrandma extends Upgrade{
+public class ForwardsFromGrandma extends Upgrade {
 
     public ForwardsFromGrandma(CCGame game) {
         super(game, 7);

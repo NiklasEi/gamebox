@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class CheapHoes extends Upgrade{
+public class CheapHoes extends Upgrade {
 
     public CheapHoes(CCGame game) {
         super(game, 10);

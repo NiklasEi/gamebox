@@ -8,9 +8,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class WishalloyMouse extends Upgrade{
+public class WishalloyMouse extends Upgrade {
 
     public WishalloyMouse(CCGame game) {
         super(game, 191);

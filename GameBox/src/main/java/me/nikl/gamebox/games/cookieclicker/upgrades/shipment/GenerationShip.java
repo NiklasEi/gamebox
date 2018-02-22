@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class GenerationShip extends Upgrade{
+public class GenerationShip extends Upgrade {
 
     public GenerationShip(CCGame game) {
         super(game, 196);

@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class FluxCapacitors extends Upgrade{
+public class FluxCapacitors extends Upgrade {
 
     public FluxCapacitors(CCGame game) {
         super(game, 28);

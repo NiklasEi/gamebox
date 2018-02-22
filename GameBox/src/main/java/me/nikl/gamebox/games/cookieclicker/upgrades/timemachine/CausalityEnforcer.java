@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class CausalityEnforcer extends Upgrade{
+public class CausalityEnforcer extends Upgrade {
 
     public CausalityEnforcer(CCGame game) {
         super(game, 51);

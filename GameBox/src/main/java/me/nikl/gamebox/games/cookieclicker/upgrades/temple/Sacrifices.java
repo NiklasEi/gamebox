@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class Sacrifices extends Upgrade{
+public class Sacrifices extends Upgrade {
 
     public Sacrifices(CCGame game) {
         super(game, 239);

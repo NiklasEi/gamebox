@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class GreatBakerInTheSky extends Upgrade{
+public class GreatBakerInTheSky extends Upgrade {
 
     public GreatBakerInTheSky(CCGame game) {
         super(game, 243);

@@ -11,8 +11,8 @@ public class NmsFactory {
     private final static String VERSION = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
     private static NmsUtility nmsUtility;
 
-    public static NmsUtility getNmsUtility(){
-        if(nmsUtility != null) return nmsUtility;
+    public static NmsUtility getNmsUtility() {
+        if (nmsUtility != null) return nmsUtility;
         GameBox.debug("Your server is running version " + VERSION);
         switch (VERSION) {
             case "v1_8_R1":
@@ -34,7 +34,8 @@ public class NmsFactory {
                 return nmsUtility = new NmsUtility_1_11_R1();
             case "v1_12_R1":
                 return nmsUtility = new NmsUtility_1_12_R1();
-            default: return null;
+            default:
+                return null;
         }
     }
 }

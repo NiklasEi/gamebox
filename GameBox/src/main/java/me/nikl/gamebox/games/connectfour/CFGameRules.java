@@ -8,14 +8,14 @@ import java.util.HashSet;
 /**
  * @author Niklas Eicker
  *
- * This class stores settings for a game mode
+ *         This class stores settings for a game mode
  */
-public class CFGameRules extends GameRule{
+public class CFGameRules extends GameRule {
 
     private int tokens, timePerMove, minNumberOfPlayedChips;
     private double cost, reward;
 
-    public CFGameRules(String key, int timePerMove, int minNumberOfPlayedChips, double cost, double reward, int tokens, boolean saveStats){
+    public CFGameRules(String key, int timePerMove, int minNumberOfPlayedChips, double cost, double reward, int tokens, boolean saveStats) {
         super(saveStats, new HashSet<>(), key);
         this.saveTypes.add(SaveType.WINS);
         this.cost = cost;

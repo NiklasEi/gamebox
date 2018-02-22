@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class HBombMining extends Upgrade{
+public class HBombMining extends Upgrade {
 
     public HBombMining(CCGame game) {
         super(game, 113);

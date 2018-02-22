@@ -7,9 +7,8 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class PureCosmicLight extends Upgrade{
+public class PureCosmicLight extends Upgrade {
 
     public PureCosmicLight(CCGame game) {
         super(game, 179);

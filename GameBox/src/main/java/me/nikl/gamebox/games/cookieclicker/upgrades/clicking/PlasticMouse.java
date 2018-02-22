@@ -9,7 +9,7 @@ import org.bukkit.material.MaterialData;
 /**
  * @author Niklas Eicker
  */
-public class PlasticMouse extends Upgrade{
+public class PlasticMouse extends Upgrade {
 
     public PlasticMouse(CCGame game) {
         super(game, 75);

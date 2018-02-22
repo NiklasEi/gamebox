@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class FarFutureEnactment extends Upgrade{
+public class FarFutureEnactment extends Upgrade {
 
     public FarFutureEnactment(CCGame game) {
         super(game, 199);

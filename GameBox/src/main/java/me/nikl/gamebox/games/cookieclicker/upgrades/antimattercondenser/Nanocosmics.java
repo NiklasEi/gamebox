@@ -7,9 +7,8 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class Nanocosmics extends Upgrade{
+public class Nanocosmics extends Upgrade {
 
     public Nanocosmics(CCGame game) {
         super(game, 200);

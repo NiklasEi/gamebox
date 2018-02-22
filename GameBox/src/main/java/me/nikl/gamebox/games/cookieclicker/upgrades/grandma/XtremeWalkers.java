@@ -11,7 +11,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 /**
  * @author Niklas Eicker
  */
-public class XtremeWalkers extends Upgrade{
+public class XtremeWalkers extends Upgrade {
 
     public XtremeWalkers(CCGame game) {
         super(game, 294);

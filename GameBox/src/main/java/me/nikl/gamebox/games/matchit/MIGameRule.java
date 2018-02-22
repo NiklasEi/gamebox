@@ -7,7 +7,6 @@ import java.util.HashSet;
 
 /**
  * Created by nikl on 02.12.17.
- *
  */
 public class MIGameRule extends GameRule {
     private double cost;

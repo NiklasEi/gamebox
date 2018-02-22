@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class EndOfTimesBackUpPlan extends Upgrade{
+public class EndOfTimesBackUpPlan extends Upgrade {
 
     public EndOfTimesBackUpPlan(CCGame game) {
         super(game, 303);

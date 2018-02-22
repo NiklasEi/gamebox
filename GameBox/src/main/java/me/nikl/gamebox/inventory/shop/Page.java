@@ -6,9 +6,9 @@ import me.nikl.gamebox.inventory.GUIManager;
 /**
  * @author Niklas Eicker
  *
- * save a shop page
+ *         save a shop page
  */
-public class Page extends Shop{
+public class Page extends Shop {
     private int page;
 
     Page(GameBox plugin, GUIManager guiManager, int slots, int page, ShopManager shopManager, String[] args) {
@@ -16,7 +16,7 @@ public class Page extends Shop{
         this.page = page;
     }
 
-    public int getPage(){
+    public int getPage() {
         return this.page;
     }
 }

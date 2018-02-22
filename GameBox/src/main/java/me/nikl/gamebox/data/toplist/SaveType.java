@@ -6,7 +6,7 @@ package me.nikl.gamebox.data.toplist;
 public enum SaveType {
     TIME_LOW, TIME_HIGH, SCORE, WINS, HIGH_NUMBER_SCORE;
 
-    public boolean isHigherScore(){
+    public boolean isHigherScore() {
         return this != TIME_LOW;
     }
 }

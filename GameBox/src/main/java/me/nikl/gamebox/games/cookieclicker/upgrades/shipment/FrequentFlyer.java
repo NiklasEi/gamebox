@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class FrequentFlyer extends Upgrade{
+public class FrequentFlyer extends Upgrade {
 
     public FrequentFlyer(CCGame game) {
         super(game, 21);

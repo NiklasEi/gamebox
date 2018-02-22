@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class CreationMyth extends Upgrade{
+public class CreationMyth extends Upgrade {
 
     public CreationMyth(CCGame game) {
         super(game, 299);

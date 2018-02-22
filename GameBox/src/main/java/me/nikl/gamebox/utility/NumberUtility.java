@@ -2,7 +2,6 @@ package me.nikl.gamebox.utility;
 
 /**
  * @author Niklas Eicker
- *
  */
 public class NumberUtility {
     private static final String SHORTNAMES[] = new String[]{
@@ -52,12 +51,12 @@ public class NumberUtility {
             " Vigintillion",
     };
 
-    public static String convertHugeNumber(double number){
+    public static String convertHugeNumber(double number) {
         return convertHugeNumber(number, true);
     }
 
-    public static String convertHugeNumber(double number, boolean shortNames){
-        if(number >= 1000.) {
+    public static String convertHugeNumber(double number, boolean shortNames) {
+        if (number >= 1000.) {
             String numberStr = String.format("%.0f", number);
             int index = (numberStr.length() - 1) / 3;
             if (index == 0) return numberStr;
@@ -87,10 +86,10 @@ public class NumberUtility {
             } else {
                 numberStr = new StringBuilder(numberStr).insert(numberStr.length() - 3, ",").toString();
             }
-            if(index > NAMES.length){
+            if (index > NAMES.length) {
                 return "Way too much...";
             }
-            if(shortNames) {
+            if (shortNames) {
                 return numberStr + SHORTNAMES[index - 1];
             } else {
                 return numberStr + NAMES[index - 1];

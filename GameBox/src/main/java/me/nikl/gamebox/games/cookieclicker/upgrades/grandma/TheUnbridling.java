@@ -11,7 +11,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 /**
  * @author Niklas Eicker
  */
-public class TheUnbridling extends Upgrade{
+public class TheUnbridling extends Upgrade {
 
     public TheUnbridling(CCGame game) {
         super(game, 307);

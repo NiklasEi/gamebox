@@ -11,7 +11,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 /**
  * @author Niklas Eicker
  */
-public class AgingAgents extends Upgrade{
+public class AgingAgents extends Upgrade {
 
     public AgingAgents(CCGame game) {
         super(game, 192);

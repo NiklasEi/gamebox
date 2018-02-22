@@ -2,23 +2,133 @@ package me.nikl.gamebox.games.cookieclicker;
 
 import me.nikl.gamebox.games.cookieclicker.buildings.*;
 import me.nikl.gamebox.games.cookieclicker.upgrades.Upgrade;
-import me.nikl.gamebox.games.cookieclicker.upgrades.alchemylab.*;
-import me.nikl.gamebox.games.cookieclicker.upgrades.antimattercondenser.*;
-import me.nikl.gamebox.games.cookieclicker.upgrades.bank.*;
-import me.nikl.gamebox.games.cookieclicker.upgrades.clicking.*;
-import me.nikl.gamebox.games.cookieclicker.upgrades.curser.*;
-import me.nikl.gamebox.games.cookieclicker.upgrades.factory.*;
-import me.nikl.gamebox.games.cookieclicker.upgrades.farm.*;
-import me.nikl.gamebox.games.cookieclicker.upgrades.grandma.*;
-import me.nikl.gamebox.games.cookieclicker.upgrades.mine.*;
-import me.nikl.gamebox.games.cookieclicker.upgrades.portal.*;
-import me.nikl.gamebox.games.cookieclicker.upgrades.prism.*;
-import me.nikl.gamebox.games.cookieclicker.upgrades.shipment.*;
-import me.nikl.gamebox.games.cookieclicker.upgrades.temple.*;
-import me.nikl.gamebox.games.cookieclicker.upgrades.timemachine.*;
-import me.nikl.gamebox.games.cookieclicker.upgrades.wizardtower.*;
+import me.nikl.gamebox.games.cookieclicker.upgrades.alchemylab.Ambrosia;
+import me.nikl.gamebox.games.cookieclicker.upgrades.alchemylab.Antimony;
+import me.nikl.gamebox.games.cookieclicker.upgrades.alchemylab.AquaCrustulae;
+import me.nikl.gamebox.games.cookieclicker.upgrades.alchemylab.BeigeGoo;
+import me.nikl.gamebox.games.cookieclicker.upgrades.alchemylab.EssenceOfDough;
+import me.nikl.gamebox.games.cookieclicker.upgrades.alchemylab.OriginCrucible;
+import me.nikl.gamebox.games.cookieclicker.upgrades.alchemylab.TheoryOfAtomicFluidity;
+import me.nikl.gamebox.games.cookieclicker.upgrades.alchemylab.TrueChocolate;
+import me.nikl.gamebox.games.cookieclicker.upgrades.antimattercondenser.BigBangBake;
+import me.nikl.gamebox.games.cookieclicker.upgrades.antimattercondenser.LargeMacaronCollider;
+import me.nikl.gamebox.games.cookieclicker.upgrades.antimattercondenser.Nanocosmics;
+import me.nikl.gamebox.games.cookieclicker.upgrades.antimattercondenser.ReverseCyclotrons;
+import me.nikl.gamebox.games.cookieclicker.upgrades.antimattercondenser.SomeOtherSuperTinyFundamentalParticle;
+import me.nikl.gamebox.games.cookieclicker.upgrades.antimattercondenser.StringTheory;
+import me.nikl.gamebox.games.cookieclicker.upgrades.antimattercondenser.SugarBosons;
+import me.nikl.gamebox.games.cookieclicker.upgrades.antimattercondenser.ThePulse;
+import me.nikl.gamebox.games.cookieclicker.upgrades.bank.AcidProofVaults;
+import me.nikl.gamebox.games.cookieclicker.upgrades.bank.ChocolateCoins;
+import me.nikl.gamebox.games.cookieclicker.upgrades.bank.ExponentialInterestRates;
+import me.nikl.gamebox.games.cookieclicker.upgrades.bank.FinancialZen;
+import me.nikl.gamebox.games.cookieclicker.upgrades.bank.ScissorResistantCreditCards;
+import me.nikl.gamebox.games.cookieclicker.upgrades.bank.TallerTellers;
+import me.nikl.gamebox.games.cookieclicker.upgrades.bank.TheStuffRationale;
+import me.nikl.gamebox.games.cookieclicker.upgrades.bank.WayOfTheWallet;
+import me.nikl.gamebox.games.cookieclicker.upgrades.clicking.AdamantiumMouse;
+import me.nikl.gamebox.games.cookieclicker.upgrades.clicking.EludiumMouse;
+import me.nikl.gamebox.games.cookieclicker.upgrades.clicking.FantasteelMouse;
+import me.nikl.gamebox.games.cookieclicker.upgrades.clicking.IronMouse;
+import me.nikl.gamebox.games.cookieclicker.upgrades.clicking.NevercrackMouse;
+import me.nikl.gamebox.games.cookieclicker.upgrades.clicking.PlasticMouse;
+import me.nikl.gamebox.games.cookieclicker.upgrades.clicking.TitaniumMouse;
+import me.nikl.gamebox.games.cookieclicker.upgrades.clicking.UnobtainiumMouse;
+import me.nikl.gamebox.games.cookieclicker.upgrades.clicking.WishalloyMouse;
+import me.nikl.gamebox.games.cookieclicker.upgrades.curser.Ambidextrous;
+import me.nikl.gamebox.games.cookieclicker.upgrades.curser.BillionFingers;
+import me.nikl.gamebox.games.cookieclicker.upgrades.curser.CarpalTunnelPreventionCream;
+import me.nikl.gamebox.games.cookieclicker.upgrades.curser.MillionFingers;
+import me.nikl.gamebox.games.cookieclicker.upgrades.curser.OctillionFingers;
+import me.nikl.gamebox.games.cookieclicker.upgrades.curser.QuadrillionFingers;
+import me.nikl.gamebox.games.cookieclicker.upgrades.curser.QuintillionFingers;
+import me.nikl.gamebox.games.cookieclicker.upgrades.curser.ReinforcedIndexFinger;
+import me.nikl.gamebox.games.cookieclicker.upgrades.curser.SeptillionFingers;
+import me.nikl.gamebox.games.cookieclicker.upgrades.curser.SextillionFingers;
+import me.nikl.gamebox.games.cookieclicker.upgrades.curser.ThousandFingers;
+import me.nikl.gamebox.games.cookieclicker.upgrades.curser.TrillionFingers;
+import me.nikl.gamebox.games.cookieclicker.upgrades.factory.ChildLabor;
+import me.nikl.gamebox.games.cookieclicker.upgrades.factory.CyborgWorkforce;
+import me.nikl.gamebox.games.cookieclicker.upgrades.factory.DeepBakeProcess;
+import me.nikl.gamebox.games.cookieclicker.upgrades.factory.HourDays;
+import me.nikl.gamebox.games.cookieclicker.upgrades.factory.RadiumReactors;
+import me.nikl.gamebox.games.cookieclicker.upgrades.factory.Recombobulators;
+import me.nikl.gamebox.games.cookieclicker.upgrades.factory.SturdierConveyorBelts;
+import me.nikl.gamebox.games.cookieclicker.upgrades.factory.Sweatshop;
+import me.nikl.gamebox.games.cookieclicker.upgrades.farm.CheapHoes;
+import me.nikl.gamebox.games.cookieclicker.upgrades.farm.CookieTrees;
+import me.nikl.gamebox.games.cookieclicker.upgrades.farm.Fertilizer;
+import me.nikl.gamebox.games.cookieclicker.upgrades.farm.FudgeFungus;
+import me.nikl.gamebox.games.cookieclicker.upgrades.farm.GeneticallyModifiedCookies;
+import me.nikl.gamebox.games.cookieclicker.upgrades.farm.GingerbreadScarecrows;
+import me.nikl.gamebox.games.cookieclicker.upgrades.farm.PulsarSprinklers;
+import me.nikl.gamebox.games.cookieclicker.upgrades.farm.WheatTriffids;
+import me.nikl.gamebox.games.cookieclicker.upgrades.grandma.AgingAgents;
+import me.nikl.gamebox.games.cookieclicker.upgrades.grandma.DoubleThickGlasses;
+import me.nikl.gamebox.games.cookieclicker.upgrades.grandma.ForwardsFromGrandma;
+import me.nikl.gamebox.games.cookieclicker.upgrades.grandma.LubricatedDentures;
+import me.nikl.gamebox.games.cookieclicker.upgrades.grandma.PruneJuice;
+import me.nikl.gamebox.games.cookieclicker.upgrades.grandma.SteelPlatedRollingPins;
+import me.nikl.gamebox.games.cookieclicker.upgrades.grandma.TheUnbridling;
+import me.nikl.gamebox.games.cookieclicker.upgrades.grandma.XtremeWalkers;
+import me.nikl.gamebox.games.cookieclicker.upgrades.mine.CanolaOilWells;
+import me.nikl.gamebox.games.cookieclicker.upgrades.mine.Coreforge;
+import me.nikl.gamebox.games.cookieclicker.upgrades.mine.HBombMining;
+import me.nikl.gamebox.games.cookieclicker.upgrades.mine.Megadrill;
+import me.nikl.gamebox.games.cookieclicker.upgrades.mine.Planetsplitters;
+import me.nikl.gamebox.games.cookieclicker.upgrades.mine.SugarGas;
+import me.nikl.gamebox.games.cookieclicker.upgrades.mine.Ultimadrill;
+import me.nikl.gamebox.games.cookieclicker.upgrades.mine.Ultradrill;
+import me.nikl.gamebox.games.cookieclicker.upgrades.portal.AncientTablet;
+import me.nikl.gamebox.games.cookieclicker.upgrades.portal.BraneTransplant;
+import me.nikl.gamebox.games.cookieclicker.upgrades.portal.DeitySizedPortals;
+import me.nikl.gamebox.games.cookieclicker.upgrades.portal.EndOfTimesBackUpPlan;
+import me.nikl.gamebox.games.cookieclicker.upgrades.portal.InsaneOatlingWorkers;
+import me.nikl.gamebox.games.cookieclicker.upgrades.portal.MaddeningChants;
+import me.nikl.gamebox.games.cookieclicker.upgrades.portal.SanityDance;
+import me.nikl.gamebox.games.cookieclicker.upgrades.portal.SoulBond;
+import me.nikl.gamebox.games.cookieclicker.upgrades.prism.ChocolateLight;
+import me.nikl.gamebox.games.cookieclicker.upgrades.prism.GemPolish;
+import me.nikl.gamebox.games.cookieclicker.upgrades.prism.GlowInTheDark;
+import me.nikl.gamebox.games.cookieclicker.upgrades.prism.Grainbow;
+import me.nikl.gamebox.games.cookieclicker.upgrades.prism.LuxSanctorum;
+import me.nikl.gamebox.games.cookieclicker.upgrades.prism.NinethColor;
+import me.nikl.gamebox.games.cookieclicker.upgrades.prism.PureCosmicLight;
+import me.nikl.gamebox.games.cookieclicker.upgrades.prism.ReverseShadows;
+import me.nikl.gamebox.games.cookieclicker.upgrades.shipment.ChocolateMonoliths;
+import me.nikl.gamebox.games.cookieclicker.upgrades.shipment.DysonSphere;
+import me.nikl.gamebox.games.cookieclicker.upgrades.shipment.FrequentFlyer;
+import me.nikl.gamebox.games.cookieclicker.upgrades.shipment.GenerationShip;
+import me.nikl.gamebox.games.cookieclicker.upgrades.shipment.TheFinalFrontier;
+import me.nikl.gamebox.games.cookieclicker.upgrades.shipment.VanillaNebulae;
+import me.nikl.gamebox.games.cookieclicker.upgrades.shipment.WarpDrive;
+import me.nikl.gamebox.games.cookieclicker.upgrades.shipment.Wormholes;
+import me.nikl.gamebox.games.cookieclicker.upgrades.temple.CreationMyth;
+import me.nikl.gamebox.games.cookieclicker.upgrades.temple.DeliciousBlessing;
+import me.nikl.gamebox.games.cookieclicker.upgrades.temple.EnlargedPantheon;
+import me.nikl.gamebox.games.cookieclicker.upgrades.temple.GoldenIdols;
+import me.nikl.gamebox.games.cookieclicker.upgrades.temple.GreatBakerInTheSky;
+import me.nikl.gamebox.games.cookieclicker.upgrades.temple.Sacrifices;
+import me.nikl.gamebox.games.cookieclicker.upgrades.temple.SunFestival;
+import me.nikl.gamebox.games.cookieclicker.upgrades.temple.Theocracy;
+import me.nikl.gamebox.games.cookieclicker.upgrades.timemachine.CausalityEnforcer;
+import me.nikl.gamebox.games.cookieclicker.upgrades.timemachine.CookietopianMomentsOfMaybe;
+import me.nikl.gamebox.games.cookieclicker.upgrades.timemachine.FarFutureEnactment;
+import me.nikl.gamebox.games.cookieclicker.upgrades.timemachine.FluxCapacitors;
+import me.nikl.gamebox.games.cookieclicker.upgrades.timemachine.GreatLoopHypothesis;
+import me.nikl.gamebox.games.cookieclicker.upgrades.timemachine.QuantumConundrum;
+import me.nikl.gamebox.games.cookieclicker.upgrades.timemachine.TimeParadoxResolver;
+import me.nikl.gamebox.games.cookieclicker.upgrades.timemachine.YestermorrowComparators;
+import me.nikl.gamebox.games.cookieclicker.upgrades.wizardtower.AncientGrimoires;
+import me.nikl.gamebox.games.cookieclicker.upgrades.wizardtower.BeardlierBeards;
+import me.nikl.gamebox.games.cookieclicker.upgrades.wizardtower.Cookiemancy;
+import me.nikl.gamebox.games.cookieclicker.upgrades.wizardtower.DarkFormulas;
+import me.nikl.gamebox.games.cookieclicker.upgrades.wizardtower.KitchenCurses;
+import me.nikl.gamebox.games.cookieclicker.upgrades.wizardtower.PointierHats;
+import me.nikl.gamebox.games.cookieclicker.upgrades.wizardtower.RabbitTrick;
+import me.nikl.gamebox.games.cookieclicker.upgrades.wizardtower.SchoolOfSorcery;
+import me.nikl.gamebox.nms.NmsFactory;
 import me.nikl.gamebox.nms.NmsUtility;
-import me.nikl.gamebox.utility.InventoryUtility;
 import me.nikl.gamebox.utility.NumberUtility;
 import me.nikl.gamebox.utility.Sound;
 import org.bukkit.Material;
@@ -32,7 +142,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
 /**
  * Created by Niklas
@@ -41,51 +158,34 @@ import java.util.*;
  */
 public class CCGame extends BukkitRunnable {
 
-    private Random rand;
-
-    private CCLanguage lang;
-
-    private NmsUtility nms;
-
-    private CookieClicker plugin;
-
-    private boolean playSounds;
-
-    private CCGameRules rule;
-
-    private Player player;
-
-    private Inventory inventory;
-
-    private double cookies;
-
-    private double cookiesPerClick = 0.;
-
     public double baseCookiesPerClick = 1.;
     public double cookiesPerClickPerCPS = 0.;
-
+    private Random rand;
+    private CCLanguage lang;
+    private NmsUtility nms;
+    private CookieClicker plugin;
+    private boolean playSounds;
+    private CCGameRules rule;
+    private Player player;
+    private Inventory inventory;
+    private double cookies;
+    private double cookiesPerClick = 0.;
     private Map<Buildings, Double> clickBonuses = new HashMap<>();
-
-
     private Map<Buildings, Map<Buildings, Double>> buildingBonuses = new HashMap<>();
-
     // stats
     private double totalCookiesProduced = 0.;
     private double clickCookiesProduced = 0.;
-
     private double cookiesPerSecond = 0.;
-    private long lastTimeStamp = System.currentTimeMillis();
 
+    private long lastTimeStamp = System.currentTimeMillis();
     private HashMap<Buildings, Building> buildings = new HashMap<>();
     private HashMap<Integer, Buildings> buildingsPositions = new HashMap<>();
-
     private ItemStack mainCookie = new MaterialData(Material.COOKIE).toItemStack();
     private int mainCookieSlot = 31;
     private List<Integer> mainCookieSlots;
     private int moveCookieAfterClicks;
     private ItemStack oven = new MaterialData(Material.FURNACE).toItemStack();
     private int ovenSlot = 0;
-
     private Set<Upgrade> activeUpgrades = new HashSet<>();
     private Map<Integer, Upgrade> futureUpgrades = new HashMap<>();
     private Map<Integer, Upgrade> shownUpgrades = new HashMap<>();
@@ -98,25 +198,19 @@ public class CCGame extends BukkitRunnable {
     private float pitch = 10f;
 
 
-    public CCGame(CCGameRules rule, CookieClicker game, Player player, boolean playSounds, ConfigurationSection save){
+    public CCGame(CCGameRules rule, CookieClicker game, Player player, boolean playSounds, ConfigurationSection save) {
         this.plugin = game;
-        nms = game.getGameBox().getNMS();
+        nms = NmsFactory.getNmsUtility();
         this.lang = (CCLanguage) game.getGameLang();
         this.rule = rule;
         this.player = player;
-
         rand = new Random();
-
         mainCookieSlots = new ArrayList<>();
         mainCookieSlots.add(30);
         mainCookieSlots.add(31);
         mainCookieSlots.add(32);
-
         moveCookieAfterClicks = rule.getMoveCookieAfterClicks();
-
         cookies = 0.;
-
-
         // add all buildings and register them with their slot
         buildings.put(Buildings.CURSOR, new Cursor(game, 2, Buildings.CURSOR));
         buildingsPositions.put(2, Buildings.CURSOR);
@@ -147,9 +241,7 @@ public class CCGame extends BukkitRunnable {
         buildings.put(Buildings.PRISM, new Prism(game, 17, Buildings.PRISM));
         buildingsPositions.put(17, Buildings.PRISM);
 
-
         Set<Upgrade> futureUpgradesTemp = new HashSet<>();
-
         // clicking
         futureUpgradesTemp.add(new PlasticMouse(this));
         futureUpgradesTemp.add(new IronMouse(this));
@@ -309,7 +401,7 @@ public class CCGame extends BukkitRunnable {
         // sort upgrades in map with ids as key (fast lookup for loading of old game)
         Upgrade upgrade;
         Iterator<Upgrade> iterator = futureUpgradesTemp.iterator();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             upgrade = iterator.next();
             futureUpgrades.put(upgrade.getId(), upgrade);
         }
@@ -321,9 +413,9 @@ public class CCGame extends BukkitRunnable {
         String title = lang.GAME_TITLE
                 .replace("%score%", String.valueOf((int) cookies));
 
-        this.inventory = InventoryUtility.createInventory(null, 54, title);
+        this.inventory = game.createInventory(54, title);
 
-        if(save != null){
+        if (save != null) {
             //load the game
             load(save);
         }
@@ -340,7 +432,6 @@ public class CCGame extends BukkitRunnable {
         calcCookiesPerClick();
         visualize();
 
-
         mainCookie.setAmount(1);
         ItemMeta meta = mainCookie.getItemMeta();
         meta.setDisplayName(lang.GAME_COOKIE_NAME);
@@ -351,13 +442,12 @@ public class CCGame extends BukkitRunnable {
         meta = oven.getItemMeta();
         meta.setDisplayName(lang.GAME_OVEN_NAME);
         oven.setItemMeta(meta);
-
         updateOven();
     }
 
     private void updateOven() {
         ArrayList<String> lore = new ArrayList<>();
-        for(String line : lang.GAME_OVEN_LORE){
+        for (String line : lang.GAME_OVEN_LORE) {
             lore.add(line.replace("%cookies_per_second%", NumberUtility.convertHugeNumber(cookiesPerSecond))
                     .replace("%cookies_per_click%", NumberUtility.convertHugeNumber(cookiesPerClick))
                     .replace("%cookies_per_second_long%", NumberUtility.convertHugeNumber(cookiesPerSecond, false))
@@ -371,54 +461,55 @@ public class CCGame extends BukkitRunnable {
 
 
     public void onClick(InventoryClickEvent inventoryClickEvent) {
-        if(inventoryClickEvent.getAction() != InventoryAction.PICKUP_ALL && inventoryClickEvent.getAction() != InventoryAction.PICKUP_HALF) return;
-        if(inventoryClickEvent.getCurrentItem() == null) return;
+        if (inventoryClickEvent.getAction() != InventoryAction.PICKUP_ALL && inventoryClickEvent.getAction() != InventoryAction.PICKUP_HALF)
+            return;
+        if (inventoryClickEvent.getCurrentItem() == null) return;
 
         // Click on cookie
-        if(inventoryClickEvent.getRawSlot() == mainCookieSlot) {
+        if (inventoryClickEvent.getRawSlot() == mainCookieSlot) {
             cookies += cookiesPerClick;
-            clickCookiesProduced += cookiesPerClick ;
+            clickCookiesProduced += cookiesPerClick;
             totalCookiesProduced += cookiesPerClick;
 
             // move the cookie if configured
-            if(moveCookieAfterClicks == 1){
+            if (moveCookieAfterClicks == 1) {
                 int oldSlot = mainCookieSlot;
-                while (oldSlot == mainCookieSlot){
+                while (oldSlot == mainCookieSlot) {
                     mainCookieSlot = mainCookieSlots.get(rand.nextInt(mainCookieSlots.size()));
                 }
                 inventory.setItem(oldSlot, null);
                 inventory.setItem(mainCookieSlot, mainCookie);
                 moveCookieAfterClicks = rule.getMoveCookieAfterClicks();
-            } else if(moveCookieAfterClicks > 0){
-                moveCookieAfterClicks --;
+            } else if (moveCookieAfterClicks > 0) {
+                moveCookieAfterClicks--;
             }
 
-            if(playSounds) player.playSound(player.getLocation(), clickCookie, volume * 0.5f, pitch);
+            if (playSounds) player.playSound(player.getLocation(), clickCookie, volume * 0.5f, pitch);
         }
 
         // click on production
-        else if(buildingsPositions.keySet().contains(inventoryClickEvent.getRawSlot())){
+        else if (buildingsPositions.keySet().contains(inventoryClickEvent.getRawSlot())) {
             Building building = buildings.get(buildingsPositions.get(inventoryClickEvent.getRawSlot()));
             double cost = building.getCost();
 
-            switch (inventoryClickEvent.getAction()){
+            switch (inventoryClickEvent.getAction()) {
                 case PICKUP_ALL:
-                    if(cookies < cost){
-                        if(playSounds) player.playSound(player.getLocation(), no, volume, pitch);
+                    if (cookies < cost) {
+                        if (playSounds) player.playSound(player.getLocation(), no, volume, pitch);
                         return;
                     }
                     cookies -= cost;
                     building.addProductions(1);
                     building.visualize(inventory);
-                    if(playSounds) player.playSound(player.getLocation(), click, volume, pitch);
+                    if (playSounds) player.playSound(player.getLocation(), click, volume, pitch);
                     break;
 
                 case PICKUP_HALF:
-                    if(building.getCount() == 0) return;
+                    if (building.getCount() == 0) return;
 
                     building.addProductions(-1);
                     cookies += 0.45 * cost;
-                    if(playSounds) player.playSound(player.getLocation(), clickCookie, volume, pitch);
+                    if (playSounds) player.playSound(player.getLocation(), clickCookie, volume, pitch);
                     building.visualize(inventory);
                     break;
             }
@@ -428,16 +519,16 @@ public class CCGame extends BukkitRunnable {
         }
 
         // click on upgrade
-        else if(shownUpgrades.keySet().contains(53 - inventoryClickEvent.getRawSlot())){
+        else if (shownUpgrades.keySet().contains(53 - inventoryClickEvent.getRawSlot())) {
             Upgrade upgrade = shownUpgrades.get(53 - inventoryClickEvent.getRawSlot());
-            if(cookies < upgrade.getCost()) {
-                if(playSounds) player.playSound(player.getLocation(), no, volume, pitch);
+            if (cookies < upgrade.getCost()) {
+                if (playSounds) player.playSound(player.getLocation(), no, volume, pitch);
                 return;
             }
 
             cookies -= upgrade.getCost();
             upgrade.onActivation();
-            if(playSounds) player.playSound(player.getLocation(), this.upgrade, volume, pitch);
+            if (playSounds) player.playSound(player.getLocation(), this.upgrade, volume, pitch);
 
             activeUpgrades.add(upgrade);
             shownUpgrades.remove(53 - inventoryClickEvent.getRawSlot());
@@ -452,9 +543,9 @@ public class CCGame extends BukkitRunnable {
 
     private void calcCookiesPerSecond() {
         cookiesPerSecond = 0.;
-        for(Buildings buildings : buildings.keySet()){
+        for (Buildings buildings : buildings.keySet()) {
             // check for bonuses from other buildings
-            if(buildingBonuses.keySet().contains(buildings)) {
+            if (buildingBonuses.keySet().contains(buildings)) {
 
                 double otherBuildingBonus = 0.;
                 double bonus;
@@ -476,33 +567,33 @@ public class CCGame extends BukkitRunnable {
     private void calcCookiesPerClick() {
         cookiesPerClick = baseCookiesPerClick + cookiesPerClickPerCPS * cookiesPerSecond;
 
-        for(Buildings buildings : clickBonuses.keySet()){
+        for (Buildings buildings : clickBonuses.keySet()) {
             cookiesPerClick += this.buildings.get(buildings).getCount() * clickBonuses.get(buildings);
         }
     }
 
-    private void checkUpgrades(){
+    private void checkUpgrades() {
         boolean added = false;
-        Set<Upgrade> toAdd =  new HashSet<>();
+        Set<Upgrade> toAdd = new HashSet<>();
         Iterator<Upgrade> iterator = futureUpgrades.values().iterator();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             Upgrade upgrade = iterator.next();
-            if(!upgrade.isUnlocked()) continue;
+            if (!upgrade.isUnlocked()) continue;
 
             added = true;
             toAdd.add(upgrade);
             iterator.remove();
         }
 
-        if(added) visualizeUpgrades(toAdd);
+        if (added) visualizeUpgrades(toAdd);
     }
 
     private void visualizeUpgrades(Set<Upgrade> toAdd) {
         Iterator<Upgrade> iterator = toAdd.iterator();
         int slot = 8;
-        while (iterator.hasNext()){
-            if(shownUpgrades.keySet().contains(slot)){
-                slot --;
+        while (iterator.hasNext()) {
+            if (shownUpgrades.keySet().contains(slot)) {
+                slot--;
                 continue;
             }
 
@@ -519,7 +610,7 @@ public class CCGame extends BukkitRunnable {
     private void visualizeUpgrades() {
         Map<Integer, Upgrade> orderedUpgrades = new HashMap<>();
 
-        if(shownUpgrades.isEmpty()){
+        if (shownUpgrades.isEmpty()) {
             inventory.setItem(53 - 8, null);
             return;
         }
@@ -544,8 +635,8 @@ public class CCGame extends BukkitRunnable {
 
         shownUpgrades = orderedUpgrades;
 
-        for(int i = 8; i >= 0 ; i --){
-            if(shownUpgrades.get(i) == null){
+        for (int i = 8; i >= 0; i--) {
+            if (shownUpgrades.get(i) == null) {
                 inventory.setItem(53 - i, null);
                 continue;
             }
@@ -564,12 +655,12 @@ public class CCGame extends BukkitRunnable {
         cookies.put("total", this.totalCookiesProduced);
 
         Map<String, Integer> productions = new HashMap<>();
-        for(Buildings production : buildingsPositions.values()){
+        for (Buildings production : buildingsPositions.values()) {
             productions.put(production.toString(), getBuilding(production).getCount());
         }
 
         List<Integer> upgrades = new ArrayList<>();
-        for(Upgrade upgrade : activeUpgrades){
+        for (Upgrade upgrade : activeUpgrades) {
             upgrades.add(upgrade.getId());
         }
 
@@ -577,21 +668,21 @@ public class CCGame extends BukkitRunnable {
     }
 
     private void load(ConfigurationSection save) {
-        if(save.isConfigurationSection("cookies")){
+        if (save.isConfigurationSection("cookies")) {
             ConfigurationSection cookieSection = save.getConfigurationSection("cookies");
             cookies = cookieSection.getDouble("current", 0.);
             clickCookiesProduced = cookieSection.getDouble("click", 0.);
             totalCookiesProduced = cookieSection.getDouble("total", 0.);
         }
 
-        if(save.isConfigurationSection("productions")) {
+        if (save.isConfigurationSection("productions")) {
 
             Buildings building;
             for (String key : save.getConfigurationSection("productions").getKeys(false)) {
-                try{
+                try {
                     building = Buildings.valueOf(key);
                     buildings.get(building).addProductions(save.getInt("productions" + "." + key, 0));
-                } catch (IllegalArgumentException exception){
+                } catch (IllegalArgumentException exception) {
                     // ignore
                 }
             }
@@ -599,10 +690,10 @@ public class CCGame extends BukkitRunnable {
 
         List<Integer> upgrades = save.getIntegerList("upgrades");
 
-        if(upgrades != null && !upgrades.isEmpty()){
-            for(int id : upgrades){
+        if (upgrades != null && !upgrades.isEmpty()) {
+            for (int id : upgrades) {
                 Upgrade upgrade = futureUpgrades.get(id);
-                if(upgrade == null) continue;
+                if (upgrade == null) continue;
                 upgrade.onActivation();
                 activeUpgrades.add(upgrade);
                 futureUpgrades.remove(id);
@@ -614,7 +705,7 @@ public class CCGame extends BukkitRunnable {
     public void run() {
         long newTimeStamp = System.currentTimeMillis();
 
-        if(cookiesPerSecond > 0) {
+        if (cookiesPerSecond > 0) {
             double newCookies = ((newTimeStamp - lastTimeStamp) / 1000.) * cookiesPerSecond;
             cookies += newCookies;
             totalCookiesProduced += newCookies;
@@ -628,19 +719,20 @@ public class CCGame extends BukkitRunnable {
         checkUpgrades();
     }
 
-    public void visualize(){
-        for(Building building : buildings.values()) {
+    public void visualize() {
+        for (Building building : buildings.values()) {
             building.visualize(inventory);
         }
     }
 
     /**
      * Add a bonus number of cookies per click and per specified building
+     *
      * @param production
      * @param bonusPerBuilding
      */
-    public void addClickBonus(Buildings production, double bonusPerBuilding){
-        if(clickBonuses.keySet().contains(production)){
+    public void addClickBonus(Buildings production, double bonusPerBuilding) {
+        if (clickBonuses.keySet().contains(production)) {
             clickBonuses.put(production, (clickBonuses.get(production) + bonusPerBuilding));
             return;
         } else {
@@ -649,10 +741,10 @@ public class CCGame extends BukkitRunnable {
         }
     }
 
-    public void addBuildingBonus(Buildings buildingThatGetsTheBonus, Buildings buildingTheBonusComesFrom, double bonus){
-        if(buildingBonuses.keySet().contains(buildingThatGetsTheBonus)){
+    public void addBuildingBonus(Buildings buildingThatGetsTheBonus, Buildings buildingTheBonusComesFrom, double bonus) {
+        if (buildingBonuses.keySet().contains(buildingThatGetsTheBonus)) {
             Map<Buildings, Double> bonusMap = buildingBonuses.get(buildingThatGetsTheBonus);
-            if(bonusMap.keySet().contains(buildingTheBonusComesFrom)){
+            if (bonusMap.keySet().contains(buildingTheBonusComesFrom)) {
                 bonusMap.put(buildingTheBonusComesFrom, bonusMap.get(buildingTheBonusComesFrom) + bonus);
                 buildingBonuses.put(buildingThatGetsTheBonus, bonusMap);
                 return;
@@ -668,11 +760,11 @@ public class CCGame extends BukkitRunnable {
         }
     }
 
-    public double getTotalCookiesProduced(){
+    public double getTotalCookiesProduced() {
         return this.totalCookiesProduced;
     }
 
-    public double getClickCookiesProduced(){
+    public double getClickCookiesProduced() {
         return this.clickCookiesProduced;
     }
 
@@ -684,15 +776,15 @@ public class CCGame extends BukkitRunnable {
         return inventory;
     }
 
-    public CCGameRules getRule(){
+    public CCGameRules getRule() {
         return this.rule;
     }
 
-    public Player getPlayer(){
+    public Player getPlayer() {
         return this.player;
     }
 
-    public CCLanguage getLang(){
+    public CCLanguage getLang() {
         return this.lang;
     }
 }

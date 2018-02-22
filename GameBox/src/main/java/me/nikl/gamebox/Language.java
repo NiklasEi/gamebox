@@ -4,7 +4,11 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,21 +22,18 @@ import java.util.List;
  */
 public abstract class Language {
 
-    protected GameBox plugin;
-    protected Module module;
-
-    protected File languageFile;
-
-    protected FileConfiguration defaultLanguage;
-    protected FileConfiguration language;
-
-    public String PREFIX = "["+ChatColor.DARK_AQUA+"GameBox"+ChatColor.RESET+"]";
-    public String NAME = ChatColor.DARK_AQUA+"GameBox"+ChatColor.RESET;
+    public String PREFIX = "[" + ChatColor.DARK_AQUA + "GameBox" + ChatColor.RESET + "]";
+    public String NAME = ChatColor.DARK_AQUA + "GameBox" + ChatColor.RESET;
     public String PLAIN_PREFIX = ChatColor.stripColor(PREFIX);
     public String PLAIN_NAME = ChatColor.stripColor(NAME);
     public String DEFAULT_NAME, DEFAULT_PLAIN_NAME;
+    protected GameBox plugin;
+    protected Module module;
+    protected File languageFile;
+    protected FileConfiguration defaultLanguage;
+    protected FileConfiguration language;
 
-    public Language(GameBox plugin, Module module){
+    public Language(GameBox plugin, Module module) {
         this.plugin = plugin;
         this.module = module;
 
@@ -68,6 +69,7 @@ public abstract class Language {
      * are:
      * 'default'/'default.yml': loads the english language file from inside the jar
      * 'lang_xx.yml': will try to load the given file inside the namespaces language folder
+     *
      * @param config
      */
     protected void getLangFile(FileConfiguration config) {
@@ -88,12 +90,12 @@ public abstract class Language {
 
         String fileName = config.getString("langFile");
 
-        if(fileName != null && (fileName.equalsIgnoreCase("default") || fileName.equalsIgnoreCase("default.yml"))) {
+        if (fileName != null && (fileName.equalsIgnoreCase("default") || fileName.equalsIgnoreCase("default.yml"))) {
             language = defaultLanguage;
             return;
         }
 
-        if(fileName == null || !fileName.endsWith(".yml")){
+        if (fileName == null || !fileName.endsWith(".yml")) {
             String path = moduleID.equals(GameBox.MODULE_GAMEBOX) ? "'config.yml'" : "'games" + "/" + moduleID + "/config.yml'";
             plugin.getLogger().warning("Language file for " + moduleID + " is not specified or not valid.");
             plugin.getLogger().warning("Did you forget to give the file ending '.yml'?");
@@ -110,7 +112,7 @@ public abstract class Language {
                 new File(plugin.getDataFolder().toString() + File.separatorChar + "language" + File.separatorChar
                         + moduleID + File.separatorChar + fileName);
 
-        if(!languageFile.exists()){
+        if (!languageFile.exists()) {
             String path = moduleID.equals(GameBox.MODULE_GAMEBOX) ? "'config.yml'"
                     : "'games" + "/" + moduleID + "/config.yml'";
             plugin.getLogger().warning("The in " + path + " as 'langFile' configured file '" + fileName + "' does not exist!");
@@ -142,15 +144,15 @@ public abstract class Language {
      *
      * @return list of all missing keys (can be empty list)
      */
-    public List<String> findMissingStringMessages(){
+    public List<String> findMissingStringMessages() {
 
         List<String> toReturn = new ArrayList<>();
 
-        if(defaultLanguage.equals(language)) return toReturn;
+        if (defaultLanguage.equals(language)) return toReturn;
 
-        for(String key : defaultLanguage.getKeys(true)){
-            if(defaultLanguage.isString(key)){
-                if(!language.isString(key)){
+        for (String key : defaultLanguage.getKeys(true)) {
+            if (defaultLanguage.isString(key)) {
+                if (!language.isString(key)) {
                     // there is a message missing
                     toReturn.add(key);
                 }
@@ -168,15 +170,15 @@ public abstract class Language {
      *
      * @return list of all missing keys (can be empty list)
      */
-    public List<String> findMissingListMessages(){
+    public List<String> findMissingListMessages() {
 
         List<String> toReturn = new ArrayList<>();
 
-        if(defaultLanguage.equals(language)) return toReturn;
+        if (defaultLanguage.equals(language)) return toReturn;
 
-        for(String key : defaultLanguage.getKeys(true)){
-            if (defaultLanguage.isList(key)){
-                if(!language.isList(key)){
+        for (String key : defaultLanguage.getKeys(true)) {
+            if (defaultLanguage.isList(key)) {
+                if (!language.isList(key)) {
                     // there is a list missing
                     toReturn.add(key);
                 }
@@ -193,7 +195,8 @@ public abstract class Language {
      * language file the corresponding list from the default
      * file is returned.
      * ChatColor can be translated here.
-     * @param path path to the message
+     *
+     * @param path  path to the message
      * @param color if set, color the loaded message
      * @return message
      */
@@ -201,12 +204,13 @@ public abstract class Language {
         List<String> toReturn;
 
         // load from default file if path is not valid
-        if(!language.isList(path)){
+        if (!language.isList(path)) {
             toReturn = defaultLanguage.getStringList(path);
-            if(toReturn == null) throw new IllegalArgumentException("The language key '" + path + "' is not a valid list!");
-            if(color){
-                for(int i = 0; i<toReturn.size(); i++){
-                    toReturn.set(i, ChatColor.translateAlternateColorCodes('&',toReturn.get(i)));
+            if (toReturn == null)
+                throw new IllegalArgumentException("The language key '" + path + "' is not a valid list!");
+            if (color) {
+                for (int i = 0; i < toReturn.size(); i++) {
+                    toReturn.set(i, ChatColor.translateAlternateColorCodes('&', toReturn.get(i)));
                 }
             }
             return toReturn;
@@ -214,7 +218,7 @@ public abstract class Language {
 
         // load from language file
         toReturn = language.getStringList(path);
-        if(color && toReturn != null) {
+        if (color && toReturn != null) {
             for (int i = 0; i < toReturn.size(); i++) {
                 toReturn.set(i, ChatColor.translateAlternateColorCodes('&', toReturn.get(i)));
             }
@@ -222,7 +226,7 @@ public abstract class Language {
         return toReturn;
     }
 
-    protected List<String> getStringList(String path){
+    protected List<String> getStringList(String path) {
         return getStringList(path, true);
     }
 
@@ -233,34 +237,36 @@ public abstract class Language {
      * configured language file the corresponding
      * message from the default file is returned.
      * ChatColor is translated when reading the message.
-     * @param path path to the message
+     *
+     * @param path  path to the message
      * @param color if set, color the loaded message
      * @return message
      */
     protected String getString(String path, boolean color) {
         String toReturn;
-        if(!language.isString(path)){
+        if (!language.isString(path)) {
             toReturn = defaultLanguage.getString(path);
-            if(toReturn == null) throw new IllegalArgumentException("The language key '" + path + "' is not a valid string!");
-            if(color){
+            if (toReturn == null)
+                throw new IllegalArgumentException("The language key '" + path + "' is not a valid string!");
+            if (color) {
                 return ChatColor.translateAlternateColorCodes('&', defaultLanguage.getString(path));
             }
             return toReturn;
         }
         toReturn = language.getString(path);
-        if(!color) return toReturn;
-        return ChatColor.translateAlternateColorCodes('&',toReturn);
+        if (!color) return toReturn;
+        return ChatColor.translateAlternateColorCodes('&', toReturn);
     }
 
-    protected String getString(String path){
+    protected String getString(String path) {
         return getString(path, true);
     }
 
     // Todo (from admin command)
-    protected boolean createDiffFile(){
+    protected boolean createDiffFile() {
         File diffFile = new File(languageFile.getAbsolutePath() + "(missingKeys)");
         int copy = 0;
-        while (diffFile.exists()){
+        while (diffFile.exists()) {
             copy++;
             diffFile = new File(languageFile.getAbsolutePath() + "(missingKeys)(" + String.valueOf(copy) + ")");
         }

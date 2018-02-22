@@ -7,9 +7,8 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class ReverseShadows extends Upgrade{
+public class ReverseShadows extends Upgrade {
 
     public ReverseShadows(CCGame game) {
         super(game, 319);

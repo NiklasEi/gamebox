@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class DarkFormulas extends Upgrade{
+public class DarkFormulas extends Upgrade {
 
     public DarkFormulas(CCGame game) {
         super(game, 249);

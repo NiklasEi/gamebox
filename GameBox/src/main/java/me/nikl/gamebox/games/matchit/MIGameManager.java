@@ -3,10 +3,12 @@ package me.nikl.gamebox.games.matchit;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.games.GameManager;
 import me.nikl.gamebox.games.GameRule;
+import me.nikl.gamebox.games.exceptions.GameStartException;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.Inventory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +16,6 @@ import java.util.UUID;
 
 /**
  * Created by nikl on 02.12.17.
- *
  */
 public class MIGameManager implements GameManager {
     private MatchIt matchIt;
@@ -23,7 +24,7 @@ public class MIGameManager implements GameManager {
     private HashMap<String, MIGameRule> gameRules = new HashMap<>();
     private HashMap<UUID, MIGame> games = new HashMap<>();
 
-    public MIGameManager (MatchIt matchIt){
+    public MIGameManager(MatchIt matchIt) {
         this.matchIt = matchIt;
         this.gameBox = matchIt.getGameBox();
     }
@@ -31,7 +32,7 @@ public class MIGameManager implements GameManager {
     @Override
     public boolean onInventoryClick(InventoryClickEvent event) {
         MIGame game = games.get(event.getWhoClicked().getUniqueId());
-        if(game == null) return false;
+        if (game == null) return false;
 
         game.onClick(event);
         return true;
@@ -39,7 +40,7 @@ public class MIGameManager implements GameManager {
 
     @Override
     public boolean onInventoryClose(InventoryCloseEvent event) {
-        if(!games.keySet().contains(event.getPlayer().getUniqueId())) return false;
+        if (!games.keySet().contains(event.getPlayer().getUniqueId())) return false;
 
         // do same stuff as on removeFromGame()
         removeFromGame(event.getPlayer().getUniqueId());
@@ -52,21 +53,24 @@ public class MIGameManager implements GameManager {
     }
 
     @Override
-    public int startGame(Player[] players, boolean playSounds, String... args) {
+    public void startGame(Player[] players, boolean playSounds, String... args) throws GameStartException {
         MIGameRule rule = gameRules.get(args[0]);
-        if(rule == null) return GameBox.GAME_NOT_STARTED_ERROR;
+        if (rule == null) throw new GameStartException(GameStartException.Reason.ERROR);
+        if (!matchIt.payIfNecessary(players[0], rule.getCost())) {
+            throw new GameStartException(GameStartException.Reason.NOT_ENOUGH_MONEY);
+        }
         games.put(players[0].getUniqueId(),
                 new MIGame(matchIt, players[0]
                         , playSounds && matchIt.getSettings().isPlaySounds()
                         , rule));
-        return GameBox.GAME_STARTED;
+        return;
     }
 
     @Override
     public void removeFromGame(UUID uuid) {
         MIGame game = games.get(uuid);
 
-        if(game == null) return;
+        if (game == null) return;
 
         game.cancel();
         game.onGameEnd();
@@ -82,7 +86,7 @@ public class MIGameManager implements GameManager {
         MatchIt.GridSize gridSize;
         try {
             gridSize = MatchIt.GridSize.valueOf(buttonSec.getString("size", "medium").toUpperCase());
-        } catch (IllegalArgumentException exception){
+        } catch (IllegalArgumentException exception) {
             gridSize = MatchIt.GridSize.MIDDLE;
         }
 
@@ -96,5 +100,10 @@ public class MIGameManager implements GameManager {
 
     public GameBox getGameBox() {
         return gameBox;
+    }
+
+    @Override
+    public Inventory getInventory() {
+        return null;
     }
 }

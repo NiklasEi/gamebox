@@ -21,33 +21,33 @@ public class Building {
     protected double productionPerSecond = 0.;
     protected double multiplier = 1.;
     protected double otherBuildingsBonus = 0.;
-    protected List<String > lore;
+    protected List<String> lore;
 
     protected String name;
 
     protected CCLanguage lang;
 
-    public Building(CookieClicker plugin, int slot, Buildings building){
+    public Building(CookieClicker plugin, int slot, Buildings building) {
         this.lang = (CCLanguage) plugin.getGameLang();
         this.name = lang.buildingName.get(building);
 
         lore = new ArrayList<>();
-        for(String line : lang.buildingLore.get(building)){
+        for (String line : lang.buildingLore.get(building)) {
             lore.add(line.replace("%name%", name));
         }
 
-        if(slot < 0 || slot > 53){
+        if (slot < 0 || slot > 53) {
             slot = 0;
         }
 
         this.slot = slot;
     }
 
-    public double getAllInAllProductionPerSecond(){
-        return  getProductionPerSecondPerItem() * count;
+    public double getAllInAllProductionPerSecond() {
+        return getProductionPerSecondPerItem() * count;
     }
 
-    public void addProductions(int amount){
+    public void addProductions(int amount) {
         this.count += amount;
     }
 
@@ -67,9 +67,10 @@ public class Building {
      *
      * The current multiplier is multiplied by the
      * given factor
+     *
      * @param multiplier
      */
-    public void multiply(double multiplier){
+    public void multiply(double multiplier) {
         this.multiplier = this.multiplier * multiplier;
     }
 
@@ -79,6 +80,7 @@ public class Building {
 
     /**
      * Calculate and return the cost for the next building
+     *
      * @return
      */
     public double getCost() {
@@ -89,8 +91,8 @@ public class Building {
         return productionPerSecond * multiplier + otherBuildingsBonus;
     }
 
-    public void visualize(Inventory inventory){
-        if(icon == null || lore == null) return;
+    public void visualize(Inventory inventory) {
+        if (icon == null || lore == null) return;
         List<String> newLore = new ArrayList<>();
         for (String line : lore) {
             newLore.add(line.replace("%count%", String.valueOf(count))
@@ -108,11 +110,11 @@ public class Building {
         inventory.setItem(slot, icon);
     }
 
-    public void setOtherBuildingsBonus(double bonus){
+    public void setOtherBuildingsBonus(double bonus) {
         this.otherBuildingsBonus = bonus;
     }
 
-    public ItemStack getIcon(){
+    public ItemStack getIcon() {
         return icon.clone();
     }
 }

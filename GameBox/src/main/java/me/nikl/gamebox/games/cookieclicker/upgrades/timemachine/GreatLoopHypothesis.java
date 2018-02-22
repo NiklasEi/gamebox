@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class GreatLoopHypothesis extends Upgrade{
+public class GreatLoopHypothesis extends Upgrade {
 
     public GreatLoopHypothesis(CCGame game) {
         super(game, 304);

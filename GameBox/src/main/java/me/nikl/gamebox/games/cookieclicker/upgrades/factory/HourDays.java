@@ -10,9 +10,9 @@ import org.bukkit.material.MaterialData;
 /**
  * @author Niklas Eicker
  *
- * Custom upgrade replacing 'Sweatshop'
+ *         Custom upgrade replacing 'Sweatshop'
  */
-public class HourDays extends Upgrade{
+public class HourDays extends Upgrade {
 
     public HourDays(CCGame game) {
         super(game, 310);

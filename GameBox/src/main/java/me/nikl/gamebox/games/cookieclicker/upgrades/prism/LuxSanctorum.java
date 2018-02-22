@@ -7,9 +7,8 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class LuxSanctorum extends Upgrade{
+public class LuxSanctorum extends Upgrade {
 
     public LuxSanctorum(CCGame game) {
         super(game, 306);

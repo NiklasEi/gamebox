@@ -37,15 +37,15 @@ public class FileUtility {
         URL main = GameBox.class.getResource("GameBox.class");
         try {
             JarURLConnection connection = (JarURLConnection) main.openConnection();
-            JarFile jar = new JarFile(URLDecoder.decode( connection.getJarFileURL().getFile(), "UTF-8" ));
+            JarFile jar = new JarFile(URLDecoder.decode(connection.getJarFileURL().getFile(), "UTF-8"));
             Plugin gameBox = Bukkit.getPluginManager().getPlugin("GameBox");
             for (Enumeration list = jar.entries(); list.hasMoreElements(); ) {
                 JarEntry entry = (JarEntry) list.nextElement();
-                if(entry.getName().split("/")[0].equals("language")) {
+                if (entry.getName().split("/")[0].equals("language")) {
 
                     String[] pathParts = entry.getName().split("/");
 
-                    if (pathParts.length < 2 || !entry.getName().endsWith(".yml")){
+                    if (pathParts.length < 2 || !entry.getName().endsWith(".yml")) {
                         continue;
                     }
 
@@ -65,12 +65,12 @@ public class FileUtility {
 
     public static boolean copyExternalResources(GameBox gameBox, Module module) {
         JavaPlugin external = module.getExternalPlugin();
-        if(external == null) return false;
+        if (external == null) return false;
         URL main = external.getClass().getResource(module.getClassPath()
                 .split("\\.")[module.getClassPath().split("\\.").length - 1] + ".class");
         try {
             JarURLConnection connection = (JarURLConnection) main.openConnection();
-            JarFile jar = new JarFile(URLDecoder.decode( connection.getJarFileURL().getFile(), "UTF-8" ));
+            JarFile jar = new JarFile(URLDecoder.decode(connection.getJarFileURL().getFile(), "UTF-8"));
             boolean foundDefaultLang = false;
             boolean foundConfig = false;
 
@@ -78,14 +78,14 @@ public class FileUtility {
                 JarEntry entry = (JarEntry) list.nextElement();
                 String[] pathParts = entry.getName().split("/");
                 String folderName = pathParts[0];
-                if(folderName.equals("language")) {
-                    if (pathParts.length < 3 || !entry.getName().endsWith(".yml")){
+                if (folderName.equals("language")) {
+                    if (pathParts.length < 3 || !entry.getName().endsWith(".yml")) {
                         continue;
                     }
                     // subfolder in language folder
-                    if(!pathParts[1].equalsIgnoreCase(module.getModuleID())) continue;
+                    if (!pathParts[1].equalsIgnoreCase(module.getModuleID())) continue;
                     String fileName = pathParts[pathParts.length - 1];
-                    if(fileName.equals("lang_en.yml")){
+                    if (fileName.equals("lang_en.yml")) {
                         foundDefaultLang = true;
                     }
                     String gbPath = gameBox.getDataFolder().toString() + File.separatorChar
@@ -96,26 +96,26 @@ public class FileUtility {
                         file.getParentFile().mkdirs();
                         saveResourceToGBFolder(entry.getName(), gbPath, external);
                     }
-                } else if(folderName.equalsIgnoreCase("games")){
-                    if(entry.isDirectory()) continue;
+                } else if (folderName.equalsIgnoreCase("games")) {
+                    if (entry.isDirectory()) continue;
                     // only take resources from module folders
-                    if(pathParts.length < 3){
+                    if (pathParts.length < 3) {
                         continue;
                     }
                     // check module folder
-                    if(!pathParts[1].equalsIgnoreCase(module.getModuleID())){
+                    if (!pathParts[1].equalsIgnoreCase(module.getModuleID())) {
                         // resource of other module
                         continue;
                     }
                     StringBuilder builder = new StringBuilder();
-                    for(int i = 2; i < pathParts.length; i++){
+                    for (int i = 2; i < pathParts.length; i++) {
                         builder.append(pathParts[i]);
-                        if(i+1 < pathParts.length){
+                        if (i + 1 < pathParts.length) {
                             builder.append(File.separatorChar);
                         }
                     }
                     String fileName = builder.toString();
-                    if(fileName.equals("config.yml")){
+                    if (fileName.equals("config.yml")) {
                         foundConfig = true;
                     }
                     String gbPath = gameBox.getDataFolder().toString() + File.separatorChar
@@ -129,15 +129,15 @@ public class FileUtility {
                 }
             }
             jar.close();
-            if(!foundDefaultLang){
-                gameBox.info(" Failed to locate default language file for the module '" + module.getModuleID() +"'");
-                gameBox.info(" " + jar.getName() + " is missing the file 'language/" + module.getModuleID() +"/lang_en.yml'");
+            if (!foundDefaultLang) {
+                gameBox.info(" Failed to locate default language file for the module '" + module.getModuleID() + "'");
+                gameBox.info(" " + jar.getName() + " is missing the file 'language/" + module.getModuleID() + "/lang_en.yml'");
             }
-            if(!foundConfig){
-                gameBox.info(" Failed to locate the configuration of the module '" + module.getModuleID() +"'");
-                gameBox.info(" " + jar.getName() + " is missing the file 'games/" + module.getModuleID() +"/config.yml'");
+            if (!foundConfig) {
+                gameBox.info(" Failed to locate the configuration of the module '" + module.getModuleID() + "'");
+                gameBox.info(" " + jar.getName() + " is missing the file 'games/" + module.getModuleID() + "/config.yml'");
             }
-            if(!foundConfig || !foundDefaultLang){
+            if (!foundConfig || !foundDefaultLang) {
                 return false;
             }
         } catch (IOException e) {
@@ -151,34 +151,34 @@ public class FileUtility {
      * Slightly adapted method from Bukkit...
      *
      * @param resourcePath path to the resource in the external plugin
-     * @param gbPath wanted path for the resource in gameBox
-     * @param plugin external plugin
+     * @param gbPath       wanted path for the resource in gameBox
+     * @param plugin       external plugin
      */
     static private void saveResourceToGBFolder(String resourcePath, String gbPath, JavaPlugin plugin) {
-        if(resourcePath == null || resourcePath.isEmpty()) {
+        if (resourcePath == null || resourcePath.isEmpty()) {
             throw new IllegalArgumentException("ResourcePath cannot be null or empty");
         }
 
         Plugin gameBox = Bukkit.getPluginManager().getPlugin("GameBox");
         resourcePath = resourcePath.replace('\\', '/');
         InputStream in = plugin.getResource(resourcePath);
-        if(in == null) {
+        if (in == null) {
             throw new IllegalArgumentException("The embedded resource '" + resourcePath + "' cannot be found in " + plugin.getName());
         }
 
         File outFile = new File(gbPath);
         int lastIndex = resourcePath.lastIndexOf(47);
-        File outDir = new File(gameBox.getDataFolder(), resourcePath.substring(0, lastIndex >= 0?lastIndex:0));
-        if(!outDir.exists()) {
+        File outDir = new File(gameBox.getDataFolder(), resourcePath.substring(0, lastIndex >= 0 ? lastIndex : 0));
+        if (!outDir.exists()) {
             outDir.mkdirs();
         }
-        if(outFile.exists()) return;
+        if (outFile.exists()) return;
         try {
             OutputStream out = new FileOutputStream(outFile);
             byte[] buf = new byte[1024];
 
             int len;
-            while((len = in.read(buf)) > 0) {
+            while ((len = in.read(buf)) > 0) {
                 out.write(buf, 0, len);
             }
             out.close();

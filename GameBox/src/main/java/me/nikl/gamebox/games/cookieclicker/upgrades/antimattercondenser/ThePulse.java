@@ -7,9 +7,8 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class ThePulse extends Upgrade{
+public class ThePulse extends Upgrade {
 
     public ThePulse(CCGame game) {
         super(game, 305);

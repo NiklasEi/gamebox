@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class Theocracy extends Upgrade{
+public class Theocracy extends Upgrade {
 
     public Theocracy(CCGame game) {
         super(game, 312);

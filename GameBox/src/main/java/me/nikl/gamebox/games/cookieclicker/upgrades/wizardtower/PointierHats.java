@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class PointierHats extends Upgrade{
+public class PointierHats extends Upgrade {
 
     public PointierHats(CCGame game) {
         super(game, 244);

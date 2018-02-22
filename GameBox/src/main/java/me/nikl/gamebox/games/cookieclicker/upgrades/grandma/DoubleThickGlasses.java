@@ -11,7 +11,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 /**
  * @author Niklas Eicker
  */
-public class DoubleThickGlasses extends Upgrade{
+public class DoubleThickGlasses extends Upgrade {
 
     public DoubleThickGlasses(CCGame game) {
         super(game, 110);

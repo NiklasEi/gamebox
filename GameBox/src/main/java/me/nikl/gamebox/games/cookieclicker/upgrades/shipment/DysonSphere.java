@@ -9,9 +9,8 @@ import org.bukkit.material.MaterialData;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class DysonSphere extends Upgrade{
+public class DysonSphere extends Upgrade {
 
     public DysonSphere(CCGame game) {
         super(game, 301);

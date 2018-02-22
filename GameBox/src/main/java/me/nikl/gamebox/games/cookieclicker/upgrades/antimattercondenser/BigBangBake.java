@@ -7,9 +7,8 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class BigBangBake extends Upgrade{
+public class BigBangBake extends Upgrade {
 
     public BigBangBake(CCGame game) {
         super(game, 102);

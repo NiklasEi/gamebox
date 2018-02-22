@@ -7,9 +7,8 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
 
 /**
  * @author Niklas Eicker
- *
  */
-public class ChocolateLight extends Upgrade{
+public class ChocolateLight extends Upgrade {
 
     public ChocolateLight(CCGame game) {
         super(game, 177);
