@@ -11,6 +11,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -20,6 +21,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -121,26 +123,21 @@ public class FileDB extends DataBase {
     public TopList getTopList(String gameID, String gameTypeID, SaveType saveType) {
         String topListIdentifier = buildTopListIdentifier(gameID, gameTypeID, saveType);
         if (cachedTopLists.containsKey(topListIdentifier)) return cachedTopLists.get(topListIdentifier);
-        ArrayList<PlayerScore> playerScores = getTopPlayerScores(topListIdentifier, saveType);
-        TopList newTopList = new TopList(topListIdentifier, playerScores);
+        TopList newTopList = new TopList(topListIdentifier, new ArrayList<>());
         cachedTopLists.put(topListIdentifier, newTopList);
-        return newTopList;
-    }
+        getTopNPlayerScores(TopList.TOP_LIST_LENGTH, gameID, gameTypeID, saveType, new Callback<List<PlayerScore>>() {
+            @Override
+            public void onSuccess(List<PlayerScore> done) {
+                newTopList.updatePlayerScores(done);
+            }
 
-    private ArrayList<PlayerScore> getTopPlayerScores(String topListIdentifier, SaveType saveType) {
-        ArrayList<PlayerScore> toReturn = new ArrayList<>();
-        Map<UUID, Double> valuesMap = createValuesMap(topListIdentifier);
-        boolean higher = saveType.isHigherScore();
-        UUID currentBestUuid;
-        int number = 0;
-        while (number < TopList.TOP_LIST_LENGTH && !valuesMap.keySet().isEmpty()) {
-            currentBestUuid = getBestScore(valuesMap, higher);
-            GameBox.debug("Found rank " + (number + 1) + " with time: " + valuesMap.get(currentBestUuid) + "      higher: " + higher);
-            toReturn.add(new PlayerScore(currentBestUuid, valuesMap.get(currentBestUuid), saveType));
-            number++;
-            valuesMap.remove(currentBestUuid);
-        }
-        return toReturn;
+            @Override
+            public void onFailure(@Nullable Throwable throwable, @Nullable List<PlayerScore> value) {
+                plugin.getLogger().warning("Error while grabbing top list entries!");
+                if (throwable != null) throwable.printStackTrace();
+            }
+        });
+        return newTopList;
     }
 
     private UUID getBestScore(Map<UUID, Double> valuesMap, boolean higher) {
@@ -211,6 +208,37 @@ public class FileDB extends DataBase {
             if (!data.isConfigurationSection(uuid + "." + DataBase.GAMES_STATISTICS_NODE)) continue;
             data.set(uuid + "." + DataBase.GAMES_STATISTICS_NODE, null);
         }
+    }
+
+    @Override
+    public void getTopNPlayerScores(int n, String gameID, String gameTypeID, SaveType saveType, Callback<List<PlayerScore>> callback) {
+        new BukkitRunnable(){
+            @Override
+            public void run() {
+                GameBox.debug("Grabbing top " + n + " entries in " + gameID + "." + gameTypeID);
+                long start = System.currentTimeMillis();
+                String topListIdentifier = buildTopListIdentifier(gameID, gameTypeID, saveType);
+                ArrayList<PlayerScore> toReturn = new ArrayList<>();
+                Map<UUID, Double> valuesMap = createValuesMap(topListIdentifier);
+                boolean higher = saveType.isHigherScore();
+                UUID currentBestUuid;
+                int number = 0;
+                while (number < TopList.TOP_LIST_LENGTH && !valuesMap.keySet().isEmpty()) {
+                    currentBestUuid = getBestScore(valuesMap, higher);
+                    GameBox.debug("Found rank " + (number + 1) + " with time: " + valuesMap.get(currentBestUuid) + "      higher: " + higher);
+                    toReturn.add(new PlayerScore(currentBestUuid, valuesMap.get(currentBestUuid), saveType));
+                    number++;
+                    valuesMap.remove(currentBestUuid);
+                }
+                GameBox.debug("Found " + toReturn.size() + " in " + Math.round(System.currentTimeMillis() - start)/1000. + " seconds");
+                new BukkitRunnable(){
+                    @Override
+                    public void run() {
+                        callback.onSuccess(toReturn);
+                    }
+                }.runTask(plugin);
+            }
+        }.runTaskAsynchronously(plugin);
     }
 
     public void convertToMySQL() {

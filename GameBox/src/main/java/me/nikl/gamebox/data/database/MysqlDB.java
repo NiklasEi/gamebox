@@ -13,6 +13,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import javax.annotation.Nullable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,7 +35,7 @@ public class MysqlDB extends DataBase {
     private static final String SAVE = "UPDATE " + PLAYER_TABLE + " SET " + PLAYER_TOKEN_PATH + "=?, " + PLAYER_PLAY_SOUNDS + "=?, " + PLAYER_ALLOW_INVITATIONS + "=? WHERE " + PLAYER_UUID + "=?";
     private static final String SET_TOKEN = "UPDATE " + PLAYER_TABLE + " SET " + PLAYER_TOKEN_PATH + "=? WHERE " + PLAYER_UUID + "=?";
     private static final String UPDATE_HIGH_SCORE = "INSERT INTO `" + HIGH_SCORES_TABLE + "` (`" + PLAYER_UUID + "`,`%column%`) VALUES(?,?) ON DUPLICATE KEY UPDATE `%column%`=GREATEST(`%column%`, VALUES(`%column%`))";
-    private static final String COLLECT_TOP_SCORES = "SELECT e1.* FROM (SELECT DISTINCT `%column%` FROM `" + HIGH_SCORES_TABLE + "` ORDER BY `%column%` %order% LIMIT " + TopList.TOP_LIST_LENGTH + ") s1 JOIN `" + HIGH_SCORES_TABLE + "` e1 ON e1.`%column%` = s1.`%column%` ORDER BY e1.`%column%` %order%";
+    private static final String COLLECT_TOP_SCORES = "SELECT e1.* FROM (SELECT DISTINCT `%column%` FROM `" + HIGH_SCORES_TABLE + "` ORDER BY `%column%` %order% LIMIT %n%) s1 JOIN `" + HIGH_SCORES_TABLE + "` e1 ON e1.`%column%` = s1.`%column%` ORDER BY e1.`%column%` %order%";
     private static final String COLLECT_COLUMNS_STARTING_WITH = "SELECT column_name FROM INFORMATION_SCHEMA.columns WHERE table_schema = ? AND table_name = `" + HIGH_SCORES_TABLE + "` AND LEFT(column_name, %length%) =?";
 
     private String host;
@@ -158,37 +159,71 @@ public class MysqlDB extends DataBase {
         return newTopList;
     }
 
-    private void initialiseNewTopList(TopList newTopList, SaveType saveType) {
+    @Override
+    public void getTopNPlayerScores(int n, String gameID, String gameTypeID, SaveType saveType, Callback<List<PlayerScore>> callback) {
+        String identifier = buildColumnName(gameID, gameTypeID, saveType);
+        getTopNPlayerScores(n, identifier, saveType, callback);
+    }
+
+    private void getTopNPlayerScores(int n, String identifier, SaveType saveType, Callback<List<PlayerScore>> callback) {
         new BukkitRunnable() {
             @Override
             public void run() {
-                checkHighScoreColumnName(newTopList.getIdentifier());
+                checkHighScoreColumnName(identifier);
                 try (Connection connection = hikari.getConnection();
-                     PreparedStatement select = connection.prepareStatement(COLLECT_TOP_SCORES.replace("%column%", newTopList.getIdentifier()).replace("%order%", saveType.isHigherScore() ? "DESC" : "ASC"))) {
+                     PreparedStatement select = connection.prepareStatement(COLLECT_TOP_SCORES
+                             .replace("%column%", identifier)
+                             .replace("%order%", saveType.isHigherScore() ? "DESC" : "ASC")
+                             .replace("%n%", String.valueOf(n)))) {
                     ResultSet result = select.executeQuery();
                     List<PlayerScore> scores = new ArrayList<>();
                     while (result.next()) {
                         final UUID uuid = UUID.fromString(result.getString(PLAYER_UUID));
-                        final double value = result.getDouble(newTopList.getIdentifier());
+                        final double value = result.getDouble(identifier);
                         scores.add(new PlayerScore(uuid, value, saveType));
                     }
                     // back to main thread and update score
                     new BukkitRunnable() {
                         @Override
                         public void run() {
-                            newTopList.updatePlayerScores(scores);
+                            callback.onSuccess(scores);
                         }
                     }.runTask(plugin);
                     try {
                         result.close();
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                callback.onFailure(e, scores);
+                            }
+                        }.runTask(plugin);
                     }
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            callback.onFailure(e, null);
+                        }
+                    }.runTask(plugin);
                 }
             }
         }.runTaskAsynchronously(plugin);
+    }
+
+    private void initialiseNewTopList(TopList newTopList, SaveType saveType) {
+        getTopNPlayerScores(TopList.TOP_LIST_LENGTH, newTopList.getIdentifier(), saveType, new Callback<List<PlayerScore>>() {
+            @Override
+            public void onSuccess(List<PlayerScore> done) {
+                newTopList.updatePlayerScores(done);
+            }
+
+            @Override
+            public void onFailure(@Nullable Throwable throwable, @Nullable List<PlayerScore> value) {
+                plugin.getLogger().warning("Error while grabbing top list entries!");
+                if (throwable != null) throwable.printStackTrace();
+            }
+        });
     }
 
     @Override

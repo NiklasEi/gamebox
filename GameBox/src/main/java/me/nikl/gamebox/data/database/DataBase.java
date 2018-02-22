@@ -10,6 +10,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -83,6 +84,8 @@ public abstract class DataBase {
     public abstract void setToken(UUID uuid, int token);
 
     public abstract void resetHighScores();
+
+    public abstract void getTopNPlayerScores(int n, String gameID, String gameTypeID, SaveType saveType, Callback<List<PlayerScore>> callback);
 
     public interface Callback<T> {
         void onSuccess(T done);

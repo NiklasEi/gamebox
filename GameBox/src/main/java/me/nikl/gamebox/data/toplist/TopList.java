@@ -89,7 +89,6 @@ public class TopList {
 
     private void addNewScoreEntry(PlayerScore playerScore) {
         int position = getNewScorePosition(playerScore);
-        GameBox.debug("Rank: " + (position + 1));
         playerScores.add(position, playerScore);
     }
 
