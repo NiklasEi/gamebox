@@ -213,13 +213,6 @@ public class ShopManager {
         }
     }
 
-    public void updateTokens(GBPlayer gbPlayer) {
-        mainShop.updateTokens(gbPlayer);
-        for (Category category : categories.values()) {
-            category.updateTokens(gbPlayer);
-        }
-    }
-
     public ItemStack getShopItemStack(String category, String counter) {
         if (categories.get(category) != null) {
             return categories.get(category).getShopItemStack(counter);

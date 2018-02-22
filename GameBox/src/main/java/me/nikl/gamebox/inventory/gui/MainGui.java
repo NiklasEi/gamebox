@@ -3,6 +3,7 @@ package me.nikl.gamebox.inventory.gui;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.data.GBPlayer;
+import me.nikl.gamebox.data.TokenListener;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.button.Button;
@@ -26,7 +27,7 @@ import java.util.UUID;
 /**
  * Created by niklas on 2/5/17.
  */
-public class MainGui extends AGui {
+public class MainGui extends AGui implements TokenListener {
     private Map<UUID, ToggleButton> soundButtons = new HashMap<>();
     private Map<UUID, DisplayButton> tokenButtons = new HashMap<>();
 
@@ -48,6 +49,7 @@ public class MainGui extends AGui {
 
 
         if (GameBoxSettings.tokensEnabled) {
+            GBPlayer.addTokenListener(this);
             DisplayButton tokens = ButtonFactory.createTokenButton(plugin.lang, 0);
             setButton(tokens, tokenButtonSlot);
         }
@@ -89,30 +91,28 @@ public class MainGui extends AGui {
     }
 
     public void loadMainGui(GBPlayer player) {
-        ToggleButton soundToggle = ButtonFactory.createToggleButton(gameBox.lang);
-        soundButtons.put(player.getUuid(), player.isPlaySounds() ? soundToggle : soundToggle.toggle());
-
-        if (GameBoxSettings.tokensEnabled) {
-            DisplayButton tokens = ButtonFactory.createTokenButton(gameBox.lang, player.getTokens());
-            tokenButtons.put(player.getUuid(), tokens);
-        }
         String title = this.title.replace("%player%", Bukkit.getPlayer(player.getUuid()).getName());
         Inventory inventory = InventoryUtility.createInventory(this, this.inventory.getSize(), title);
         inventory.setContents(this.inventory.getContents().clone());
+        ToggleButton soundToggle = ButtonFactory.createToggleButton(gameBox.lang);
+        soundToggle = player.isPlaySounds() ? soundToggle : soundToggle.toggle();
+        soundButtons.put(player.getUuid(), soundToggle);
+        inventory.setItem(soundToggleSlot, soundToggle);
+        if (GameBoxSettings.tokensEnabled) {
+            DisplayButton tokens = ButtonFactory.createTokenButton(gameBox.lang, player.getTokens());
+            tokenButtons.put(player.getUuid(), tokens);
+            inventory.setItem(tokenButtonSlot, tokens);
+        }
         openInventories.putIfAbsent(player.getUuid(), inventory);
     }
 
-    public void updateButtons(GBPlayer player) {
-        if (openInventories.get(player.getUuid()) == null) return;
-        if (!player.isPlaySounds())
-            openInventories.get(player.getUuid()).setItem(soundToggleSlot, this.getSoundToggleButton(player.getUuid()).toggle());
-
-        updateTokens(player);
-    }
-
-    public void updateTokens(GBPlayer player) {
-        if (!GameBoxSettings.tokensEnabled) return;
-        openInventories.get(player.getUuid()).setItem(tokenButtonSlot, tokenButtons.get(player.getUuid()).update("%tokens%", player.getTokens()));
+    @Override
+    public void updateToken(GBPlayer player) {
+        DisplayButton tokenButton = tokenButtons.get(player.getUuid());
+        if(tokenButton != null) {
+            tokenButton.update("%tokens%", player.getTokens());
+            openInventories.get(player.getUuid()).setItem(tokenButtonSlot, tokenButton);
+        }
     }
 
     @Override

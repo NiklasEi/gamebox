@@ -305,7 +305,7 @@ public class Category {
 
     public void updateTokens(GBPlayer gbPlayer) {
         for (Page page : pages.values()) {
-            page.updateTokens(gbPlayer);
+            page.updateToken(gbPlayer);
         }
     }
 

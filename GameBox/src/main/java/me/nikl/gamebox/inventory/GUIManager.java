@@ -299,11 +299,6 @@ public class GUIManager {
         return shopManager;
     }
 
-    public void updateTokens(GBPlayer gbPlayer) {
-        mainGui.updateTokens(gbPlayer);
-        shopManager.updateTokens(gbPlayer);
-    }
-
     public int getTitleMessageSeconds() {
         return titleMessageSeconds;
     }

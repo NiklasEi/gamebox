@@ -105,7 +105,9 @@ public class PluginManager implements Listener {
     }
 
     private void setHotBar() {
-        ItemStack toMainItem = ItemStackUtility.getItemStack(config.getString("guiSettings.hotBarNavigation.mainMenuMaterial")), toGameItem = ItemStackUtility.getItemStack(config.getString("guiSettings.hotBarNavigation.gameMenuMaterial")), exitItem = ItemStackUtility.getItemStack(config.getString("guiSettings.hotBarNavigation.exitMaterial"));
+        ItemStack toMainItem = ItemStackUtility.getItemStack(config.getString("guiSettings.hotBarNavigation.mainMenuMaterial"))
+                , toGameItem = ItemStackUtility.getItemStack(config.getString("guiSettings.hotBarNavigation.gameMenuMaterial"))
+                , exitItem = ItemStackUtility.getItemStack(config.getString("guiSettings.hotBarNavigation.exitMaterial"));
 
         if (toMainItem == null) {
             toMainItem = new ItemStack(Material.DARK_OAK_DOOR_ITEM);

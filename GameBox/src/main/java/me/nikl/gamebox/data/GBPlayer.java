@@ -5,12 +5,15 @@ import me.nikl.gamebox.data.database.DataBase;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 /**
  * @author Niklas Eicker
  */
 public class GBPlayer {
+    private static Set<TokenListener> tokenListeners = new HashSet<>();
     private UUID uuid;
     private boolean playSounds = true;
     private GameBox plugin;
@@ -75,7 +78,7 @@ public class GBPlayer {
 
     public void setTokens(int newTokens) {
         this.tokens = newTokens;
-        plugin.getPluginManager().getGuiManager().updateTokens(this);
+        for (TokenListener tokenListener : tokenListeners) tokenListener.updateToken(this);
     }
 
     public void remove(boolean async) {
@@ -110,5 +113,13 @@ public class GBPlayer {
             this.player = Bukkit.getPlayer(uuid);
         }
         return player;
+    }
+
+    public static void addTokenListener(TokenListener tokenListener) {
+        tokenListeners.add(tokenListener);
+    }
+
+    public static void clearTokenListeners() {
+        tokenListeners.clear();
     }
 }

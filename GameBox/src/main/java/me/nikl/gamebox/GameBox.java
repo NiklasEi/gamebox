@@ -2,9 +2,11 @@ package me.nikl.gamebox;
 
 import me.nikl.gamebox.commands.AdminCommand;
 import me.nikl.gamebox.commands.MainCommand;
+import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.data.database.DataBase;
 import me.nikl.gamebox.data.database.FileDB;
 import me.nikl.gamebox.data.database.MysqlDB;
+import me.nikl.gamebox.data.toplist.TopList;
 import me.nikl.gamebox.games.Game;
 import me.nikl.gamebox.games.GameLanguage;
 import me.nikl.gamebox.input.HandleInvitations;
@@ -204,6 +206,7 @@ public class GameBox extends JavaPlugin {
             }
         }
         reloadListeners();
+        GBPlayer.clearTokenListeners();
         this.inventoryTitleMessenger = new InventoryTitleMessenger(this);
         // get a new plugin manager and set the other managers and handlers
         pManager = new PluginManager(this);
@@ -217,8 +220,6 @@ public class GameBox extends JavaPlugin {
         this.getCommand("gameboxadmin").setExecutor(adminCommand);
         // load players that are already online (otherwise done on join)
         pManager.loadPlayers();
-        // load all already registered games from the Registry
-        //    on first startup this will do nothing...
         gameRegistry.loadGames();
         new BukkitRunnable() {
             @Override
