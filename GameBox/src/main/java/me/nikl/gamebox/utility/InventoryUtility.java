@@ -14,7 +14,7 @@ public class InventoryUtility {
         if (GameBoxSettings.checkInventoryLength && title.length() > 32) {
             title = StringUtility.shorten(title, 32);
         }
-        if(owner == null) throw new IllegalArgumentException("InventoryHolder cannot be null");
+        if (owner == null) throw new IllegalArgumentException("InventoryHolder cannot be null");
         return Bukkit.createInventory(owner, size, title);
     }
 

@@ -16,10 +16,10 @@ import java.util.ArrayList;
 public enum Permission {
     PLAY_SPECIFIC_GAME("play", true),
     @Deprecated // * is supported via placeholder!
-    PLAY_ALL_GAMES("play.*"),
+            PLAY_ALL_GAMES("play.*"),
     OPEN_GAME_GUI("gamegui", true),
     @Deprecated // * is supported via placeholder!
-    OPEN_ALL_GAME_GUI("gamegui.*"),
+            OPEN_ALL_GAME_GUI("gamegui.*"),
     USE("use"),
     ADMIN("admin"),
     CMD_INFO("info"),
@@ -65,6 +65,7 @@ public enum Permission {
      * Check sender for the permission.
      *
      * If the passed moduleID is null, only the wildcard permission is checked.
+     *
      * @param sender
      * @param moduleID
      * @return permission is set

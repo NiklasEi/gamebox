@@ -1,8 +1,8 @@
 package me.nikl.gamebox.games.connectfour;
 
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.nms.NmsFactory;
 import me.nikl.gamebox.nms.NmsUtility;
-import me.nikl.gamebox.utility.InventoryUtility;
 import me.nikl.gamebox.utility.Permission;
 import me.nikl.gamebox.utility.Sound;
 import org.bukkit.Bukkit;
@@ -55,7 +55,7 @@ public class CFGame extends BukkitRunnable {
     CFGame(CFGameRules rule, ConnectFour connectFour, boolean playSounds, Player[] players, Map<Integer, ItemStack> chips) {
         this.connectFour = connectFour;
         this.lang = (CFLanguage) connectFour.getGameLang();
-        this.nms = connectFour.getGameBox().getNMS();
+        this.nms = NmsFactory.getNmsUtility();
         this.rule = rule;
         this.playSounds = playSounds;
 

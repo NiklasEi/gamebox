@@ -7,6 +7,7 @@ import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.gui.AGui;
+import me.nikl.gamebox.nms.NmsFactory;
 import me.nikl.gamebox.utility.ItemStackUtility;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -78,7 +79,7 @@ public class GameGui extends AGui {
      * @param list text that will be displayed on the button
      */
     public void setHelpButton(List<String> list) {
-        Button help = new Button(plugin.getNMS().addGlow(ItemStackUtility.createBookWithText(list)));
+        Button help = new Button(NmsFactory.getNmsUtility().addGlow(ItemStackUtility.createBookWithText(list)));
         help.setAction(ClickAction.NOTHING);
 
         setButton(help, inventory.getSize() - 1);

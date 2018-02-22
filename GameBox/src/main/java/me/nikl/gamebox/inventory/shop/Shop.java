@@ -2,12 +2,11 @@ package me.nikl.gamebox.inventory.shop;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
-import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
-import me.nikl.gamebox.inventory.button.AButton;
 import me.nikl.gamebox.inventory.button.Button;
+import me.nikl.gamebox.inventory.button.ButtonFactory;
 import me.nikl.gamebox.inventory.button.DisplayButton;
 import me.nikl.gamebox.inventory.gui.AGui;
 import me.nikl.gamebox.utility.InventoryUtility;
@@ -28,7 +27,7 @@ import java.util.UUID;
  *         class to extend upon for shop GUIs
  */
 public class Shop extends AGui {
-    protected Map<UUID, AButton> tokenButtons = new HashMap<>();
+    protected Map<UUID, DisplayButton> tokenButtons = new HashMap<>();
     protected int tokenButtonSlot;
     FileConfiguration shop;
     ShopManager shopManager;
@@ -64,10 +63,7 @@ public class Shop extends AGui {
 
         if (GameBoxSettings.tokensEnabled) {
             // set a placeholder in the general main gui
-            DisplayButton tokens = guiManager.getTokenButton();
-            ItemMeta meta = tokens.getItemMeta();
-            meta.setDisplayName("Placeholder");
-            tokens.setItemMeta(meta);
+            DisplayButton tokens = ButtonFactory.createTokenButton(gameBox.lang, 0);
             setButton(tokens, tokenButtonSlot);
         }
     }
@@ -82,30 +78,18 @@ public class Shop extends AGui {
     }
 
     void loadPlayerShop(GBPlayer player) {
-
         if (GameBoxSettings.tokensEnabled) {
-            DisplayButton tokens = guiManager.getTokenButton();
+            DisplayButton tokens = ButtonFactory.createTokenButton(gameBox.lang, player.getTokens());
             tokenButtons.put(player.getUuid(), tokens);
         }
-
         Inventory inventory = InventoryUtility.createInventory(this, this.inventory.getSize(), "GameBox gui");
         inventory.setContents(this.inventory.getContents().clone());
-
         openInventories.putIfAbsent(player.getUuid(), inventory);
-
-        updateTokens(player);
     }
 
-    void updateTokens(GBPlayer player) {
+    public void updateTokens(GBPlayer player) {
         if (!GameBoxSettings.tokensEnabled) return;
-        if (!tokenButtons.keySet().contains(player.getUuid())) return;
-        if (!openInventories.keySet().contains(player.getUuid())) return;
-
-        ItemMeta meta = tokenButtons.get(player.getUuid()).getItemMeta();
-        meta.setDisplayName(plugin.lang.BUTTON_TOKENS.replace("%tokens%", String.valueOf(player.getTokens())));
-        tokenButtons.get(player.getUuid()).setItemMeta(meta);
-
-        openInventories.get(player.getUuid()).setItem(tokenButtonSlot, tokenButtons.get(player.getUuid()));
+        openInventories.get(player.getUuid()).setItem(tokenButtonSlot, tokenButtons.get(player.getUuid()).update("%tokens%", player.getTokens()));
     }
 
     @Override

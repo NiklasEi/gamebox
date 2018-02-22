@@ -42,7 +42,7 @@ public abstract class AGui implements InventoryHolder {
     protected Map<UUID, Inventory> openInventories = new HashMap<>();
     protected Set<UUID> inGui;
     protected GUIManager guiManager;
-    protected GameBox plugin;
+    protected GameBox gameBox;
     protected PluginManager pluginManager;
     protected float volume = 0.5f, pitch = 10f;
     protected AButton[] grid;
@@ -52,11 +52,11 @@ public abstract class AGui implements InventoryHolder {
     private Sound successfulClick, unsuccessfulClick;
     private int titleMessageSeconds;
 
-    public AGui(GameBox plugin, GUIManager guiManager, int slots, String[] args, String title) {
-        this.plugin = plugin;
+    public AGui(GameBox gameBox, GUIManager guiManager, int slots, String[] args, String title) {
+        this.gameBox = gameBox;
         this.args = args;
         this.guiManager = guiManager;
-        this.pluginManager = plugin.getPluginManager();
+        this.pluginManager = gameBox.getPluginManager();
         this.grid = new AButton[slots];
         inGui = new HashSet<>();
         this.titleMessageSeconds = guiManager.getTitleMessageSeconds();
@@ -129,7 +129,7 @@ public abstract class AGui implements InventoryHolder {
                             break checkPerms;
                         }
 
-                        sentInventoryTitleMessage(player[0], plugin.lang.TITLE_NO_PERM);
+                        sentInventoryTitleMessage(player[0], gameBox.lang.TITLE_NO_PERM);
 
                         // remove flag
                         GameBox.openingNewGUI = false;
@@ -150,7 +150,7 @@ public abstract class AGui implements InventoryHolder {
                         }
 
                         if (pluginManager.isInGame(player[1].getUniqueId())) {
-                            sentInventoryTitleMessage(player[0], plugin.lang.TITLE_ALREADY_IN_ANOTHER_GAME);
+                            sentInventoryTitleMessage(player[0], gameBox.lang.TITLE_ALREADY_IN_ANOTHER_GAME);
                             return false;
                         }
 
@@ -219,7 +219,7 @@ public abstract class AGui implements InventoryHolder {
                     // check for perm in this case and stop invite if necessary
                     if (!event.getWhoClicked().hasPermission(Permission.PLAY_ALL_GAMES.getPermission())
                             && !event.getWhoClicked().hasPermission(Permission.PLAY_SPECIFIC_GAME.getPermission(args[0]))) {
-                        sentInventoryTitleMessage((Player) event.getWhoClicked(), plugin.lang.TITLE_NO_PERM);
+                        sentInventoryTitleMessage((Player) event.getWhoClicked(), gameBox.lang.TITLE_NO_PERM);
                         return false;
                     }
                 }
@@ -229,8 +229,8 @@ public abstract class AGui implements InventoryHolder {
                 if (worked) {
                     event.getWhoClicked().closeInventory();
                     ((Player) event.getWhoClicked()).updateInventory();
-                    event.getWhoClicked().sendMessage(plugin.lang.PREFIX + plugin.lang.INPUT_START_MESSAGE);
-                    for (String message : plugin.lang.INPUT_HELP_MESSAGE) {
+                    event.getWhoClicked().sendMessage(gameBox.lang.PREFIX + gameBox.lang.INPUT_START_MESSAGE);
+                    for (String message : gameBox.lang.INPUT_HELP_MESSAGE) {
                         event.getWhoClicked().sendMessage(message
                                 .replace("%seconds%", String.valueOf(GameBoxSettings.inviteInputDuration)));
                     }
@@ -276,7 +276,7 @@ public abstract class AGui implements InventoryHolder {
 
                 // check for closed shop
                 if (guiManager.getShopManager().isClosed()) {
-                    sentInventoryTitleMessage((Player) event.getWhoClicked(), plugin.lang.SHOP_IS_CLOSED);
+                    sentInventoryTitleMessage((Player) event.getWhoClicked(), gameBox.lang.SHOP_IS_CLOSED);
                     return false;
                 }
 
@@ -294,13 +294,13 @@ public abstract class AGui implements InventoryHolder {
                 int hasToken = 0;
                 if (tokens > 0) {
                     if ((hasToken = pluginManager.getPlayer(event.getWhoClicked().getUniqueId()).getTokens()) < tokens) {
-                        sentInventoryTitleMessage((Player) event.getWhoClicked(), plugin.lang.SHOP_TITLE_NOT_ENOUGH_TOKEN);
+                        sentInventoryTitleMessage((Player) event.getWhoClicked(), gameBox.lang.SHOP_TITLE_NOT_ENOUGH_TOKEN);
                         return false;
                     }
                 }
                 if (money > 0) {
                     if (!GameBoxSettings.econEnabled || GameBox.econ.getBalance((OfflinePlayer) event.getWhoClicked()) < money) {
-                        sentInventoryTitleMessage((Player) event.getWhoClicked(), plugin.lang.SHOP_TITLE_NOT_ENOUGH_MONEY);
+                        sentInventoryTitleMessage((Player) event.getWhoClicked(), gameBox.lang.SHOP_TITLE_NOT_ENOUGH_MONEY);
                         return false;
                     }
                 }
@@ -316,7 +316,7 @@ public abstract class AGui implements InventoryHolder {
                 if (!shopItem.getPermissions().isEmpty()) {
                     for (String permission : shopItem.getPermissions()) {
                         if (!event.getWhoClicked().hasPermission(permission)) {
-                            sentInventoryTitleMessage((Player) event.getWhoClicked(), plugin.lang.SHOP_TITLE_REQUIREMENT_NOT_FULFILLED);
+                            sentInventoryTitleMessage((Player) event.getWhoClicked(), gameBox.lang.SHOP_TITLE_REQUIREMENT_NOT_FULFILLED);
                             return false;
                         }
                     }
@@ -325,7 +325,7 @@ public abstract class AGui implements InventoryHolder {
                 if (!shopItem.getNoPermissions().isEmpty()) {
                     for (String noPermission : shopItem.getNoPermissions()) {
                         if (event.getWhoClicked().hasPermission(noPermission)) {
-                            sentInventoryTitleMessage((Player) event.getWhoClicked(), plugin.lang.SHOP_TITLE_REQUIREMENT_NOT_FULFILLED);
+                            sentInventoryTitleMessage((Player) event.getWhoClicked(), gameBox.lang.SHOP_TITLE_REQUIREMENT_NOT_FULFILLED);
                             return false;
                         }
                     }
@@ -333,10 +333,10 @@ public abstract class AGui implements InventoryHolder {
 
                 if (item != null) {
                     if (!pluginManager.addItem(event.getWhoClicked().getUniqueId(), item)) {
-                        sentInventoryTitleMessage((Player) event.getWhoClicked(), plugin.lang.SHOP_TITLE_INVENTORY_FULL);
+                        sentInventoryTitleMessage((Player) event.getWhoClicked(), gameBox.lang.SHOP_TITLE_INVENTORY_FULL);
                         return false;
                     } else {
-                        sentInventoryTitleMessage((Player) event.getWhoClicked(), plugin.lang.SHOP_TITLE_BOUGHT_SUCCESSFULLY);
+                        sentInventoryTitleMessage((Player) event.getWhoClicked(), gameBox.lang.SHOP_TITLE_BOUGHT_SUCCESSFULLY);
                     }
                 }
 
@@ -368,25 +368,25 @@ public abstract class AGui implements InventoryHolder {
                 return true;
 
             default:
-                plugin.warning("Missing case: " + action);
+                gameBox.warning("Missing case: " + action);
                 return false;
         }
     }
 
     private void sentInventoryTitleMessage(Player player, String message) {
-        plugin.getInventoryTitleMessenger().sendInventoryTitle(player, message, titleMessageSeconds);
+        gameBox.getInventoryTitleMessenger().sendInventoryTitle(player, message, titleMessageSeconds);
     }
 
     private void handleGameStartException(GameStartException e, Player[] player) {
         switch (e.getReason()) {
             case NOT_ENOUGH_MONEY:
-                sentInventoryTitleMessage(player[0], plugin.lang.TITLE_NOT_ENOUGH_MONEY);
+                sentInventoryTitleMessage(player[0], gameBox.lang.TITLE_NOT_ENOUGH_MONEY);
                 break;
             case NOT_ENOUGH_MONEY_FIRST_PLAYER:
-                sentInventoryTitleMessage(player[0], plugin.lang.TITLE_NOT_ENOUGH_MONEY);
+                sentInventoryTitleMessage(player[0], gameBox.lang.TITLE_NOT_ENOUGH_MONEY);
                 if (args.length == 3) {
                     if (guiManager.isInGUI(player[1].getUniqueId())) {
-                        sentInventoryTitleMessage(player[1], plugin.lang.TITLE_OTHER_PLAYER_NOT_ENOUGH_MONEY);
+                        sentInventoryTitleMessage(player[1], gameBox.lang.TITLE_OTHER_PLAYER_NOT_ENOUGH_MONEY);
                     } else {
                         //ToDo
                         player[1].sendMessage(player[0].getName() + " Does not have enough money to start the game!");
@@ -396,18 +396,18 @@ public abstract class AGui implements InventoryHolder {
             case NOT_ENOUGH_MONEY_SECOND_PLAYER:
                 if (args.length == 3) {
                     if (guiManager.isInGUI(player[1].getUniqueId())) {
-                        sentInventoryTitleMessage(player[1], plugin.lang.TITLE_NOT_ENOUGH_MONEY);
+                        sentInventoryTitleMessage(player[1], gameBox.lang.TITLE_NOT_ENOUGH_MONEY);
                     } else {
                         //ToDo
                         player[1].sendMessage(player[0].getName() + " tried starting a game with you. But you do not have enough money!");
                     }
                 }
-                sentInventoryTitleMessage(player[0], plugin.lang.TITLE_OTHER_PLAYER_NOT_ENOUGH_MONEY);
+                sentInventoryTitleMessage(player[0], gameBox.lang.TITLE_OTHER_PLAYER_NOT_ENOUGH_MONEY);
                 break;
             case ERROR:
                 for (Player playerObj : player) {
                     if (guiManager.isInGUI(playerObj.getUniqueId()) || guiManager.getShopManager().inShop(playerObj.getUniqueId())) {
-                        sentInventoryTitleMessage(playerObj, plugin.lang.TITLE_ERROR);
+                        sentInventoryTitleMessage(playerObj, gameBox.lang.TITLE_ERROR);
                     } else {
                         playerObj.sendMessage("A game failed to start");
                     }
@@ -528,7 +528,7 @@ public abstract class AGui implements InventoryHolder {
     }
 
     @Override
-    public Inventory getInventory(){
+    public Inventory getInventory() {
         return this.inventory;
     }
 }

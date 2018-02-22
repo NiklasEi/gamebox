@@ -9,6 +9,7 @@ import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.gui.AGui;
+import me.nikl.gamebox.nms.NmsFactory;
 import me.nikl.gamebox.utility.ItemStackUtility;
 import me.nikl.gamebox.utility.Permission;
 import me.nikl.gamebox.utility.StringUtility;
@@ -37,7 +38,7 @@ import java.util.logging.Level;
  * @author Niklas Eicker
  */
 public class ShopManager {
-    public static final String MAIN = "main" + UUID.randomUUID().toString();
+    public static final String MAIN = "MainShop_" + UUID.randomUUID().toString();
     protected Map<String, Category> categories;
     protected MainShop mainShop;
     protected GUIManager guiManager;
@@ -45,54 +46,50 @@ public class ShopManager {
     private File shopFile;
     private Button mainButton;
     private boolean closed;
-
-    private GameBox plugin;
+    private GameBox gameBox;
     private GameBoxLanguage lang;
-
     private int mainSlots = 27, titleMessageSeconds = 3;
 
-    public ShopManager(GameBox plugin, GUIManager guiManager) {
-        this.plugin = plugin;
-        this.lang = plugin.lang;
+    public ShopManager(GameBox gameBox, GUIManager guiManager) {
+        this.gameBox = gameBox;
+        this.lang = gameBox.lang;
         this.guiManager = guiManager;
-
         categories = new HashMap<>();
-
         loadFile();
-        if (!shop.isConfigurationSection("shop") || !shop.isConfigurationSection("shop.button") || !shop.isConfigurationSection("shop.categories")) {
+        if (!shop.isConfigurationSection("shop")
+                || !shop.isConfigurationSection("shop.button")
+                || !shop.isConfigurationSection("shop.categories")) {
             Bukkit.getLogger().log(Level.WARNING, "The shop is not correctly set up!");
             Bukkit.getLogger().log(Level.WARNING, "Disabling tokens!");
             GameBoxSettings.tokensEnabled = false;
             return;
         }
-
         this.closed = !shop.getBoolean("open");
+        loadShopButton();
+        mainShop = new MainShop(gameBox, guiManager, mainSlots, this, new String[]{MAIN, "0"});
+    }
 
+    private void loadShopButton() {
         ItemStack mainItem = ItemStackUtility.getItemStack(shop.getString("shop.button.materialData", Material.STORAGE_MINECART.toString()));
-        if (shop.getBoolean("shop.button.glow")) mainItem = plugin.getNMS().addGlow(mainItem);
+        if (shop.getBoolean("shop.button.glow")) mainItem = NmsFactory.getNmsUtility().addGlow(mainItem);
         mainButton = new Button(mainItem);
         ItemMeta meta = mainItem.getItemMeta();
         if (shop.isString("shop.button.displayName")) {
             meta.setDisplayName(StringUtility.color(shop.getString("shop.button.displayName")));
         }
-
         if (shop.isList("shop.button.lore")) {
             meta.setLore(StringUtility.color(shop.getStringList("shop.button.lore")));
         }
-
         mainButton.setItemMeta(meta);
         mainButton.setAction(ClickAction.OPEN_SHOP_PAGE);
         mainButton.setArgs(MAIN, "0");
-
-        mainShop = new MainShop(plugin, guiManager, mainSlots, this, new String[]{MAIN, "0"});
     }
 
-
     private void loadFile() {
-        shopFile = new File(plugin.getDataFolder().toString() + File.separatorChar + "tokenShop.yml");
+        shopFile = new File(gameBox.getDataFolder().toString() + File.separatorChar + "tokenShop.yml");
         if (!shopFile.exists()) {
             shopFile.getParentFile().mkdirs();
-            plugin.saveResource("tokenShop.yml", false);
+            gameBox.saveResource("tokenShop.yml", false);
         }
         try {
             this.shop = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(shopFile), "UTF-8"));
@@ -108,10 +105,10 @@ public class ShopManager {
     public boolean openShopPage(Player whoClicked, String[] args) {
         boolean saved = false;
 
-        if (!plugin.getPluginManager().hasSavedContents(whoClicked.getUniqueId())) {
+        if (!gameBox.getPluginManager().hasSavedContents(whoClicked.getUniqueId())) {
             EnterGameBoxEvent enterEvent = new EnterGameBoxEvent(whoClicked, args[0], args[1]);
             if (!enterEvent.isCancelled()) {
-                plugin.getPluginManager().saveInventory(whoClicked);
+                gameBox.getPluginManager().saveInventory(whoClicked);
                 saved = true;
             } else {
                 whoClicked.sendMessage(lang.PREFIX + " A game was canceled with the reason: " + enterEvent.getCancelMessage());
@@ -126,9 +123,9 @@ public class ShopManager {
                 GameBox.openingNewGUI = false;
 
                 if (closed) {
-                    plugin.getNMS().updateInventoryTitle(whoClicked, plugin.lang.SHOP_IS_CLOSED);
+                    NmsFactory.getNmsUtility().updateInventoryTitle(whoClicked, gameBox.lang.SHOP_IS_CLOSED);
                 } else {
-                    plugin.getNMS().updateInventoryTitle(whoClicked, plugin.lang.SHOP_TITLE_MAIN_SHOP.replace("%player%", whoClicked.getDisplayName()));
+                    NmsFactory.getNmsUtility().updateInventoryTitle(whoClicked, gameBox.lang.SHOP_TITLE_MAIN_SHOP.replace("%player%", whoClicked.getDisplayName()));
                 }
                 return true;
             } else if (categories.containsKey(args[0])) {
@@ -143,24 +140,24 @@ public class ShopManager {
                 boolean open = categories.get(args[0]).openPage(whoClicked, page);
                 GameBox.openingNewGUI = false;
                 if (open) {
-                    plugin.getNMS().updateInventoryTitle(whoClicked, plugin.lang.SHOP_TITLE_PAGE_SHOP.replace("%page%", String.valueOf(page + 1)));
+                    NmsFactory.getNmsUtility().updateInventoryTitle(whoClicked, gameBox.lang.SHOP_TITLE_PAGE_SHOP.replace("%page%", String.valueOf(page + 1)));
                     return true;
                 } else {
                     return false;
                 }
             }
         } else {
-            if (saved) plugin.getPluginManager().leaveGameBox(whoClicked);
+            if (saved) gameBox.getPluginManager().leaveGameBox(whoClicked);
             whoClicked.sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
 
             if (guiManager.isInMainGUI(whoClicked.getUniqueId())) {
-                String currentTitle = plugin.lang.TITLE_MAIN_GUI.replace("%player%", whoClicked.getName());
-                plugin.getInventoryTitleMessenger().sendInventoryTitle(whoClicked, plugin.lang.TITLE_NO_PERM, currentTitle, titleMessageSeconds);
+                String currentTitle = gameBox.lang.TITLE_MAIN_GUI.replace("%player%", whoClicked.getName());
+                gameBox.getInventoryTitleMessenger().sendInventoryTitle(whoClicked, gameBox.lang.TITLE_NO_PERM, currentTitle, titleMessageSeconds);
             }
 
             return false;
         }
-        if (saved) plugin.getPluginManager().leaveGameBox(whoClicked);
+        if (saved) gameBox.getPluginManager().leaveGameBox(whoClicked);
         Bukkit.getLogger().log(Level.SEVERE, "trying to open a shop page failed");
         Bukkit.getLogger().log(Level.SEVERE, "args: " + Arrays.asList(args));
         whoClicked.sendMessage("Error");
@@ -172,7 +169,7 @@ public class ShopManager {
     }
 
     public void loadCategory(String cat) {
-        categories.put(cat, new Category(plugin, this, guiManager, cat));
+        categories.put(cat, new Category(gameBox, this, guiManager, cat));
     }
 
     public boolean inShop(UUID uuid) {

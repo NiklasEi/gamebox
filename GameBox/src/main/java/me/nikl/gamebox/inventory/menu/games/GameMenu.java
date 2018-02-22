@@ -24,6 +24,7 @@ import java.util.Map;
  */
 public class GameMenu extends PerPlayerMenu {
     private Module module;
+
     public GameMenu(GameBox gameBox, Game game) {
         super(gameBox);
         size = 54;
@@ -53,7 +54,7 @@ public class GameMenu extends PerPlayerMenu {
         }
     }
 
-    public String getModuleID(){
+    public String getModuleID() {
         return module.getModuleID();
     }
 

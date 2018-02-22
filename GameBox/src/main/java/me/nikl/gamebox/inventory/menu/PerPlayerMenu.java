@@ -21,7 +21,7 @@ public abstract class PerPlayerMenu extends StaticMenu {
         super(gameBox);
     }
 
-    protected void setUpperPlayerButton(Button button, int slot, UUID uuid){
+    protected void setUpperPlayerButton(Button button, int slot, UUID uuid) {
         AButton[] buttons = playerButtons.get(uuid);
         if (buttons == null) buttons = new Button[lowerGrid.length];
         buttons[slot] = button;

@@ -1,7 +1,7 @@
 package me.nikl.gamebox.games.matchit;
 
+import me.nikl.gamebox.nms.NmsFactory;
 import me.nikl.gamebox.nms.NmsUtility;
-import me.nikl.gamebox.utility.InventoryUtility;
 import me.nikl.gamebox.utility.Sound;
 import me.nikl.gamebox.utility.StringUtility;
 import org.bukkit.Bukkit;
@@ -52,7 +52,7 @@ public class MIGame extends BukkitRunnable {
         this.player = player;
         this.matchIt = matchIt;
         this.language = (MILanguage) matchIt.getGameLang();
-        this.nms = matchIt.getGameBox().getNMS();
+        this.nms = NmsFactory.getNmsUtility();
 
         this.cover = matchIt.getCover();
         this.border = matchIt.getBorder();

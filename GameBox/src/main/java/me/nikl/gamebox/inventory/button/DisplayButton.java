@@ -16,6 +16,7 @@ public class DisplayButton extends AButton {
     protected Map<String, Object> displays = new HashMap<>();
     private List<String> defaultLore;
     private String displayName;
+
     public DisplayButton(ItemStack item, String displayName, List<String> defaultLore) {
         super(item);
         setAction(ClickAction.NOTHING);
@@ -33,11 +34,11 @@ public class DisplayButton extends AButton {
         return this;
     }
 
-    public void update(){
-        List<String > updatedLore = new ArrayList<>(defaultLore);
+    public void update() {
+        List<String> updatedLore = new ArrayList<>(defaultLore);
         String updatedName = displayName;
-        for(String toReplace : displays.keySet()){
-            for(int i = 0; i < defaultLore.size(); i++) {
+        for (String toReplace : displays.keySet()) {
+            for (int i = 0; i < defaultLore.size(); i++) {
                 updatedLore.set(i, updatedLore.get(i).replace(toReplace, String.valueOf(displays.get(toReplace))));
             }
             updatedName = updatedName.replace(toReplace, String.valueOf(displays.get(toReplace)));
@@ -49,7 +50,7 @@ public class DisplayButton extends AButton {
     }
 
     @Override
-    public DisplayButton clone(){
+    public DisplayButton clone() {
         DisplayButton toReturn = new DisplayButton(this, displayName, defaultLore);
         toReturn.displays = new HashMap<>(this.displays);
         toReturn.update();

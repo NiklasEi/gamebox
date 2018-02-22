@@ -6,6 +6,7 @@ import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.gui.AGui;
+import me.nikl.gamebox.nms.NmsFactory;
 import me.nikl.gamebox.utility.ItemStackUtility;
 import me.nikl.gamebox.utility.StringUtility;
 import org.bukkit.Bukkit;
@@ -103,7 +104,7 @@ public class Category {
                     }
                 }
                 if (pageSection.getBoolean(itemKey + ".glow", false)) {
-                    itemStack = plugin.getNMS().addGlow(itemStack);
+                    itemStack = NmsFactory.getNmsUtility().addGlow(itemStack);
                 }
 
                 meta = itemStack.getItemMeta();
@@ -226,7 +227,7 @@ public class Category {
         }
 
         if (pageSection.getBoolean(path + ".glow", false)) {
-            presentItem = plugin.getNMS().addGlow(presentItem);
+            presentItem = NmsFactory.getNmsUtility().addGlow(presentItem);
         }
 
         if (pageSection.isInt(path + ".count")) {

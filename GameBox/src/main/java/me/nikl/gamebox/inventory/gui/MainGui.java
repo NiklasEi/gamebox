@@ -9,6 +9,7 @@ import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.button.ButtonFactory;
 import me.nikl.gamebox.inventory.button.DisplayButton;
 import me.nikl.gamebox.inventory.button.ToggleButton;
+import me.nikl.gamebox.nms.NmsFactory;
 import me.nikl.gamebox.utility.InventoryUtility;
 import me.nikl.gamebox.utility.ItemStackUtility;
 import org.bukkit.Bukkit;
@@ -37,8 +38,7 @@ public class MainGui extends AGui {
     public MainGui(GameBox plugin, GUIManager guiManager) {
         super(plugin, guiManager, 54, new String[]{}, plugin.lang.TITLE_MAIN_GUI);
 
-
-        Button help = new Button(plugin.getNMS().addGlow(ItemStackUtility.createBookWithText(plugin.lang.BUTTON_MAIN_MENU_INFO)));
+        Button help = new Button(NmsFactory.getNmsUtility().addGlow(ItemStackUtility.createBookWithText(plugin.lang.BUTTON_MAIN_MENU_INFO)));
         help.setAction(ClickAction.NOTHING);
         setButton(help, 53);
 
@@ -48,11 +48,7 @@ public class MainGui extends AGui {
 
 
         if (GameBoxSettings.tokensEnabled) {
-            // set a placeholder in the general main gui
-            DisplayButton tokens = guiManager.getTokenButton();
-            ItemMeta meta = tokens.getItemMeta();
-            meta.setDisplayName("Placeholder");
-            tokens.setItemMeta(meta);
+            DisplayButton tokens = ButtonFactory.createTokenButton(plugin.lang, 0);
             setButton(tokens, tokenButtonSlot);
         }
 
@@ -81,7 +77,7 @@ public class MainGui extends AGui {
         }
         if (super.open(player)) {
             if (pluginManager.getGames().isEmpty()) {
-                plugin.getNMS().updateInventoryTitle(player, ChatColor.translateAlternateColorCodes('&', "&c&l %player% you should get some games on Spigot ;)".replace("%player%", player.getName())));
+                NmsFactory.getNmsUtility().updateInventoryTitle(player, ChatColor.translateAlternateColorCodes('&', "&c&l %player% you should get some games on Spigot ;)".replace("%player%", player.getName())));
             }
             return true;
         }
@@ -93,23 +89,17 @@ public class MainGui extends AGui {
     }
 
     public void loadMainGui(GBPlayer player) {
-        ToggleButton soundToggle = ButtonFactory.createToggleButton(plugin.lang);
-        soundButtons.put(player.getUuid(), soundToggle);
+        ToggleButton soundToggle = ButtonFactory.createToggleButton(gameBox.lang);
+        soundButtons.put(player.getUuid(), player.isPlaySounds() ? soundToggle : soundToggle.toggle());
 
         if (GameBoxSettings.tokensEnabled) {
-            DisplayButton tokens = guiManager.getTokenButton();
+            DisplayButton tokens = ButtonFactory.createTokenButton(gameBox.lang, player.getTokens());
             tokenButtons.put(player.getUuid(), tokens);
         }
-
         String title = this.title.replace("%player%", Bukkit.getPlayer(player.getUuid()).getName());
-
         Inventory inventory = InventoryUtility.createInventory(this, this.inventory.getSize(), title);
-
         inventory.setContents(this.inventory.getContents().clone());
-
         openInventories.putIfAbsent(player.getUuid(), inventory);
-
-        updateButtons(player);
     }
 
     public void updateButtons(GBPlayer player) {
@@ -122,14 +112,7 @@ public class MainGui extends AGui {
 
     public void updateTokens(GBPlayer player) {
         if (!GameBoxSettings.tokensEnabled) return;
-        if (!tokenButtons.keySet().contains(player.getUuid())) return;
-        if (!openInventories.keySet().contains(player.getUuid())) return;
-
-        ItemMeta meta = tokenButtons.get(player.getUuid()).getItemMeta();
-        meta.setDisplayName(plugin.lang.BUTTON_TOKENS.replace("%tokens%", String.valueOf(player.getTokens())));
-        tokenButtons.get(player.getUuid()).setItemMeta(meta);
-
-        openInventories.get(player.getUuid()).setItem(tokenButtonSlot, tokenButtons.get(player.getUuid()));
+        openInventories.get(player.getUuid()).setItem(tokenButtonSlot, tokenButtons.get(player.getUuid()).update("%tokens%", player.getTokens()));
     }
 
     @Override

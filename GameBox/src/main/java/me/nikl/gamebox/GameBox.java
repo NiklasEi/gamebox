@@ -14,7 +14,6 @@ import me.nikl.gamebox.inventory.InventoryTitleMessenger;
 import me.nikl.gamebox.listeners.EnterGameBoxListener;
 import me.nikl.gamebox.listeners.LeftGameBoxListener;
 import me.nikl.gamebox.nms.NmsFactory;
-import me.nikl.gamebox.nms.NmsUtility;
 import me.nikl.gamebox.utility.FileUtility;
 import net.milkbowl.vault.economy.Economy;
 import org.bstats.bukkit.Metrics;
@@ -47,13 +46,12 @@ public class GameBox extends JavaPlugin {
     public static final String MODULE_CONNECTFOUR = "connectfour";
     public static final String MODULE_COOKIECLICKER = "cookieclicker";
     public static final String MODULE_MATCHIT = "matchit";
-    public static boolean debug = false;
-    // toggle to stop inventory contents to be restored when a new gui is opened
+    public static boolean debug = true;
+    // toggle to stop inventory contents from being restored when a new gui is opened
     public static boolean openingNewGUI = false;
     public static Economy econ = null;
     public GameBoxLanguage lang;
     private FileConfiguration config;
-    private NmsUtility nms;
     private GameBoxAPI api;
     private PluginManager pManager;
     private DataBase dataBase;
@@ -72,7 +70,7 @@ public class GameBox extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        if ((nms = NmsFactory.getNmsUtility()) == null) {
+        if ((NmsFactory.getNmsUtility()) == null) {
             sendVersionError();
             Bukkit.getPluginManager().disablePlugin(this);
             return;
@@ -315,11 +313,6 @@ public class GameBox extends JavaPlugin {
 
     public PluginManager getPluginManager() {
         return pManager;
-    }
-
-    @Deprecated //move to NmsFactory
-    public NmsUtility getNMS() {
-        return nms;
     }
 
     @Deprecated // to config manager

@@ -4,7 +4,9 @@ import me.nikl.gamebox.utility.Sound;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.logging.Level;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Niklas Eicker
@@ -26,11 +28,13 @@ public class GameBoxSettings {
     public static boolean sendInviteClickMessage = true;
     public static boolean bStatsMetrics = true;
     public static boolean hubModeEnabled = false;
-    public static boolean closeInventoryOnDamage = true; // what to do on player damage
+    public static boolean closeInventoryOnDamage = true;
     public static int autoSaveIntervalInMinutes = 10;
     public static int exitButtonSlot = 4;
     public static int toMainButtonSlot = 0;
     public static int toGameButtonSlot = 8;
+    public static int emptyHotBarSlotToHold = 0;
+    public static List<Integer> slotsToKeep = new ArrayList<>();
 
     public static void loadSettings(GameBox plugin) {
         FileConfiguration config = plugin.getConfig();
@@ -67,13 +71,45 @@ public class GameBoxSettings {
     }
 
     private static void loadHotBarSlots(FileConfiguration config) {
-        GameBoxSettings.exitButtonSlot = config.getInt("guiSettings.hotBarNavigation.exitSlot", 4);
-        GameBoxSettings.toMainButtonSlot = config.getInt("guiSettings.hotBarNavigation.mainMenuSlot", 0);
-        GameBoxSettings.toGameButtonSlot = config.getInt("guiSettings.hotBarNavigation.gameMenuSlot", 8);
+        exitButtonSlot = config.getInt("guiSettings.hotBarNavigation.exitSlot", 4);
+        toMainButtonSlot = config.getInt("guiSettings.hotBarNavigation.mainMenuSlot", 0);
+        toGameButtonSlot = config.getInt("guiSettings.hotBarNavigation.gameMenuSlot", 8);
 
         if (exitButtonSlot > 8) exitButtonSlot = 4;
         if (toMainButtonSlot > 8) toMainButtonSlot = 0;
         if (toGameButtonSlot > 8) toGameButtonSlot = 8;
+
+        // load special hot bar slots which keep their items
+        if (config.isSet("guiSettings.keepItemsSlots")
+                && config.isList("guiSettings.keepItemsSlots")) {
+            slotsToKeep = config.getIntegerList("guiSettings.keepItemsSlots");
+        }
+        if (slotsToKeep == null) slotsToKeep = new ArrayList<>();
+        Iterator<Integer> it = slotsToKeep.iterator();
+        while (it.hasNext()) {
+            int slot = it.next();
+            if (slot == toMainButtonSlot
+                    || slot == exitButtonSlot
+                    || slot == toGameButtonSlot)
+                it.remove();
+            if (slot < 0 || slot > 8) it.remove();
+        }
+
+        // try finding an empty hubItemSlot to hold while in GUI/game
+        if (3 + slotsToKeep.size() < 9) {
+            while (emptyHotBarSlotToHold == exitButtonSlot
+                    || emptyHotBarSlotToHold == toMainButtonSlot
+                    || emptyHotBarSlotToHold == toGameButtonSlot
+                    || slotsToKeep.contains(emptyHotBarSlotToHold)) {
+                emptyHotBarSlotToHold++;
+            }
+        } else {
+            while (emptyHotBarSlotToHold == exitButtonSlot
+                    || emptyHotBarSlotToHold == toMainButtonSlot
+                    || emptyHotBarSlotToHold == toGameButtonSlot) {
+                emptyHotBarSlotToHold++;
+            }
+        }
     }
 
     private static boolean checkInventoryTitleLength() {

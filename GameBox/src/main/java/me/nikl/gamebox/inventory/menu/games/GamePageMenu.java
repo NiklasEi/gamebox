@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * Created by nikl on 21.02.18.
  */
-public class GamePageMenu extends GameMenu{
+public class GamePageMenu extends GameMenu {
     public GamePageMenu(GameBox gameBox, Game game) {
         super(gameBox, game);
 

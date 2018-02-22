@@ -58,10 +58,10 @@ public class ToggleButton extends Button {
 
     @Override
     public Button clone() {
-        ToggleButton clone = new ToggleButton(this, toggled?getData():toggleData);
+        ToggleButton clone = new ToggleButton(this, toggled ? getData() : toggleData);
         clone.setActionAndArgs(this.action, this.args);
-        clone.setToggleDisplayName(toggled?getItemMeta().getDisplayName():toggleDisplayName);
-        clone.setToggleLore(toggled?getItemMeta().getLore():toggleLore);
+        clone.setToggleDisplayName(toggled ? getItemMeta().getDisplayName() : toggleDisplayName);
+        clone.setToggleLore(toggled ? getItemMeta().getLore() : toggleLore);
         return clone;
     }
 }

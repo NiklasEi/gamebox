@@ -9,13 +9,13 @@ import me.nikl.gamebox.input.HandleInvitations;
 import me.nikl.gamebox.input.HandleInviteInput;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.gui.AGui;
-import me.nikl.gamebox.nms.NmsUtility;
 import me.nikl.gamebox.utility.ItemStackUtility;
 import me.nikl.gamebox.utility.Permission;
 import me.nikl.gamebox.utility.Sound;
 import me.nikl.gamebox.utility.StringUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -48,7 +48,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -65,61 +64,41 @@ public class PluginManager implements Listener {
 
     // count the number of registered games
     public static int gamesRegistered = 0;
-    public static int emptyHotBarSlotToHold = 1;
-    private static List<Integer> slotsToKeep = new ArrayList<>();
-    // GameBox instance
     private GameBox plugin;
-    // GameBoxLanguage
     private GameBoxLanguage lang;
-    // plugin configuration
     private FileConfiguration config;
-    private NmsUtility nms;
     private GUIManager guiManager;
-    // save and manage players that we are waiting for to invite someone in the chat
     private HandleInviteInput handleInviteInput;
-    // save and handle invitations
     private HandleInvitations handleInvitations;
     private Map<String, Game> games = new HashMap<>();
-    // save the players inventory contents
     private Map<UUID, ItemStack[]> savedContents = new HashMap<>();
     private Map<UUID, Integer> hotBarSlot = new HashMap<>();
-    // players
     private Map<UUID, GBPlayer> gbPlayers = new HashMap<>();
     private Map<Integer, ItemStack> hotbarButtons = new HashMap<>();
-
-    // list of disabled worlds
     private List<String> blockedWorlds = new ArrayList<>();
-
-    // hub stuff
     private boolean setOnWorldJoin;
     private ItemStack hubItem;
     private List<String> hubWorlds;
     private int hubItemSlot;
-
-    //sounds
     private float volume = 0.5f, pitch = 10f;
 
     public PluginManager(GameBox plugin) {
         this.plugin = plugin;
         this.lang = plugin.lang;
-        this.nms = plugin.getNMS();
         this.config = plugin.getConfig();
-
         if (config.isList("settings.blockedWorlds")) {
             blockedWorlds = new ArrayList<>(config.getStringList("settings.blockedWorlds"));
         }
-
         setHotBar();
-
         if (GameBoxSettings.hubModeEnabled) getHub();
-
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
 
     public void loadPlayers() {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            if (!blockedWorlds.contains(player.getLocation().getWorld().getName())) {
+        for (World world : Bukkit.getWorlds()) {
+            if (blockedWorlds.contains(world.getName())) continue;
+            for (Player player : world.getPlayers()) {
                 gbPlayers.putIfAbsent(player.getUniqueId(), new GBPlayer(plugin, player.getUniqueId()));
             }
         }
@@ -163,33 +142,6 @@ public class PluginManager implements Listener {
         if (GameBoxSettings.toMainButtonSlot >= 0) hotbarButtons.put(GameBoxSettings.toMainButtonSlot, toMainItem);
         if (GameBoxSettings.exitButtonSlot >= 0) hotbarButtons.put(GameBoxSettings.exitButtonSlot, exitItem);
         if (GameBoxSettings.toGameButtonSlot >= 0) hotbarButtons.put(GameBoxSettings.toGameButtonSlot, toGameItem);
-
-
-        // load special hot bar slots which keep their items
-        if (config.isSet("guiSettings.keepItemsSlots") && config.isList("guiSettings.keepItemsSlots")) {
-            slotsToKeep = config.getIntegerList("guiSettings.keepItemsSlots");
-        }
-        if (slotsToKeep == null) slotsToKeep = new ArrayList<>();
-
-        // do not use the slots that are already taken by a navigation button
-        Iterator<Integer> it = slotsToKeep.iterator();
-
-        while (it.hasNext()) {
-            int slot = it.next();
-            if (slot == GameBoxSettings.toMainButtonSlot || slot == GameBoxSettings.exitButtonSlot || slot == GameBoxSettings.toGameButtonSlot) it.remove();
-            if (slot < 0 || slot > 8) it.remove();
-        }
-
-        // try finding an empty hubItemSlot to hold while in GUI/game
-        if (hotbarButtons.values().size() + slotsToKeep.size() < 9) {
-            while (emptyHotBarSlotToHold == GameBoxSettings.exitButtonSlot || emptyHotBarSlotToHold == GameBoxSettings.toMainButtonSlot || emptyHotBarSlotToHold == GameBoxSettings.toGameButtonSlot || slotsToKeep.contains(emptyHotBarSlotToHold)) {
-                emptyHotBarSlotToHold++;
-            }
-        } else {
-            while (emptyHotBarSlotToHold == GameBoxSettings.exitButtonSlot || emptyHotBarSlotToHold == GameBoxSettings.toMainButtonSlot || emptyHotBarSlotToHold == GameBoxSettings.toGameButtonSlot) {
-                emptyHotBarSlotToHold++;
-            }
-        }
     }
 
     @EventHandler
@@ -250,7 +202,7 @@ public class PluginManager implements Listener {
         } else {
             player.getInventory().clear();
         }
-        player.getInventory().setHeldItemSlot(emptyHotBarSlotToHold);
+        player.getInventory().setHeldItemSlot(GameBoxSettings.emptyHotBarSlotToHold);
     }
 
     public void restoreInventory(Player player) {
@@ -280,52 +232,49 @@ public class PluginManager implements Listener {
             return;
         }
         GameBox.debug("checking gameManagers     clicked inv has " + event.getInventory().getSize() + " slots");
-        if(event.getInventory().getHolder() instanceof GameManager) {
+        if (event.getInventory().getHolder() instanceof GameManager) {
             GameBox.debug("found Game manager");
             GameManager gameManager = (GameManager) event.getInventory().getHolder();
-                event.setCancelled(true);
-                if ((event.getRawSlot() - event.getSlot()) < event.getView().getTopInventory().getSize()) {
-                    // click in the top or in the upper bottom inventory
-                    // always handel in the game
-                    GameBox.debug("click in top or middle inventory");
+            event.setCancelled(true);
+            if ((event.getRawSlot() - event.getSlot()) < event.getView().getTopInventory().getSize()) {
+                // click in the top or in the upper bottom inventory
+                // always handel in the game
+                GameBox.debug("click in top or middle inventory");
+                gameManager.onInventoryClick(event);
+            } else {
+                if (games.get(GameBox.MODULE_CONNECTFOUR /*TODO*/).getSettings().isHandleClicksOnHotbar()) {
                     gameManager.onInventoryClick(event);
                 } else {
-                    if (games.get(GameBox.MODULE_CONNECTFOUR /*TODO*/).getSettings().isHandleClicksOnHotbar()) {
-                        gameManager.onInventoryClick(event);
-                    } else {
-                        if (event.getView().getBottomInventory().getItem(event.getSlot()) == null) {
-                            GameBox.debug("empty hotbar slot clicked... returning");
-                            return;
+                    if (event.getView().getBottomInventory().getItem(event.getSlot()) == null) {
+                        GameBox.debug("empty hotbar slot clicked... returning");
+                        return;
+                    }
+                    if (event.getSlot() == GameBoxSettings.toGameButtonSlot) {
+                        gameManager.removeFromGame(event.getWhoClicked().getUniqueId());
+                        guiManager.openGameGui((Player) event.getWhoClicked(), GameBox.MODULE_CONNECTFOUR/*TODO*/, GUIManager.MAIN_GAME_GUI);
+                        if (GameBoxSettings.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
+                            ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.CLICK.bukkitSound(), volume, pitch);
                         }
-                        if (event.getSlot() == GameBoxSettings.toGameButtonSlot) {
-                            gameManager.removeFromGame(event.getWhoClicked().getUniqueId());
-                            guiManager.openGameGui((Player) event.getWhoClicked(), GameBox.MODULE_CONNECTFOUR/*TODO*/, GUIManager.MAIN_GAME_GUI);
-                            if (GameBoxSettings.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
-                                ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.CLICK.bukkitSound(), volume, pitch);
-                            }
-                            return;
-                        } else if (event.getSlot() == GameBoxSettings.toMainButtonSlot) {
-                            gameManager.removeFromGame(event.getWhoClicked().getUniqueId());
-                            guiManager.openMainGui((Player) event.getWhoClicked());
-                            if (GameBoxSettings.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
-                                ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.CLICK.bukkitSound(), volume, pitch);
-                            }
-                        } else if (event.getSlot() == GameBoxSettings.exitButtonSlot) {
-                            event.getWhoClicked().closeInventory();
-                            ((Player) event.getWhoClicked()).updateInventory();
-                            if (GameBoxSettings.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
-                                ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.CLICK.bukkitSound(), volume, pitch);
-                            }
-                            return;
+                        return;
+                    } else if (event.getSlot() == GameBoxSettings.toMainButtonSlot) {
+                        gameManager.removeFromGame(event.getWhoClicked().getUniqueId());
+                        guiManager.openMainGui((Player) event.getWhoClicked());
+                        if (GameBoxSettings.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
+                            ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.CLICK.bukkitSound(), volume, pitch);
                         }
+                    } else if (event.getSlot() == GameBoxSettings.exitButtonSlot) {
+                        event.getWhoClicked().closeInventory();
+                        ((Player) event.getWhoClicked()).updateInventory();
+                        if (GameBoxSettings.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
+                            ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.CLICK.bukkitSound(), volume, pitch);
+                        }
+                        return;
+                    }
                 }
-
-
-                //if(!topInv)guiManager.onInGameBottomInvClick(event, gameID);
                 return;
             }
         }
-        if(event.getInventory().getHolder() instanceof AGui) {
+        if (event.getInventory().getHolder() instanceof AGui) {
             GameBox.debug("found aGui");
             AGui aGui = (AGui) event.getInventory().getHolder();
             boolean topInv = event.getSlot() == event.getRawSlot();
@@ -716,8 +665,8 @@ public class PluginManager implements Listener {
 
     public void setItemsToKeep(Player player) {
         if (!savedContents.containsKey(player.getUniqueId())) return;
-        GameBox.debug("setting the items to keep: " + slotsToKeep);
-        for (int slot : slotsToKeep) {
+        GameBox.debug("setting the items to keep: " + GameBoxSettings.slotsToKeep);
+        for (int slot : GameBoxSettings.slotsToKeep) {
             player.getInventory().setItem(slot, savedContents.get(player.getUniqueId())[slot]);
         }
     }

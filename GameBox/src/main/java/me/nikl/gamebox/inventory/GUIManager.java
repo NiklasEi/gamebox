@@ -6,22 +6,19 @@ import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.events.EnterGameBoxEvent;
 import me.nikl.gamebox.inventory.button.Button;
-import me.nikl.gamebox.inventory.button.ButtonFactory;
-import me.nikl.gamebox.inventory.button.DisplayButton;
 import me.nikl.gamebox.inventory.gui.AGui;
 import me.nikl.gamebox.inventory.gui.MainGui;
 import me.nikl.gamebox.inventory.gui.game.GameGui;
 import me.nikl.gamebox.inventory.shop.ShopManager;
+import me.nikl.gamebox.nms.NmsFactory;
 import me.nikl.gamebox.nms.NmsUtility;
 import me.nikl.gamebox.utility.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.MaterialData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,21 +41,15 @@ public class GUIManager {
     private MainGui mainGui;
     private int titleMessageSeconds = 3;
     private ShopManager shopManager;
-    private DisplayButton tokenButton;
 
     public GUIManager(GameBox plugin) {
         this.plugin = plugin;
-        this.nms = plugin.getNMS();
+        this.nms = NmsFactory.getNmsUtility();
         this.lang = plugin.lang;
         this.gameGuis = new HashMap<>();
-        loadTokenButton();
         this.mainGui = new MainGui(plugin, this);
         shopManager = new ShopManager(plugin, this);
         if (GameBoxSettings.tokensEnabled) mainGui.registerShop();
-    }
-
-    private void loadTokenButton() {
-        tokenButton = ButtonFactory.createTokenButton(plugin.lang, 0);
     }
 
 
@@ -311,10 +302,6 @@ public class GUIManager {
     public void updateTokens(GBPlayer gbPlayer) {
         mainGui.updateTokens(gbPlayer);
         shopManager.updateTokens(gbPlayer);
-    }
-
-    public DisplayButton getTokenButton() {
-        return tokenButton.clone();
     }
 
     public int getTitleMessageSeconds() {

@@ -4,6 +4,7 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.button.Button;
+import me.nikl.gamebox.nms.NmsFactory;
 import me.nikl.gamebox.utility.InventoryUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -49,7 +50,7 @@ public class StartMultiplayerGamePage extends GameGuiPage {
             loadInvites(player.getUniqueId());
         }
         if (super.open(player)) {
-            plugin.getNMS().updateInventoryTitle(player, plugin.lang.TITLE_MAIN_GUI.replace("%player%", player.getName()));
+            NmsFactory.getNmsUtility().updateInventoryTitle(player, gameBox.lang.TITLE_MAIN_GUI.replace("%player%", player.getName()));
             return true;
         }
         return false;
@@ -92,8 +93,8 @@ public class StartMultiplayerGamePage extends GameGuiPage {
             skull.setDurability((short) 3);
             SkullMeta meta = (SkullMeta) skull.getItemMeta();
             meta.setOwner(player1.getName());
-            meta.setDisplayName(plugin.lang.BUTTON_INVITE_SKULL_NAME.replace("%player%", player1.getName()));
-            meta.setLore(plugin.lang.BUTTON_INVITE_SKULL_LORE);
+            meta.setDisplayName(gameBox.lang.BUTTON_INVITE_SKULL_NAME.replace("%player%", player1.getName()));
+            meta.setLore(gameBox.lang.BUTTON_INVITE_SKULL_LORE);
             skull.setItemMeta(meta);
             skull.setAction(ClickAction.START_GAME);
             skull.setArgs(args[0], args[1], uuid1.toString());

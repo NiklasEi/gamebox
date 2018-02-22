@@ -48,9 +48,9 @@ public class StringUtility {
     }
 
     public static String center(String toCenter, int letterCount) {
-        int addToFront = (letterCount - toCenter.length())/2;
+        int addToFront = (letterCount - toCenter.length()) / 2;
         StringBuilder builder = new StringBuilder();
-        for(int count = 0; count < addToFront; count++) builder.append(" ");
+        for (int count = 0; count < addToFront; count++) builder.append(" ");
         builder.append(toCenter);
         return builder.toString();
     }

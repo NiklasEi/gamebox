@@ -127,8 +127,8 @@ import me.nikl.gamebox.games.cookieclicker.upgrades.wizardtower.KitchenCurses;
 import me.nikl.gamebox.games.cookieclicker.upgrades.wizardtower.PointierHats;
 import me.nikl.gamebox.games.cookieclicker.upgrades.wizardtower.RabbitTrick;
 import me.nikl.gamebox.games.cookieclicker.upgrades.wizardtower.SchoolOfSorcery;
+import me.nikl.gamebox.nms.NmsFactory;
 import me.nikl.gamebox.nms.NmsUtility;
-import me.nikl.gamebox.utility.InventoryUtility;
 import me.nikl.gamebox.utility.NumberUtility;
 import me.nikl.gamebox.utility.Sound;
 import org.bukkit.Material;
@@ -200,7 +200,7 @@ public class CCGame extends BukkitRunnable {
 
     public CCGame(CCGameRules rule, CookieClicker game, Player player, boolean playSounds, ConfigurationSection save) {
         this.plugin = game;
-        nms = game.getGameBox().getNMS();
+        nms = NmsFactory.getNmsUtility();
         this.lang = (CCLanguage) game.getGameLang();
         this.rule = rule;
         this.player = player;

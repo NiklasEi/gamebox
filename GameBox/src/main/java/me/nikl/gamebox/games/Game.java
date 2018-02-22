@@ -11,6 +11,7 @@ import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.gui.game.GameGui;
 import me.nikl.gamebox.inventory.gui.game.StartMultiplayerGamePage;
 import me.nikl.gamebox.inventory.gui.game.TopListPage;
+import me.nikl.gamebox.nms.NmsFactory;
 import me.nikl.gamebox.nms.NmsUtility;
 import me.nikl.gamebox.utility.FileUtility;
 import me.nikl.gamebox.utility.InventoryUtility;
@@ -62,7 +63,7 @@ public abstract class Game {
         Validate.notNull(module, " You cannot initialize a game without registering it's module first!");
         this.gameBox = gameBox;
         this.gbLang = gameBox.lang;
-        this.nms = gameBox.getNMS();
+        this.nms = NmsFactory.getNmsUtility();
         this.gameSettings = new GameSettings();
     }
 
@@ -404,7 +405,7 @@ public abstract class Game {
                 .replace("%config%", "GameBox/games/" + getGameID() + "/config.yml"));
     }
 
-    public Inventory createInventory(int size, String title){
+    public Inventory createInventory(int size, String title) {
         return InventoryUtility.createInventory(gameManager, size, title);
     }
 }
