@@ -3,17 +3,18 @@ package me.nikl.gamebox.games;
 import me.nikl.gamebox.data.toplist.SaveType;
 
 import java.util.HashSet;
+import java.util.Set;
 
 /**
- * Created by nikl on 02.11.17.
+ * @author Niklas Eicker
  */
 public class GameRule {
-    protected HashSet<SaveType> saveTypes;
+    protected HashSet<SaveType> saveTypes = new HashSet<>();
     protected boolean saveStats;
     protected String key;
 
-    public GameRule(boolean saveStats, HashSet<SaveType> saveTypes, String key) {
-        this.saveTypes = saveTypes;
+    public GameRule(boolean saveStats, Set<SaveType> saveTypes, String key) {
+        this.saveTypes.addAll(saveTypes);
         this.saveStats = saveStats;
         this.key = key;
     }
