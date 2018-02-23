@@ -14,8 +14,7 @@ public class MIGameRule extends GameRule {
     private MatchIt.GridSize gridSize;
 
     public MIGameRule(boolean saveStats, double cost, String key, MatchIt.GridSize gridSize, double timeVisible) {
-        super(saveStats, new HashSet<>(), key);
-        this.saveTypes.add(SaveType.TIME_LOW);
+        super(key, saveStats, SaveType.TIME_LOW);
         this.gridSize = gridSize;
         this.cost = cost;
         this.timeVisible = timeVisible;

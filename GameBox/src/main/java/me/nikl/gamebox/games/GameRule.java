@@ -2,8 +2,8 @@ package me.nikl.gamebox.games;
 
 import me.nikl.gamebox.data.toplist.SaveType;
 
+import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author Niklas Eicker
@@ -13,8 +13,10 @@ public class GameRule {
     protected boolean saveStats;
     protected String key;
 
-    public GameRule(boolean saveStats, Set<SaveType> saveTypes, String key) {
-        this.saveTypes.addAll(saveTypes);
+    public GameRule(String key, boolean saveStats, SaveType... saveTypes) {
+        if(saveTypes != null){
+            this.saveTypes.addAll(Arrays.asList(saveTypes));
+        }
         this.saveStats = saveStats;
         this.key = key;
     }

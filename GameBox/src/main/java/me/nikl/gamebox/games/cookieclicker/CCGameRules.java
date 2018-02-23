@@ -16,8 +16,7 @@ public class CCGameRules extends GameRule {
     private int moveCookieAfterClicks;
 
     public CCGameRules(String key, double cost, int moveCookieAfterClicks, boolean saveStats) {
-        super(saveStats, new HashSet<>(), key);
-        this.saveTypes.add(SaveType.HIGH_NUMBER_SCORE);
+        super(key, saveStats, SaveType.HIGH_NUMBER_SCORE);
         this.cost = cost;
         this.saveStats = saveStats;
         this.moveCookieAfterClicks = moveCookieAfterClicks;

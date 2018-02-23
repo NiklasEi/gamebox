@@ -16,8 +16,7 @@ public class CFGameRules extends GameRule {
     private double cost, reward;
 
     public CFGameRules(String key, int timePerMove, int minNumberOfPlayedChips, double cost, double reward, int tokens, boolean saveStats) {
-        super(saveStats, new HashSet<>(), key);
-        this.saveTypes.add(SaveType.WINS);
+        super(key, saveStats, SaveType.WINS);
         this.cost = cost;
         this.reward = reward;
         this.tokens = tokens;
