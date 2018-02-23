@@ -53,41 +53,32 @@ public class MIGame extends BukkitRunnable {
         this.matchIt = matchIt;
         this.language = (MILanguage) matchIt.getGameLang();
         this.nms = NmsFactory.getNmsUtility();
-
         this.cover = matchIt.getCover();
         this.border = matchIt.getBorder();
-
         nrPairs = gridSize.getSize() / 2;
-
         this.inventory = matchIt.createInventory(54, language.INV_TITLE_START);
         generateGame();
-
         player.openInventory(inventory);
     }
 
     public void onClick(InventoryClickEvent event) {
         if (over) return;
-
         if (!started) {
             started = true;
             startGame();
         }
-
         int slot = event.getSlot();
         if (inventoryToGrid(slot) < 0) return;
         if (!pairs.containsKey(inventoryToGrid(slot))) return;
-
         if (firstOpen < 0) {
             playSound(click);
             show(slot);
             firstOpen = slot;
             return;
         }
-
         if (secondOpen < 0) {
             if (firstOpen == slot) return;
             show(slot);
-
             if (pairs.get(inventoryToGrid(slot)).equals(pairs.get(inventoryToGrid(firstOpen)))) {
                 firstOpen = -1;
                 secondOpen = -1;
@@ -122,8 +113,7 @@ public class MIGame extends BukkitRunnable {
 
     private void won() {
         onGameEnd();
-        if (rule.isSaveStats())
-            matchIt.getGameBox().getDataBase().addStatistics(player.getUniqueId(), matchIt.getGameID(), rule.getKey(), time, rule.getSaveTypes().iterator().next());
+        matchIt.onGameWon(player, rule, time);
     }
 
     private void startGame() {

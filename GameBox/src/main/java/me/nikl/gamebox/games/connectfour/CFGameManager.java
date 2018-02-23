@@ -149,8 +149,8 @@ public class CFGameManager implements GameManager {
             game.cancel();
             if (this.connectFour.getSettings().isEconEnabled() && game.getPlayedChips() >= game.getRule().getMinNumberOfPlayedChips()) {
                 if (!winner.hasPermission(Permission.BYPASS_ALL.getPermission()) && !winner.hasPermission(Permission.BYPASS_GAME.getPermission(connectFour.getGameID()))) {
-                    GameBox.econ.depositPlayer(winner, game.getRule().getReward());
-                    winner.sendMessage(StringUtility.color(lang.PREFIX + lang.GAME_WON_MONEY_GAVE_UP.replaceAll("%reward%", game.getRule().getReward() + "").replaceAll("%loser%", loser.getName())));
+                    GameBox.econ.depositPlayer(winner, game.getRule().getMoneyToPay());
+                    winner.sendMessage(StringUtility.color(lang.PREFIX + lang.GAME_WON_MONEY_GAVE_UP.replaceAll("%reward%", game.getRule().getMoneyToPay() + "").replaceAll("%loser%", loser.getName())));
                 } else {
                     winner.sendMessage(StringUtility.color(lang.PREFIX + lang.GAME_OTHER_GAVE_UP.replaceAll("%loser%", loser.getName())));
                 }
@@ -238,8 +238,8 @@ public class CFGameManager implements GameManager {
         if (rule.isSaveStats()) {
             addWin(winner.getUniqueId(), rule.getKey());
         }
-        if (rule.getTokens() > 0 && chipsPlayed >= rule.getMinNumberOfPlayedChips()) {
-            connectFour.getGameBox().wonTokens(winner.getUniqueId(), rule.getTokens(), connectFour.getGameID());
+        if (rule.getTokenToWin() > 0 && chipsPlayed >= rule.getMinNumberOfPlayedChips()) {
+            connectFour.getGameBox().wonTokens(winner.getUniqueId(), rule.getTokenToWin(), connectFour.getGameID());
         }
     }
 

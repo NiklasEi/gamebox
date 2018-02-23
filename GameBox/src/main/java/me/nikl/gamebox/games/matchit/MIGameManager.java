@@ -56,7 +56,7 @@ public class MIGameManager implements GameManager {
     public void startGame(Player[] players, boolean playSounds, String... args) throws GameStartException {
         MIGameRule rule = gameRules.get(args[0]);
         if (rule == null) throw new GameStartException(GameStartException.Reason.ERROR);
-        if (!matchIt.payIfNecessary(players[0], rule.getCost())) {
+        if (!matchIt.payIfNecessary(players[0], rule.getMoneyToPay())) {
             throw new GameStartException(GameStartException.Reason.NOT_ENOUGH_MONEY);
         }
         games.put(players[0].getUniqueId(),
@@ -83,14 +83,18 @@ public class MIGameManager implements GameManager {
         double cost = buttonSec.getDouble("cost", 0.);
         boolean saveStats = buttonSec.getBoolean("saveStats", false);
         double timeVisible = buttonSec.getDouble("timeVisible", 1.5);
+        int token = buttonSec.getInt("token", 0);
+        double money = buttonSec.getDouble("reward", 0.);
         MatchIt.GridSize gridSize;
         try {
             gridSize = MatchIt.GridSize.valueOf(buttonSec.getString("size", "medium").toUpperCase());
         } catch (IllegalArgumentException exception) {
             gridSize = MatchIt.GridSize.MIDDLE;
         }
-
-        gameRules.put(buttonID, new MIGameRule(saveStats, cost, buttonID, gridSize, timeVisible));
+        MIGameRule rule = new MIGameRule(saveStats, cost, buttonID, gridSize, timeVisible);
+        rule.setMoneyToWin(money);
+        rule.setToken(token);
+        gameRules.put(buttonID, rule);
     }
 
     @Override

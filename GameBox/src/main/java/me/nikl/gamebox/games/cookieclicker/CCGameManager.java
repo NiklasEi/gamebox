@@ -103,7 +103,7 @@ public class CCGameManager implements GameManager {
             Bukkit.getLogger().log(Level.WARNING, " unknown gametype: " + Arrays.asList(strings));
             throw new GameStartException(GameStartException.Reason.ERROR);
         }
-        if (!game.payIfNecessary(players[0], rule.getCost())) {
+        if (!game.payIfNecessary(players[0], rule.getMoneyToPay())) {
             throw new GameStartException(GameStartException.Reason.NOT_ENOUGH_MONEY);
         }
         if (saves.isConfigurationSection(rule.getKey() + "." + players[0].getUniqueId())) {

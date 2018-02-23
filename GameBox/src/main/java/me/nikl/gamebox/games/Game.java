@@ -17,6 +17,7 @@ import me.nikl.gamebox.utility.FileUtility;
 import me.nikl.gamebox.utility.InventoryUtility;
 import me.nikl.gamebox.utility.ItemStackUtility;
 import me.nikl.gamebox.utility.Permission;
+import me.nikl.gamebox.utility.Sound;
 import me.nikl.gamebox.utility.StringUtility;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
@@ -295,7 +296,7 @@ public abstract class Game {
                 } else {
                     lore = new ArrayList<>(Arrays.asList("", "No lore specified in the config!"));
                 }
-                SaveType saveType = gameRules.get(buttonID).getSaveTypes().iterator().next();
+                SaveType saveType = gameRules.get(buttonID).getSaveType();
                 TopListPage topListPage = new TopListPage(gameBox, guiManager, 54, getGameID(), buttonID + GUIManager.TOP_LIST_KEY_ADDON,
                         StringUtility.color(buttonSec.getString("inventoryTitle", "Title missing in config")), saveType, lore);
                 guiManager.registerGameGUI(topListPage);
@@ -407,5 +408,30 @@ public abstract class Game {
 
     public Inventory createInventory(int size, String title) {
         return InventoryUtility.createInventory(gameManager, size, title);
+    }
+
+    public void playSound(Player player, Sound sound) {
+        playSound(player, sound, 0.5f, 10f);
+    }
+
+    public void playSound(Player player, Sound sound, float volume, float pitch) {
+        player.playSound(player.getLocation(), sound.bukkitSound(), volume, pitch);
+    }
+
+    public void onGameWon(Player player, GameRule rule, double score){
+        if(rule.isSaveStats()) gameBox.getDataBase()
+                .addStatistics(player.getUniqueId(), getGameID(), rule.getKey(), score, rule.getSaveType());
+        if(!shouldGetRewards(player, rule, score)) return;
+        if(GameBoxSettings.econEnabled && gameSettings.isEconEnabled()) {
+            GameBox.econ.depositPlayer(player, rule.moneyToWin);
+        }
+        if(GameBoxSettings.tokensEnabled) gameBox.getApi().giveToken(player, rule.tokenToWin);
+    }
+
+    private boolean shouldGetRewards(Player winner, GameRule rule, double score) {
+        return (!winner.hasPermission(Permission.BYPASS_ALL.getPermission())
+                && !winner.hasPermission(Permission.BYPASS_GAME.getPermission(getGameID()))
+                && ((rule.getSaveType().isHigherScore() && score >= rule.minOrMaxScore)
+                || (!rule.getSaveType().isHigherScore() && score <= rule.minOrMaxScore)));
     }
 }

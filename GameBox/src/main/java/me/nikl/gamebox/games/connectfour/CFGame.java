@@ -58,16 +58,12 @@ public class CFGame extends BukkitRunnable {
         this.nms = NmsFactory.getNmsUtility();
         this.rule = rule;
         this.playSounds = playSounds;
-
         this.time = rule.getTimePerMove();
         this.timeStr = String.valueOf((int) time);
-
         this.first = players[0];
         this.second = players[1];
-
         this.firstUUID = first.getUniqueId();
         this.secondUUID = second.getUniqueId();
-
         Random rand = new Random(System.currentTimeMillis());
         int first, second;
         first = rand.nextInt(chips.size());
@@ -75,28 +71,23 @@ public class CFGame extends BukkitRunnable {
         while (first == second) {
             second = rand.nextInt(chips.size());
         }
-
         firstChip = chips.get(first).clone();
         ItemMeta meta = firstChip.getItemMeta();
         meta.setDisplayName(meta.getDisplayName().replace("%player%", this.first.getName()));
         firstChip.setItemMeta(meta);
-
         secondChip = chips.get(second).clone();
         meta = secondChip.getItemMeta();
         meta.setDisplayName(meta.getDisplayName().replace("%player%", this.second.getName()));
         secondChip.setItemMeta(meta);
-
         if (rand.nextDouble() < 0.5) {
             this.state = CFGameState.FIRST_TURN;
         } else {
             this.state = CFGameState.SECOND_TURN;
         }
-
         inv = connectFour.createInventory(54, "default");
         this.first.openInventory(inv);
         this.second.openInventory(inv);
         updateStatus();
-
         runTaskTimer(connectFour.getGameBox(), 0, 5);
     }
 
@@ -253,8 +244,8 @@ public class CFGame extends BukkitRunnable {
 
             if (connectFour.getSettings().isEconEnabled()) {
                 if (!winner.hasPermission(Permission.BYPASS_ALL.getPermission()) && !winner.hasPermission(Permission.BYPASS_GAME.getPermission(connectFour.getGameID()))) {
-                    GameBox.econ.depositPlayer(winner, rule.getReward());
-                    winner.sendMessage((lang.PREFIX + lang.GAME_WON_MONEY.replaceAll("%reward%", rule.getReward() + "").replaceAll("%loser%", loser.getName())));
+                    GameBox.econ.depositPlayer(winner, rule.getMoneyToPay());
+                    winner.sendMessage((lang.PREFIX + lang.GAME_WON_MONEY.replaceAll("%reward%", rule.getMoneyToPay() + "").replaceAll("%loser%", loser.getName())));
                 } else {
                     winner.sendMessage((lang.PREFIX + lang.GAME_WON.replaceAll("%loser%", loser.getName())));
                 }

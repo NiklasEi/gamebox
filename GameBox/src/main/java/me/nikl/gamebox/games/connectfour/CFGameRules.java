@@ -12,28 +12,20 @@ import java.util.HashSet;
  */
 public class CFGameRules extends GameRule {
 
-    private int tokens, timePerMove, minNumberOfPlayedChips;
-    private double cost, reward;
+    private int timePerMove, minNumberOfPlayedChips;
+    private double cost;
 
     public CFGameRules(String key, int timePerMove, int minNumberOfPlayedChips, double cost, double reward, int tokens, boolean saveStats) {
-        super(key, saveStats, SaveType.WINS);
+        super(key, saveStats, SaveType.WINS, cost);
         this.cost = cost;
-        this.reward = reward;
-        this.tokens = tokens;
+        setMoneyToWin(reward);
+        setToken(tokens);
         this.timePerMove = timePerMove;
         this.minNumberOfPlayedChips = minNumberOfPlayedChips;
     }
 
     public double getCost() {
         return cost;
-    }
-
-    public double getReward() {
-        return reward;
-    }
-
-    public int getTokens() {
-        return tokens;
     }
 
     public int getTimePerMove() {
