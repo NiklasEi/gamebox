@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.cookieclicker;
 
-import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.games.Game;
 import me.nikl.gamebox.games.GameLanguage;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
@@ -27,10 +27,9 @@ public class CCLanguage extends GameLanguage {
     public HashMap<Integer, List<String>> upgradeDescriptionLore;
     public HashMap<UpgradeType, List<String>> upgradeLore;
 
-    public CCLanguage(GameBox plugin) {
-        super(plugin, GameBox.MODULE_COOKIECLICKER);
+    public CCLanguage(Game game) {
+        super(game);
     }
-
 
     @Override
     public void loadMessages() {

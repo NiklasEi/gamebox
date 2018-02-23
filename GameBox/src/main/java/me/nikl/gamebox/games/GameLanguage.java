@@ -1,8 +1,6 @@
 package me.nikl.gamebox.games;
 
-import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.Language;
-import me.nikl.gamebox.Module;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,14 +17,8 @@ public abstract class GameLanguage extends Language {
 
     public String GAME_PAYED = " You payed %cost%", GAME_NOT_ENOUGH_MONEY = " Not enough money (%cost%)";
 
-    public GameLanguage(GameBox plugin, Module module) {
-        super(plugin, module);
-
-        this.GAME_HELP = getStringList("gameHelp");
-    }
-
-    public GameLanguage(GameBox plugin, String moduleID) {
-        super(plugin, moduleID);
+    public GameLanguage(Game game) {
+        super(game.getGameBox(), game.getModule());
 
         this.GAME_HELP = getStringList("gameHelp");
     }

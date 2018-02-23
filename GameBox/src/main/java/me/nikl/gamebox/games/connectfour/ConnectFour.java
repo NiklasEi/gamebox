@@ -34,7 +34,7 @@ public class ConnectFour extends Game {
 
     @Override
     public void loadLanguage() {
-        this.gameLang = new CFLanguage(gameBox);
+        this.gameLang = new CFLanguage(this);
     }
 
     @Override

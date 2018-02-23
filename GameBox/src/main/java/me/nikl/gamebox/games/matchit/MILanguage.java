@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.matchit;
 
-import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.games.Game;
 import me.nikl.gamebox.games.GameLanguage;
 
 /**
@@ -10,8 +10,8 @@ public class MILanguage extends GameLanguage {
 
     public String INV_TITLE_GAME, INV_TITLE_START, INV_TITLE_WON;
 
-    public MILanguage(GameBox plugin) {
-        super(plugin, GameBox.MODULE_MATCHIT);
+    public MILanguage(Game game) {
+        super(game);
     }
 
     @Override

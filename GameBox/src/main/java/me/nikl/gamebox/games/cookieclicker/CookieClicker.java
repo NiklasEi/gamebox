@@ -34,7 +34,7 @@ public class CookieClicker extends Game {
 
     @Override
     public void loadLanguage() {
-        this.gameLang = new CCLanguage(gameBox);
+        this.gameLang = new CCLanguage(this);
     }
 
     @Override

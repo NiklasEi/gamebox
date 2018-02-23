@@ -133,7 +133,7 @@ public class MatchIt extends Game {
 
     @Override
     public void loadLanguage() {
-        this.gameLang = new MILanguage(gameBox);
+        this.gameLang = new MILanguage(this);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package me.nikl.gamebox.games.connectfour;
 
-import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.games.Game;
 import me.nikl.gamebox.games.GameLanguage;
 
 /**
@@ -15,8 +15,8 @@ public class CFLanguage extends GameLanguage {
     public String GAME_NOT_ENOUGH_MONEY, GAME_PAYED, GAME_WON_MONEY, GAME_WON_MONEY_GAVE_UP, GAME_WON, GAME_LOSE, GAME_GAVE_UP, GAME_OTHER_GAVE_UP, TITLE_DRAW;
     public String TITLE_IN_GAME_YOUR_TURN, TITLE_IN_GAME_OTHERS_TURN, TITLE_WON, TITLE_LOST;
 
-    public CFLanguage(GameBox gameBox) {
-        super(gameBox, GameBox.MODULE_CONNECTFOUR);
+    public CFLanguage(Game game) {
+        super(game);
     }
 
     @Override
