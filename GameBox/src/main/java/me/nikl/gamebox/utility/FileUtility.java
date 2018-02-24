@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.JarURLConnection;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Enumeration;
@@ -66,11 +68,8 @@ public class FileUtility {
     public static boolean copyExternalResources(GameBox gameBox, Module module) {
         JavaPlugin external = module.getExternalPlugin();
         if (external == null) return false;
-        URL main = external.getClass().getResource(module.getClassPath()
-                .split("\\.")[module.getClassPath().split("\\.").length - 1] + ".class");
         try {
-            JarURLConnection connection = (JarURLConnection) main.openConnection();
-            JarFile jar = new JarFile(URLDecoder.decode(connection.getJarFileURL().getFile(), "UTF-8"));
+            JarFile jar = new JarFile(external.getClass().getProtectionDomain().getCodeSource().getLocation().getFile());
             boolean foundDefaultLang = false;
             boolean foundConfig = false;
 
