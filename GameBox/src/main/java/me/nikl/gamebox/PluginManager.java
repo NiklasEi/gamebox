@@ -244,7 +244,8 @@ public class PluginManager implements Listener {
                 GameBox.debug("click in top or middle inventory");
                 gameManager.onInventoryClick(event);
             } else {
-                if (games.get(GameBox.MODULE_CONNECTFOUR /*TODO*/).getSettings().isHandleClicksOnHotbar()) {
+                Game game = getGame(event.getWhoClicked().getUniqueId());
+                if (game.getSettings().isHandleClicksOnHotbar()) {
                     gameManager.onInventoryClick(event);
                 } else {
                     if (event.getView().getBottomInventory().getItem(event.getSlot()) == null) {
@@ -253,7 +254,7 @@ public class PluginManager implements Listener {
                     }
                     if (event.getSlot() == GameBoxSettings.toGameButtonSlot) {
                         gameManager.removeFromGame(event.getWhoClicked().getUniqueId());
-                        guiManager.openGameGui((Player) event.getWhoClicked(), GameBox.MODULE_CONNECTFOUR/*TODO*/, GUIManager.MAIN_GAME_GUI);
+                        guiManager.openGameGui((Player) event.getWhoClicked(), game.getGameID(), GUIManager.MAIN_GAME_GUI);
                         if (GameBoxSettings.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
                             ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.CLICK.bukkitSound(), volume, pitch);
                         }
@@ -285,9 +286,7 @@ public class PluginManager implements Listener {
             else aGui.onBottomInvClick(event);
             return;
         }
-
         GameBox.debug("none found...");
-        //guiManager.onInvClick(event);
     }
 
     @EventHandler
@@ -299,8 +298,6 @@ public class PluginManager implements Listener {
             return;
         }
         UUID uuid = event.getPlayer().getUniqueId();
-
-
         for (Game game : games.values()) {
             GameManager manager = game.getGameManager();
             if (manager.isInGame(uuid)) {
@@ -310,8 +307,6 @@ public class PluginManager implements Listener {
                 return;
             }
         }
-
-
         guiManager.onInvClose(event);
     }
 
@@ -321,7 +316,6 @@ public class PluginManager implements Listener {
             if (!gbPlayers.containsKey(event.getPlayer().getUniqueId())) {
                 gbPlayers.put(event.getPlayer().getUniqueId(), new GBPlayer(plugin, event.getPlayer().getUniqueId()));
             }
-
             // hub stuff
             if (GameBoxSettings.hubModeEnabled && hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName()) && setOnWorldJoin) {
                 GameBox.debug("in the hub world!");
@@ -370,14 +364,12 @@ public class PluginManager implements Listener {
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-
         // close inventory when in a game or GUI. This should trigger InventoryCloseEvent
         if (isInGame(player.getUniqueId()) || guiManager.isInGUI(player.getUniqueId())
                 || guiManager.getShopManager().inShop(player.getUniqueId())) {
             player.closeInventory();
             restoreInventory(player);
         }
-
         // remove the player and all the personal GUIs. This also saves the GB options of that player.
         if (gbPlayers.keySet().contains(player.getUniqueId())) {
             removePlayer(event.getPlayer().getUniqueId());
@@ -397,12 +389,10 @@ public class PluginManager implements Listener {
     public void onPickUp(PlayerPickupItemEvent playerPickupItemEvent) {
         if (!isInGame(playerPickupItemEvent.getPlayer().getUniqueId()) && !guiManager.isInGUI(playerPickupItemEvent.getPlayer().getUniqueId()) && !guiManager.getShopManager().inShop(playerPickupItemEvent.getPlayer().getUniqueId()))
             return;
-
         // ToDo: change #addItem() and this method to allow for partial pick up
         if (addItem(playerPickupItemEvent.getPlayer().getUniqueId(), playerPickupItemEvent.getItem().getItemStack())) {
             playerPickupItemEvent.getItem().remove();
         }
-
         playerPickupItemEvent.setCancelled(true);
     }
 
@@ -416,12 +406,10 @@ public class PluginManager implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerDeath(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
-
         if (guiManager == null) {
             Bukkit.getConsoleSender().sendMessage(" The plugin dit not start correctly. Please check for previous errors!");
             return;
         }
-
         // if player is in gui or in game close the inventory
         // this should fire before death event and thus will fix problems with drops on death
         if ((GameBoxSettings.closeInventoryOnDamage
@@ -464,14 +452,11 @@ public class PluginManager implements Listener {
                 leaveGameBox(player);
             }
         }
-
         for (Game game : games.values()) {
             GameBox.debug("disabling " + game.getGameLang().DEFAULT_PLAIN_NAME);
             game.onDisable();
         }
-
         gamesRegistered = 0;
-
         logging:
         if (savedContents.size() > 0) {
             Bukkit.getLogger().log(Level.SEVERE, "-------------------------------------------------------------------");
@@ -483,18 +468,14 @@ public class PluginManager implements Listener {
             fileName = fileName.replace(":", "_");
             fileName += ".txt";
             Bukkit.getLogger().log(Level.SEVERE, "Saving those contents in a log file in the folder Logs as: " + fileName);
-
             File logFile = new File(plugin.getDataFolder().toString() + File.separatorChar + "Logs" + File.separatorChar + fileName);
-
             logFile.getParentFile().mkdirs();
             try {
                 logFile.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             FileConfiguration log;
-
             try {
                 log = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(logFile), "UTF-8"));
             } catch (UnsupportedEncodingException | FileNotFoundException e) {
@@ -517,7 +498,6 @@ public class PluginManager implements Listener {
             }
             Bukkit.getLogger().log(Level.SEVERE, "-------------------------------------------------------------------");
         }
-
         for (GBPlayer player : gbPlayers.values()) {
             player.remove();
         }

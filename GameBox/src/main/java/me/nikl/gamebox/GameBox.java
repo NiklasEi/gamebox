@@ -48,7 +48,7 @@ public class GameBox extends JavaPlugin {
     public static final String MODULE_CONNECTFOUR = "connectfour";
     public static final String MODULE_COOKIECLICKER = "cookieclicker";
     public static final String MODULE_MATCHIT = "matchit";
-    public static boolean debug = true;
+    public static boolean debug = false;
     // toggle to stop inventory contents from being restored when a new gui is opened
     public static boolean openingNewGUI = false;
     public static Economy econ = null;
@@ -65,10 +65,6 @@ public class GameBox extends JavaPlugin {
     private AdminCommand adminCommand;
     private LeftGameBoxListener leftGameBoxListener;
     private EnterGameBoxListener enterGameBoxListener;
-
-    public static void debug(String message) {
-        if (debug) Bukkit.getConsoleSender().sendMessage(message);
-    }
 
     @Override
     public void onEnable() {
@@ -408,6 +404,10 @@ public class GameBox extends JavaPlugin {
         Game game = getPluginManager().getGame(moduleID);
         if (game == null) return null;
         return game.getGameLang();
+    }
+
+    public static void debug(String message) {
+        if (debug) Bukkit.getConsoleSender().sendMessage(message);
     }
 
     public void info(String message) {
