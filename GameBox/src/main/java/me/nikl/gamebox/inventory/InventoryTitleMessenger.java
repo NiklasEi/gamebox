@@ -64,12 +64,11 @@ public class InventoryTitleMessenger extends BukkitRunnable {
             if (gui instanceof GameGuiPage) {
                 currentTitle = ((GameGuiPage) gui).getTitle().replace("%player%", player.getName());
             } else if (gui instanceof GameGui) {
-                currentTitle = gameBox.lang.TITLE_GAME_GUI.replace("%game%", gameBox.getPluginManager().getGame(player.getUniqueId()).getGameLang().PLAIN_NAME).replace("%player%", player.getName());
+                currentTitle = gameBox.lang.TITLE_GAME_GUI.replace("%game%", gameBox.getPluginManager().getGame(gui.getArgs()[0]).getGameLang().PLAIN_NAME).replace("%player%", player.getName());
             } else if (gui instanceof Page) {
                 currentTitle = gameBox.lang.SHOP_TITLE_PAGE_SHOP.replace("%page%", String.valueOf(((Page) gui).getPage() + 1));
             }
+            sendInventoryTitle(player, message, currentTitle, duration);
         }
-        sendInventoryTitle(player, message, currentTitle, duration);
     }
-
 }
