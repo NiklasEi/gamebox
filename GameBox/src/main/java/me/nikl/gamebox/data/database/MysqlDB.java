@@ -98,7 +98,7 @@ public class MysqlDB extends DataBase {
         new BukkitRunnable() {
             @Override
             public void run() {
-                checkHighScoreColumnName(columnName);
+                createColumnIfNecessary(columnName);
                 try (Connection connection = hikari.getConnection();
                      PreparedStatement statement = connection.prepareStatement(UPDATE_HIGH_SCORE.replace("%column%", columnName))) {
                     statement.setString(1, uuid.toString());
@@ -118,10 +118,23 @@ public class MysqlDB extends DataBase {
         }.runTaskAsynchronously(plugin);
     }
 
-    private void checkHighScoreColumnName(String columnName) {
+    private void createColumnIfNecessary(String columnName) {
+        if (!doesHighScoreColumnExist(columnName)) {
+            try (Connection connection = hikari.getConnection();
+                 Statement statement = connection.createStatement()) {
+                GameBox.debug("  Adding the column " + columnName);
+                statement.executeUpdate("ALTER TABLE `" + HIGH_SCORES_TABLE + "` ADD `" + columnName + "` DOUBLE NULL");
+                knownHighScoreColumns.add(columnName);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private boolean doesHighScoreColumnExist(String columnName) {
         if (knownHighScoreColumns.contains(columnName)) {
             GameBox.debug("  Found known high score column!");
-            return;
+            return true;
         }
         // first time this column is used in this server session... better check it exists
         GameBox.debug("  Column name (length = " + columnName.length() + "): " + columnName);
@@ -133,16 +146,17 @@ public class MysqlDB extends DataBase {
                             "AND TABLE_NAME = '" + HIGH_SCORES_TABLE + "'" +
                             "AND COLUMN_NAME = '" + columnName + "'");
             if (!resultSet.next()) {
-                GameBox.debug("  Adding the column " + columnName);
-                statement.executeUpdate("ALTER TABLE `" + HIGH_SCORES_TABLE + "` ADD `" + columnName + "` DOUBLE NULL");
+                GameBox.debug("  Column does not exist");
+                return false;
             } else {
                 GameBox.debug("  Column already exists");
+                knownHighScoreColumns.add(columnName);
+                return true;
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-        knownHighScoreColumns.add(columnName);
-        return;
     }
 
     private String buildColumnName(String gameID, String gameTypeID, SaveType saveType) {
@@ -169,7 +183,7 @@ public class MysqlDB extends DataBase {
         new BukkitRunnable() {
             @Override
             public void run() {
-                checkHighScoreColumnName(identifier);
+                doesHighScoreColumnExist(identifier);
                 try (Connection connection = hikari.getConnection();
                      PreparedStatement select = connection.prepareStatement(COLLECT_TOP_SCORES
                              .replace("%column%", identifier)
@@ -379,6 +393,18 @@ public class MysqlDB extends DataBase {
         try (Connection connection = hikari.getConnection();
              Statement statement = connection.createStatement()) {
             statement.executeUpdate("TRUNCATE TABLE `" + HIGH_SCORES_TABLE + "`");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void resetHighScores(String gameID, String gameTypeID, SaveType saveType) {
+        try (Connection connection = hikari.getConnection();
+             Statement statement = connection.createStatement()) {
+            String columnName = buildColumnName(gameID, gameTypeID,saveType);
+            if(!doesHighScoreColumnExist(columnName)) return;
+            statement.executeUpdate("ALTER TABLE `" + HIGH_SCORES_TABLE + "` DROP COLUMN `" + columnName + "`");
         } catch (SQLException e) {
             e.printStackTrace();
         }

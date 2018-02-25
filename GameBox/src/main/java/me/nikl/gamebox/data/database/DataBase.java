@@ -85,6 +85,8 @@ public abstract class DataBase {
 
     public abstract void resetHighScores();
 
+    public abstract void resetHighScores(String gameID, String gameTypeID, SaveType saveType);
+
     public abstract void getTopNPlayerScores(int n, String gameID, String gameTypeID, SaveType saveType, Callback<List<PlayerScore>> callback);
 
     public interface Callback<T> {

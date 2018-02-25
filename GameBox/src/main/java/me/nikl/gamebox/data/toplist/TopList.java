@@ -119,4 +119,9 @@ public class TopList {
     public String getIdentifier() {
         return identifier;
     }
+
+    public void clearTopList() {
+        playerScores.clear();
+        updateUsers();
+    }
 }

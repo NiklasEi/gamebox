@@ -110,6 +110,17 @@ public class AdminCommand implements CommandExecutor {
             List<String> columns = ((MysqlDB) dataBase).getHighScoreColumnsBeginningWith(args[1]);
             sender.sendMessage(String.join(", ", columns));
             return true;
+        } else if (args[0].equalsIgnoreCase("resetstats")) {
+            if (args.length < 5) return true;
+            DataBase dataBase = plugin.getDataBase();
+            try {
+                SaveType saveType = SaveType.valueOf(args[3]);
+                dataBase.resetHighScores(args[1], args[2], saveType);
+                sender.sendMessage( " High score reset successful");
+            } catch (IllegalArgumentException exception) {
+                sender.sendMessage("Valid saveTyps: " + SaveType.values().toString());
+            }
+            return true;
         }
         sendHelpMessages(sender);
         return true;

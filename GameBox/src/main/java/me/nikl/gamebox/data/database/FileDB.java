@@ -211,6 +211,16 @@ public class FileDB extends DataBase {
     }
 
     @Override
+    public void resetHighScores(String gameID, String gameTypeID, SaveType saveType) {
+        for (String uuid : data.getKeys(false)) {
+            if (!data.isConfigurationSection(uuid + "." + DataBase.GAMES_STATISTICS_NODE)) continue;
+            String topListIdentifier = buildTopListIdentifier(gameID,gameTypeID, saveType);
+            if (!data.isSet(uuid + "." + DataBase.GAMES_STATISTICS_NODE + "." + topListIdentifier)) continue;
+            data.set(uuid + "." + DataBase.GAMES_STATISTICS_NODE + "." + topListIdentifier, null);
+        }
+    }
+
+    @Override
     public void getTopNPlayerScores(int n, String gameID, String gameTypeID, SaveType saveType, Callback<List<PlayerScore>> callback) {
         new BukkitRunnable(){
             @Override
