@@ -421,17 +421,31 @@ public abstract class Game {
     public void onGameWon(Player player, GameRule rule, double score){
         if(rule.isSaveStats()) gameBox.getDataBase()
                 .addStatistics(player.getUniqueId(), getGameID(), rule.getKey(), score, rule.getSaveType());
-        if(!shouldGetRewards(player, rule, score)) return;
+        if(hasBypassPermission(player)) return;
+        if(rule instanceof GameRuleRewards) payOut(player, (GameRuleRewards) rule, score);
+        if(rule instanceof GameRuleMultiRewards) payOut(player, (GameRuleMultiRewards) rule, score);
+    }
+
+    private void payOut(Player player, GameRuleRewards rule, double score) {
+        if((rule.getSaveType().isHigherScore() && score < rule.minOrMaxScore)
+                || (!rule.getSaveType().isHigherScore() && score > rule.minOrMaxScore)) return;
         if(GameBoxSettings.econEnabled && gameSettings.isEconEnabled()) {
             GameBox.econ.depositPlayer(player, rule.moneyToWin);
         }
         if(GameBoxSettings.tokensEnabled) gameBox.getApi().giveToken(player, rule.tokenToWin);
     }
 
-    private boolean shouldGetRewards(Player winner, GameRule rule, double score) {
-        return (!winner.hasPermission(Permission.BYPASS_ALL.getPermission())
-                && !winner.hasPermission(Permission.BYPASS_GAME.getPermission(getGameID()))
-                && ((rule.getSaveType().isHigherScore() && score >= rule.minOrMaxScore)
-                || (!rule.getSaveType().isHigherScore() && score <= rule.minOrMaxScore)));
+    private void payOut(Player player, GameRuleMultiRewards rule, double score) {
+        double money = rule.getMoneyToWin(score);
+        int token = rule.getTokenToWin(score);
+        if(GameBoxSettings.econEnabled && gameSettings.isEconEnabled() && money > 0) {
+            GameBox.econ.depositPlayer(player, money);
+        }
+        if(GameBoxSettings.tokensEnabled && token > 0) gameBox.getApi().giveToken(player, token);
+    }
+
+    private boolean hasBypassPermission(Player winner) {
+        return (winner.hasPermission(Permission.BYPASS_ALL.getPermission())
+                || winner.hasPermission(Permission.BYPASS_GAME.getPermission(getGameID())));
     }
 }
