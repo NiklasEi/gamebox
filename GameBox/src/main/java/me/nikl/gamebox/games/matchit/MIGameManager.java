@@ -91,9 +91,7 @@ public class MIGameManager implements GameManager {
         } catch (IllegalArgumentException exception) {
             gridSize = MatchIt.GridSize.MIDDLE;
         }
-        MIGameRule rule = new MIGameRule(saveStats, cost, buttonID, gridSize, timeVisible);
-        rule.setMoneyToWin(money);
-        rule.setToken(token);
+        MIGameRule rule = new MIGameRule(saveStats, cost, buttonID, gridSize, timeVisible, money, token);
         gameRules.put(buttonID, rule);
     }
 

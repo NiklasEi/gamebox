@@ -13,9 +13,9 @@ import java.util.List;
  */
 public abstract class GameLanguage extends Language {
 
-    public List<String> GAME_HELP = new ArrayList<>(Arrays.asList("Have fun playing"));
+    public List<String> GAME_HELP;
 
-    public String GAME_PAYED = " You payed %cost%", GAME_NOT_ENOUGH_MONEY = " Not enough money (%cost%)";
+    public String GAME_PAYED = " You payed %cost%", GAME_NOT_ENOUGH_MONEY = " Not enough money (cost: %cost%)";
 
     public GameLanguage(Game game) {
         super(game.getGameBox(), game.getModule());

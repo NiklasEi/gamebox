@@ -63,26 +63,21 @@ gameBox:
       rewards:
         # Any player with a score less then the value below will not get any reward, regardless of his/her rank
         #    The score is not the amount of cookies on the players bank, but the total number of cookies produced!
-        minScore: 1000000
-        rewardIntervalls:
-          1:
-            money: 500
-            tokens: 5
-          2:
-            money: 400
-            tokens: 4
-          3:
-            money: 300
-            tokens: 3
-          4:
-            money: 200
-            tokens: 2
-          6:
-            money: 100
-            tokens: 1
-          11:
-            money: 0
-            tokens: 0
+        1000000000000: # trillion
+          money: 500
+          tokens: 5
+        10000000000: # 10 billion
+          money: 400
+          tokens: 4
+        100000000: # 100 million
+          money: 300
+          tokens: 3
+        10000000: # 10 million
+          money: 200
+          tokens: 2
+        1000000:
+          money: 100
+          tokens: 1
 
   topListButtons:
     # use the same key as the game you want to display the top list for

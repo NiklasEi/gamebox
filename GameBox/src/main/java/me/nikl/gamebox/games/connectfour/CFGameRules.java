@@ -3,8 +3,6 @@ package me.nikl.gamebox.games.connectfour;
 import me.nikl.gamebox.data.toplist.SaveType;
 import me.nikl.gamebox.games.GameRule;
 
-import java.util.HashSet;
-
 /**
  * @author Niklas Eicker
  *
@@ -19,7 +17,7 @@ public class CFGameRules extends GameRule {
         super(key, saveStats, SaveType.WINS, cost);
         this.cost = cost;
         setMoneyToWin(reward);
-        setToken(tokens);
+        setTokenToWin(tokens);
         this.timePerMove = timePerMove;
         this.minNumberOfPlayedChips = minNumberOfPlayedChips;
     }

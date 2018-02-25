@@ -2,6 +2,7 @@ package me.nikl.gamebox.games.cookieclicker;
 
 import me.nikl.gamebox.data.toplist.SaveType;
 import me.nikl.gamebox.games.GameRule;
+import me.nikl.gamebox.games.GameRuleMultiRewards;
 
 import java.util.HashSet;
 
@@ -10,7 +11,7 @@ import java.util.HashSet;
  *
  * Game rules container for Cookie Clicker
  */
-public class CCGameRules extends GameRule {
+public class CCGameRules extends GameRuleMultiRewards {
     private int moveCookieAfterClicks;
 
     public CCGameRules(String key, double cost, int moveCookieAfterClicks, boolean saveStats) {

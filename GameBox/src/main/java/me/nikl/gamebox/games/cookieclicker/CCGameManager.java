@@ -128,7 +128,22 @@ public class CCGameManager implements GameManager {
         if (moveCookieAfterClicks < 1) moveCookieAfterClicks = 0;
         double cost = buttonSec.getDouble("cost", 0.);
         boolean saveStats = buttonSec.getBoolean("saveStats", false);
-        gameRules.put(buttonID, new CCGameRules(buttonID, cost, moveCookieAfterClicks, saveStats));
+        CCGameRules rules = new CCGameRules(buttonID, cost, moveCookieAfterClicks, saveStats);
+        if (buttonSec.isConfigurationSection("rewards")) {
+            ConfigurationSection rewards = buttonSec.getConfigurationSection("rewards");
+            for (String key : rewards.getKeys(false)) {
+                try {
+                    int minScore = Integer.valueOf(key);
+                    int token = rewards.getInt(key + ".token", 0);
+                    double money = rewards.getDouble(key + ".money", 0.);
+                    rules.addMoneyReward(minScore, money);
+                    rules.addTokenReward(minScore, token);
+                } catch (NumberFormatException exception) {
+                    continue;
+                }
+            }
+        }
+        gameRules.put(buttonID, rules);
     }
 
     @Override
