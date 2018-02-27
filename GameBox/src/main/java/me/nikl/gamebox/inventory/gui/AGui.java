@@ -95,13 +95,13 @@ public abstract class AGui implements InventoryHolder {
     public boolean action(InventoryClickEvent event, ClickAction action, String[] args) {
 
         if (GameBox.debug)
-            Bukkit.getConsoleSender().sendMessage("action called: " + action.toString() + " with the args: " + (args == null ? "" : Arrays.asList(args)));
+            Bukkit.getConsoleSender().sendMessage("action called: " + action.toString()
+                    + " with the args: " + (args == null ? "" : Arrays.asList(args)));
         switch (action) {
             case OPEN_GAME_GUI:
                 if (args.length != 2) {
                     Bukkit.getConsoleSender().sendMessage("wrong number of arguments to open a game gui: " + args.length);
                 }
-
                 if (guiManager.openGameGui((Player) event.getWhoClicked(), args[0], args[1])) {
                     inGui.remove(event.getWhoClicked().getUniqueId());
                     return true;
@@ -115,67 +115,54 @@ public abstract class AGui implements InventoryHolder {
                 }
                 String gameID = args[0];
                 GameManager manager;
-                if ((manager = pluginManager.getGameManager(gameID)) != null) {
+                if ((manager = pluginManager.getGameManager(gameID)) == null) {
+                    GameBox.debug("Game with id: " + args[0] + " was not found");
+                    return false;
+                }
                     // set flag
                     GameBox.openingNewGUI = true;
                     Player[] player = args.length == 3 ? new Player[2] : new Player[1];
                     player[0] = (Player) event.getWhoClicked();
-
-                    checkPerms:
-                    if (!event.getWhoClicked().hasPermission(Permission.PLAY_ALL_GAMES.getPermission()) && !event.getWhoClicked().hasPermission(Permission.PLAY_SPECIFIC_GAME.getPermission(gameID))) {
-
-                        // special case for multiplayer games and option 'ExceptInvitesWithoutPlayPermission'
-                        if (player.length > 1 && GameBoxSettings.exceptInvitesWithoutPlayPermission) {
-                            break checkPerms;
-                        }
-
+                    if (!Permission.PLAY_GAME.hasPermission(player[0], gameID)
+                            // for multi player games there is a setting that allows playing without permission
+                            && !(player.length > 1 && GameBoxSettings.exceptInvitesWithoutPlayPermission)) {
                         sentInventoryTitleMessage(player[0], gameBox.lang.TITLE_NO_PERM);
-
-                        // remove flag
                         GameBox.openingNewGUI = false;
                         return false;
                     }
-
                     if (args.length == 3) {
                         // last entry should be a UUID
                         try {
                             UUID uuid = UUID.fromString(args[2]);
                             Player player2 = Bukkit.getPlayer(uuid);
-                            if (player == null) return false;
+                            if (player2 == null) return false;
                             player[1] = player2;
                         } catch (IllegalArgumentException exception) {
                             exception.printStackTrace();
                             GameBox.debug("tried inviting with a not valid UUID");
                             return false;
                         }
-
                         if (pluginManager.isInGame(player[1].getUniqueId())) {
                             sentInventoryTitleMessage(player[0], gameBox.lang.TITLE_ALREADY_IN_ANOTHER_GAME);
                             return false;
                         }
-
-                        if (!guiManager.isInGUI(player[1].getUniqueId()) && !guiManager.getShopManager().inShop(player[1].getUniqueId())) {
-                            // ToDO: the reasons (messages)...
+                        if (!guiManager.isInGUI(player[1].getUniqueId())
+                                && !guiManager.getShopManager().inShop(player[1].getUniqueId())) {
                             if (!pluginManager.enterGameBox(player[1], args[0], args[1])) {
-                                for (Player playerObj : player) {
-                                    if (guiManager.isInGUI(playerObj.getUniqueId()) || guiManager.getShopManager().inShop(playerObj.getUniqueId())) {
-                                        sentInventoryTitleMessage(playerObj, "To do");
-                                    } else {
-                                        playerObj.sendMessage("A game was canceled");
-                                    }
-                                }
+                                return false;
                             }
                         }
                     }
-
-
                     try {
-                        manager.startGame(player, (GameBoxSettings.playSounds && pluginManager.getPlayer(player[0].getUniqueId()).isPlaySounds()), args[1]);
+                        manager.startGame(player, (GameBoxSettings.playSounds
+                                && pluginManager.getPlayer(player[0].getUniqueId()).isPlaySounds()), args[1]);
                     } catch (GameStartException e) {
                         handleGameStartException(e, player);
                         return false;
                     }
-                    GameBox.debug("started game " + args[0] + " for player " + player[0].getName() + (player.length == 2 ? " and " + player[1].getName() : "") + " with the arguments: " + Arrays.asList(args));
+                    GameBox.debug("started game " + args[0] + " for player " + player[0].getName()
+                            + (player.length == 2 ? " and " + player[1].getName() : "")
+                            + " with the arguments: " + Arrays.asList(args));
                     AGui gui;
                     for (Player playerObj : player) {
                         gui = guiManager.getCurrentGui(playerObj.getUniqueId());
@@ -186,29 +173,22 @@ public abstract class AGui implements InventoryHolder {
                             playerObj.getInventory().setItem(slot, pluginManager.getHotBarButtons().get(slot));
                         }
                     }
-                    // remove flag
                     GameBox.openingNewGUI = false;
                     return true;
-                }
-                GameBox.debug("Game with id: " + args[0] + " was not found");
-                return false;
 
             case OPEN_MAIN_GUI:
                 if (this instanceof MainGui) return false;
-
                 if (guiManager.openMainGui((Player) event.getWhoClicked())) {
                     inGui.remove(event.getWhoClicked().getUniqueId());
                     return true;
                 }
                 return false;
 
-
             case CLOSE:
                 // do i need to do more here?
                 event.getWhoClicked().closeInventory();
                 ((Player) event.getWhoClicked()).updateInventory();
                 return true;
-
 
             case NOTHING:
                 return true;
@@ -217,16 +197,15 @@ public abstract class AGui implements InventoryHolder {
                 if (this instanceof StartMultiplayerGamePage) {
                     // if this gets called from a StartMultiplayerGamePage it is the beginning of an invite!
                     // check for perm in this case and stop invite if necessary
-                    if (!event.getWhoClicked().hasPermission(Permission.PLAY_ALL_GAMES.getPermission())
-                            && !event.getWhoClicked().hasPermission(Permission.PLAY_SPECIFIC_GAME.getPermission(args[0]))) {
+                    if (!Permission.PLAY_GAME.hasPermission(event.getWhoClicked(), args[0])) {
                         sentInventoryTitleMessage((Player) event.getWhoClicked(), gameBox.lang.TITLE_NO_PERM);
                         return false;
                     }
                 }
                 long timeStamp = System.currentTimeMillis();
-                boolean worked = pluginManager.getHandleInviteInput().addWaiting(event.getWhoClicked().getUniqueId()
+                boolean inputStarted = pluginManager.getHandleInviteInput().addWaiting(event.getWhoClicked().getUniqueId()
                         , timeStamp + GameBoxSettings.inviteInputDuration * 1000, args);
-                if (worked) {
+                if (inputStarted) {
                     event.getWhoClicked().closeInventory();
                     ((Player) event.getWhoClicked()).updateInventory();
                     event.getWhoClicked().sendMessage(gameBox.lang.PREFIX + gameBox.lang.INPUT_START_MESSAGE);
@@ -242,9 +221,10 @@ public abstract class AGui implements InventoryHolder {
                 if (args != null && args.length == 1) {
                     if (args[0].equals("sound")) {
                         pluginManager.getPlayer(event.getWhoClicked().getUniqueId()).toggleSound();
+                        event.getInventory().setItem(event.getSlot()
+                                , ((MainGui) this).getSoundToggleButton(event.getWhoClicked().getUniqueId()).toggle());
                     }
                 }
-                event.getInventory().setItem(event.getSlot(), ((MainGui) this).getSoundToggleButton(event.getWhoClicked().getUniqueId()).toggle());
                 ((Player) event.getWhoClicked()).updateInventory();
                 return true;
 
@@ -253,7 +233,6 @@ public abstract class AGui implements InventoryHolder {
                     Bukkit.getLogger().log(Level.WARNING, "show top list click has the wrong number of arguments: " + args.length);
                     return false;
                 }
-
                 if (guiManager.openGameGui((Player) event.getWhoClicked(), args)) {
                     inGui.remove(event.getWhoClicked().getUniqueId());
                     return true;
@@ -273,14 +252,10 @@ public abstract class AGui implements InventoryHolder {
                 return false;
 
             case BUY:
-
-                // check for closed shop
                 if (guiManager.getShopManager().isClosed()) {
                     sentInventoryTitleMessage((Player) event.getWhoClicked(), gameBox.lang.SHOP_IS_CLOSED);
                     return false;
                 }
-
-                // check whether player can pay
                 int tokens, money;
                 try {
                     tokens = Integer.parseInt(args[2]);
@@ -304,14 +279,11 @@ public abstract class AGui implements InventoryHolder {
                         return false;
                     }
                 }
-
                 // clone the item if it exists
-                //   otherwise the number beeing given to the player is wrong after the first buy
+                //   otherwise the number being given to the player is wrong after the first buy
                 ItemStack item = guiManager.getShopManager().getShopItemStack(args[0], args[1]) == null ?
                         null : guiManager.getShopManager().getShopItemStack(args[0], args[1]).clone();
-
                 ShopItem shopItem = guiManager.getShopManager().getShopItem(args[0], args[1]);
-
                 // test for perms
                 if (!shopItem.getPermissions().isEmpty()) {
                     for (String permission : shopItem.getPermissions()) {
@@ -321,7 +293,6 @@ public abstract class AGui implements InventoryHolder {
                         }
                     }
                 }
-
                 if (!shopItem.getNoPermissions().isEmpty()) {
                     for (String noPermission : shopItem.getNoPermissions()) {
                         if (event.getWhoClicked().hasPermission(noPermission)) {
@@ -330,7 +301,6 @@ public abstract class AGui implements InventoryHolder {
                         }
                     }
                 }
-
                 if (item != null) {
                     if (!pluginManager.addItem(event.getWhoClicked().getUniqueId(), item)) {
                         sentInventoryTitleMessage((Player) event.getWhoClicked(), gameBox.lang.SHOP_TITLE_INVENTORY_FULL);
@@ -339,32 +309,28 @@ public abstract class AGui implements InventoryHolder {
                         sentInventoryTitleMessage((Player) event.getWhoClicked(), gameBox.lang.SHOP_TITLE_BOUGHT_SUCCESSFULLY);
                     }
                 }
-
                 if (shopItem.manipulatesInventory() && this instanceof Shop) {
                     GameBox.debug("   closed due to shop item manipulating the inventory");
                     event.getWhoClicked().closeInventory();
                 }
-
                 // item was given now check for commands and sent them
                 if (!shopItem.getCommands().isEmpty()) {
                     for (String command : shopItem.getCommands()) {
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", event.getWhoClicked().getName()));
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender()
+                                , command.replace("%player%", event.getWhoClicked().getName()));
                     }
                 }
-
                 // reopen shop page
                 if (shopItem.manipulatesInventory() && this instanceof Shop) {
                     GameBox.debug("   reopening the gui");
                     guiManager.openShopPage((Player) event.getWhoClicked(), this.args);
                 }
-
                 if (tokens > 0) {
                     pluginManager.getPlayer(event.getWhoClicked().getUniqueId()).setTokens(hasToken - tokens);
                 }
                 if (money > 0) {
                     GameBox.econ.withdrawPlayer((OfflinePlayer) event.getWhoClicked(), money);
                 }
-
                 return true;
 
             default:
@@ -406,7 +372,8 @@ public abstract class AGui implements InventoryHolder {
                 break;
             case ERROR:
                 for (Player playerObj : player) {
-                    if (guiManager.isInGUI(playerObj.getUniqueId()) || guiManager.getShopManager().inShop(playerObj.getUniqueId())) {
+                    if (guiManager.isInGUI(playerObj.getUniqueId())
+                            || guiManager.getShopManager().inShop(playerObj.getUniqueId())) {
                         sentInventoryTitleMessage(playerObj, gameBox.lang.TITLE_ERROR);
                     } else {
                         playerObj.sendMessage("A game failed to start");
@@ -445,14 +412,18 @@ public abstract class AGui implements InventoryHolder {
         }
 
         if (action(event, button.getAction(), button.getArgs())) {
-            if (GameBoxSettings.playSounds && pluginManager.getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds() && button.getAction() != ClickAction.NOTHING) {
+            if (GameBoxSettings.playSounds
+                    && pluginManager.getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()
+                    && button.getAction() != ClickAction.NOTHING) {
                 ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), successfulClick, volume, pitch);
             }
             if (perInvitation) {
                 mpGui.removeInvite(UUID.fromString(button.getArgs()[2]), event.getWhoClicked().getUniqueId());
             }
         } else {
-            if (GameBoxSettings.playSounds && pluginManager.getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds() && button.getAction() != ClickAction.NOTHING) {
+            if (GameBoxSettings.playSounds
+                    && pluginManager.getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()
+                    && button.getAction() != ClickAction.NOTHING) {
                 ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), unsuccessfulClick, volume, pitch);
             }
         }
