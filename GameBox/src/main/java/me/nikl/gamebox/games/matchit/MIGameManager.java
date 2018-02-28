@@ -30,21 +30,20 @@ public class MIGameManager implements GameManager {
     }
 
     @Override
-    public boolean onInventoryClick(InventoryClickEvent event) {
+    public void onInventoryClick(InventoryClickEvent event) {
         MIGame game = games.get(event.getWhoClicked().getUniqueId());
-        if (game == null) return false;
+        if (game == null) return;
 
         game.onClick(event);
-        return true;
+        return;
     }
 
     @Override
-    public boolean onInventoryClose(InventoryCloseEvent event) {
-        if (!games.keySet().contains(event.getPlayer().getUniqueId())) return false;
+    public void onInventoryClose(InventoryCloseEvent event) {
+        if (!games.keySet().contains(event.getPlayer().getUniqueId())) return;
 
         // do same stuff as on removeFromGame()
         removeFromGame(event.getPlayer().getUniqueId());
-        return true;
     }
 
     @Override

@@ -1,12 +1,12 @@
 package me.nikl.gamebox.games;
 
 import me.nikl.gamebox.games.exceptions.GameStartException;
+import me.nikl.gamebox.inventory.GameBoxHolder;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 
 import java.util.Map;
 import java.util.UUID;
@@ -14,27 +14,7 @@ import java.util.UUID;
 /**
  * Created by niklas on 2/4/17.
  */
-public interface GameManager extends InventoryHolder {
-
-    /**
-     * Handle a click in the game
-     *
-     * @param event ClickEvent
-     * @return successful
-     */
-    boolean onInventoryClick(InventoryClickEvent event);
-
-
-    /**
-     * Handle an InventoryCloseEvent
-     * You should do the same as in IGameManager.removeFromGame
-     *
-     * @param event CloseEvent
-     * @return successful
-     */
-    boolean onInventoryClose(InventoryCloseEvent event);
-
-
+public interface GameManager extends GameBoxHolder {
     /**
      * Return whether a player is in a game or not
      *

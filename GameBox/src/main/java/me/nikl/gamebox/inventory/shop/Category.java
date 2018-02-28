@@ -270,7 +270,7 @@ public class Category {
     public void onInvClick(InventoryClickEvent event) {
         for (Page page : pages.values()) {
             if (page.isInGui(event.getWhoClicked().getUniqueId())) {
-                page.onInvClick(event);
+                page.onInventoryClick(event);
                 return;
             }
         }
@@ -288,7 +288,7 @@ public class Category {
     public void onInvClose(InventoryCloseEvent event) {
         for (Page page : pages.values()) {
             if (page.isInGui(event.getPlayer().getUniqueId())) {
-                page.onInvClose(event);
+                page.onInventoryClose(event);
                 return;
             }
         }

@@ -111,19 +111,18 @@ public class CFGameManager implements GameManager {
     }
 
     @Override
-    public boolean onInventoryClick(InventoryClickEvent inventoryClickEvent) {
+    public void onInventoryClick(InventoryClickEvent inventoryClickEvent) {
         CFGame game = getGame(inventoryClickEvent.getWhoClicked().getUniqueId());
-        if (game == null) return false;
+        if (game == null) return;
         if (inventoryClickEvent.getCurrentItem() != null && inventoryClickEvent.getCurrentItem().getType() != Material.AIR)
-            return false;
+            return;
         game.onClick(inventoryClickEvent);
-        return true;
     }
 
     @Override
-    public boolean onInventoryClose(InventoryCloseEvent inventoryCloseEvent) {
+    public void onInventoryClose(InventoryCloseEvent inventoryCloseEvent) {
         if (!isInGame(inventoryCloseEvent.getPlayer().getUniqueId())) {
-            return false;
+            return;
         }
         CFGame game = getGame(inventoryCloseEvent.getPlayer().getUniqueId());
         boolean firstClosed = inventoryCloseEvent.getPlayer().getUniqueId().equals(game.getFirstUUID());
@@ -131,10 +130,9 @@ public class CFGameManager implements GameManager {
         Player loser = firstClosed ? game.getFirst() : game.getSecond();
         if ((!firstClosed && game.getFirst() == null) || (firstClosed && game.getSecond() == null)) {
             games.remove(game.getFirstUUID());
-            return true;
+            return;
         }
         removeFromGame(firstClosed, winner, loser, game);
-        return true;
     }
 
     private void removeFromGame(boolean firstClosed, Player winner, Player loser, CFGame game) {

@@ -7,6 +7,7 @@ import me.nikl.gamebox.games.GameManager;
 import me.nikl.gamebox.games.exceptions.GameStartException;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
+import me.nikl.gamebox.inventory.GameBoxHolder;
 import me.nikl.gamebox.inventory.button.AButton;
 import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.gui.game.GameGui;
@@ -23,7 +24,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
@@ -37,7 +37,7 @@ import java.util.logging.Level;
 /**
  * @author Niklas Eicker
  */
-public abstract class AGui implements InventoryHolder {
+public abstract class AGui implements GameBoxHolder {
     protected Inventory inventory;
     protected Map<UUID, Inventory> openInventories = new HashMap<>();
     protected Set<UUID> inGui;
@@ -391,7 +391,8 @@ public abstract class AGui implements InventoryHolder {
         GameBox.debug("did not start a game");
     }
 
-    public void onInvClick(InventoryClickEvent event) {
+    @Override
+    public void onInventoryClick(InventoryClickEvent event) {
         if (event.getCurrentItem() == null) return;
         AButton button = grid[event.getRawSlot()];
         boolean perInvitation = false;
@@ -429,7 +430,8 @@ public abstract class AGui implements InventoryHolder {
         }
     }
 
-    public void onInvClose(InventoryCloseEvent event) {
+    @Override
+    public void onInventoryClose(InventoryCloseEvent event) {
         inGui.remove(event.getPlayer().getUniqueId());
         GameBox.debug("GUI was closed");
     }

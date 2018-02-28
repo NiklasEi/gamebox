@@ -3,7 +3,6 @@ package me.nikl.gamebox.inventory;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.GameBoxSettings;
-import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.events.EnterGameBoxEvent;
 import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.gui.AGui;
@@ -59,7 +58,7 @@ public class GUIManager {
         boolean topInv = event.getSlot() == event.getRawSlot();
         if (mainGui.isInGui(uuid)) {
             event.setCancelled(true);
-            if (topInv) mainGui.onInvClick(event);
+            if (topInv) mainGui.onInventoryClick(event);
             if (!topInv) mainGui.onBottomInvClick(event);
             return;
         }
@@ -68,7 +67,7 @@ public class GUIManager {
             for (GameGui gui : guis.values()) {
                 if (gui.isInGui(uuid)) {
                     event.setCancelled(true);
-                    if (topInv) gui.onInvClick(event);
+                    if (topInv) gui.onInventoryClick(event);
                     if (!topInv) gui.onBottomInvClick(event);
                     return;
                 }
@@ -89,7 +88,7 @@ public class GUIManager {
         if (!(event.getPlayer() instanceof Player)) return;
         UUID uuid = event.getPlayer().getUniqueId();
         if (mainGui.isInGui(uuid)) {
-            mainGui.onInvClose(event);
+            mainGui.onInventoryClose(event);
             plugin.getPluginManager().leaveGameBox((Player) event.getPlayer());
             return;
         }
@@ -97,7 +96,7 @@ public class GUIManager {
             Map<String, GameGui> guis = gameGuis.get(gameID);
             for (GameGui gui : guis.values()) {
                 if (gui.isInGui(uuid)) {
-                    gui.onInvClose(event);
+                    gui.onInventoryClose(event);
                     plugin.getPluginManager().leaveGameBox((Player) event.getPlayer());
                     return;
                 }

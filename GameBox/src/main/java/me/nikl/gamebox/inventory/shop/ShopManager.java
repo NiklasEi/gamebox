@@ -3,7 +3,6 @@ package me.nikl.gamebox.inventory.shop;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.GameBoxSettings;
-import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.events.EnterGameBoxEvent;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
@@ -184,7 +183,7 @@ public class ShopManager {
         boolean topInv = event.getSlot() == event.getRawSlot();
         if (mainShop.isInGui(event.getWhoClicked().getUniqueId())) {
             if (topInv) {
-                mainShop.onInvClick(event);
+                mainShop.onInventoryClick(event);
             } else {
                 mainShop.onBottomInvClick(event);
             }
@@ -203,7 +202,7 @@ public class ShopManager {
 
     public void onInvClose(InventoryCloseEvent event) {
         if (mainShop.isInGui(event.getPlayer().getUniqueId())) {
-            mainShop.onInvClose(event);
+            mainShop.onInventoryClose(event);
             return;
         }
         for (Category category : categories.values()) {

@@ -8,6 +8,7 @@ import me.nikl.gamebox.games.GameManager;
 import me.nikl.gamebox.input.HandleInvitations;
 import me.nikl.gamebox.input.HandleInviteInput;
 import me.nikl.gamebox.inventory.GUIManager;
+import me.nikl.gamebox.inventory.GameBoxHolder;
 import me.nikl.gamebox.inventory.gui.AGui;
 import me.nikl.gamebox.utility.ItemStackUtility;
 import me.nikl.gamebox.utility.Permission;
@@ -282,7 +283,7 @@ public class PluginManager implements Listener {
             AGui aGui = (AGui) event.getInventory().getHolder();
             boolean topInv = event.getSlot() == event.getRawSlot();
             event.setCancelled(true);
-            if (topInv) aGui.onInvClick(event);
+            if (topInv) aGui.onInventoryClick(event);
             else aGui.onBottomInvClick(event);
             return;
         }
@@ -297,17 +298,11 @@ public class PluginManager implements Listener {
             GameBox.debug("ignoring close because of flag: GameBox.openingNewGUI");
             return;
         }
-        UUID uuid = event.getPlayer().getUniqueId();
-        for (Game game : games.values()) {
-            GameManager manager = game.getGameManager();
-            if (manager.isInGame(uuid)) {
-                if (manager.onInventoryClose(event) && !manager.isInGame(uuid)) {
-                    leaveGameBox((Player) event.getPlayer());
-                }
-                return;
-            }
+        if (event.getInventory().getHolder() != null
+                && event.getInventory().getHolder() instanceof GameBoxHolder) {
+            ((GameBoxHolder) event.getInventory().getHolder()).onInventoryClose(event);
+            leaveGameBox((Player) event.getPlayer());
         }
-        guiManager.onInvClose(event);
     }
 
     @EventHandler

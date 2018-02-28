@@ -69,22 +69,18 @@ public class CCGameManager implements GameManager {
     }
 
 
-    public boolean onInventoryClick(InventoryClickEvent inventoryClickEvent) {
-        if (!games.keySet().contains(inventoryClickEvent.getWhoClicked().getUniqueId())) return false;
-
+    public void onInventoryClick(InventoryClickEvent inventoryClickEvent) {
+        if (!games.keySet().contains(inventoryClickEvent.getWhoClicked().getUniqueId())) return;
         CCGame game = games.get(inventoryClickEvent.getWhoClicked().getUniqueId());
-
         game.onClick(inventoryClickEvent);
-        return true;
     }
 
 
-    public boolean onInventoryClose(InventoryCloseEvent inventoryCloseEvent) {
-        if (!games.keySet().contains(inventoryCloseEvent.getPlayer().getUniqueId())) return false;
+    public void onInventoryClose(InventoryCloseEvent inventoryCloseEvent) {
+        if (!games.keySet().contains(inventoryCloseEvent.getPlayer().getUniqueId())) return;
 
         // do same stuff as on removeFromGame()
         removeFromGame(inventoryCloseEvent.getPlayer().getUniqueId());
-        return true;
     }
 
 
