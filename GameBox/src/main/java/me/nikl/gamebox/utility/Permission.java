@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * just change the permission nodes here
  */
 public enum Permission {
-    PLAY_SPECIFIC_GAME("play", true),
+    PLAY_GAME("play", true),
     @Deprecated // * is supported via placeholder!
             PLAY_ALL_GAMES("play.*"),
     OPEN_GAME_GUI("gamegui", true),
@@ -47,20 +47,6 @@ public enum Permission {
         GameBox.debug("registered permissions for: " + moduleID);
     }
 
-    // ToDO: make private (and remove) and change usage to #hasPermission
-    public String getPermission(String moduleID) {
-        return perm.replace("%moduleID%", moduleID);
-    }
-
-    // ToDO: make private (and remove) and change usage to #hasPermission
-    public String getPermission() {
-        return perm;
-    }
-
-    public String getPermission(Module module) {
-        return getPermission(module.getModuleID());
-    }
-
     /**
      * Check sender for the permission.
      *
@@ -80,6 +66,10 @@ public enum Permission {
             return (sender.hasPermission(perm.replace("%moduleID%", moduleID))
                     || sender.hasPermission(perm.replace("%moduleID%", "*")));
         }
+    }
+
+    public boolean hasPermission(CommandSender sender, Module module) {
+        return hasPermission(sender, module.getModuleID());
     }
 
     public boolean hasPermission(CommandSender sender) {

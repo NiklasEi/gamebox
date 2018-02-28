@@ -24,31 +24,24 @@ import java.util.UUID;
  * @author Niklas Eicker
  */
 public class CFGame extends BukkitRunnable {
-
     private CFGameRules rule;
     private boolean playSounds;
     private ConnectFour connectFour;
-
     private UUID firstUUID, secondUUID;
     private Player first, second;
-
     private ItemStack firstChip, secondChip;
-
     private Inventory inv;
-
-    private org.bukkit.Sound falling = Sound.WOOD_CLICK.bukkitSound(), insert = Sound.CLICK.bukkitSound(), turn = Sound.NOTE_PLING.bukkitSound(), won = Sound.VILLAGER_YES.bukkitSound(), lose = Sound.VILLAGER_NO.bukkitSound();
-
+    private org.bukkit.Sound falling = Sound.WOOD_CLICK.bukkitSound()
+            , insert = Sound.CLICK.bukkitSound()
+            , turn = Sound.NOTE_PLING.bukkitSound()
+            , won = Sound.VILLAGER_YES.bukkitSound()
+            , lose = Sound.VILLAGER_NO.bukkitSound();
     private float volume = 0.5f, pitch = 1f;
-
     private double time;
     private String timeStr = "";
-
     private CFGameState state;
-
     private int fallingChip;
-
     private int playedChips = 0;
-
     private NmsUtility nms;
     private CFLanguage lang;
 
@@ -243,9 +236,11 @@ public class CFGame extends BukkitRunnable {
         if (winner != null && loser != null) {
 
             if (connectFour.getSettings().isEconEnabled()) {
-                if (!winner.hasPermission(Permission.BYPASS_ALL.getPermission()) && !winner.hasPermission(Permission.BYPASS_GAME.getPermission(connectFour.getGameID()))) {
+                if (!Permission.BYPASS_GAME.hasPermission(winner, connectFour.getGameID())) {
                     GameBox.econ.depositPlayer(winner, rule.getMoneyToPay());
-                    winner.sendMessage((lang.PREFIX + lang.GAME_WON_MONEY.replaceAll("%reward%", rule.getMoneyToPay() + "").replaceAll("%loser%", loser.getName())));
+                    winner.sendMessage((lang.PREFIX + lang.GAME_WON_MONEY
+                            .replaceAll("%reward%", rule.getMoneyToPay() + "")
+                            .replaceAll("%loser%", loser.getName())));
                 } else {
                     winner.sendMessage((lang.PREFIX + lang.GAME_WON.replaceAll("%loser%", loser.getName())));
                 }

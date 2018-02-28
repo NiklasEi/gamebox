@@ -148,14 +148,14 @@ public class CFGameManager implements GameManager {
         if (game.getState() != CFGameState.FINISHED) {
             game.cancel();
             if (this.connectFour.getSettings().isEconEnabled() && game.getPlayedChips() >= game.getRule().getMinNumberOfPlayedChips()) {
-                if (!winner.hasPermission(Permission.BYPASS_ALL.getPermission()) && !winner.hasPermission(Permission.BYPASS_GAME.getPermission(connectFour.getGameID()))) {
+                if (!Permission.BYPASS_GAME.hasPermission(winner, connectFour.getGameID())) {
                     GameBox.econ.depositPlayer(winner, game.getRule().getMoneyToPay());
                     winner.sendMessage(StringUtility.color(lang.PREFIX + lang.GAME_WON_MONEY_GAVE_UP.replaceAll("%reward%", game.getRule().getMoneyToPay() + "").replaceAll("%loser%", loser.getName())));
                 } else {
                     winner.sendMessage(StringUtility.color(lang.PREFIX + lang.GAME_OTHER_GAVE_UP.replaceAll("%loser%", loser.getName())));
                 }
             } else if (connectFour.getSettings().isEconEnabled()) {
-                if (!winner.hasPermission(Permission.BYPASS_ALL.getPermission()) && !winner.hasPermission(Permission.BYPASS_GAME.getPermission(connectFour.getGameID()))) {
+                if (!Permission.BYPASS_GAME.hasPermission(winner, connectFour.getGameID())) {
                     GameBox.econ.depositPlayer(winner, game.getRule().getCost());
                     winner.sendMessage(StringUtility.color(lang.PREFIX + lang.GAME_WON_MONEY_GAVE_UP.replaceAll("%reward%", game.getRule().getCost() + "").replaceAll("%loser%", loser.getName())));
                 } else {

@@ -434,7 +434,7 @@ public class PluginManager implements Listener {
         if (event.getItem().getItemMeta().getDisplayName().equals(hubItem.getItemMeta().getDisplayName())) {
             event.setCancelled(true);
             if (hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName())) {
-                if (event.getPlayer().hasPermission(Permission.USE.getPermission())) {
+                if (Permission.USE.hasPermission(event.getPlayer())) {
                     guiManager.openMainGui(event.getPlayer());
                 } else {
                     event.getPlayer().sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
@@ -686,13 +686,13 @@ public class PluginManager implements Listener {
         return Collections.unmodifiableMap(this.gbPlayers);
     }
 
-    public boolean enterGameBox(Player whoClicked, String moduleID, String menuID) {
-        EnterGameBoxEvent enterEvent = new EnterGameBoxEvent(whoClicked, moduleID, menuID);
+    public boolean enterGameBox(Player player, String moduleID, String menuID) {
+        EnterGameBoxEvent enterEvent = new EnterGameBoxEvent(player, moduleID, menuID);
         if (!enterEvent.isCancelled()) {
-            saveInventory(whoClicked);
+            saveInventory(player);
             return true;
         } else {
-            whoClicked.sendMessage(enterEvent.getCancelMessage());
+            player.sendMessage(lang.PREFIX + enterEvent.getCancelMessage());
             return false;
         }
     }

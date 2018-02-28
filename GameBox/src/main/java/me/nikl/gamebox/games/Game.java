@@ -363,8 +363,7 @@ public abstract class Game {
      */
     public boolean payIfNecessary(Player player, double cost, boolean withdraw) {
         if (GameBoxSettings.econEnabled && gameSettings.isEconEnabled()
-                && !player.hasPermission(Permission.BYPASS_ALL.getPermission())
-                && !player.hasPermission(Permission.BYPASS_GAME.getPermission(getGameID()))
+                && !Permission.BYPASS_GAME.hasPermission(player, getGameID())
                 && cost > 0.0) {
             return pay(player, cost, withdraw);
         }
@@ -445,7 +444,6 @@ public abstract class Game {
     }
 
     private boolean hasBypassPermission(Player winner) {
-        return (winner.hasPermission(Permission.BYPASS_ALL.getPermission())
-                || winner.hasPermission(Permission.BYPASS_GAME.getPermission(getGameID())));
+        return Permission.BYPASS_GAME.hasPermission(winner, getGameID());
     }
 }

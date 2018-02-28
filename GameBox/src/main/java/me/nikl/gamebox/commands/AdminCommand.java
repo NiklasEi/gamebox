@@ -50,7 +50,7 @@ public class AdminCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (!sender.hasPermission(Permission.ADMIN.getPermission())) {
+        if (!Permission.ADMIN.hasPermission(sender)) {
             sender.sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
             return true;
         }

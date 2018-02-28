@@ -116,7 +116,7 @@ public class ShopManager {
             }
         }
 
-        if (whoClicked.hasPermission(Permission.OPEN_SHOP.getPermission())) {
+        if (Permission.OPEN_SHOP.hasPermission(whoClicked)) {
             if (args[0].equals(ShopManager.MAIN) && args[1].equals("0")) {
                 GameBox.openingNewGUI = true;
                 mainShop.open(whoClicked);

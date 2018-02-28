@@ -155,7 +155,7 @@ public class GUIManager {
         }
 
         String gameID = args[0], key = args[1];
-        if (whoClicked.hasPermission(Permission.OPEN_ALL_GAME_GUI.getPermission()) || whoClicked.hasPermission(Permission.OPEN_GAME_GUI.getPermission(gameID))) {
+        if (Permission.OPEN_GAME_GUI.hasPermission(whoClicked, gameID)) {
             AGui gui = gameGuis.get(gameID).get(key);
             GameBox.openingNewGUI = true;
             boolean opened = gui.open(whoClicked);
@@ -190,7 +190,7 @@ public class GUIManager {
      * @return success in opening the gui
      */
     public boolean openMainGui(Player whoClicked) {
-        if (!whoClicked.hasPermission(Permission.USE.getPermission())) {
+        if (!Permission.USE.hasPermission(whoClicked)) {
             whoClicked.sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
             return false;
         }

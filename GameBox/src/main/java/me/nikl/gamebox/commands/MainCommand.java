@@ -38,7 +38,7 @@ public class MainCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (!sender.hasPermission(Permission.USE.getPermission())) {
+        if (!Permission.USE.hasPermission(sender)) {
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', lang.PREFIX + lang.CMD_NO_PERM));
             return true;
         }
@@ -92,7 +92,7 @@ public class MainCommand implements CommandExecutor {
 
             // this will be checked again when opening the gui but checking it here
             //   removes the necessity to save and later restore the inventory of the player
-            if (!sender.hasPermission(Permission.OPEN_ALL_GAME_GUI.getPermission()) && !sender.hasPermission(Permission.OPEN_GAME_GUI.getPermission(module))) {
+            if (!Permission.OPEN_GAME_GUI.hasPermission(sender, module)) {
                 sender.sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
                 return true;
             }
@@ -107,7 +107,7 @@ public class MainCommand implements CommandExecutor {
     }
 
     private boolean sendHelp(CommandSender sender) {
-        if (!sender.hasPermission(Permission.CMD_HELP.getPermission())) {
+        if (!Permission.CMD_HELP.hasPermission(sender)) {
             sender.sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
             return true;
         }
@@ -118,7 +118,7 @@ public class MainCommand implements CommandExecutor {
     }
 
     private boolean sendInformation(CommandSender sender) {
-        if (!sender.hasPermission(Permission.CMD_INFO.getPermission())) {
+        if (!Permission.CMD_INFO.hasPermission(sender)) {
             sender.sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
             return true;
         }
