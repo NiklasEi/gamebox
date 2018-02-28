@@ -36,9 +36,10 @@ public class MysqlDB extends DataBase {
     private static final String SET_TOKEN = "UPDATE " + PLAYER_TABLE + " SET " + PLAYER_TOKEN_PATH + "=? WHERE " + PLAYER_UUID + "=?";
     private static final String UPDATE_HIGH_SCORE_GREATEST = "INSERT INTO `" + HIGH_SCORES_TABLE + "` (`" + PLAYER_UUID + "`,`%column%`) VALUES(?,?) ON DUPLICATE KEY UPDATE `%column%`=GREATEST(`%column%`, VALUES(`%column%`))";
     private static final String UPDATE_HIGH_SCORE_LEAST = "INSERT INTO `" + HIGH_SCORES_TABLE + "` (`" + PLAYER_UUID + "`,`%column%`) VALUES(?,?) ON DUPLICATE KEY UPDATE `%column%`=LEAST(`%column%`, VALUES(`%column%`))";
-    private static final String UPDATE_HIGH_SCORE_ADD_WIN = "INSERT INTO `" + HIGH_SCORES_TABLE + "` (`" + PLAYER_UUID + "`,`%column%`) VALUES(?,?) ON DUPLICATE KEY UPDATE `%column%`=`%column%`+1";
+    private static final String UPDATE_HIGH_SCORE_ADD_WIN = "INSERT INTO `" + HIGH_SCORES_TABLE + "` (`" + PLAYER_UUID + "`,`%column%`) VALUES(?,?) ON DUPLICATE KEY UPDATE `%column%`=VALUES(`%column%`)";
     private static final String COLLECT_TOP_SCORES = "SELECT e1.* FROM (SELECT DISTINCT `%column%` FROM `" + HIGH_SCORES_TABLE + "` ORDER BY `%column%` %order% LIMIT %n%) s1 JOIN `" + HIGH_SCORES_TABLE + "` e1 ON e1.`%column%` = s1.`%column%` ORDER BY e1.`%column%` %order%";
     private static final String COLLECT_COLUMNS_STARTING_WITH = "SELECT column_name FROM INFORMATION_SCHEMA.columns WHERE table_schema = ? AND table_name = `" + HIGH_SCORES_TABLE + "` AND LEFT(column_name, %length%) =?";
+    private static final String SELECT_HIGH_SCORE = "SELECT `%column%` FROM `" + HIGH_SCORES_TABLE + "` WHERE " + PLAYER_UUID + "=?";
 
     private String host;
     private String database;
@@ -101,16 +102,22 @@ public class MysqlDB extends DataBase {
             @Override
             public void run() {
                 createColumnIfNecessary(columnName);
-                if (saveType == SaveType.WINS)
-                    updateHighscoreAddWin(columnName, uuid, value);
-                else if (saveType.isHigherScore())
+                double newValue;
+                if (saveType == SaveType.WINS) {
+                    newValue = value + getHighscore(columnName, uuid);
+                    updateHighscoreSetValue(columnName, uuid, newValue);
+                }
+                else if (saveType.isHigherScore()) {
+                    newValue = value;
                     updateHighscoreGreatest(columnName, uuid, value);
-                else
+                } else {
+                    newValue = value;
                     updateHighscoreLeast(columnName, uuid, value);
+                }
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        getTopList(gameID, gameTypeID, saveType).update(new PlayerScore(uuid, value, saveType));
+                        getTopList(gameID, gameTypeID, saveType).update(new PlayerScore(uuid, newValue, saveType));
                     }
                 }.runTask(plugin);
             }
@@ -129,7 +136,7 @@ public class MysqlDB extends DataBase {
         }
     }
 
-    private void updateHighscoreAddWin(String columnName, UUID uuid, double value) {
+    private void updateHighscoreSetValue(String columnName, UUID uuid, double value) {
         try (Connection connection = hikari.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_HIGH_SCORE_ADD_WIN.replace("%column%", columnName))) {
             statement.setString(1, uuid.toString());
@@ -150,6 +157,21 @@ public class MysqlDB extends DataBase {
             GameBox.debug("High score added!");
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    private double getHighscore(String columnName, UUID uuid) {
+        try (Connection connection = hikari.getConnection();
+             PreparedStatement select = connection.prepareStatement(SELECT_HIGH_SCORE.replace("%column%", columnName))) {
+            select.setString(1, uuid.toString());
+            ResultSet result = select.executeQuery();
+            if (result.next()) {
+                return result.getDouble(columnName);
+            }
+            return 0.;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0.;
         }
     }
 
