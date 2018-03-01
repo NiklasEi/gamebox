@@ -21,6 +21,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
 
 /**
  * Created by niklas on 10/17/16.
@@ -28,7 +29,6 @@ import java.lang.reflect.Field;
  * nms utility for 1.8.R1
  */
 public class NmsUtility_1_8_R1 implements NmsUtility {
-
     private boolean checkInventoryTitleLength = false;
 
     public NmsUtility_1_8_R1() {
@@ -43,15 +43,12 @@ public class NmsUtility_1_8_R1 implements NmsUtility {
     public void updateInventoryTitle(Player player, String newTitle) {
         EntityPlayer ep = ((CraftPlayer) player).getHandle();
         newTitle = ChatColor.translateAlternateColorCodes('&', newTitle);
-
         if (checkInventoryTitleLength && newTitle.length() > 32) {
             newTitle = newTitle.substring(0, 28) + "...";
         }
-
         PacketPlayOutOpenWindow packet = new PacketPlayOutOpenWindow(ep.activeContainer.windowId
                 , "minecraft:chest", new ChatMessage(newTitle)
                 , player.getOpenInventory().getTopInventory().getSize());
-
         try {
             ep.playerConnection.sendPacket(packet);
             ep.updateInventory(ep.activeContainer);
@@ -66,18 +63,52 @@ public class NmsUtility_1_8_R1 implements NmsUtility {
     }
 
     @Override
+    public void sendJSON(Player player, String json) {
+        IChatBaseComponent comp = ChatSerializer.a(json);
+        PacketPlayOutChat packet = new PacketPlayOutChat(comp, (byte) 0);
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+    }
+
+    @Override
+    public void sendJSON(Player player, Collection<String> json) {
+        for (String message : json) {
+            IChatBaseComponent comp = ChatSerializer.a(message);
+            PacketPlayOutChat packet = new PacketPlayOutChat(comp, (byte) 0);
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+        }
+    }
+
+    @Override
+    public void sendJSON(Collection<Player> players, String json) {
+        IChatBaseComponent comp = ChatSerializer.a(json);
+        PacketPlayOutChat packet = new PacketPlayOutChat(comp, (byte) 0);
+        for (Player player : players) {
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+        }
+    }
+
+    @Override
+    public void sendJSON(Collection<Player> players, Collection<String> json) {
+        for (String message : json) {
+            IChatBaseComponent comp = ChatSerializer.a(message);
+            PacketPlayOutChat packet = new PacketPlayOutChat(comp, (byte) 0);
+            for (Player player : players) {
+                ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+            }
+        }
+    }
+
+    @Override
     public void sendTitle(Player player, String title, String subTitle) {
         if (title != null) {
             IChatBaseComponent chatTitle = ChatSerializer.a("{\"text\": \"" + title + "\",color:" + ChatColor.GOLD.name().toLowerCase() + "}");
             PacketPlayOutTitle pTitle = new PacketPlayOutTitle(EnumTitleAction.TITLE, chatTitle);
             ((CraftPlayer) player).getHandle().playerConnection.sendPacket(pTitle);
-
         }
         if (subTitle != null) {
             IChatBaseComponent chatSubTitle = ChatSerializer.a("{\"text\": \"" + subTitle + "\",color:" + ChatColor.GOLD.name().toLowerCase() + "}");
             PacketPlayOutTitle pSubTitle = new PacketPlayOutTitle(EnumTitleAction.SUBTITLE, chatSubTitle);
             ((CraftPlayer) player).getHandle().playerConnection.sendPacket(pSubTitle);
-
         }
         PacketPlayOutTitle length = new PacketPlayOutTitle(5, 20, 5);
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(length);
@@ -85,11 +116,8 @@ public class NmsUtility_1_8_R1 implements NmsUtility {
 
     @Override
     public void sendActionbar(Player p, String message) {
-
         IChatBaseComponent icbc = ChatSerializer.a("{\"text\": \"" + ChatColor.translateAlternateColorCodes('&', message) + "\"}");
-
         PacketPlayOutChat bar = new PacketPlayOutChat(icbc, (byte) 2);
-
         ((CraftPlayer) p).getHandle().playerConnection.sendPacket(bar);
     }
 
@@ -97,9 +125,7 @@ public class NmsUtility_1_8_R1 implements NmsUtility {
     @Override
     public void sendListFooter(Player player, String footer) {
         IChatBaseComponent bottom = ChatSerializer.a("{text: '" + ChatColor.translateAlternateColorCodes('&', footer) + "'}");
-
         PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter();
-
         try {
             Field footerField = packet.getClass().getDeclaredField("b");
             footerField.setAccessible(true);
@@ -116,9 +142,7 @@ public class NmsUtility_1_8_R1 implements NmsUtility {
     @Override
     public void sendListHeader(Player player, String header) {
         IChatBaseComponent bottom = ChatSerializer.a("{text: '" + ChatColor.translateAlternateColorCodes('&', header) + "'}");
-
         PacketPlayOutPlayerListHeaderFooter packet = new PacketPlayOutPlayerListHeaderFooter();
-
         try {
             Field footerField = packet.getClass().getDeclaredField("a");
             footerField.setAccessible(true);

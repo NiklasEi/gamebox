@@ -3,6 +3,8 @@ package me.nikl.gamebox.nms;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Collection;
+
 /**
  * Created by niklas on 10/17/16.
  *
@@ -11,6 +13,14 @@ import org.bukkit.inventory.ItemStack;
 public interface NmsUtility {
 
     void updateInventoryTitle(Player player, String newTitle);
+
+    void sendJSON(Player player, String json);
+
+    void sendJSON(Player player, Collection<String> json);
+
+    void sendJSON(Collection<Player> players, String json);
+
+    void sendJSON(Collection<Player> players, Collection<String> json);
 
     void sendTitle(Player player, String title, String subTitle);
 
