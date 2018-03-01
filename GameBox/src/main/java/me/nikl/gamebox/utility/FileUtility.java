@@ -44,13 +44,10 @@ public class FileUtility {
             for (Enumeration list = jar.entries(); list.hasMoreElements(); ) {
                 JarEntry entry = (JarEntry) list.nextElement();
                 if (entry.getName().split("/")[0].equals("language")) {
-
                     String[] pathParts = entry.getName().split("/");
-
                     if (pathParts.length < 2 || !entry.getName().endsWith(".yml")) {
                         continue;
                     }
-
                     File file = new File(gameBox.getDataFolder().toString() + File.separatorChar + entry.getName());
                     if (!file.exists()) {
                         file.getParentFile().mkdirs();
@@ -69,10 +66,9 @@ public class FileUtility {
         JavaPlugin external = module.getExternalPlugin();
         if (external == null) return false;
         try {
-            JarFile jar = new JarFile(external.getClass().getProtectionDomain().getCodeSource().getLocation().getFile());
+            JarFile jar = new JarFile(URLDecoder.decode(external.getClass().getProtectionDomain().getCodeSource().getLocation().getFile(), "UTF-8"));
             boolean foundDefaultLang = false;
             boolean foundConfig = false;
-
             for (Enumeration list = jar.entries(); list.hasMoreElements(); ) {
                 JarEntry entry = (JarEntry) list.nextElement();
                 String[] pathParts = entry.getName().split("/");
@@ -157,14 +153,12 @@ public class FileUtility {
         if (resourcePath == null || resourcePath.isEmpty()) {
             throw new IllegalArgumentException("ResourcePath cannot be null or empty");
         }
-
         Plugin gameBox = Bukkit.getPluginManager().getPlugin("GameBox");
         resourcePath = resourcePath.replace('\\', '/');
         InputStream in = plugin.getResource(resourcePath);
         if (in == null) {
             throw new IllegalArgumentException("The embedded resource '" + resourcePath + "' cannot be found in " + plugin.getName());
         }
-
         File outFile = new File(gbPath);
         int lastIndex = resourcePath.lastIndexOf(47);
         File outDir = new File(gameBox.getDataFolder(), resourcePath.substring(0, lastIndex >= 0 ? lastIndex : 0));
@@ -175,7 +169,6 @@ public class FileUtility {
         try {
             OutputStream out = new FileOutputStream(outFile);
             byte[] buf = new byte[1024];
-
             int len;
             while ((len = in.read(buf)) > 0) {
                 out.write(buf, 0, len);
