@@ -51,66 +51,6 @@ public class GUIManager {
         if (GameBoxSettings.tokensEnabled) mainGui.registerShop();
     }
 
-
-    public void onInvClick(InventoryClickEvent event) {
-        // get the uuid and check where the click should go
-        UUID uuid = event.getWhoClicked().getUniqueId();
-        boolean topInv = event.getSlot() == event.getRawSlot();
-        if (mainGui.isInGui(uuid)) {
-            event.setCancelled(true);
-            if (topInv) mainGui.onInventoryClick(event);
-            if (!topInv) mainGui.onBottomInvClick(event);
-            return;
-        }
-        for (String gameID : gameGuis.keySet()) {
-            Map<String, GameGui> guis = gameGuis.get(gameID);
-            for (GameGui gui : guis.values()) {
-                if (gui.isInGui(uuid)) {
-                    event.setCancelled(true);
-                    if (topInv) gui.onInventoryClick(event);
-                    if (!topInv) gui.onBottomInvClick(event);
-                    return;
-                }
-            }
-        }
-        GameBox.debug("Not in a GameBox GUI, checking shops now");
-        if (shopManager.inShop(event.getWhoClicked().getUniqueId())) {
-            event.setCancelled(true);
-            shopManager.onClick(event);
-            return;
-        }
-        GameBox.debug("Not in a Shop...");
-    }
-
-
-    public void onInvClose(InventoryCloseEvent event) {
-        // get the uuid and check where the event should go
-        if (!(event.getPlayer() instanceof Player)) return;
-        UUID uuid = event.getPlayer().getUniqueId();
-        if (mainGui.isInGui(uuid)) {
-            mainGui.onInventoryClose(event);
-            plugin.getPluginManager().leaveGameBox((Player) event.getPlayer());
-            return;
-        }
-        for (String gameID : gameGuis.keySet()) {
-            Map<String, GameGui> guis = gameGuis.get(gameID);
-            for (GameGui gui : guis.values()) {
-                if (gui.isInGui(uuid)) {
-                    gui.onInventoryClose(event);
-                    plugin.getPluginManager().leaveGameBox((Player) event.getPlayer());
-                    return;
-                }
-            }
-        }
-        if (GameBox.debug) Bukkit.getConsoleSender().sendMessage("Not in a GameBox GUI, checking shops now");
-        if (shopManager.inShop(event.getPlayer().getUniqueId())) {
-            shopManager.onInvClose(event);
-            plugin.getPluginManager().leaveGameBox((Player) event.getPlayer());
-            return;
-        }
-        if (GameBox.debug) Bukkit.getConsoleSender().sendMessage("Not in a Shop...");
-    }
-
     public boolean isInGUI(UUID uuid) {
         if (isInMainGUI(uuid)) return true;
         if (isInGameGUI(uuid)) return true;

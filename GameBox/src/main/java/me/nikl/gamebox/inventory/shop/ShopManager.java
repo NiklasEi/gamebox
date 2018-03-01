@@ -179,39 +179,6 @@ public class ShopManager {
         return false;
     }
 
-    public void onClick(InventoryClickEvent event) {
-        boolean topInv = event.getSlot() == event.getRawSlot();
-        if (mainShop.isInGui(event.getWhoClicked().getUniqueId())) {
-            if (topInv) {
-                mainShop.onInventoryClick(event);
-            } else {
-                mainShop.onBottomInvClick(event);
-            }
-            return;
-        }
-        for (Category category : categories.values()) {
-            if (category.inCategory(event.getWhoClicked().getUniqueId())) {
-                if (topInv) {
-                    category.onInvClick(event);
-                } else {
-                    category.onBottomInvClick(event);
-                }
-            }
-        }
-    }
-
-    public void onInvClose(InventoryCloseEvent event) {
-        if (mainShop.isInGui(event.getPlayer().getUniqueId())) {
-            mainShop.onInventoryClose(event);
-            return;
-        }
-        for (Category category : categories.values()) {
-            if (category.inCategory(event.getPlayer().getUniqueId())) {
-                category.onInvClose(event);
-            }
-        }
-    }
-
     public ItemStack getShopItemStack(String category, String counter) {
         if (categories.get(category) != null) {
             return categories.get(category).getShopItemStack(counter);
