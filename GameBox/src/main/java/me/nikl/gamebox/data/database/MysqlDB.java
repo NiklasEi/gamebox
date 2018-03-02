@@ -240,7 +240,7 @@ public class MysqlDB extends DataBase {
         new BukkitRunnable() {
             @Override
             public void run() {
-                doesHighScoreColumnExist(identifier);
+                createColumnIfNecessary(identifier);
                 try (Connection connection = hikari.getConnection();
                      PreparedStatement select = connection.prepareStatement(COLLECT_TOP_SCORES
                              .replace("%column%", identifier)
@@ -373,6 +373,7 @@ public class MysqlDB extends DataBase {
             statement.setString(4, player.getUuid().toString());
             statement.execute();
         } catch (SQLException e) {
+            plugin.warning("Error while saving a player to the database!");
             e.printStackTrace();
         }
     }
