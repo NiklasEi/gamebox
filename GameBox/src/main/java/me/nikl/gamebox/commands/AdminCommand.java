@@ -133,22 +133,24 @@ public class AdminCommand implements CommandExecutor {
                 plugin.info(ChatColor.GREEN + " You have no missing messages in your language files :)");
                 return true;
             } else {
-                // ToDo: allow for cmd from op? (atm only printed to console)
                 printIncompleteLangFilesInfo();
                 return true;
             }
         } else if (args.length == 2) {
-            switch (args[1].toLowerCase()) {
-                case "all":
-                    printMissingKeys(sender);
-                    return true;
-                default:
-                    // ToDo print keys of only one specific file
-                    sender.sendMessage(" Todo...");
-                    return true;
+            if (args[1].equalsIgnoreCase("all")) {
+                printMissingKeys();
+                return true;
             }
+            if (missingLanguageKeys.get(args[1].toLowerCase()) == null) {
+                plugin.info(" Module '" + args[1].toLowerCase() + "' does not exist or has no missing keys.");
+                return true;
+            }
+            plugin.info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - +");
+            printMissingModuleKeys(args[1].toLowerCase());
+            plugin.info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - +");
+            return true;
         }
-
+        sendHelpMessages(sender);
         return true;
     }
 
@@ -284,12 +286,9 @@ public class AdminCommand implements CommandExecutor {
     }
 
     public void printIncompleteLangFilesInfo() {
-        // return if no keys are missing. This is only for calls from outside this class (e.g. from main class)
         if (missingLanguageKeys.isEmpty()) return;
-
-        // print info about the incomplete files
         plugin.info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - +");
-        plugin.info(ChatColor.BOLD + " There are missing keys in the following file(s):");
+        plugin.info(ChatColor.BOLD + " There are missing keys in the following module(s):");
         plugin.info("");
         Iterator<String> iterator = missingLanguageKeys.keySet().iterator();
         String moduleID;
@@ -298,8 +297,8 @@ public class AdminCommand implements CommandExecutor {
             plugin.info(ChatColor.RED + "   -> " + ChatColor.RESET + plugin.getLanguage(moduleID).DEFAULT_PLAIN_NAME);
         }
         plugin.info("");
-        plugin.info(" To get the specific missing keys of one file run ");
-        plugin.info("      " + ChatColor.BLUE + "/gba language <>");
+        plugin.info(" To get the specific missing keys of one module run ");
+        plugin.info("      " + ChatColor.BLUE + "/gba language <" + String.join(":", missingLanguageKeys.keySet()) + ">");
         plugin.info(" To get the specific missing keys of all files run ");
         plugin.info("      " + ChatColor.BLUE + "/gba language all");
         plugin.info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - +");
@@ -316,32 +315,28 @@ public class AdminCommand implements CommandExecutor {
         plugin.info(ChatColor.DARK_GREEN + " /gba language");
     }
 
-    private void printMissingKeys(CommandSender sender) {
+    private void printMissingKeys() {
         if (missingLanguageKeys.isEmpty()) return;
-
-        plugin.info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
+        plugin.info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - +");
         Iterator<String> iterator = missingLanguageKeys.keySet().iterator();
         String moduleID;
         while (iterator.hasNext()) {
             moduleID = iterator.next();
-
-            printMissingModuleKeys(sender, moduleID);
-
+            printMissingModuleKeys(moduleID);
             if (iterator.hasNext()) {
                 plugin.info(" ");
                 plugin.info(" ");
             } else {
-                plugin.info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
+                plugin.info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - +");
             }
         }
     }
 
-    private void printMissingModuleKeys(CommandSender sender, String moduleID) {
+    private void printMissingModuleKeys(String moduleID) {
         HashMap<String, List<String>> currentKeys = missingLanguageKeys.get(moduleID);
         List<String> keys;
         plugin.info(" Missing from " + ChatColor.BLUE + plugin.getLanguage(moduleID).DEFAULT_PLAIN_NAME
                 + ChatColor.RESET + " language file:");
-
         if (currentKeys.keySet().contains("string")) {
             plugin.info(" ");
             plugin.info(ChatColor.BOLD + "   Strings:");
@@ -350,7 +345,6 @@ public class AdminCommand implements CommandExecutor {
                 plugin.info(ChatColor.RED + "   -> " + ChatColor.RESET + key);
             }
         }
-
         if (currentKeys.keySet().contains("list")) {
             plugin.info(" ");
             plugin.info(ChatColor.BOLD + "   Lists:");
@@ -363,10 +357,6 @@ public class AdminCommand implements CommandExecutor {
 
 
     private void checkLanguageFiles() {
-        /*
-        ToDo: check for missing keys in all used language files and add some support for creating
-		Files that contain all customized messages and the default ones for previously unset keys
-		*/
         HashMap<String, List<String>> currentKeys;
         for (String moduleID : plugin.getGameRegistry().getModuleIDs()) {
             currentKeys = collectMissingKeys(moduleID);
@@ -378,29 +368,15 @@ public class AdminCommand implements CommandExecutor {
 
     private HashMap<String, List<String>> collectMissingKeys(String moduleID) {
         Language language = plugin.getLanguage(moduleID);
-
         List<String> missingStringKeys = language.findMissingStringMessages();
         List<String> missingListKeys = language.findMissingListMessages();
-
         HashMap<String, List<String>> toReturn = new HashMap<>();
-
         if (!missingListKeys.isEmpty()) {
             toReturn.put("list", missingListKeys);
         }
-
         if (!missingStringKeys.isEmpty()) {
             toReturn.put("string", missingStringKeys);
         }
-
         return toReturn;
-    }
-
-    public HashMap<String, HashMap<String, List<String>>> getMissingLanguageKeys() {
-        return this.missingLanguageKeys;
-    }
-
-    // Todo (method in language)
-    private void createDiffFile(String moduleID) {
-
     }
 }
