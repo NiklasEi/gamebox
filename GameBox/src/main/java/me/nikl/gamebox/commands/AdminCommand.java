@@ -127,6 +127,10 @@ public class AdminCommand implements CommandExecutor {
     }
 
     private boolean languageCommand(CommandSender sender, String[] args) {
+        if (sender instanceof Player) {
+            sender.sendMessage(lang.PREFIX + " Only from the console!");
+            return true;
+        }
         // args length is min. 1
         if (args.length == 1) {
             if (missingLanguageKeys.isEmpty()) {
@@ -143,6 +147,7 @@ public class AdminCommand implements CommandExecutor {
             }
             if (missingLanguageKeys.get(args[1].toLowerCase()) == null) {
                 plugin.info(" Module '" + args[1].toLowerCase() + "' does not exist or has no missing keys.");
+                plugin.info(" Valid options: " + String.join(", ", missingLanguageKeys.keySet()));
                 return true;
             }
             plugin.info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - +");
@@ -298,7 +303,7 @@ public class AdminCommand implements CommandExecutor {
         }
         plugin.info("");
         plugin.info(" To get the specific missing keys of one module run ");
-        plugin.info("      " + ChatColor.BLUE + "/gba language <" + String.join(":", missingLanguageKeys.keySet()) + ">");
+        plugin.info("      " + ChatColor.BLUE + "/gba language <module name>");
         plugin.info(" To get the specific missing keys of all files run ");
         plugin.info("      " + ChatColor.BLUE + "/gba language all");
         plugin.info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - +");
