@@ -18,7 +18,6 @@ import java.util.UUID;
 public class GameBoxAPI {
     private GameBox plugin;
 
-
     public GameBoxAPI(GameBox plugin) {
         this.plugin = plugin;
     }
@@ -85,7 +84,6 @@ public class GameBoxAPI {
                 return;
             }
         }
-
         plugin.getDataBase().setToken(player.getUniqueId(), count);
     }
 

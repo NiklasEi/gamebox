@@ -335,7 +335,7 @@ public class GameBox extends JavaPlugin {
 
     private void establishHooksAndMetric() {
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            new PlaceholderAPIHook(this, MODULE_GAMEBOX);
+            new PlaceholderAPIHook(this);
             Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Hooked into PlaceholderAPI");
         }
         // send data with bStats if not opt out

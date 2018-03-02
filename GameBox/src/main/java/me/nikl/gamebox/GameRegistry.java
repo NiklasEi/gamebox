@@ -15,10 +15,9 @@ import java.util.Set;
 import java.util.logging.Level;
 
 /**
- * Created by nikl on 21.11.17.
+ * @author Niklas Eicker
  */
 public class GameRegistry {
-
     private final Set<String> forbiddenIDs =
             new HashSet<>(Arrays.asList("all, game, games"));
     private final Set<String> forbiddenSubCommands =
@@ -32,20 +31,16 @@ public class GameRegistry {
         this.gameBox = plugin;
     }
 
-
     public boolean registerModule(Module module) {
         if (isRegistered(module.getModuleID())) {
             gameBox.getLogger().log(Level.WARNING, " A Module tried registering with an already in use ID!");
             return false;
         }
-
         if (forbiddenIDs.contains(module.getModuleID())) {
             gameBox.getLogger().log(Level.WARNING, " A Module tried registering with a forbidden ID (" + module.getModuleID() + ")");
             return false;
         }
-
         modules.put(module.getModuleID(), module);
-
         if (module.getExternalPlugin() != null) {
             if (!FileUtility.copyExternalResources(gameBox, module)) {
                 gameBox.info(" Failed to completely load the external module '" + module.getModuleID() + "'");
@@ -53,7 +48,6 @@ public class GameRegistry {
                 return false;
             }
         }
-
         if (module.isGame()) {
             loadGame(module);
             registerSubCommands(module);
@@ -93,7 +87,6 @@ public class GameRegistry {
             e.printStackTrace();
         }
         if (clazz == null) return;
-
         try {
             Constructor<Game> ctor = ((Class<Game>) clazz).getConstructor(GameBox.class);
             Game game = ctor.newInstance(gameBox);
@@ -102,7 +95,7 @@ public class GameRegistry {
         } catch (NoSuchMethodException | IllegalAccessException
                 | InstantiationException | InvocationTargetException e) {
             e.printStackTrace();
-            gameBox.info(" The game class needs a public constructor taking only a GameBox obj!");
+            gameBox.info(" The game class needs a public constructor taking only a GameBox object!");
         }
     }
 
@@ -118,20 +111,16 @@ public class GameRegistry {
         if (module.getSubCommands() == null || module.getSubCommands().isEmpty()) {
             return;
         }
-
         List<String> subCommands = module.getSubCommands();
-
         for (int i = 0; i < subCommands.size(); i++) {
             subCommands.set(i, subCommands.get(i).toLowerCase());
         }
-
         // ensure that sub commands are unique and valid
         for (int i = 0; i < subCommands.size(); i++) {
             if (forbiddenSubCommands.contains(subCommands.get(i)))
                 continue;
             if (this.subCommands.keySet().contains(subCommands.get(i)))
                 continue;
-
             this.subCommands.put(subCommands.get(i), module);
             addSubCommandToBundle(module, subCommands.get(i));
         }

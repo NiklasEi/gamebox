@@ -7,16 +7,12 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by nikl on 21.11.17.
+ * @author Niklas Eicker
  */
 public class Module {
-
     private String moduleID, classPath;
-
     private boolean isGame = false;
-
     private JavaPlugin externalPlugin;
-
     private List<String> subCommands;
 
     public Module(GameBox gameBox, String moduleID, String classPath, JavaPlugin plugin, String... subCommands) {
@@ -25,15 +21,12 @@ public class Module {
         if (classPath != null && !classPath.isEmpty()) {
             this.isGame = true;
         }
-
         if (subCommands != null && !(subCommands.length < 1)) {
             this.subCommands = Arrays.asList(subCommands);
         }
-
         this.classPath = classPath;
         this.moduleID = moduleID.toLowerCase();
         this.externalPlugin = plugin;
-
         gameBox.getGameRegistry().registerModule(this);
     }
 
@@ -54,7 +47,6 @@ public class Module {
         if (!(module instanceof Module)) {
             return false;
         }
-
         return moduleID.equalsIgnoreCase(((Module) module).moduleID);
     }
 
