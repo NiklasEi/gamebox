@@ -373,9 +373,10 @@ public class AdminCommand implements CommandExecutor {
 
     private HashMap<String, List<String>> collectMissingKeys(String moduleID) {
         Language language = plugin.getLanguage(moduleID);
+        HashMap<String, List<String>> toReturn = new HashMap<>();
+        if (language == null) return toReturn;
         List<String> missingStringKeys = language.findMissingStringMessages();
         List<String> missingListKeys = language.findMissingListMessages();
-        HashMap<String, List<String>> toReturn = new HashMap<>();
         if (!missingListKeys.isEmpty()) {
             toReturn.put("list", missingListKeys);
         }
