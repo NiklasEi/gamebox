@@ -73,13 +73,50 @@ public abstract class Game {
     public void onEnable() {
         GameBox.debug(" enabling the game: " + module.getModuleID());
         loadConfig();
-        // abstract
         loadSettings();
         loadLanguage();
+        if(!checkRequirements()) return;
         // at this point the game can load any game specific stuff (e.g. from config)
         init();
         loadGameManager();
         hook();
+    }
+
+    private boolean checkRequirements() {
+        return checkGameBoxVersion();
+    }
+
+    private boolean checkGameBoxVersion() {
+        String[] versionString = gameBox.getDescription().getVersion().replaceAll("[^0-9.]", "").split("\\.");
+        String[] minVersionString = gameSettings.getGameBoxMinimumVersion().split("\\.");
+        Integer[] version = new Integer[versionString.length];
+        Integer[] minVersion = new Integer[minVersionString.length];
+        for(int i = 0; i < minVersionString.length; i++){
+            try {
+                minVersion[i] = Integer.valueOf(minVersionString[i]);
+                version[i] = Integer.valueOf(versionString[i]);
+            } catch (NumberFormatException exception){
+                warn(" Failed to check required GameBox version!");
+                return true;
+            }
+        }
+        if (minVersion.length != version.length) {
+            warn(" Failed to check required GameBox version!");
+            return true;
+        }
+        for(int i = 0; i < minVersion.length; i++){
+            if(minVersion[i] > version[i]) {
+                warn(" Your GameBox is outdated!");
+                warn(" Get the latest version on Spigot.");
+                warn(" https://www.spigotmc.org/resources/37273/");
+                warn(" You need at least version " + gameSettings.getGameBoxMinimumVersion());
+                warn(" for this game to work.");
+                return false;
+            }
+            if(minVersion[i] == version[i]) continue;
+            return true;
+        }
+        return true;
     }
 
     /**
@@ -94,7 +131,7 @@ public abstract class Game {
      * This method will be called on enable,
      * after the configuration file is loaded.
      *
-     * Load all game settings
+     * Set all game settings
      */
     public abstract void loadSettings();
 
@@ -107,10 +144,10 @@ public abstract class Game {
     public abstract void loadLanguage();
 
     /**
-     * Get a new GameManager
+     * Initialize the GameManager
      *
      * Gets called on enable of the the game.
-     * Initialize the GameManager and save it.
+     * Initialize the GameManager and save it to its field.
      */
     public abstract void loadGameManager();
 
@@ -135,7 +172,6 @@ public abstract class Game {
                 + File.separator + "games"
                 + File.separator + getGameID()
                 + File.separator);
-        // reload config
         try {
             this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(configFile), "UTF-8"));
         } catch (UnsupportedEncodingException | FileNotFoundException e) {
@@ -396,13 +432,13 @@ public abstract class Game {
     }
 
     public void warn(String message) {
-        gameBox.getLogger().warning(" " + gameLang.PLAIN_PREFIX + message
-                .replace("%config%", "GameBox/games/" + getGameID() + "/config.yml"));
+        gameBox.getLogger().warning(gameLang.PLAIN_PREFIX + StringUtility.color(message
+                .replace("%config%", "GameBox/games/" + getGameID() + "/config.yml")));
     }
 
     public void info(String message) {
-        gameBox.getLogger().info(" " + gameLang.PLAIN_PREFIX + message
-                .replace("%config%", "GameBox/games/" + getGameID() + "/config.yml"));
+        gameBox.getLogger().info(gameLang.PLAIN_PREFIX + StringUtility.color(message
+                .replace("%config%", "GameBox/games/" + getGameID() + "/config.yml")));
     }
 
     public Inventory createInventory(int size, String title) {
