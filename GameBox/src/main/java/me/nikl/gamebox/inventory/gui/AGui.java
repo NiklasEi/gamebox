@@ -411,8 +411,18 @@ public abstract class AGui implements GameBoxHolder {
                 return;
             }
         }
-
-        if (action(event, button.getAction(), button.getArgs())) {
+        boolean successfulAction;
+        try {
+            successfulAction = action(event, button.getAction(), button.getArgs());
+        } catch (Throwable e) {
+            gameBox.getLogger().severe("Caught " + e.getClass().getCanonicalName());
+            gameBox.getLogger().severe("  Action: " + button.getAction().toString());
+            gameBox.getLogger().severe("  Args: " + (button.getArgs() == null ? "null" : Arrays.asList(button.getArgs())));
+            e.printStackTrace();
+            sentInventoryTitleMessage((Player) event.getWhoClicked(), gameBox.lang.TITLE_ERROR);
+            successfulAction = false;
+        }
+        if (successfulAction) {
             if (GameBoxSettings.playSounds
                     && pluginManager.getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()
                     && button.getAction() != ClickAction.NOTHING) {
@@ -471,7 +481,18 @@ public abstract class AGui implements GameBoxHolder {
 
     public void onBottomInvClick(InventoryClickEvent event) {
         if (lowerGrid != null && lowerGrid[event.getSlot()] != null) {
-            if (action(event, lowerGrid[event.getSlot()].getAction(), lowerGrid[event.getSlot()].getArgs())) {
+            boolean successfulAction;
+            try {
+                successfulAction = action(event, lowerGrid[event.getSlot()].getAction(), lowerGrid[event.getSlot()].getArgs());
+            } catch (Throwable e) {
+                gameBox.getLogger().severe("Caught " + e.getClass().getCanonicalName());
+                gameBox.getLogger().severe("  Action: " + lowerGrid[event.getSlot()].getAction().toString());
+                gameBox.getLogger().severe("  Args: " + (lowerGrid[event.getSlot()].getArgs() == null ? "null" : Arrays.asList(lowerGrid[event.getSlot()].getArgs())));
+                e.printStackTrace();
+                sentInventoryTitleMessage((Player) event.getWhoClicked(), gameBox.lang.TITLE_ERROR);
+                successfulAction = false;
+            }
+            if (successfulAction) {
                 if (GameBoxSettings.playSounds && pluginManager.getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
                     ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), successfulClick, volume, pitch);
                 }
