@@ -12,8 +12,8 @@ public class GameRuleMultiRewards extends GameRule {
     protected Map<Double, Double> moneyToWin = new HashMap<>();
     protected Map<Double, Integer> tokenToWin = new HashMap<>();
 
-    public GameRuleMultiRewards(String key, boolean saveStats, SaveType saveType, double moneyToPay) {
-        super(key, saveStats, saveType, moneyToPay);
+    public GameRuleMultiRewards(String key, boolean saveStats, SaveType saveType, double cost) {
+        super(key, saveStats, saveType, cost);
     }
 
     public void addMoneyReward(double minScore, double reward) {

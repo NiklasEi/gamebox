@@ -10,8 +10,8 @@ public class GameRuleRewards extends GameRule {
     protected double moneyToWin;
     protected int tokenToWin;
 
-    public GameRuleRewards(String key, boolean saveStats, SaveType saveType, double moneyToPay, double moneyToWin, int tokenToWin) {
-        super(key, saveStats, saveType, moneyToPay);
+    public GameRuleRewards(String key, boolean saveStats, SaveType saveType, double cost, double moneyToWin, int tokenToWin) {
+        super(key, saveStats, saveType, cost);
         minOrMaxScore = saveType.isHigherScore()?0:Double.MAX_VALUE;
         this.moneyToWin = moneyToWin;
         this.tokenToWin = tokenToWin;

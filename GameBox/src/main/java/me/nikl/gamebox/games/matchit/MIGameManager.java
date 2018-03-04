@@ -55,7 +55,7 @@ public class MIGameManager implements GameManager {
     public void startGame(Player[] players, boolean playSounds, String... args) throws GameStartException {
         MIGameRule rule = gameRules.get(args[0]);
         if (rule == null) throw new GameStartException(GameStartException.Reason.ERROR);
-        if (!matchIt.payIfNecessary(players[0], rule.getMoneyToPay())) {
+        if (!matchIt.payIfNecessary(players[0], rule.getCost())) {
             throw new GameStartException(GameStartException.Reason.NOT_ENOUGH_MONEY);
         }
         games.put(players[0].getUniqueId(),

@@ -9,13 +9,13 @@ public abstract class GameRule {
     protected SaveType saveType;
     protected boolean saveStats;
     protected String key;
-    protected double moneyToPay;
+    protected double cost;
 
-    GameRule(String key, boolean saveStats, SaveType saveType, double moneyToPay) {
+    GameRule(String key, boolean saveStats, SaveType saveType, double cost) {
         this.saveType = saveType;
         this.saveStats = saveStats;
         this.key = key;
-        this.moneyToPay = moneyToPay;
+        this.cost = cost;
     }
 
     public SaveType getSaveType() {
@@ -30,7 +30,7 @@ public abstract class GameRule {
         return this.key;
     }
 
-    public double getMoneyToPay() {
-        return moneyToPay;
+    public double getCost() {
+        return cost;
     }
 }

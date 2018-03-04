@@ -237,9 +237,9 @@ public class CFGame extends BukkitRunnable {
 
             if (connectFour.getSettings().isEconEnabled()) {
                 if (!Permission.BYPASS_GAME.hasPermission(winner, connectFour.getGameID())) {
-                    GameBox.econ.depositPlayer(winner, rule.getMoneyToPay());
+                    GameBox.econ.depositPlayer(winner, rule.getCost());
                     winner.sendMessage((lang.PREFIX + lang.GAME_WON_MONEY
-                            .replaceAll("%reward%", rule.getMoneyToPay() + "")
+                            .replaceAll("%reward%", rule.getCost() + "")
                             .replaceAll("%loser%", loser.getName())));
                 } else {
                     winner.sendMessage((lang.PREFIX + lang.GAME_WON.replaceAll("%loser%", loser.getName())));
