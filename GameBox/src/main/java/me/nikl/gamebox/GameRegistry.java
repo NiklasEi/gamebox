@@ -94,8 +94,8 @@ public class GameRegistry {
             game.onEnable();
         } catch (NoSuchMethodException | IllegalAccessException
                 | InstantiationException | InvocationTargetException e) {
+            gameBox.warning(" The game class needs a public constructor taking only a GameBox object!");
             e.printStackTrace();
-            gameBox.info(" The game class needs a public constructor taking only a GameBox object!");
         }
     }
 
