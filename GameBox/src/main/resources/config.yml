@@ -19,7 +19,6 @@
 #   to use the default messages just write 'default' (this option uses a file from inside the jar!)
 #   you cannot customise messages when using 'default', but your messages will always be up to date
 # If you want custom messages please write your own file or use one of the already written 'lang_xx.yml' files
-# If an update added new messages that are not in your defined file the plugin will print a warning.
 langFile: 'default'
 
 
@@ -85,6 +84,11 @@ settings:
   # You can take a look yourself: https://bstats.org/plugin/bukkit/GameBox
   # Please consider twice before changing this to false.
   bstats: true
+
+  # By default the plugin will check your used language files for missing messages
+  # every time it gets loaded/reloaded.
+  # This check can also be triggered by running 'gba language'
+  runLanguageChecksAutomatically: true
 
 
 # Settings related with the GameBox GUI

@@ -291,6 +291,7 @@ public class AdminCommand implements CommandExecutor {
     }
 
     public void printIncompleteLangFilesInfo() {
+        if (missingLanguageKeys == null) checkLanguageFiles();
         if (missingLanguageKeys.isEmpty()) return;
         plugin.info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - +");
         plugin.info(ChatColor.BOLD + " There are missing keys in the following module(s):");

@@ -29,6 +29,7 @@ public class GameBoxSettings {
     public static boolean bStatsMetrics = true;
     public static boolean hubModeEnabled = false;
     public static boolean closeInventoryOnDamage = true;
+    public static boolean runLanguageChecksAutomatically = true;
     public static int autoSaveIntervalInMinutes = 10;
     public static int exitButtonSlot = 4;
     public static int toMainButtonSlot = 0;
@@ -59,6 +60,7 @@ public class GameBoxSettings {
         closeInventoryOnDamage = config.getBoolean("settings.closeInventoryOnDamage", true);
         autoSaveIntervalInMinutes = config.getInt("settings.autoSaveIntervalInMinutes", 10);
         keepArmorWhileInGame = config.getBoolean("settings.keepArmor", false);
+        runLanguageChecksAutomatically = config.getBoolean("settings.runLanguageChecksAutomatically", true);
     }
 
     private static void invitationSettings(FileConfiguration config) {

@@ -148,7 +148,7 @@ public class GameBox extends JavaPlugin {
             info(ChatColor.RED + " To fix this ('...'), create your own language file with shorter titles.");
         }
 
-        adminCommand.printIncompleteLangFilesInfo();
+        if (GameBoxSettings.runLanguageChecksAutomatically) adminCommand.printIncompleteLangFilesInfo();
 
         if (PluginManager.gamesRegistered == 0) {
             info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
