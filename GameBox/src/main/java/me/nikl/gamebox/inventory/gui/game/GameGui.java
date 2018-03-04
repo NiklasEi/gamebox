@@ -2,7 +2,7 @@ package me.nikl.gamebox.inventory.gui.game;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
-import me.nikl.gamebox.games.Game;
+import me.nikl.gamebox.game.Game;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.button.Button;

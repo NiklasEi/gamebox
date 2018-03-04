@@ -1,10 +1,7 @@
 package me.nikl.gamebox.games.cookieclicker;
 
 import me.nikl.gamebox.data.toplist.SaveType;
-import me.nikl.gamebox.games.GameRule;
-import me.nikl.gamebox.games.GameRuleMultiRewards;
-
-import java.util.HashSet;
+import me.nikl.gamebox.game.rules.GameRuleMultiRewards;
 
 /**
  * Created by Niklas

@@ -1,7 +1,7 @@
 package me.nikl.gamebox.games.connectfour;
 
-import me.nikl.gamebox.games.Game;
-import me.nikl.gamebox.games.GameLanguage;
+import me.nikl.gamebox.game.Game;
+import me.nikl.gamebox.game.GameLanguage;
 
 /**
  * Class loading and storing messages.

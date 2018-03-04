@@ -2,8 +2,8 @@ package me.nikl.gamebox.games.matchit;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
-import me.nikl.gamebox.games.Game;
-import me.nikl.gamebox.games.GameSettings;
+import me.nikl.gamebox.game.Game;
+import me.nikl.gamebox.game.GameSettings;
 import me.nikl.gamebox.utility.ItemStackUtility;
 import me.nikl.gamebox.utility.StringUtility;
 import org.bukkit.Material;

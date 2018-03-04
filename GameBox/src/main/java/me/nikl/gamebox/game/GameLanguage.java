@@ -1,9 +1,7 @@
-package me.nikl.gamebox.games;
+package me.nikl.gamebox.game;
 
 import me.nikl.gamebox.Language;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**

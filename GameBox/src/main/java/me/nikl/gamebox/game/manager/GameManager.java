@@ -1,18 +1,17 @@
-package me.nikl.gamebox.games;
+package me.nikl.gamebox.game.manager;
 
-import me.nikl.gamebox.games.exceptions.GameStartException;
+import me.nikl.gamebox.game.rules.GameRule;
+import me.nikl.gamebox.game.exceptions.GameStartException;
 import me.nikl.gamebox.inventory.GameBoxHolder;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 
 import java.util.Map;
 import java.util.UUID;
 
 /**
- * Created by niklas on 2/4/17.
+ * @author Niklas Eicker
  */
 public interface GameManager extends GameBoxHolder {
     /**

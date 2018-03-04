@@ -1,7 +1,7 @@
 package me.nikl.gamebox.games.matchit;
 
-import me.nikl.gamebox.games.Game;
-import me.nikl.gamebox.games.GameLanguage;
+import me.nikl.gamebox.game.Game;
+import me.nikl.gamebox.game.GameLanguage;
 
 /**
  * Created by nikl on 02.12.17.

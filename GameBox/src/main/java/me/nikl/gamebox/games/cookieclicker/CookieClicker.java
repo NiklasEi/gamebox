@@ -1,8 +1,8 @@
 package me.nikl.gamebox.games.cookieclicker;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.games.Game;
-import me.nikl.gamebox.games.GameSettings;
+import me.nikl.gamebox.game.Game;
+import me.nikl.gamebox.game.GameSettings;
 
 /**
  * Created by Niklas

@@ -1,10 +1,7 @@
 package me.nikl.gamebox.games.matchit;
 
 import me.nikl.gamebox.data.toplist.SaveType;
-import me.nikl.gamebox.games.GameRule;
-import me.nikl.gamebox.games.GameRuleRewards;
-
-import java.util.HashSet;
+import me.nikl.gamebox.game.rules.GameRuleRewards;
 
 /**
  * Created by nikl on 02.12.17.

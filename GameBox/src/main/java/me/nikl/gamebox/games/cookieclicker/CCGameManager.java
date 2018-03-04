@@ -2,9 +2,9 @@ package me.nikl.gamebox.games.cookieclicker;
 
 import me.nikl.gamebox.data.database.DataBase;
 import me.nikl.gamebox.data.toplist.SaveType;
-import me.nikl.gamebox.games.GameManager;
-import me.nikl.gamebox.games.GameRule;
-import me.nikl.gamebox.games.exceptions.GameStartException;
+import me.nikl.gamebox.game.manager.GameManager;
+import me.nikl.gamebox.game.rules.GameRule;
+import me.nikl.gamebox.game.exceptions.GameStartException;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;

@@ -1,9 +1,9 @@
 package me.nikl.gamebox.games.matchit;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.games.GameManager;
-import me.nikl.gamebox.games.GameRule;
-import me.nikl.gamebox.games.exceptions.GameStartException;
+import me.nikl.gamebox.game.manager.GameManager;
+import me.nikl.gamebox.game.rules.GameRule;
+import me.nikl.gamebox.game.exceptions.GameStartException;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;

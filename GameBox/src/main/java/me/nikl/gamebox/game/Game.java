@@ -1,10 +1,14 @@
-package me.nikl.gamebox.games;
+package me.nikl.gamebox.game;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.Module;
 import me.nikl.gamebox.data.toplist.SaveType;
+import me.nikl.gamebox.game.manager.GameManager;
+import me.nikl.gamebox.game.rules.GameRule;
+import me.nikl.gamebox.game.rules.GameRuleMultiRewards;
+import me.nikl.gamebox.game.rules.GameRuleRewards;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.button.Button;
@@ -462,12 +466,12 @@ public abstract class Game {
     }
 
     private void payOut(Player player, GameRuleRewards rule, double score) {
-        if((rule.getSaveType().isHigherScore() && score < rule.minOrMaxScore)
-                || (!rule.getSaveType().isHigherScore() && score > rule.minOrMaxScore)) return;
+        if((rule.getSaveType().isHigherScore() && score < rule.getMinOrMaxScore())
+                || (!rule.getSaveType().isHigherScore() && score > rule.getMinOrMaxScore())) return;
         if(GameBoxSettings.econEnabled && gameSettings.isEconEnabled()) {
-            GameBox.econ.depositPlayer(player, rule.moneyToWin);
+            GameBox.econ.depositPlayer(player, rule.getMoneyToWin());
         }
-        if(GameBoxSettings.tokensEnabled) gameBox.getApi().giveToken(player, rule.tokenToWin);
+        if(GameBoxSettings.tokensEnabled) gameBox.getApi().giveToken(player, rule.getTokenToWin());
     }
 
     private void payOut(Player player, GameRuleMultiRewards rule, double score) {

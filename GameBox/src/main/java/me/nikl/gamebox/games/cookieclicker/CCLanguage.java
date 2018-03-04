@@ -1,7 +1,7 @@
 package me.nikl.gamebox.games.cookieclicker;
 
-import me.nikl.gamebox.games.Game;
-import me.nikl.gamebox.games.GameLanguage;
+import me.nikl.gamebox.game.Game;
+import me.nikl.gamebox.game.GameLanguage;
 import me.nikl.gamebox.games.cookieclicker.buildings.Buildings;
 import me.nikl.gamebox.games.cookieclicker.upgrades.UpgradeType;
 import org.bukkit.ChatColor;

@@ -1,6 +1,6 @@
 package me.nikl.gamebox;
 
-import me.nikl.gamebox.games.Game;
+import me.nikl.gamebox.game.Game;
 import me.nikl.gamebox.utility.FileUtility;
 
 import java.lang.reflect.Constructor;

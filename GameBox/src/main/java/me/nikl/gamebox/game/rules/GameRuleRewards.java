@@ -1,4 +1,4 @@
-package me.nikl.gamebox.games;
+package me.nikl.gamebox.game.rules;
 
 import me.nikl.gamebox.data.toplist.SaveType;
 

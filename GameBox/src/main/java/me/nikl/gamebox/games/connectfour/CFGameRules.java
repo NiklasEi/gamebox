@@ -1,7 +1,7 @@
 package me.nikl.gamebox.games.connectfour;
 
 import me.nikl.gamebox.data.toplist.SaveType;
-import me.nikl.gamebox.games.GameRuleRewards;
+import me.nikl.gamebox.game.rules.GameRuleRewards;
 
 /**
  * @author Niklas Eicker

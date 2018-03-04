@@ -1,7 +1,9 @@
-package me.nikl.gamebox.games.exceptions;
+package me.nikl.gamebox.game.exceptions;
 
 /**
- * Created by nikl on 17.02.18.
+ * @author Niklas Eicker
+ *
+ * Exception thrown by a game if starting a new game fails
  */
 public class GameStartException extends GameException {
     private Reason reason;
