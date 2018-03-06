@@ -56,7 +56,7 @@
                     <relocations>
                         <relocation>
                             <pattern>org.bstats</pattern>
-                            <shadedPattern>me.nikl.common.bstats</shadedPattern>
+                            <shadedPattern>me.nikl.gamebox.common.bstats</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>com.zaxxer</pattern>
