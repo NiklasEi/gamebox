@@ -159,6 +159,8 @@ public abstract class AGui implements GameBoxHolder {
                     } catch (GameStartException e) {
                         handleGameStartException(e, player);
                         return false;
+                    } finally {
+                        GameBox.openingNewGUI = false;
                     }
                     GameBox.debug("started game " + args[0] + " for player " + player[0].getName()
                             + (player.length == 2 ? " and " + player[1].getName() : "")
@@ -173,7 +175,6 @@ public abstract class AGui implements GameBoxHolder {
                             playerObj.getInventory().setItem(slot, pluginManager.getHotBarButtons().get(slot));
                         }
                     }
-                    GameBox.openingNewGUI = false;
                     return true;
 
             case OPEN_MAIN_GUI:
