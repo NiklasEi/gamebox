@@ -52,8 +52,8 @@ public enum Permission {
      *
      * If the passed moduleID is null, only the wildcard permission is checked.
      *
-     * @param sender
-     * @param moduleID
+     * @param sender to check permission for
+     * @param moduleID for module specific permissions
      * @return permission is set
      */
     public boolean hasPermission(CommandSender sender, @Nullable String moduleID) {

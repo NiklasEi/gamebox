@@ -21,7 +21,6 @@ import java.util.List;
  * Provides methods to load messages from the files.
  */
 public abstract class Language {
-
     public String PREFIX = "[" + ChatColor.DARK_AQUA + "GameBox" + ChatColor.RESET + "]";
     public String NAME = ChatColor.DARK_AQUA + "GameBox" + ChatColor.RESET;
     public String PLAIN_PREFIX = ChatColor.stripColor(PREFIX);
@@ -70,7 +69,7 @@ public abstract class Language {
      * 'default'/'default.yml': loads the english language file from inside the jar
      * 'lang_xx.yml': will try to load the given file inside the namespaces language folder
      *
-     * @param config
+     * @param config configuration of the module
      */
     protected void getLangFile(FileConfiguration config) {
         String moduleID = module.getModuleID();

@@ -393,12 +393,12 @@ public abstract class Game {
 
     /**
      * Withdraw the specified cost from the players balance,
-     * only if economy is enabled (for GameBox and the game) and the
+     * if economy is enabled (for GameBox and the game) and the
      * player does not have a bypass permission.
      *
-     * @param player
-     * @param cost
-     * @param withdraw
+     * @param player that has to pay
+     * @param cost to pay
+     * @param withdraw whether to actually withdraw the money
      * @return whether player can enter the game now
      */
     public boolean payIfNecessary(Player player, double cost, boolean withdraw) {

@@ -22,24 +22,19 @@ public class Building {
     protected double multiplier = 1.;
     protected double otherBuildingsBonus = 0.;
     protected List<String> lore;
-
     protected String name;
-
     protected CCLanguage lang;
 
     public Building(CookieClicker plugin, int slot, Buildings building) {
         this.lang = (CCLanguage) plugin.getGameLang();
         this.name = lang.buildingName.get(building);
-
         lore = new ArrayList<>();
         for (String line : lang.buildingLore.get(building)) {
             lore.add(line.replace("%name%", name));
         }
-
         if (slot < 0 || slot > 53) {
             slot = 0;
         }
-
         this.slot = slot;
     }
 
@@ -54,8 +49,8 @@ public class Building {
     /***
      * Add a multiplier
      *
-     * 0.5 => 50%
-     * 1 => 100%
+     * 0.5 equals 50%
+     * 1 equals 100%
      * @param toAdd production to add to multiplier
      */
     public void addMultiplier(double toAdd) {
@@ -68,7 +63,7 @@ public class Building {
      * The current multiplier is multiplied by the
      * given factor
      *
-     * @param multiplier
+     * @param multiplier factor for old multiplier
      */
     public void multiply(double multiplier) {
         this.multiplier = this.multiplier * multiplier;
@@ -81,7 +76,7 @@ public class Building {
     /**
      * Calculate and return the cost for the next building
      *
-     * @return
+     * @return cost of next building
      */
     public double getCost() {
         return (baseCost * Math.pow(1.15, count));

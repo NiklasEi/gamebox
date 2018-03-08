@@ -12,7 +12,6 @@ public interface GameBoxHolder extends InventoryHolder {
      * Handle a click in the game
      *
      * @param event ClickEvent
-     * @return successful
      */
     void onInventoryClick(InventoryClickEvent event);
 
@@ -22,7 +21,6 @@ public interface GameBoxHolder extends InventoryHolder {
      * You should do the same as in IGameManager.removeFromGame
      *
      * @param event CloseEvent
-     * @return successful
      */
     void onInventoryClose(InventoryCloseEvent event);
 }

@@ -90,8 +90,9 @@ public class GameBoxAPI {
     /**
      * Take token from a specified player
      *
-     * @param player
+     * @param player to take the token from
      * @param count  token to take
+     * @param callback to call with outcome
      */
     public void takeToken(OfflinePlayer player, int count, DataBase.Callback<Integer> callback) {
         Validate.notNull(player, "Player cannot be null!");

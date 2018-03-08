@@ -28,8 +28,8 @@ public class StringUtility {
      * Shorten a passed String to the given length.
      * The last three characters of the new String will be dots.
      *
-     * @param string
-     * @param length
+     * @param string to shorten
+     * @param length maximum length of returning string
      * @return shortened String
      */
     public static String shorten(String string, int length) {

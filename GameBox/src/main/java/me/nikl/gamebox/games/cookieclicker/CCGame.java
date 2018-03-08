@@ -728,8 +728,8 @@ public class CCGame extends BukkitRunnable {
     /**
      * Add a bonus number of cookies per click and per specified building
      *
-     * @param production
-     * @param bonusPerBuilding
+     * @param production building type to apply bonus to
+     * @param bonusPerBuilding bonus to apply per building
      */
     public void addClickBonus(Buildings production, double bonusPerBuilding) {
         if (clickBonuses.keySet().contains(production)) {

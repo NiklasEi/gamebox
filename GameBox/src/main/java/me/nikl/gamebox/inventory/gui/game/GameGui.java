@@ -65,7 +65,7 @@ public class GameGui extends AGui {
      * set in the GameBox language file
      *
      * @param plugin GameBox instance
-     * @param game
+     * @param game the game belonging to this gui
      * @param slots  slots of the GUI
      */
     public GameGui(GameBox plugin, Game game, int slots) {

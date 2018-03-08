@@ -24,12 +24,12 @@ public interface GameManager extends GameBoxHolder {
 
     /**
      * Start a game for a player or players
-     *
-     * @param players players to start the game with
-     * @param args    additional arguments
+     * @param players to start the game for
+     * @param playSounds whether to play sounds in the game
+     * @param args game arguments
+     * @throws GameStartException if game start fails
      */
     void startGame(Player[] players, boolean playSounds, String... args) throws GameStartException;
-
 
     /**
      * Remove the specified player from his game

@@ -177,6 +177,8 @@ public class GameBox extends JavaPlugin {
 
     /**
      * Reload method called onEnable and on the reload command
+     *
+     * @return success
      */
     public boolean reload() {
         if (!prepareForReload()) return false;
