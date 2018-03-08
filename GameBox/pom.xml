@@ -44,6 +44,10 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.0.0</version>
+                <configuration>
+                    <quiet>true</quiet>
+                    <notimestamp>true</notimestamp>
+                </configuration>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -156,7 +160,7 @@
         <!-- SLF4J -->
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
+            <artifactId>slf4j-nop</artifactId>
             <version>1.7.5</version>
             <scope>compile</scope>
         </dependency>
