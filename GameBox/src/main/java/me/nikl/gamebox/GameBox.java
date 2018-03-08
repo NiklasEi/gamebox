@@ -6,6 +6,8 @@ import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.data.database.DataBase;
 import me.nikl.gamebox.data.database.FileDB;
 import me.nikl.gamebox.data.database.MysqlDB;
+import me.nikl.gamebox.external.CalendarEventsHook;
+import me.nikl.gamebox.external.PlaceholderAPIHook;
 import me.nikl.gamebox.game.Game;
 import me.nikl.gamebox.game.GameLanguage;
 import me.nikl.gamebox.input.HandleInvitations;
@@ -336,6 +338,10 @@ public class GameBox extends JavaPlugin {
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new PlaceholderAPIHook(this);
             Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Hooked into PlaceholderAPI");
+        }
+        if (Bukkit.getPluginManager().isPluginEnabled("CalendarEvents")) {
+            new CalendarEventsHook(this);
+            Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Hooked into CalendarEvents");
         }
         // send data with bStats if not opt out
         if (GameBoxSettings.bStatsMetrics) {

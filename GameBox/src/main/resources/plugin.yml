@@ -3,7 +3,7 @@ author: Nikl
 main: me.nikl.gamebox.GameBox
 version: 2.0.0-BETA
 website: nikl.me
-softdepend: [Vault, PlaceholderAPI]
+softdepend: [Vault, PlaceholderAPI, CalendarEvents]
 
 commands:
   gamebox:

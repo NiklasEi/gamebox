@@ -42,6 +42,18 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
@@ -101,6 +113,10 @@
             <id>hikari-repo</id>
             <url>https://mvnrepository.com/artifact/com.zaxxer/HikariCP</url>
         </repository>
+        <repository>
+            <id>nikl-repo</id>
+            <url>http://repo.nikl.me/artifactory/repositories</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -142,6 +158,13 @@
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.5</version>
             <scope>compile</scope>
+        </dependency>
+        <!-- CalendarEvents -->
+        <dependency>
+            <groupId>me.nikl.calendarevents</groupId>
+            <artifactId>CalendarEvents</artifactId>
+            <version>1.4.0</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- nms modules -->
