@@ -19,16 +19,13 @@ import java.util.logging.Level;
 /**
  * @author Niklas Eicker
  *
- *         GUI containing all shop categories
+ * GUI containing all shop categories
  */
 class MainShop extends Shop {
-
     MainShop(GameBox plugin, GUIManager guiManager, int slots, ShopManager shopManager, String[] args) {
         super(plugin, guiManager, slots, shopManager, args, plugin.lang.SHOP_TITLE_MAIN_SHOP);
-
         loadCategories();
     }
-
 
     private void loadCategories() {
         List<String> lore;
@@ -36,7 +33,6 @@ class MainShop extends Shop {
         for (String cat : shop.getConfigurationSection("shop.categories").getKeys(false)) {
             ConfigurationSection category = shop.getConfigurationSection("shop.categories." + cat);
             buttonItem = ItemStackUtility.getItemStack(category.getString("materialData"));
-
             if (buttonItem == null) {
                 Bukkit.getLogger().log(Level.WARNING, " error loading:   shop.categories." + cat);
                 Bukkit.getLogger().log(Level.WARNING, "     invalid material data");
@@ -47,11 +43,9 @@ class MainShop extends Shop {
             }
             Button button = new Button(buttonItem);
             ItemMeta meta = button.getItemMeta();
-
             if (category.isString("displayName")) {
                 meta.setDisplayName(StringUtility.color(category.getString("displayName")));
             }
-
             if (category.isList("lore")) {
                 lore = new ArrayList<>(category.getStringList("lore"));
                 for (int i = 0; i < lore.size(); i++) {
@@ -59,13 +53,10 @@ class MainShop extends Shop {
                 }
                 meta.setLore(lore);
             }
-
             button.setItemMeta(meta);
             button.setAction(ClickAction.OPEN_SHOP_PAGE);
             button.setArgs(cat, "0");
-
             setButton(button);
-
             shopManager.loadCategory(cat);
         }
     }

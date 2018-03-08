@@ -5,6 +5,7 @@ import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.button.Button;
+import me.nikl.gamebox.inventory.button.ButtonFactory;
 import me.nikl.gamebox.inventory.gui.AGui;
 import me.nikl.gamebox.nms.NmsFactory;
 import me.nikl.gamebox.utility.ItemStackUtility;
@@ -35,7 +36,6 @@ public class Category {
     private ShopManager shopManager;
     private GUIManager guiManager;
     private GameBox plugin;
-    private ItemStack back, forward;
     private FileConfiguration shop;
     private Map<String, ShopItem> shopItems = new HashMap<>();
     private int slots = 27, itemsPerPage = 18, backSlot = 21, forSlot = 23;
@@ -45,20 +45,8 @@ public class Category {
         this.shopManager = shopManager;
         this.guiManager = guiManager;
         this.plugin = plugin;
-
         this.shop = shopManager.getShop();
-
         pages = new HashMap<>();
-
-        back = new ItemStack(Material.ARROW, 1);
-        ItemMeta meta = back.getItemMeta();
-        meta.setDisplayName(plugin.lang.BUTTON_BACK);
-        back.setItemMeta(meta);
-        forward = new ItemStack(Material.ARROW, 1);
-        meta = forward.getItemMeta();
-        meta.setDisplayName(plugin.lang.BUTTON_FORWARD);
-        forward.setItemMeta(meta);
-
         loadShopItems();
     }
 
@@ -198,21 +186,18 @@ public class Category {
             if ((counter) % itemsPerPage == 0) {
                 pages.put(counter / itemsPerPage, (page = new Page(plugin, guiManager, slots, counter / itemsPerPage, shopManager, new String[]{key, String.valueOf(counter / itemsPerPage)})));
                 if (counter / itemsPerPage == 0) {
-                    page.setButton(new Button(back).setActionAndArgs(ClickAction.OPEN_SHOP_PAGE, ShopManager.MAIN, "0"), backSlot);
+                    page.setButton(ButtonFactory.createShopPageBackButton(plugin.lang, ShopManager.MAIN, "0"), backSlot);
                 } else {
-                    page.setButton(new Button(back).setActionAndArgs(ClickAction.OPEN_SHOP_PAGE, key, String.valueOf(counter / itemsPerPage - 1)), backSlot);
+                    page.setButton(ButtonFactory.createShopPageBackButton(plugin.lang, key, String.valueOf(counter / itemsPerPage - 1)), backSlot);
                 }
-
                 if (pageNum - 1 > counter / itemsPerPage) {
-                    page.setButton(new Button(forward).setActionAndArgs(ClickAction.OPEN_SHOP_PAGE, key, String.valueOf(counter / itemsPerPage + 1)), forSlot);
+                    page.setButton(ButtonFactory.createShopPageForwardButton(plugin.lang, key, String.valueOf(counter / itemsPerPage + 1)), forSlot);
                 }
-
             }
             page.setButton(allItems.get(counter));
             allItems.remove(counter);
             counter++;
         }
-
     }
 
     private ItemStack getButtonItem(ItemStack itemStack, ConfigurationSection pageSection, String itemKey) {
