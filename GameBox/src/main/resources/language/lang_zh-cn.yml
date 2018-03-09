@@ -35,16 +35,14 @@ commandMessages:
   # 首先出现的是作者和版本信息
   info:
     header:
-    - ' &6&l列出所有已下载游戏:'
-    - ''
     - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
+    - ' &6&l列出所有已下载游戏:'
     # %name% 变量代表游戏名
     # %shorts 变量代表开始游戏的短指令%
     # %playerNum% 变量代表玩这个游戏最少需要的玩家
     perGame:
-    - ' &3&l%name%:'
+    - ' &3&l%name%&r (需要玩家: %playerNum%)'
     - '   &2/gb <%shorts%>'
-    - '   需要玩家: %playerNum%'
     footer:
     - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
   tokenInfo: ' &2%player% 拥有 %token% 筹码'

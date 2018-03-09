@@ -39,13 +39,13 @@ commandMessages:
   #   the first output will always be version and author
   info:
     header:
-    - ' &6&lList of all installed games:'
     - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
+    - ' &6&lListing all installed games:'
     # use %name% for the game name
     # %shorts will be replaced by all available shortcut commands%
     # %playerNum% will give the number of players needed per game
     perGame:
-    - ' &3&l%name% for %playerNum% player(s):'
+    - ' &3&l%name% &r(%playerNum% player)'
     - '   &2/gb <%shorts%>'
     footer:
     - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
