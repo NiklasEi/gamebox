@@ -76,4 +76,8 @@ public enum Permission {
         if (perGame) throw new IllegalArgumentException("Accessing a per-game permission without a gameID");
         return sender.hasPermission(perm);
     }
+
+    public String getPermission() {
+        return this.perm;
+    }
 }

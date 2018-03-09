@@ -1,7 +1,6 @@
 package me.nikl.gamebox;
 
-import me.nikl.gamebox.commands.AdminCommand;
-import me.nikl.gamebox.commands.MainCommand;
+import me.nikl.gamebox.commands.GameBoxCommands;
 import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.data.database.DataBase;
 import me.nikl.gamebox.data.database.FileDB;
@@ -61,11 +60,9 @@ public class GameBox extends JavaPlugin {
     private Metrics metrics;
     private GameRegistry gameRegistry;
     private InventoryTitleMessenger inventoryTitleMessenger;
-
-    private MainCommand mainCommand;
-    private AdminCommand adminCommand;
     private LeftGameBoxListener leftGameBoxListener;
     private EnterGameBoxListener enterGameBoxListener;
+    private GameBoxCommands commands;
 
     @Override
     public void onEnable() {
@@ -149,7 +146,7 @@ public class GameBox extends JavaPlugin {
             info(ChatColor.RED + " To fix this ('...'), create your own language file with shorter titles.");
         }
 
-        if (GameBoxSettings.runLanguageChecksAutomatically) adminCommand.printIncompleteLangFilesInfo();
+        // Todo if (GameBoxSettings.runLanguageChecksAutomatically) adminCommand.printIncompleteLangFilesInfo();
 
         if (PluginManager.gamesRegistered == 0) {
             info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
@@ -213,10 +210,7 @@ public class GameBox extends JavaPlugin {
         pManager.setHandleInviteInput(new HandleInviteInput(this));
         pManager.setHandleInvitations(new HandleInvitations(this));
 
-        mainCommand = new MainCommand(this);
-        adminCommand = new AdminCommand(this);
-        this.getCommand("gamebox").setExecutor(mainCommand);
-        this.getCommand("gameboxadmin").setExecutor(adminCommand);
+        this.commands = new GameBoxCommands(this);
         // load players that are already online (otherwise done on join)
         pManager.loadPlayers();
         gameRegistry.loadGames();

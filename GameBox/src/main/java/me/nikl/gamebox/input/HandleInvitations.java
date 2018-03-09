@@ -4,7 +4,7 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.PluginManager;
-import me.nikl.gamebox.commands.MainCommand;
+import me.nikl.gamebox.commands.GameBoxCommands;
 import me.nikl.gamebox.inventory.gui.game.StartMultiplayerGamePage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -88,7 +88,7 @@ public class HandleInvitations extends BukkitRunnable {
                 ",{\"text\":\"" + lang.INVITATION_PRE_TEXT + "\",\"color\":\""
                 + lang.INVITATION_PRE_COLOR + "\"},{\"text\":\"" + lang.INVITATION_CLICK_TEXT + "\",\"color\":\""
                 + lang.INVITATION_CLICK_COLOR + "\",\"bold\":" + boldClick + ",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/gb "
-                + MainCommand.INVITE_CLICK_COMMAND + " " + args[0] + " " + args[1]
+                + GameBoxCommands.INVITE_CLICK_COMMAND + " " + args[0] + " " + args[1]
                 + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + lang.INVITATION_HOVER_TEXT + "\",\"color\":\""
                 + lang.INVITATION_HOVER_COLOR + "\"}}}, {\"text\":\"" + lang.INVITATION_AFTER_TEXT + "\",\"color\":\"" + lang.INVITATION_AFTER_COLOR + "\"}]";
     }
