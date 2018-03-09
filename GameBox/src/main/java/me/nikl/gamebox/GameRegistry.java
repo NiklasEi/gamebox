@@ -109,6 +109,7 @@ public class GameRegistry {
 
     private void registerSubCommands(Module module) {
         if (module.getSubCommands() == null || module.getSubCommands().isEmpty()) {
+            bundledSubCommands.putIfAbsent(module, new HashSet<>());
             return;
         }
         List<String> subCommands = module.getSubCommands();
