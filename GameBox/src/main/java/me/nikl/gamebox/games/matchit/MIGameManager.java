@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Created by nikl on 02.12.17.
+ * @author Niklas Eicker
  */
 public class MIGameManager implements GameManager {
     private MatchIt matchIt;
@@ -33,7 +33,6 @@ public class MIGameManager implements GameManager {
     public void onInventoryClick(InventoryClickEvent event) {
         MIGame game = games.get(event.getWhoClicked().getUniqueId());
         if (game == null) return;
-
         game.onClick(event);
         return;
     }
@@ -41,7 +40,6 @@ public class MIGameManager implements GameManager {
     @Override
     public void onInventoryClose(InventoryCloseEvent event) {
         if (!games.keySet().contains(event.getPlayer().getUniqueId())) return;
-
         // do same stuff as on removeFromGame()
         removeFromGame(event.getPlayer().getUniqueId());
     }
@@ -68,12 +66,9 @@ public class MIGameManager implements GameManager {
     @Override
     public void removeFromGame(UUID uuid) {
         MIGame game = games.get(uuid);
-
         if (game == null) return;
-
         game.cancel();
         game.onGameEnd();
-
         games.remove(uuid);
     }
 
