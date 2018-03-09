@@ -87,7 +87,7 @@ public class FileDB extends DataBase {
     }
 
     @Override
-    public void addStatistics(UUID uuid, String gameID, String gameTypeID, double value, SaveType saveType) {
+    public void addStatistics(UUID uuid, String gameID, String gameTypeID, double value, SaveType saveType, boolean async) {
         String topListIdentifier = buildTopListIdentifier(gameID, gameTypeID, saveType);
         GameBox.debug("Adding statistics '" + uuid.toString() + "." + topListIdentifier + "' with the value: " + value);
         double oldScore;

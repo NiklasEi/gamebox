@@ -115,7 +115,7 @@ public class CCGameManager implements GameManager {
         CCGame game = games.get(uuid);
         if (game == null) return;
         game.cancel();
-        game.onGameEnd();
+        game.onGameEnd(true);
         games.remove(uuid);
     }
 
@@ -147,7 +147,8 @@ public class CCGameManager implements GameManager {
         return gameRules;
     }
 
-    public void saveGame(CCGameRules rule, UUID uuid, Map<String, Double> cookies, Map<String, Integer> productions, List<Integer> upgrades) {
+    public void saveGame(CCGameRules rule, UUID uuid, Map<String, Double> cookies, Map<String, Integer> productions, List<Integer> upgrades, boolean async) {
+        Bukkit.getLogger().info(" saving game and add stats");
         for (String key : cookies.keySet()) {
             saves.set(rule.getKey() + "." + uuid.toString() + "." + "cookies" + "." + key, Math.floor(cookies.get(key)));
         }
@@ -155,14 +156,14 @@ public class CCGameManager implements GameManager {
             saves.set(rule.getKey() + "." + uuid.toString() + "." + "productions" + "." + production, productions.get(production));
         }
         saves.set(rule.getKey() + "." + uuid.toString() + "." + "upgrades", upgrades);
-        statistics.addStatistics(uuid, game.getGameID(), rule.getKey(), Math.floor(cookies.get("total")), SaveType.HIGH_NUMBER_SCORE);
+        statistics.addStatistics(uuid, game.getGameID(), rule.getKey(), Math.floor(cookies.get("total")), SaveType.HIGH_NUMBER_SCORE, async);
     }
 
     public void onShutDown() {
         // save all open games!
         for (CCGame game : games.values()) {
             game.cancel();
-            game.onGameEnd();
+            game.onGameEnd(false);
         }
         try {
             saves.save(savesFile);

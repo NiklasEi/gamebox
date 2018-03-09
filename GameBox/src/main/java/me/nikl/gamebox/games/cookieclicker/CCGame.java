@@ -131,6 +131,7 @@ import me.nikl.gamebox.nms.NmsFactory;
 import me.nikl.gamebox.nms.NmsUtility;
 import me.nikl.gamebox.utility.NumberUtility;
 import me.nikl.gamebox.utility.Sound;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -646,7 +647,8 @@ public class CCGame extends BukkitRunnable {
     }
 
 
-    public void onGameEnd() {
+    public void onGameEnd(boolean async) {
+        Bukkit.getLogger().info(" on game end...");
         player.sendMessage(lang.PREFIX + lang.GAME_CLOSED.replace("%score%", NumberUtility.convertHugeNumber(Math.floor(totalCookiesProduced))));
 
         Map<String, Double> cookies = new HashMap<>();
@@ -664,7 +666,7 @@ public class CCGame extends BukkitRunnable {
             upgrades.add(upgrade.getId());
         }
 
-        ((CCGameManager) plugin.getGameManager()).saveGame(rule, player.getUniqueId(), cookies, productions, upgrades);
+        ((CCGameManager) plugin.getGameManager()).saveGame(rule, player.getUniqueId(), cookies, productions, upgrades, async);
     }
 
     private void load(ConfigurationSection save) {

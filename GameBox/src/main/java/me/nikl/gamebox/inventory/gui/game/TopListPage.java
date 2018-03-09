@@ -23,13 +23,12 @@ import java.util.List;
  * @author Niklas Eicker
  */
 public class TopListPage extends GameGuiPage implements TopListUser {
-
     private SaveType saveType;
     private List<String> skullLore;
     private TopList topList;
 
-    public TopListPage(GameBox plugin, GUIManager guiManager, int slots, String gameID, String key, String title, SaveType saveType, List<String> skullLore) {
-        super(plugin, guiManager, 54, gameID, key, title); // ToDo: slots are hardcoded because of the hardcoded top list structure
+    public TopListPage(GameBox plugin, GUIManager guiManager, String gameID, String key, String title, SaveType saveType, List<String> skullLore) {
+        super(plugin, guiManager, 54, gameID, key, title);
         this.saveType = saveType;
         this.skullLore = skullLore;
         this.topList = plugin.getDataBase().getTopList(args[0], args[1].replace(GUIManager.TOP_LIST_KEY_ADDON, ""), saveType);
@@ -57,6 +56,7 @@ public class TopListPage extends GameGuiPage implements TopListUser {
             player = Bukkit.getOfflinePlayer(stat.getUuid());
             // checking for name == null is important to prevent NPEs after player data reset on server
             if (player == null || player.getName() == null) {
+                GameBox.debug("player is invalid, or doesn't have a name");
                 continue;
             }
             String name = player.getName();
@@ -69,6 +69,7 @@ public class TopListPage extends GameGuiPage implements TopListUser {
             skullMeta.setLore(skullLore);
             skullMeta.setDisplayName(ChatColor.BLUE + name);
             skull.setItemMeta(skullMeta);
+            GameBox.debug("placed top list skull");
             inventory.setItem(getSlotByRank(rank), skull);
         }
     }

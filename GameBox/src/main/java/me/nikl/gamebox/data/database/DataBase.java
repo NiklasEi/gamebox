@@ -71,7 +71,11 @@ public abstract class DataBase {
 
     public abstract void save(boolean async);
 
-    public abstract void addStatistics(UUID uuid, String gameID, String gameTypeID, double value, SaveType saveType);
+    public void addStatistics(UUID uuid, String gameID, String gameTypeID, double value, SaveType saveType) {
+        addStatistics(uuid, gameID, gameTypeID, value, saveType, true);
+    }
+
+    public abstract void addStatistics(UUID uuid, String gameID, String gameTypeID, double value, SaveType saveType, boolean async);
 
     public abstract TopList getTopList(String gameID, String gameTypeID, SaveType saveType);
 

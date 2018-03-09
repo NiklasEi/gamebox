@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Created by nikl on 22.01.18.
+ * @author Niklas Eicker
  */
 public class TopList {
     public static final int TOP_LIST_LENGTH = 25;
@@ -43,7 +43,7 @@ public class TopList {
         if (playerScores.size() >= TOP_LIST_LENGTH && !playerScore.isBetterThen(playerScores.get(TOP_LIST_LENGTH - 1)))
             return false;
         addNewScoreEntry(playerScore);
-        if (playerScores.size() >= TOP_LIST_LENGTH) {
+        if (playerScores.size() > TOP_LIST_LENGTH) {
             playerScores = playerScores.subList(0, TOP_LIST_LENGTH);
         }
         return true;
@@ -89,6 +89,7 @@ public class TopList {
 
     private void addNewScoreEntry(PlayerScore playerScore) {
         int position = getNewScorePosition(playerScore);
+        GameBox.debug(" add new score in position " + position);
         playerScores.add(position, playerScore);
     }
 

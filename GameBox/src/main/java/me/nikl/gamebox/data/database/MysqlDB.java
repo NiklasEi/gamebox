@@ -95,10 +95,10 @@ public class MysqlDB extends DataBase {
     }
 
     @Override
-    public void addStatistics(UUID uuid, String gameID, String gameTypeID, double value, SaveType saveType) {
+    public void addStatistics(UUID uuid, String gameID, String gameTypeID, double value, SaveType saveType, boolean async) {
         GameBox.debug("Add stats...");
         String columnName = buildColumnName(gameID, gameTypeID, saveType);
-        new BukkitRunnable() {
+        BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
                 createColumnIfNecessary(columnName);
@@ -114,14 +114,19 @@ public class MysqlDB extends DataBase {
                     newValue = value;
                     updateHighscoreLeast(columnName, uuid, value);
                 }
-                new BukkitRunnable() {
+                BukkitRunnable update = new BukkitRunnable() {
                     @Override
                     public void run() {
+                        GameBox.debug("update top list score: " + uuid.toString() + "    " + newValue + "      " + saveType.toString());
                         getTopList(gameID, gameTypeID, saveType).update(new PlayerScore(uuid, newValue, saveType));
                     }
-                }.runTask(plugin);
+                };
+                if (async) update.runTask(plugin);
+                else update.run();
             }
-        }.runTaskAsynchronously(plugin);
+        };
+        if (async) runnable.runTaskAsynchronously(plugin);
+        else runnable.run();
     }
 
     private void updateHighscoreLeast(String columnName, UUID uuid, double value) {
@@ -190,7 +195,7 @@ public class MysqlDB extends DataBase {
 
     private boolean doesHighScoreColumnExist(String columnName) {
         if (knownHighScoreColumns.contains(columnName)) {
-            GameBox.debug("  Found known high score column!");
+            GameBox.debug("  Found known high score column: " + columnName);
             return true;
         }
         // first time this column is used in this server session... better check it exists
