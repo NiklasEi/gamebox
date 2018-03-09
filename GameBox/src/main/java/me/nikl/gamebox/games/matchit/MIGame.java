@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by nikl on 02.12.17.
+ * @author Niklas Eicker
  */
 public class MIGame extends BukkitRunnable {
     private Player player;
@@ -210,6 +210,12 @@ public class MIGame extends BukkitRunnable {
         for (int slot : slots) {
             inventory.setItem(slot, cover);
         }
+    }
+
+    @Override
+    public void cancel() {
+        if(!started) return;
+        super.cancel();
     }
 
     private void updateTitle() {
