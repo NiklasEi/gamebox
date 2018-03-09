@@ -38,13 +38,13 @@ commandMessages:
   #   the first output will always be version and author
   info:
     header:
-    - ' &6&lListe aller installierten Spiele:'
     - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
+    - ' &6&lListe aller installierten Spiele:'
     # use %name% for the game name
     # %shorts will be replaced by all available shortcut commands%
     # %playerNum% will give the number of players needed per game
     perGame:
-    - ' &3&l%name% (Spielerzahl: %playerNum%):'
+    - ' &3&l%name%&r (%playerNum% Spieler)'
     - '   &2/gb <%shorts%>'
     footer:
     - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
