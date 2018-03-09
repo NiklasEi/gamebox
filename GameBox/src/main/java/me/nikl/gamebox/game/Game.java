@@ -337,7 +337,7 @@ public abstract class Game {
                     lore = new ArrayList<>(Arrays.asList("", "No lore specified in the config!"));
                 }
                 SaveType saveType = gameRules.get(buttonID).getSaveType();
-                TopListPage topListPage = new TopListPage(gameBox, guiManager, 54, getGameID(), buttonID + GUIManager.TOP_LIST_KEY_ADDON,
+                TopListPage topListPage = new TopListPage(gameBox, guiManager, getGameID(), buttonID + GUIManager.TOP_LIST_KEY_ADDON,
                         StringUtility.color(buttonSec.getString("inventoryTitle", "Title missing in config")), saveType, lore);
                 guiManager.registerGameGUI(topListPage);
             }
