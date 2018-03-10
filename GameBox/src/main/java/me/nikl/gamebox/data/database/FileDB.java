@@ -107,9 +107,12 @@ public class FileDB extends DataBase {
             case WINS:
                 oldScore = data.getDouble(uuid.toString() + "." + GAMES_STATISTICS_NODE + "." + topListIdentifier, 0.);
                 data.set(uuid.toString() + "." + GAMES_STATISTICS_NODE + "." + topListIdentifier, value + oldScore);
+                // new wins count to pass on to the top list
+                value = value + oldScore;
                 break;
             default:
                 Bukkit.getLogger().log(Level.WARNING, "trying to save unsupported statistics: " + saveType.toString());
+                return;
         }
         // top value of player was corrected
         updateCachedTopList(topListIdentifier, new PlayerScore(uuid, value, saveType));
