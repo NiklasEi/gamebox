@@ -14,7 +14,6 @@ import me.nikl.gamebox.commands.player.HelpCommand;
 import me.nikl.gamebox.commands.player.InfoCommand;
 import me.nikl.gamebox.commands.player.InvitationClickCommand;
 import me.nikl.gamebox.commands.player.OpenGameBox;
-import me.nikl.gamebox.commands.player.SubCommand;
 import me.nikl.gamebox.utility.Permission;
 
 import java.util.UUID;
@@ -40,7 +39,6 @@ public class GameBoxCommands extends BukkitCommandManager {
     }
 
     private void registerCommands() {
-        registerCommand(new SubCommand(gameBox));
         registerCommand(new OpenGameBox(gameBox));
         registerCommand(new InvitationClickCommand(gameBox));
         registerCommand(new InfoCommand(gameBox));
