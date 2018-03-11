@@ -49,6 +49,7 @@ commandMessages:
     footer:
     - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
   tokenInfo: ' &2%player% hat %token% Token.'
+  ownTokenInfo: ' &2Du hast %token% Token.'
   gaveToken: ' &2%token% Token wurden %player% gegeben.'
   tookToken: ' &2%token% Token wurden von %player% genommen.'
   notEnoughToken: ' &4Fehler! %player% hat nur %token% Token.'

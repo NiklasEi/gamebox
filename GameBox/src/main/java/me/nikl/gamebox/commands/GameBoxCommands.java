@@ -3,6 +3,7 @@ package me.nikl.gamebox.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.BukkitCommandManager;
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.commands.admin.DatabaseConverter;
 import me.nikl.gamebox.commands.admin.LanguageCommands;
 import me.nikl.gamebox.commands.admin.Reload;
@@ -12,6 +13,7 @@ import me.nikl.gamebox.commands.admin.ToggleDebug;
 import me.nikl.gamebox.commands.admin.TokenCommands;
 import me.nikl.gamebox.commands.general.HelpCommand;
 import me.nikl.gamebox.commands.general.InfoCommand;
+import me.nikl.gamebox.commands.player.GetTokenCount;
 import me.nikl.gamebox.commands.player.InvitationClickCommand;
 import me.nikl.gamebox.commands.player.OpenGameBox;
 import me.nikl.gamebox.utility.Permission;
@@ -41,6 +43,7 @@ public class GameBoxCommands extends BukkitCommandManager {
         registerCommand(new InvitationClickCommand(gameBox));
         registerCommand(new InfoCommand(gameBox));
         registerCommand(new HelpCommand(gameBox));
+        if (GameBoxSettings.tokensEnabled) registerCommand(new GetTokenCount(gameBox));
         // admin commands
         registerCommand(new ResetHighScores(gameBox));
         registerCommand(new DatabaseConverter(gameBox));

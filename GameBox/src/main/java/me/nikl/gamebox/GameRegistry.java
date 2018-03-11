@@ -19,9 +19,9 @@ import java.util.logging.Level;
  */
 public class GameRegistry {
     private final Set<String> forbiddenIDs =
-            new HashSet<>(Arrays.asList("all, game, games"));
+            new HashSet<>(Arrays.asList("all, game, games, info, token, t"));
     private final Set<String> forbiddenSubCommands =
-            new HashSet<>(Arrays.asList("info"));
+            new HashSet<>(Arrays.asList("all, game, games, info, token, t"));
     private GameBox gameBox;
     private Map<String, Module> modules = new HashMap<>();
     private Map<String, Module> subCommands = new HashMap<>();
@@ -119,7 +119,7 @@ public class GameRegistry {
         // ensure that sub commands are unique and valid
         for (int i = 0; i < subCommands.size(); i++) {
             if (forbiddenSubCommands.contains(subCommands.get(i)))
-                continue;
+                throw new IllegalArgumentException("Forbidden sub command: " + subCommands.get(i));
             if (this.subCommands.keySet().contains(subCommands.get(i)))
                 continue;
             this.subCommands.put(subCommands.get(i), module);

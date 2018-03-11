@@ -14,18 +14,19 @@ import java.util.ArrayList;
  * just change the permission nodes here
  */
 public enum Permission {
+    USE("use"),
     PLAY_GAME("play", true),
     OPEN_GAME_GUI("gamegui", true),
-    USE("use"),
+    CMD_INFO("info"),
+    CMD_HELP("help"),
+    CMD_TOKEN("token"),
+    BYPASS_ALL("bypass"),
+    BYPASS_GAME("bypass", true),
+    OPEN_SHOP("shop"),
     ADMIN_LANGUAGE("admin.language"),
     ADMIN_RELOAD("admin.reload"),
     ADMIN_TOKEN("admin.token"),
-    ADMIN_DATABASE("admin.database"),
-    CMD_INFO("info"),
-    CMD_HELP("help"),
-    BYPASS_ALL("bypass"),
-    BYPASS_GAME("bypass", true),
-    OPEN_SHOP("shop");
+    ADMIN_DATABASE("admin.database");
 
     private static ArrayList<String> moduleIDs = new ArrayList<>();
     private boolean perGame;

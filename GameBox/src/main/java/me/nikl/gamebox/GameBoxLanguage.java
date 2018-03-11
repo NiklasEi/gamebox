@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class GameBoxLanguage extends Language {
     public String CMD_NO_PERM, CMD_ONLY_PLAYER, CMD_RELOADED, CMD_DISABLED_WORLD, CMD_TOKEN_INFO, CMD_TOOK_TOKEN
-            , CMD_NOT_ENOUGH_TOKEN, CMD_GAVE_TOKEN, CMD_SET_TOKEN, RELOAD_SUCCESS, RELOAD_FAIL;
+            , CMD_NOT_ENOUGH_TOKEN, CMD_GAVE_TOKEN, CMD_SET_TOKEN, RELOAD_SUCCESS, RELOAD_FAIL, CMD_OWN_TOKEN_INFO;
     public List<String> CMD_HELP, CMD_WRONG_USAGE, CMD_INFO_HEADER, CMD_INFO_PER_GAME, CMD_INFO_FOOTER;
 
     public String BUTTON_EXIT, BUTTON_TO_MAIN_MENU, BUTTON_TO_GAME_MENU, BUTTON_TOKENS, BUTTON_FORWARD, BUTTON_BACK
@@ -127,6 +127,7 @@ public class GameBoxLanguage extends Language {
         this.RELOAD_FAIL = getString("commandMessages.reload.fail");
         this.RELOAD_SUCCESS = getString("commandMessages.reload.success");
         this.CMD_TOKEN_INFO = getString("commandMessages.tokenInfo");
+        this.CMD_OWN_TOKEN_INFO = getString("commandMessages.ownTokenInfo");
         this.CMD_TOOK_TOKEN = getString("commandMessages.tookToken");
         this.CMD_GAVE_TOKEN = getString("commandMessages.gaveToken");
         this.CMD_SET_TOKEN = getString("commandMessages.setToken");

@@ -15,6 +15,7 @@ permissions:
       gamebox.info: true
       gamebox.help: true
       gamebox.shop: true
+      gamebox.token: true
       gamebox.admin.*: true
   gamebox.admin.*:
     description: Gives permission to use all admin commands
@@ -39,6 +40,9 @@ permissions:
   gamebox.use:
     description: Allows the player to use /gamebox and the hub item
     default: true
+  gamebox.token:
+    default: true
+    description: Allows players to see their token count via command
   gamebox.shop:
     description: Allows the player to open the shop from the main menu
     default: true
