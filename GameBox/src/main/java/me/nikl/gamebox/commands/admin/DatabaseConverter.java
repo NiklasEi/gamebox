@@ -6,6 +6,7 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.commands.GameBoxBaseCommand;
 import me.nikl.gamebox.data.database.DataBase;
 import me.nikl.gamebox.data.database.MysqlDB;
+import me.nikl.gamebox.utility.Permission;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -20,6 +21,10 @@ public class DatabaseConverter extends GameBoxBaseCommand {
 
     @Subcommand("filetomysql")
     public void onConvertFileToMySQL (CommandSender sender) {
+        if (!Permission.ADMIN_DATABASE.hasPermission(sender)) {
+            sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_NO_PERM);
+            return;
+        }
         DataBase dataBase = gameBox.getDataBase();
         if (!(dataBase instanceof MysqlDB)) {
             sender.sendMessage(gameBox.lang.PREFIX + ChatColor.RED + " You must have MySQL enabled to do this!");

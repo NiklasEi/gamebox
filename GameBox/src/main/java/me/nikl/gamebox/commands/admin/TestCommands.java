@@ -5,6 +5,7 @@ import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Single;
 import co.aikar.commands.annotation.Subcommand;
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.commands.ConsoleBaseCommand;
 import me.nikl.gamebox.commands.GameBoxBaseCommand;
 import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.data.database.DataBase;
@@ -21,7 +22,7 @@ import java.util.UUID;
  * @author Niklas Eicker
  */
 @CommandAlias("%adminCommand")
-public class TestCommands extends GameBoxBaseCommand {
+public class TestCommands extends ConsoleBaseCommand {
     public TestCommands(GameBox gameBox) {
         super(gameBox);
     }

@@ -1,11 +1,13 @@
 package me.nikl.gamebox.commands.admin;
 
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.PreCommand;
 import co.aikar.commands.annotation.Single;
 import co.aikar.commands.annotation.Subcommand;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.Language;
 import me.nikl.gamebox.commands.GameBoxBaseCommand;
+import me.nikl.gamebox.utility.Permission;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -33,12 +35,23 @@ public class LanguageCommands extends GameBoxBaseCommand {
         }.runTask(gameBox);
     }
 
-    @Subcommand("language")
-    public void onLanguageCommand(CommandSender sender) {
+    @Override
+    @PreCommand
+    public boolean preCommand(CommandSender sender) {
+        GameBox.debug("in LanguageCommands pre command");
+        if (!Permission.ADMIN_LANGUAGE.hasPermission(sender)) {
+            sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_NO_PERM);
+            return true;
+        }
         if (sender instanceof Player) {
             sender.sendMessage(gameBox.lang.PREFIX + " Only from the console!");
-            return;
+            return true;
         }
+        return false;
+    }
+
+    @Subcommand("language")
+    public void onLanguageCommand(CommandSender sender) {
         if (missingLanguageKeys.isEmpty()) {
             gameBox.info(ChatColor.GREEN + " You have no missing messages in your language files :)");
         } else {
@@ -48,19 +61,11 @@ public class LanguageCommands extends GameBoxBaseCommand {
 
     @Subcommand("language all")
     public void onLanguageAllCommand(CommandSender sender) {
-        if (sender instanceof Player) {
-            sender.sendMessage(gameBox.lang.PREFIX + " Only from the console!");
-            return;
-        }
         printMissingKeys();
     }
 
     @Subcommand("language")
     public void onLanguageCommand(CommandSender sender, @Single String moduleID) {
-        if (sender instanceof Player) {
-            sender.sendMessage(gameBox.lang.PREFIX + " Only from the console!");
-            return;
-        }
         if (missingLanguageKeys.get(moduleID.toLowerCase()) == null) {
             gameBox.info(" Module '" + moduleID.toLowerCase() + "' does not exist or has no missing keys.");
             gameBox.info(" Valid options: " + String.join(", ", missingLanguageKeys.keySet()));

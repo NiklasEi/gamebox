@@ -15,9 +15,26 @@ permissions:
       gamebox.info: true
       gamebox.help: true
       gamebox.shop: true
-      gamebox.admin: true
-  gamebox.admin:
-    description: Gives permission to use admin commands
+      gamebox.admin.*: true
+  gamebox.admin.*:
+    description: Gives permission to use all admin commands
+    default: false
+    children:
+      gamebox.admin.database: true
+      gamebox.admin.language: true
+      gamebox.admin.reload: true
+      gamebox.admin.token: true
+  gamebox.admin.database:
+    description: Player can manipulate the database via commands
+    default: false
+  gamebox.admin.language:
+    description: Player can get language information via commands
+    default: false
+  gamebox.admin.reload:
+    description: Player can reload the plugin via command
+    default: false
+  gamebox.admin.token:
+    description: Player can manipulate token balances via commands
     default: false
   gamebox.use:
     description: Allows the player to use /gamebox and the hub item
@@ -33,7 +50,7 @@ permissions:
     description: Allows to open all game guis
   gamebox.info:
     default: true
-    description: Allows the usage of the subcommand info
+    description: Allows the usage of the info command
   gamebox.help:
     default: true
-    description: Allows the usage of the subcommand help or ?
+    description: Allows the usage of the help command

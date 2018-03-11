@@ -1,10 +1,9 @@
-package me.nikl.gamebox.commands.player;
+package me.nikl.gamebox.commands.general;
 
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Subcommand;
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.commands.GameBoxBaseCommand;
 import me.nikl.gamebox.game.Game;
 import me.nikl.gamebox.utility.Permission;
 import org.bukkit.ChatColor;
@@ -16,14 +15,17 @@ import java.util.Set;
  * @author Niklas Eicker
  */
 @CommandAlias("%mainCommand")
-public class InfoCommand extends GameBoxBaseCommand {
+public class InfoCommand extends GeneralBaseCommand {
     public InfoCommand(GameBox gameBox) {
         super(gameBox);
     }
 
     @Subcommand("info|information")
-    @CommandPermission("%infoPermission")
     public void onInfo(CommandSender sender) {
+        if (!Permission.CMD_INFO.hasPermission(sender)) {
+            sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_NO_PERM);
+            return;
+        }
         for (String message : gameBox.lang.CMD_INFO_HEADER) {
             sender.sendMessage(gameBox.lang.PREFIX + message);
         }

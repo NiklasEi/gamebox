@@ -10,8 +10,8 @@ import me.nikl.gamebox.commands.admin.ResetHighScores;
 import me.nikl.gamebox.commands.admin.TestCommands;
 import me.nikl.gamebox.commands.admin.ToggleDebug;
 import me.nikl.gamebox.commands.admin.TokenCommands;
-import me.nikl.gamebox.commands.player.HelpCommand;
-import me.nikl.gamebox.commands.player.InfoCommand;
+import me.nikl.gamebox.commands.general.HelpCommand;
+import me.nikl.gamebox.commands.general.InfoCommand;
 import me.nikl.gamebox.commands.player.InvitationClickCommand;
 import me.nikl.gamebox.commands.player.OpenGameBox;
 import me.nikl.gamebox.utility.Permission;
@@ -32,8 +32,6 @@ public class GameBoxCommands extends BukkitCommandManager {
         getCommandReplacements().addReplacement("INVITE_CLICK_COMMAND", INVITE_CLICK_COMMAND);
         getCommandReplacements().addReplacement("mainCommand", "gb|games|gamebox");
         getCommandReplacements().addReplacement("adminCommand", "gba|gameboxadmin|gamesadmin");
-        getCommandReplacements().addReplacement("infoPermission", Permission.CMD_INFO.getPermission());
-        getCommandReplacements().addReplacement("helpPermission", Permission.CMD_HELP.getPermission());
         defaultExceptionHandler = new DefaultExceptionHandler();
         registerCommands();
     }

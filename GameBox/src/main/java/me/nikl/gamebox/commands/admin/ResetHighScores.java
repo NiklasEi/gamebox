@@ -1,12 +1,14 @@
 package me.nikl.gamebox.commands.admin;
 
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.PreCommand;
 import co.aikar.commands.annotation.Single;
 import co.aikar.commands.annotation.Subcommand;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.commands.GameBoxBaseCommand;
 import me.nikl.gamebox.data.database.DataBase;
 import me.nikl.gamebox.data.toplist.SaveType;
+import me.nikl.gamebox.utility.Permission;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -20,6 +22,17 @@ public class ResetHighScores extends GameBoxBaseCommand {
 
     public ResetHighScores(GameBox gameBox) {
         super(gameBox);
+    }
+
+    @Override
+    @PreCommand
+    public boolean preCommand(CommandSender sender) {
+        GameBox.debug("in ResetHighScores pre command");
+        if (!Permission.ADMIN_DATABASE.hasPermission(sender)) {
+            sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_NO_PERM);
+            return true;
+        }
+        return false;
     }
 
     @Subcommand("resetstats")

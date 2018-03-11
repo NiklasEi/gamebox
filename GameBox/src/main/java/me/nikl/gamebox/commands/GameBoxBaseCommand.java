@@ -3,6 +3,7 @@ package me.nikl.gamebox.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.PreCommand;
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.utility.Permission;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -17,6 +18,7 @@ public abstract class GameBoxBaseCommand extends BaseCommand {
 
     @PreCommand
     public boolean preCommand(CommandSender sender) {
+        GameBox.debug("in GameBoxBaseCommand pre command");
         // gets called before any command
         // stop it via return true
         return false;

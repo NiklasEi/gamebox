@@ -15,13 +15,12 @@ import java.util.ArrayList;
  */
 public enum Permission {
     PLAY_GAME("play", true),
-    @Deprecated // * is supported via placeholder!
-            PLAY_ALL_GAMES("play.*"),
     OPEN_GAME_GUI("gamegui", true),
-    @Deprecated // * is supported via placeholder!
-            OPEN_ALL_GAME_GUI("gamegui.*"),
     USE("use"),
-    ADMIN("admin"),
+    ADMIN_LANGUAGE("admin.language"),
+    ADMIN_RELOAD("admin.reload"),
+    ADMIN_TOKEN("admin.token"),
+    ADMIN_DATABASE("admin.database"),
     CMD_INFO("info"),
     CMD_HELP("help"),
     BYPASS_ALL("bypass"),

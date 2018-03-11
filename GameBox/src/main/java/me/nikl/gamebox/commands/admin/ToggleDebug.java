@@ -3,6 +3,7 @@ package me.nikl.gamebox.commands.admin;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Subcommand;
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.commands.ConsoleBaseCommand;
 import me.nikl.gamebox.commands.GameBoxBaseCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -11,7 +12,7 @@ import org.bukkit.entity.Player;
  * @author Niklas Eicker
  */
 @CommandAlias("%adminCommand")
-public class ToggleDebug extends GameBoxBaseCommand {
+public class ToggleDebug extends ConsoleBaseCommand {
     public ToggleDebug(GameBox gameBox) {
         super(gameBox);
     }

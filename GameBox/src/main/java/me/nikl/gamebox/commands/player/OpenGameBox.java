@@ -3,13 +3,11 @@ package me.nikl.gamebox.commands.player;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Optional;
-import co.aikar.commands.annotation.Single;
 import co.aikar.commands.annotation.UnknownHandler;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.Module;
 import me.nikl.gamebox.PluginManager;
-import me.nikl.gamebox.commands.GameBoxBaseCommand;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.utility.Permission;
 import org.bukkit.entity.Player;
@@ -18,7 +16,7 @@ import org.bukkit.entity.Player;
  * @author Niklas Eicker
  */
 @CommandAlias("%mainCommand")
-public class OpenGameBox extends GameBoxBaseCommand {
+public class OpenGameBox extends PlayerBaseCommand {
     private PluginManager pManager;
     private GUIManager guiManager;
     private GameBoxLanguage lang;
@@ -33,17 +31,10 @@ public class OpenGameBox extends GameBoxBaseCommand {
     @Default
     @UnknownHandler
     public void openGamebox(Player player, @Optional String subCommand){
-        player.sendMessage("gb command");
-        if (gameBox.getPluginManager().getBlockedWorlds().contains(player.getLocation().getWorld().getName())) {
-            player.sendMessage(lang.PREFIX + lang.CMD_DISABLED_WORLD);
-            return;
-        }
         if (subCommand == null || subCommand.isEmpty()) {
-            player.sendMessage("sub is null or empty");
             guiManager.openMainGui(player);
             return;
         }
-        player.sendMessage("checking modules");
         Module module = gameBox.getGameRegistry().getModuleBySubCommand(subCommand);
         if (module != null) {
             // this will be checked again when opening the gui but checking it here
@@ -56,10 +47,8 @@ public class OpenGameBox extends GameBoxBaseCommand {
             arguments[0] = module.getModuleID();
             arguments[1] = GUIManager.MAIN_GAME_GUI;
             guiManager.openGameGui(player, arguments);
-            player.sendMessage("found " + module.getModuleID());
             return;
         }
-        player.sendMessage("none found...");
         guiManager.openMainGui(player);
     }
 }

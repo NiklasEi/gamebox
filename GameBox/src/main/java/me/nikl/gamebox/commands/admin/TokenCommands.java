@@ -1,12 +1,14 @@
 package me.nikl.gamebox.commands.admin;
 
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.PreCommand;
 import co.aikar.commands.annotation.Single;
 import co.aikar.commands.annotation.Subcommand;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.commands.GameBoxBaseCommand;
 import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.data.database.DataBase;
+import me.nikl.gamebox.utility.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -21,6 +23,17 @@ import javax.annotation.Nullable;
 public class TokenCommands extends GameBoxBaseCommand {
     public TokenCommands(GameBox gameBox) {
         super(gameBox);
+    }
+
+    @Override
+    @PreCommand
+    public boolean preCommand(CommandSender sender) {
+        GameBox.debug("in TokenCommands pre command");
+        if (!Permission.ADMIN_TOKEN.hasPermission(sender)) {
+            sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_NO_PERM);
+            return true;
+        }
+        return false;
     }
 
     @Subcommand("token")
