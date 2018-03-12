@@ -6,11 +6,11 @@ import me.nikl.gamebox.data.toplist.SaveType;
 import me.nikl.gamebox.data.toplist.TopList;
 import me.nikl.gamebox.data.toplist.TopListUser;
 import me.nikl.gamebox.inventory.GUIManager;
+import me.nikl.gamebox.utility.ItemStackUtility;
 import me.nikl.gamebox.utility.NumberUtility;
 import me.nikl.gamebox.utility.StringUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -51,8 +51,6 @@ public class TopListPage extends GameGuiPage implements TopListUser {
         for (int rank = 0; rank < topListScores.size(); ) {
             stat = topListScores.get(rank);
             rank++;
-            skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
-            skullMeta = (SkullMeta) skull.getItemMeta();
             player = Bukkit.getOfflinePlayer(stat.getUuid());
             // checking for name == null is important to prevent NPEs after player data reset on server
             if (player == null || player.getName() == null) {
@@ -60,16 +58,16 @@ public class TopListPage extends GameGuiPage implements TopListUser {
                 continue;
             }
             String name = player.getName();
+            skull = ItemStackUtility.getPlayerHead(name);
+            skullMeta = (SkullMeta) skull.getItemMeta();
             List<String> skullLore = getSkullLoreForScore(stat);
             // chat color is already handled when loading the lore from the configuration file
             for (int i = 0; i < skullLore.size(); i++) {
                 skullLore.set(i, skullLore.get(i).replace("%player%", name).replace("%rank%", String.valueOf(rank)));
             }
-            skullMeta.setOwner(name);
             skullMeta.setLore(skullLore);
             skullMeta.setDisplayName(ChatColor.BLUE + name);
             skull.setItemMeta(skullMeta);
-            GameBox.debug("placed top list skull");
             inventory.setItem(getSlotByRank(rank), skull);
         }
     }

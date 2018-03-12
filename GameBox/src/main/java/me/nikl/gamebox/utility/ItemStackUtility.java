@@ -4,41 +4,42 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.MaterialData;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Niklas Eicker
  *
- *         Utility class for ItemStacks
+ * Utility class for ItemStacks
  */
 public class ItemStackUtility {
     public static final String MAT = "materialData";
     public static final String LORE = "lore";
     public static final String NAME = "displayName";
     public static final String GLOW = "glow";
+    private static final Map<String, ItemStack> cachedPlayerHeads = new HashMap<>();
 
     public static ItemStack getItemStack(String matDataString) {
         Material mat;
         short data;
         if (matDataString == null) return null;
         String[] obj = matDataString.split(":");
-
         if (obj.length == 2) {
             try {
                 mat = Material.matchMaterial(obj[0]);
             } catch (Exception e) {
                 return null; // material name doesn't exist
             }
-
             try {
                 data = Short.valueOf(obj[1]);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 return null; // data not a number
             }
-
             //noinspection deprecation
             if (mat == null) return null;
             ItemStack stack = new ItemStack(mat, 1);
@@ -62,7 +63,6 @@ public class ItemStackUtility {
 
     public static ItemStack createItemWithText(List<String> text, MaterialData materialData) {
         ItemStack helpItem = materialData.toItemStack(1);
-
         ItemMeta meta = helpItem.getItemMeta();
         if (text != null) {
             if (text.size() > 0) meta.setDisplayName(text.get(0));
@@ -79,7 +79,6 @@ public class ItemStackUtility {
         ItemStack toReturn = getItemStack(section.getString(MAT));
         if (toReturn == null) return null;
         ItemMeta meta = toReturn.getItemMeta();
-
         if (section.isString(NAME)) {
             meta.setDisplayName(StringUtility.color(section.getString(NAME)));
         }
@@ -87,7 +86,17 @@ public class ItemStackUtility {
             meta.setLore(StringUtility.color(section.getStringList(LORE)));
         }
         toReturn.setItemMeta(meta);
-
         return toReturn;
+    }
+
+    public static ItemStack getPlayerHead(String name) {
+        ItemStack skull = cachedPlayerHeads.get(name);
+        if (skull != null) return skull;
+        skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+        SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
+        skullMeta.setOwner(name);
+        skull.setItemMeta(skullMeta);
+        cachedPlayerHeads.put(name, skull);
+        return skull;
     }
 }
