@@ -16,7 +16,6 @@ import me.nikl.gamebox.commands.general.InfoCommand;
 import me.nikl.gamebox.commands.player.GetTokenCount;
 import me.nikl.gamebox.commands.player.InvitationClickCommand;
 import me.nikl.gamebox.commands.player.OpenGameBox;
-import me.nikl.gamebox.utility.Permission;
 
 import java.util.UUID;
 

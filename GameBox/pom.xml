@@ -86,8 +86,16 @@
                             <shadedPattern>me.nikl.gamebox.common.slf4j</shadedPattern>
                         </relocation>
                         <relocation>
-                            <pattern>co.aikar</pattern>
-                            <shadedPattern>me.nikl.gamebox.common.aikar</shadedPattern>
+                            <pattern>co.aikar.timings.lib</pattern>
+                            <shadedPattern>me.nikl.gamebox.common.timings</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>co.aikar.commands</pattern>
+                            <shadedPattern>me.nikl.gamebox.common.acf</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>co.aikar.locales</pattern>
+                            <shadedPattern>me.nikl.gamebox.common.locales</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>net.jodah.expiringmap</pattern>
