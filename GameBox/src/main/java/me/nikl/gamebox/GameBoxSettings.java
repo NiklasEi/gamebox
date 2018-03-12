@@ -14,10 +14,6 @@ import java.util.List;
  * class to store global settings
  */
 public class GameBoxSettings {
-    // split aliases with pipes
-    public static final String MAIN_COMMAND = "gamebox|games|gb";
-    public static final String ADMIN_COMMAND = "gameboxadmin|gamesadmin|gba";
-
     public static boolean exceptInvitesWithoutPlayPermission = false;
     public static boolean playSounds = true; //toggle for playing sounds
     public static Sound successfulClick, unsuccessfulClick;
@@ -40,70 +36,81 @@ public class GameBoxSettings {
     public static int toGameButtonSlot = 8;
     public static int emptyHotBarSlotToHold = 0;
     public static List<Integer> slotsToKeep = new ArrayList<>();
+    // split aliases with pipes
+    public static String mainCommand;
+    public static String adminCommand;
+
+    private static FileConfiguration configuration;
 
     public static void loadSettings(GameBox plugin) {
-        FileConfiguration config = plugin.getConfig();
-        useMysql = config.getBoolean("mysql.enabled", false);
-        hubModeEnabled = config.getBoolean("hubMode.enabled", false);
+        configuration = plugin.getConfig();
+        loadCommands();
+        useMysql = configuration.getBoolean("mysql.enabled", false);
+        hubModeEnabled = configuration.getBoolean("hubMode.enabled", false);
         checkInventoryLength = checkInventoryTitleLength();
-        guiSettings(config);
-        generalSettings(config);
-        invitationSettings(config);
-        economySettings(config);
+        guiSettings();
+        generalSettings();
+        invitationSettings();
+        economySettings();
     }
 
-    private static void guiSettings(FileConfiguration config) {
-        playSounds = config.getBoolean("guiSettings.playSounds", true);
-        loadSounds(config);
-        loadHotBarSlots(config);
+    private static void loadCommands() {
+        mainCommand = configuration.getString("commands.main", "gamebox|games|gb");
+        adminCommand = configuration.getString("commands.admin", "gameboxadmin|gamesadmin|gba");
     }
 
-    private static void generalSettings(FileConfiguration config) {
-        exceptInvitesWithoutPlayPermission = config.getBoolean("settings.exceptInvitesWithoutPlayPermission", false);
-        bStatsMetrics = config.getBoolean("settings.bStats", true);
-        closeInventoryOnDamage = config.getBoolean("settings.closeInventoryOnDamage", true);
-        autoSaveIntervalInMinutes = config.getInt("settings.autoSaveIntervalInMinutes", 10);
-        keepArmorWhileInGame = config.getBoolean("settings.keepArmor", false);
-        runLanguageChecksAutomatically = config.getBoolean("settings.runLanguageChecksAutomatically", true);
+    private static void guiSettings() {
+        playSounds = configuration.getBoolean("guiSettings.playSounds", true);
+        loadSounds();
+        loadHotBarSlots();
     }
 
-    private static void invitationSettings(FileConfiguration config) {
-        sendInviteClickMessage = config.getBoolean("settings.invitations.clickMessage.enabled", true);
-        inviteValidDuration = config.getInt("settings.invitations.inviteValidDuration", 60);
-        inviteInputDuration = config.getInt("settings.invitations.inviteInputDuration", 30);
+    private static void generalSettings() {
+        exceptInvitesWithoutPlayPermission = configuration.getBoolean("settings.exceptInvitesWithoutPlayPermission", false);
+        bStatsMetrics = configuration.getBoolean("settings.bStats", true);
+        closeInventoryOnDamage = configuration.getBoolean("settings.closeInventoryOnDamage", true);
+        autoSaveIntervalInMinutes = configuration.getInt("settings.autoSaveIntervalInMinutes", 10);
+        keepArmorWhileInGame = configuration.getBoolean("settings.keepArmor", false);
+        runLanguageChecksAutomatically = configuration.getBoolean("settings.runLanguageChecksAutomatically", true);
     }
 
-    private static void economySettings(FileConfiguration config) {
-        tokensEnabled = config.getBoolean("economy.tokens.enabled", false);
-        econEnabled = config.getBoolean("economy.enabled", false);
+    private static void invitationSettings() {
+        sendInviteClickMessage = configuration.getBoolean("settings.invitations.clickMessage.enabled", true);
+        inviteValidDuration = configuration.getInt("settings.invitations.inviteValidDuration", 60);
+        inviteInputDuration = configuration.getInt("settings.invitations.inviteInputDuration", 30);
     }
 
-    private static void loadSounds(FileConfiguration config) {
+    private static void economySettings() {
+        tokensEnabled = configuration.getBoolean("economy.tokens.enabled", false);
+        econEnabled = configuration.getBoolean("economy.enabled", false);
+    }
+
+    private static void loadSounds() {
         try {
-            successfulClick = Sound.valueOf(config.getString("guiSettings.standardSounds.successfulClick", "CLICK"));
+            successfulClick = Sound.valueOf(configuration.getString("guiSettings.standardSounds.successfulClick", "CLICK"));
         } catch (IllegalArgumentException exception) {
             successfulClick = Sound.CLICK;
         }
         try {
-            unsuccessfulClick = Sound.valueOf(config.getString("guiSettings.standardSounds.unsuccessfulClick", "VILLAGER_NO"));
+            unsuccessfulClick = Sound.valueOf(configuration.getString("guiSettings.standardSounds.unsuccessfulClick", "VILLAGER_NO"));
         } catch (IllegalArgumentException exception) {
             unsuccessfulClick = Sound.VILLAGER_NO;
         }
     }
 
-    private static void loadHotBarSlots(FileConfiguration config) {
-        exitButtonSlot = config.getInt("guiSettings.hotBarNavigation.exitSlot", 4);
-        toMainButtonSlot = config.getInt("guiSettings.hotBarNavigation.mainMenuSlot", 0);
-        toGameButtonSlot = config.getInt("guiSettings.hotBarNavigation.gameMenuSlot", 8);
+    private static void loadHotBarSlots() {
+        exitButtonSlot = configuration.getInt("guiSettings.hotBarNavigation.exitSlot", 4);
+        toMainButtonSlot = configuration.getInt("guiSettings.hotBarNavigation.mainMenuSlot", 0);
+        toGameButtonSlot = configuration.getInt("guiSettings.hotBarNavigation.gameMenuSlot", 8);
         // make sure the buttons are actually in the hot bar
         if (exitButtonSlot > 8) exitButtonSlot = 4;
         if (toMainButtonSlot > 8) toMainButtonSlot = 0;
         if (toGameButtonSlot > 8) toGameButtonSlot = 8;
-        loadSlotsThatKeepTheirItems(config);
-        findEmptyHotBarSlotToHold(config);
+        loadSlotsThatKeepTheirItems();
+        findEmptyHotBarSlotToHold();
     }
 
-    private static void findEmptyHotBarSlotToHold(FileConfiguration config) {
+    private static void findEmptyHotBarSlotToHold() {
         if (3 + slotsToKeep.size() < 9) {
             while (emptyHotBarSlotToHold == exitButtonSlot
                     || emptyHotBarSlotToHold == toMainButtonSlot
@@ -120,10 +127,10 @@ public class GameBoxSettings {
         }
     }
 
-    private static void loadSlotsThatKeepTheirItems(FileConfiguration config) {
-        if (config.isSet("guiSettings.keepItemsSlots")
-                && config.isList("guiSettings.keepItemsSlots")) {
-            slotsToKeep = config.getIntegerList("guiSettings.keepItemsSlots");
+    private static void loadSlotsThatKeepTheirItems() {
+        if (configuration.isSet("guiSettings.keepItemsSlots")
+                && configuration.isList("guiSettings.keepItemsSlots")) {
+            slotsToKeep = configuration.getIntegerList("guiSettings.keepItemsSlots");
         }
         if (slotsToKeep == null) slotsToKeep = new ArrayList<>();
         Iterator<Integer> it = slotsToKeep.iterator();

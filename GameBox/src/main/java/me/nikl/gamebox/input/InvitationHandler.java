@@ -22,7 +22,7 @@ import java.util.UUID;
  * Handle Invitations for multi player games
  */
 public class InvitationHandler extends BukkitRunnable {
-    private final String COMMAND = GameBoxSettings.MAIN_COMMAND.split("\\|")[0];
+    private final String COMMAND = GameBoxSettings.mainCommand.split("\\|")[0];
     private Set<Invitation> invitations = new HashSet<>();
     private PluginManager pluginManager;
     private GameBox plugin;
