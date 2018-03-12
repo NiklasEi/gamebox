@@ -668,10 +668,6 @@ public class PluginManager implements Listener {
         return null;
     }
 
-    public void addGame(Game game) {
-        games.put(game.getGameID(), game);
-    }
-
     /**
      * Read only!
      *

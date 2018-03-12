@@ -75,6 +75,7 @@ public abstract class Game {
     public abstract void onDisable();
 
     public void onEnable() {
+        gameBox.getPluginManager().registerGame(this);
         GameBox.debug(" enabling the game: " + module.getModuleID());
         loadConfig();
         loadSettings();
@@ -187,7 +188,6 @@ public abstract class Game {
 
     private void hook() {
         GUIManager guiManager = gameBox.getPluginManager().getGuiManager();
-        gameBox.getPluginManager().registerGame(this);
         int gameGuiSlots = gameSettings.getGameGuiSize();
         GameGui gameGui = new GameGui(gameBox, this, gameGuiSlots);
         gameGui.setHelpButton(gameLang.GAME_HELP);

@@ -90,7 +90,6 @@ public class GameRegistry {
         try {
             Constructor<Game> ctor = ((Class<Game>) clazz).getConstructor(GameBox.class);
             Game game = ctor.newInstance(gameBox);
-            gameBox.getPluginManager().addGame(game);
             game.onEnable();
         } catch (NoSuchMethodException | IllegalAccessException
                 | InstantiationException | InvocationTargetException e) {
