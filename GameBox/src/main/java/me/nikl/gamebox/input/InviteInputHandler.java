@@ -17,11 +17,11 @@ import java.util.UUID;
 /**
  * @author Niklas Eicker
  */
-public class HandleInviteInput extends BukkitRunnable {
+public class InviteInputHandler extends BukkitRunnable {
     private Map<UUID, Waiting> waitings = new HashMap<>();
     private GameBox plugin;
 
-    public HandleInviteInput(GameBox plugin) {
+    public InviteInputHandler(GameBox plugin) {
         this.plugin = plugin;
         this.runTaskTimerAsynchronously(plugin, 20, 20);
     }
@@ -80,7 +80,7 @@ public class HandleInviteInput extends BukkitRunnable {
                 }
                 Waiting waiting = waitings.get(uuid);
                 // invite successful
-                if (plugin.getPluginManager().getHandleInvitations().addInvite(uuid, player2.getUniqueId(), System.currentTimeMillis() + 15 * 1000, waiting.args)) {
+                if (plugin.getPluginManager().getInvitationHandler().addInvite(uuid, player2.getUniqueId(), System.currentTimeMillis() + 15 * 1000, waiting.args)) {
                     player.sendMessage(plugin.lang.PREFIX + plugin.lang.INVITATION_SUCCESSFUL.replace("%player%", player2.getName()));
                     waitings.remove(uuid);
                 }

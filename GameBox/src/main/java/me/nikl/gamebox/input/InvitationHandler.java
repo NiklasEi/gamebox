@@ -19,19 +19,35 @@ import java.util.UUID;
 /**
  * @author Niklas Eicker
  *
- *         Handle Invitations for multi player games
+ * Handle Invitations for multi player games
  */
-public class HandleInvitations extends BukkitRunnable {
+public class InvitationHandler extends BukkitRunnable {
+    private final String COMMAND = GameBoxSettings.MAIN_COMMAND.split("\\|")[0];
     private Set<Invitation> invitations = new HashSet<>();
     private PluginManager pluginManager;
     private GameBox plugin;
     private GameBoxLanguage lang;
+    private String clickMessagePartOne;
+    private String getClickMessagePartTwo;
 
-    public HandleInvitations(GameBox plugin) {
+    public InvitationHandler(GameBox plugin) {
         pluginManager = plugin.getPluginManager();
         this.plugin = plugin;
         this.lang = plugin.lang;
+        cacheClickMessageParts();
         this.runTaskTimerAsynchronously(plugin, 20, 10);
+    }
+
+    private void cacheClickMessageParts() {
+        boolean boldClick = false;
+        clickMessagePartOne = " [{\"text\":\"" + lang.JSON_PREFIX_PRE_TEXT + "\",\"color\":\"" + lang.JSON_PREFIX_PRE_COLOR + "\"},{\"text\":\"" + lang.JSON_PREFIX_TEXT + "\",\"color\":\""
+                + lang.JSON_PREFIX_COLOR + "\"},{\"text\":\"" + lang.JSON_PREFIX_AFTER_TEXT + "\",\"color\":\"" + lang.JSON_PREFIX_AFTER_COLOR + "\"}" +
+                ",{\"text\":\"" + lang.INVITATION_PRE_TEXT + "\",\"color\":\""
+                + lang.INVITATION_PRE_COLOR + "\"},{\"text\":\"" + lang.INVITATION_CLICK_TEXT + "\",\"color\":\""
+                + lang.INVITATION_CLICK_COLOR + "\",\"bold\":" + boldClick + ",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/" + COMMAND + " "
+                + GameBoxCommands.INVITE_CLICK_COMMAND + " ";
+        getClickMessagePartTwo = "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + lang.INVITATION_HOVER_TEXT + "\",\"color\":\""
+                        + lang.INVITATION_HOVER_COLOR + "\"}}}, {\"text\":\"" + lang.INVITATION_AFTER_TEXT + "\",\"color\":\"" + lang.INVITATION_AFTER_COLOR + "\"}]";
     }
 
     @Override
@@ -68,11 +84,10 @@ public class HandleInvitations extends BukkitRunnable {
             for (String message : plugin.lang.INVITE_MESSAGE) {
                 second.sendMessage(plugin.lang.PREFIX + message.replace("%player%", first.getName()).replace("%game%", pluginManager.getGame(args[0]).getGameLang().PLAIN_NAME));
             }
-            boolean boldClick = false;
             if (GameBoxSettings.sendInviteClickMessage) {
                 Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "tellraw "
                         + second.getName()
-                        + buildClickMessage(args, boldClick));
+                        + buildClickMessage(args));
             }
         } else {
             return false;
@@ -82,15 +97,8 @@ public class HandleInvitations extends BukkitRunnable {
         return true;
     }
 
-    private String buildClickMessage(String[] args, boolean boldClick) {
-        return " [{\"text\":\"" + lang.JSON_PREFIX_PRE_TEXT + "\",\"color\":\"" + lang.JSON_PREFIX_PRE_COLOR + "\"},{\"text\":\"" + lang.JSON_PREFIX_TEXT + "\",\"color\":\""
-                + lang.JSON_PREFIX_COLOR + "\"},{\"text\":\"" + lang.JSON_PREFIX_AFTER_TEXT + "\",\"color\":\"" + lang.JSON_PREFIX_AFTER_COLOR + "\"}" +
-                ",{\"text\":\"" + lang.INVITATION_PRE_TEXT + "\",\"color\":\""
-                + lang.INVITATION_PRE_COLOR + "\"},{\"text\":\"" + lang.INVITATION_CLICK_TEXT + "\",\"color\":\""
-                + lang.INVITATION_CLICK_COLOR + "\",\"bold\":" + boldClick + ",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/gb "
-                + GameBoxCommands.INVITE_CLICK_COMMAND + " " + args[0] + " " + args[1]
-                + "\"},\"hoverEvent\":{\"action\":\"show_text\",\"value\":{\"text\":\"" + lang.INVITATION_HOVER_TEXT + "\",\"color\":\""
-                + lang.INVITATION_HOVER_COLOR + "\"}}}, {\"text\":\"" + lang.INVITATION_AFTER_TEXT + "\",\"color\":\"" + lang.INVITATION_AFTER_COLOR + "\"}]";
+    private String buildClickMessage(String[] args) {
+        return  clickMessagePartOne + args[0] + " " + args[1] + getClickMessagePartTwo;
     }
 
     public class Invitation {

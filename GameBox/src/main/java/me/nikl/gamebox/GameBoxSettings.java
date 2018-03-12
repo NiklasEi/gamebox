@@ -14,6 +14,10 @@ import java.util.List;
  * class to store global settings
  */
 public class GameBoxSettings {
+    // split aliases with pipes
+    public static final String MAIN_COMMAND = "gamebox|games|gb";
+    public static final String ADMIN_COMMAND = "gameboxadmin|gamesadmin|gba";
+
     public static boolean exceptInvitesWithoutPlayPermission = false;
     public static boolean playSounds = true; //toggle for playing sounds
     public static Sound successfulClick, unsuccessfulClick;

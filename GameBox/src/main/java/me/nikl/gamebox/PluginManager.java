@@ -5,8 +5,8 @@ import me.nikl.gamebox.events.EnterGameBoxEvent;
 import me.nikl.gamebox.events.LeftGameBoxEvent;
 import me.nikl.gamebox.game.Game;
 import me.nikl.gamebox.game.manager.GameManager;
-import me.nikl.gamebox.input.HandleInvitations;
-import me.nikl.gamebox.input.HandleInviteInput;
+import me.nikl.gamebox.input.InvitationHandler;
+import me.nikl.gamebox.input.InviteInputHandler;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.GameBoxHolder;
 import me.nikl.gamebox.inventory.gui.AGui;
@@ -69,8 +69,8 @@ public class PluginManager implements Listener {
     private GameBoxLanguage lang;
     private FileConfiguration config;
     private GUIManager guiManager;
-    private HandleInviteInput handleInviteInput;
-    private HandleInvitations handleInvitations;
+    private InviteInputHandler inviteInputHandler;
+    private InvitationHandler invitationHandler;
     private Map<String, Game> games = new HashMap<>();
     private Map<UUID, ItemStack[]> savedContents = new HashMap<>();
     private Map<UUID, Integer> hotBarSlot = new HashMap<>();
@@ -150,7 +150,7 @@ public class PluginManager implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
         if (blockedWorlds.contains(event.getPlayer().getLocation().getWorld().getName())) return;
-        handleInviteInput.onChat(event);
+        inviteInputHandler.onChat(event);
     }
 
     private void getHub() {
@@ -557,20 +557,20 @@ public class PluginManager implements Listener {
         return false;
     }
 
-    public HandleInviteInput getHandleInviteInput() {
-        return handleInviteInput;
+    public InviteInputHandler getInviteInputHandler() {
+        return inviteInputHandler;
     }
 
-    public void setHandleInviteInput(HandleInviteInput handleInviteInput) {
-        this.handleInviteInput = handleInviteInput;
+    public void setInviteInputHandler(InviteInputHandler inviteInputHandler) {
+        this.inviteInputHandler = inviteInputHandler;
     }
 
-    public HandleInvitations getHandleInvitations() {
-        return handleInvitations;
+    public InvitationHandler getInvitationHandler() {
+        return invitationHandler;
     }
 
-    public void setHandleInvitations(HandleInvitations handleInvitations) {
-        this.handleInvitations = handleInvitations;
+    public void setInvitationHandler(InvitationHandler invitationHandler) {
+        this.invitationHandler = invitationHandler;
     }
 
     /**

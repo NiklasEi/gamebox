@@ -9,8 +9,8 @@ import me.nikl.gamebox.external.CalendarEventsHook;
 import me.nikl.gamebox.external.PlaceholderAPIHook;
 import me.nikl.gamebox.game.Game;
 import me.nikl.gamebox.game.GameLanguage;
-import me.nikl.gamebox.input.HandleInvitations;
-import me.nikl.gamebox.input.HandleInviteInput;
+import me.nikl.gamebox.input.InvitationHandler;
+import me.nikl.gamebox.input.InviteInputHandler;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.InventoryTitleMessenger;
 import me.nikl.gamebox.listeners.EnterGameBoxListener;
@@ -207,8 +207,8 @@ public class GameBox extends JavaPlugin {
         // get a new plugin manager and set the other managers and handlers
         pManager = new PluginManager(this);
         pManager.setGuiManager(new GUIManager(this));
-        pManager.setHandleInviteInput(new HandleInviteInput(this));
-        pManager.setHandleInvitations(new HandleInvitations(this));
+        pManager.setInviteInputHandler(new InviteInputHandler(this));
+        pManager.setInvitationHandler(new InvitationHandler(this));
 
         this.commands = new GameBoxCommands(this);
         // load players that are already online (otherwise done on join)

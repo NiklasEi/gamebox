@@ -204,7 +204,7 @@ public abstract class AGui implements GameBoxHolder {
                     }
                 }
                 long timeStamp = System.currentTimeMillis();
-                boolean inputStarted = pluginManager.getHandleInviteInput().addWaiting(event.getWhoClicked().getUniqueId()
+                boolean inputStarted = pluginManager.getInviteInputHandler().addWaiting(event.getWhoClicked().getUniqueId()
                         , timeStamp + GameBoxSettings.inviteInputDuration * 1000, args);
                 if (inputStarted) {
                     event.getWhoClicked().closeInventory();

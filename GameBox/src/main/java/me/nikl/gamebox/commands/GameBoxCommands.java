@@ -31,8 +31,8 @@ public class GameBoxCommands extends BukkitCommandManager {
         super(gameBox);
         this.gameBox = gameBox;
         getCommandReplacements().addReplacement("INVITE_CLICK_COMMAND", INVITE_CLICK_COMMAND);
-        getCommandReplacements().addReplacement("mainCommand", "gb|games|gamebox");
-        getCommandReplacements().addReplacement("adminCommand", "gba|gameboxadmin|gamesadmin");
+        getCommandReplacements().addReplacement("mainCommand", GameBoxSettings.MAIN_COMMAND);
+        getCommandReplacements().addReplacement("adminCommand", GameBoxSettings.ADMIN_COMMAND);
         defaultExceptionHandler = new DefaultExceptionHandler();
         registerCommands();
     }
