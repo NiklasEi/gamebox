@@ -34,7 +34,6 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.logging.Level;
 
 /**
@@ -213,7 +212,7 @@ public class GameBox extends JavaPlugin {
         this.commands = new GameBoxCommands(this);
         // load players that are already online (otherwise done on join)
         pManager.loadPlayers();
-        gameRegistry.loadGames();
+        gameRegistry.reload();
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -344,7 +343,7 @@ public class GameBox extends JavaPlugin {
     private void sendVersionError() {
         Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
         Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " Your server version is not compatible with this plugin!");
-        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "   Make sure you have the newest version:");
+        Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "   Please make sure that you have the newest version:");
         Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "   https://www.spigotmc.org/resources/37273/");
         Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
     }

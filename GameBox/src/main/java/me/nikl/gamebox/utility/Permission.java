@@ -23,6 +23,7 @@ public enum Permission {
     BYPASS_ALL("bypass"),
     BYPASS_GAME("bypass", true),
     OPEN_SHOP("shop"),
+    ADMIN_SETTINGS("admin.settings"),
     ADMIN_LANGUAGE("admin.language"),
     ADMIN_RELOAD("admin.reload"),
     ADMIN_TOKEN("admin.token"),

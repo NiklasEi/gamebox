@@ -125,12 +125,12 @@ public class FileUtility {
             }
             jar.close();
             if (!foundDefaultLang) {
-                gameBox.info(" Failed to locate default language file for the module '" + module.getModuleID() + "'");
-                gameBox.info(" " + jar.getName() + " is missing the file 'language/" + module.getModuleID() + "/lang_en.yml'");
+                gameBox.warning(" Failed to locate default language file for the module '" + module.getModuleID() + "'");
+                gameBox.warning(" " + jar.getName() + " is missing the file 'language/" + module.getModuleID() + "/lang_en.yml'");
             }
             if (!foundConfig) {
-                gameBox.info(" Failed to locate the configuration of the module '" + module.getModuleID() + "'");
-                gameBox.info(" " + jar.getName() + " is missing the file 'games/" + module.getModuleID() + "/config.yml'");
+                gameBox.warning(" Failed to locate the configuration of the module '" + module.getModuleID() + "'");
+                gameBox.warning(" " + jar.getName() + " is missing the file 'games/" + module.getModuleID() + "/config.yml'");
             }
             if (!foundConfig || !foundDefaultLang) {
                 return false;

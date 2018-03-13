@@ -2,8 +2,18 @@ package me.nikl.gamebox;
 
 import me.nikl.gamebox.game.Game;
 import me.nikl.gamebox.game.exceptions.GameLoadException;
+import me.nikl.gamebox.utility.ConfigManager;
 import me.nikl.gamebox.utility.FileUtility;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
@@ -23,28 +33,63 @@ public class GameRegistry {
             new HashSet<>(Arrays.asList("all, game, games, info, token, t"));
     private final Set<String> forbiddenSubCommands =
             new HashSet<>(Arrays.asList("all, game, games, info, token, t"));
+    private final Set<String> disabledModules = new HashSet<>();
     private GameBox gameBox;
     private Map<String, Module> modules = new HashMap<>();
     private Map<String, Module> subCommands = new HashMap<>();
     private Map<Module, Set<String>> bundledSubCommands = new HashMap<>();
+    private boolean enableNewGamesByDefault;
+    private FileConfiguration gamesConfiguration;
+    private File gamesFile;
 
     public GameRegistry(GameBox plugin) {
         this.gameBox = plugin;
     }
 
+    private void loadDisabledModules() {
+        disabledModules.clear();
+        enableNewGamesByDefault = gamesConfiguration.getBoolean("enableNewGamesByDefault", true);
+        ConfigurationSection gamesSection = gamesConfiguration.getConfigurationSection("games");
+        if (gamesSection == null ) return;
+        for (String moduleID : gamesSection.getKeys(false)) {
+            if (!gamesSection.getBoolean(moduleID + ".enabled", true)) {
+                GameBox.debug("Set " + moduleID + " as disabled");
+                disabledModules.add(moduleID);
+            }
+        }
+    }
+
+    public void reloadGamesConfiguration() {
+        gamesFile = new File(gameBox.getDataFolder().toString() + File.separatorChar + "games.yml");
+        if (!gamesFile.exists()) {
+            gameBox.saveResource("games.yml", false);
+        }
+        try {
+            gamesConfiguration = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(gamesFile), "UTF-8"));
+        } catch (UnsupportedEncodingException | FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
     public boolean registerModule(Module module) {
         if (isRegistered(module.getModuleID())) {
-            gameBox.getLogger().log(Level.WARNING, " A Module tried registering with an already in use ID!");
+            gameBox.getLogger().log(Level.WARNING, "A Module tried registering with an already in use ID!");
             return false;
         }
         if (forbiddenIDs.contains(module.getModuleID())) {
-            gameBox.getLogger().log(Level.WARNING, " A Module tried registering with a forbidden ID (" + module.getModuleID() + ")");
+            gameBox.getLogger().log(Level.WARNING, "A Module tried registering with a forbidden ID (" + module.getModuleID() + ")");
             return false;
         }
+        if (disabledModules.contains(module.getModuleID())) {
+            gameBox.warning("The game " + module.getModuleID() + " is disabled in 'games.yml'");
+            return false;
+        }
+        if (!module.getModuleID().equals(GameBox.MODULE_GAMEBOX))
+            registerModuleInSettingsFile(module.getModuleID());
         modules.put(module.getModuleID(), module);
         if (module.getExternalPlugin() != null) {
             if (!FileUtility.copyExternalResources(gameBox, module)) {
-                gameBox.info(" Failed to completely load the external module '" + module.getModuleID() + "'");
+                gameBox.info(" Failed to register the external module '" + module.getModuleID() + "'");
                 modules.remove(module.getModuleID());
                 return false;
             }
@@ -54,6 +99,13 @@ public class GameRegistry {
             registerSubCommands(module);
         }
         return true;
+    }
+
+    private void registerModuleInSettingsFile(String moduleID) {
+        if (!gamesConfiguration.isSet("games." + moduleID)) {
+            gamesConfiguration.set("games." + moduleID + ".enabled", enableNewGamesByDefault);
+            saveGameSettings();
+        }
     }
 
     public boolean isRegistered(Module module) {
@@ -69,10 +121,17 @@ public class GameRegistry {
     }
 
     /**
-     * Go through all modules and try getting game instances through their classes
+     * Reload the settings. Then go through all modules and
+     * try getting game instances through their class paths
      */
-    public void loadGames() {
+    public void reload() {
+        reloadGamesConfiguration();
+        loadDisabledModules();
         for (Module module : modules.values()) {
+            if (disabledModules.contains(module.getModuleID())) {
+                gameBox.warning("The game " + module.getModuleID() + " is disabled in 'games.yml'");
+                continue;
+            }
             if (module.isGame()) {
                 loadGame(module);
                 registerSubCommands(module);
@@ -153,5 +212,29 @@ public class GameRegistry {
             this.subCommands.remove(subCommand);
         }
         bundledSubCommands.remove(gameID);
+    }
+
+    public void disableGame(String gameID) {
+        disabledModules.add(gameID);
+        gamesConfiguration.set("games." + gameID + ".enabled", false);
+        saveGameSettings();
+    }
+
+    public void enableGame(String gameID) {
+        disabledModules.remove(gameID);
+        gamesConfiguration.set("games." + gameID + ".enabled", true);
+        saveGameSettings();
+    }
+
+    private void saveGameSettings() {
+        try {
+            gamesConfiguration.save(gamesFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean isDisabledModule(String moduleID) {
+        return disabledModules.contains(moduleID);
     }
 }

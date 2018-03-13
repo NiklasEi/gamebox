@@ -15,6 +15,9 @@ public class GameBoxLanguage extends Language {
             , CMD_NOT_ENOUGH_TOKEN, CMD_GAVE_TOKEN, CMD_SET_TOKEN, RELOAD_SUCCESS, RELOAD_FAIL, CMD_OWN_TOKEN_INFO;
     public List<String> CMD_HELP, CMD_WRONG_USAGE, CMD_INFO_HEADER, CMD_INFO_PER_GAME, CMD_INFO_FOOTER;
 
+    public String CMD_SETTINGS_GAME_ENABLE_SUCCESS, CMD_SETTINGS_GAME_ENABLE_FAIL, CMD_SETTINGS_GAME_DISABLE_SUCCESS
+            , CMD_SETTINGS_GAME_DISABLE_FAIL, CMD_SETTINGS_GAME_INVALID_SETTING;
+
     public String BUTTON_EXIT, BUTTON_TO_MAIN_MENU, BUTTON_TO_GAME_MENU, BUTTON_TOKENS, BUTTON_FORWARD, BUTTON_BACK
             , BUTTON_SOUND_ON_NAME, BUTTON_SOUND_OFF_NAME, BUTTON_INVITE_BUTTON_NAME, BUTTON_INVITE_SKULL_NAME;
     public List<String> BUTTON_MAIN_MENU_INFO, BUTTON_SOUND_ON_LORE, BUTTON_SOUND_OFF_LORE, BUTTON_INVITE_BUTTON_LORE
@@ -137,6 +140,15 @@ public class GameBoxLanguage extends Language {
         this.CMD_INFO_HEADER = getStringList("commandMessages.info.header");
         this.CMD_INFO_PER_GAME = getStringList("commandMessages.info.perGame");
         this.CMD_INFO_FOOTER = getStringList("commandMessages.info.footer");
+        getSettingsCommandMessages();
+    }
+
+    private void getSettingsCommandMessages() {
+        this.CMD_SETTINGS_GAME_ENABLE_SUCCESS = getString("commandMessages.settingsCommand.gameEnableSuccess");
+        this.CMD_SETTINGS_GAME_ENABLE_FAIL = getString("commandMessages.settingsCommand.gameEnableFail");
+        this.CMD_SETTINGS_GAME_DISABLE_SUCCESS = getString("commandMessages.settingsCommand.gameDisableSuccess");
+        this.CMD_SETTINGS_GAME_DISABLE_FAIL = getString("commandMessages.settingsCommand.gameDisableFail");
+        this.CMD_SETTINGS_GAME_INVALID_SETTING = getString("commandMessages.settingsCommand.gameInvalidSetting");
     }
 
     private void getShop() {

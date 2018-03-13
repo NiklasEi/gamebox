@@ -8,6 +8,7 @@ import me.nikl.gamebox.commands.admin.DatabaseConverter;
 import me.nikl.gamebox.commands.admin.LanguageCommands;
 import me.nikl.gamebox.commands.admin.Reload;
 import me.nikl.gamebox.commands.admin.ResetHighScores;
+import me.nikl.gamebox.commands.admin.SettingsCommand;
 import me.nikl.gamebox.commands.admin.TestCommands;
 import me.nikl.gamebox.commands.admin.ToggleDebug;
 import me.nikl.gamebox.commands.admin.TokenCommands;
@@ -48,9 +49,9 @@ public class GameBoxCommands extends BukkitCommandManager {
         registerCommand(new DatabaseConverter(gameBox));
         registerCommand(new Reload(gameBox));
         registerCommand(new LanguageCommands(gameBox));
-        registerCommand(new TestCommands(gameBox));
         registerCommand(new ToggleDebug(gameBox));
         registerCommand(new TokenCommands(gameBox));
+        registerCommand(new SettingsCommand(gameBox));
         if(GameBox.debug) registerCommand(new TestCommands(gameBox));
     }
 

@@ -58,6 +58,12 @@ commandMessages:
   reload:
     fail: " &4Reloading of the plugin and all games failed!"
     success: " &aGameBox and all games have been reloaded!"
+  settingsCommand:
+    gameDisableSuccess: " &aYou have disabled %gameID%."
+    gameDisableFail: " &4This game is not enabled at the moment!"
+    gameEnableSuccess: " &aYou have enabled %gameID%."
+    gameEnableFail: " &4This game is not disabled at the moment!"
+    gameInvalidSetting: " &4Invalid game setting!"
 
 
 mainButtons:

@@ -1,0 +1,5 @@
+# This file contains general settings for games.
+# It can be manipulated via the commands '/gba settings game <gameID> <setting>'.
+# You can also change settings by hand. Afterwards save the file and run '/gba reload'
+# GameBox automatically adds new sections for new games.
+enableNewGamesByDefault: true
