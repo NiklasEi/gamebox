@@ -21,10 +21,14 @@ permissions:
     description: Gives permission to use all admin commands
     default: false
     children:
+      gamebox.admin.settings: true
       gamebox.admin.database: true
       gamebox.admin.language: true
       gamebox.admin.reload: true
       gamebox.admin.token: true
+  gamebox.admin.settings:
+    description: Player can manipulate settings
+    default: false
   gamebox.admin.database:
     description: Player can manipulate the database via commands
     default: false
@@ -41,20 +45,20 @@ permissions:
     description: Allows the player to use /gamebox and the hub item
     default: true
   gamebox.token:
-    default: true
     description: Allows players to see their token count via command
+    default: true
   gamebox.shop:
     description: Allows the player to open the shop from the main menu
     default: true
   gamebox.play.*:
-    default: true
     description: Allows the player to play all games
+    default: true
   gamebox.gamegui.*:
-    default: true
     description: Allows to open all game guis
+    default: true
   gamebox.info:
-    default: true
     description: Allows the usage of the info command
-  gamebox.help:
     default: true
+  gamebox.help:
     description: Allows the usage of the help command
+    default: true
