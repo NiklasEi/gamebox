@@ -7,6 +7,7 @@ import co.aikar.commands.annotation.Subcommand;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.Language;
 import me.nikl.gamebox.commands.GameBoxBaseCommand;
+import me.nikl.gamebox.utility.FileManager;
 import me.nikl.gamebox.utility.Permission;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -96,7 +97,7 @@ public class LanguageCommands extends GameBoxBaseCommand {
     private void printMissingModuleKeys(String moduleID) {
         HashMap<String, List<String>> currentKeys = missingLanguageKeys.get(moduleID);
         List<String> keys;
-        gameBox.info(" Missing from " + ChatColor.BLUE + gameBox.getLanguage(moduleID).DEFAULT_PLAIN_NAME
+        gameBox.info(" Missing from " + ChatColor.BLUE + FileManager.getLanguage(moduleID).DEFAULT_PLAIN_NAME
                 + ChatColor.RESET + " language file:");
         if (currentKeys.keySet().contains("string")) {
             gameBox.info(" ");
@@ -127,7 +128,7 @@ public class LanguageCommands extends GameBoxBaseCommand {
     }
 
     private HashMap<String, List<String>> collectMissingKeys(String moduleID) {
-        Language language = gameBox.getLanguage(moduleID);
+        Language language = FileManager.getLanguage(moduleID);
         HashMap<String, List<String>> toReturn = new HashMap<>();
         if (language == null) return toReturn;
         List<String> missingStringKeys = language.findMissingStringMessages();
@@ -151,7 +152,7 @@ public class LanguageCommands extends GameBoxBaseCommand {
         String moduleID;
         while (iterator.hasNext()) {
             moduleID = iterator.next();
-            gameBox.info(ChatColor.RED + "   -> " + ChatColor.RESET + gameBox.getLanguage(moduleID).DEFAULT_PLAIN_NAME);
+            gameBox.info(ChatColor.RED + "   -> " + ChatColor.RESET + FileManager.getLanguage(moduleID).DEFAULT_PLAIN_NAME);
         }
         gameBox.info("");
         gameBox.info(" To get the specific missing keys of one module run ");

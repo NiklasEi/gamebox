@@ -5,6 +5,7 @@ import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.Module;
 import me.nikl.gamebox.data.toplist.SaveType;
+import me.nikl.gamebox.game.exceptions.GameLoadException;
 import me.nikl.gamebox.game.manager.GameManager;
 import me.nikl.gamebox.game.rules.GameRule;
 import me.nikl.gamebox.game.rules.GameRuleMultiRewards;
@@ -17,6 +18,7 @@ import me.nikl.gamebox.inventory.gui.game.StartMultiplayerGamePage;
 import me.nikl.gamebox.inventory.gui.game.TopListPage;
 import me.nikl.gamebox.nms.NmsFactory;
 import me.nikl.gamebox.nms.NmsUtility;
+import me.nikl.gamebox.utility.FileManager;
 import me.nikl.gamebox.utility.FileUtility;
 import me.nikl.gamebox.utility.InventoryUtility;
 import me.nikl.gamebox.utility.ItemStackUtility;
@@ -80,6 +82,7 @@ public abstract class Game {
         loadConfig();
         loadSettings();
         loadLanguage();
+        FileManager.registerModuleLanguage(module, gameLang);
         if(!checkRequirements()) return;
         // at this point the game can load any game specific stuff (e.g. from config)
         init();
@@ -183,6 +186,7 @@ public abstract class Game {
             e.printStackTrace();
             return false;
         }
+        FileManager.registerModuleConfiguration(module, config);
         return true;
     }
 

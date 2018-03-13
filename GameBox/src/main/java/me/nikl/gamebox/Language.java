@@ -1,5 +1,6 @@
 package me.nikl.gamebox;
 
+import me.nikl.gamebox.utility.FileManager;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -35,19 +36,16 @@ public abstract class Language {
     public Language(GameBox plugin, Module module) {
         this.plugin = plugin;
         this.module = module;
-
-        getLangFile(plugin.getConfig(module));
+        getLangFile(FileManager.getConfig(module));
 
         PREFIX = getString("prefix");
         NAME = getString("name");
         PLAIN_PREFIX = ChatColor.stripColor(PREFIX);
         PLAIN_NAME = ChatColor.stripColor(NAME);
-
         // default is the value assigned to unknown games in bStats
         DEFAULT_NAME = ChatColor.translateAlternateColorCodes('&'
                 , defaultLanguage.getString("name", "Other (custom game)"));
         DEFAULT_PLAIN_NAME = ChatColor.stripColor(DEFAULT_NAME);
-
         loadMessages();
     }
 

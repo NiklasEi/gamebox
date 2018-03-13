@@ -16,6 +16,7 @@ import me.nikl.gamebox.inventory.InventoryTitleMessenger;
 import me.nikl.gamebox.listeners.EnterGameBoxListener;
 import me.nikl.gamebox.listeners.LeftGameBoxListener;
 import me.nikl.gamebox.nms.NmsFactory;
+import me.nikl.gamebox.utility.FileManager;
 import me.nikl.gamebox.utility.FileUtility;
 import net.milkbowl.vault.economy.Economy;
 import org.bstats.bukkit.Metrics;
@@ -63,6 +64,7 @@ public class GameBox extends JavaPlugin {
     private LeftGameBoxListener leftGameBoxListener;
     private EnterGameBoxListener enterGameBoxListener;
     private GameBoxCommands commands;
+    private Module gameBoxModule;
 
     @Override
     public void onEnable() {
@@ -73,7 +75,7 @@ public class GameBox extends JavaPlugin {
         }
 
         this.gameRegistry = new GameRegistry(this);
-        new Module(this, MODULE_GAMEBOX, null, null);
+        gameBoxModule = new Module(this, MODULE_GAMEBOX, null, null);
 
         if (!reload()) {
             getLogger().severe(" Problem while loading the plugin! Plugin was disabled!");
@@ -309,7 +311,6 @@ public class GameBox extends JavaPlugin {
         return pManager;
     }
 
-    @Deprecated // to config manager
     public boolean reloadConfiguration() {
         File con = new File(this.getDataFolder().toString() + File.separatorChar + "config.yml");
         if (!con.exists()) {
@@ -321,6 +322,7 @@ public class GameBox extends JavaPlugin {
             e.printStackTrace();
             return false;
         }
+        FileManager.registerModuleConfiguration(gameBoxModule, config);
         return true;
     }
 
@@ -369,42 +371,10 @@ public class GameBox extends JavaPlugin {
      * language file of the game.
      *
      * @param gameID Id of the game
-     * @return the original name, or 'Other (custom game)'
+     * @return the original name'
      */
     private String getOriginalGameName(String gameID) {
-        GameLanguage gameLang = getPluginManager().getGame(gameID).getGameLang();
-        if (gameLang != null) return gameLang.DEFAULT_PLAIN_NAME;
-
-        // is also set as default name, if not set in language file
-        return "Other (custom game)";
-    }
-
-    @Deprecated // to config manager
-    public FileConfiguration getConfig(Module module) {
-        return getConfig(module.getModuleID());
-    }
-
-    @Deprecated // to config manager
-    public FileConfiguration getConfig(String moduleId) {
-        if (moduleId.equals(MODULE_GAMEBOX))
-            return getConfig();
-        Game game = getPluginManager().getGame(moduleId);
-        if (game == null) return null;
-        return game.getConfig();
-    }
-
-    @Deprecated // to language manager
-    public Language getLanguage(Module module) {
-        return getLanguage(module.getModuleID());
-    }
-
-    @Deprecated // to language manager
-    public Language getLanguage(String moduleID) {
-        if (moduleID.equals(MODULE_GAMEBOX))
-            return lang;
-        Game game = getPluginManager().getGame(moduleID);
-        if (game == null) return null;
-        return game.getGameLang();
+        return FileManager.getGameLanguage(gameID).DEFAULT_PLAIN_NAME;
     }
 
     public static void debug(String message) {
