@@ -223,36 +223,18 @@ public class CFGame extends BukkitRunnable {
 
     private void onGameEnd() {
         cancel();
-
         if (state != CFGameState.FALLING_SECOND && state != CFGameState.FALLING_FIRST) {
             Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " *** wrong game state on game end ***");
             Bukkit.getConsoleSender().sendMessage(" Please contact Nikl on Spigot and show him this log");
             return;
         }
-
         Player winner = state == CFGameState.FALLING_SECOND ? second : first;
         Player loser = state == CFGameState.FALLING_SECOND ? first : second;
 
         if (winner != null && loser != null) {
-
-            if (connectFour.getSettings().isEconEnabled()) {
-                if (!Permission.BYPASS_GAME.hasPermission(winner, connectFour.getGameID())) {
-                    GameBox.econ.depositPlayer(winner, rule.getCost());
-                    winner.sendMessage((lang.PREFIX + lang.GAME_WON_MONEY
-                            .replaceAll("%reward%", rule.getCost() + "")
-                            .replaceAll("%loser%", loser.getName())));
-                } else {
-                    winner.sendMessage((lang.PREFIX + lang.GAME_WON.replaceAll("%loser%", loser.getName())));
-                }
-            } else {
-                winner.sendMessage((lang.PREFIX + lang.GAME_WON.replaceAll("%loser%", loser.getName())));
-            }
             loser.sendMessage((lang.PREFIX + lang.GAME_LOSE));
-
             nms.updateInventoryTitle(winner, lang.TITLE_WON);
             nms.updateInventoryTitle(loser, lang.TITLE_LOST);
-
-
             // if the game is ended regularly ignore the played chips
             ((CFGameManager) connectFour.getGameManager()).onGameEnd(winner, loser, rule.getKey(), 999);
         }

@@ -324,12 +324,6 @@ public class GameBox extends JavaPlugin {
         return true;
     }
 
-    @Deprecated // use api implementation
-    public boolean wonTokens(UUID player, int tokens, String gameID) {
-        if (!GameBoxSettings.tokensEnabled) return false;
-        return this.pManager.wonTokens(player, tokens, gameID);
-    }
-
     private void establishHooksAndMetric() {
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new PlaceholderAPIHook(this);

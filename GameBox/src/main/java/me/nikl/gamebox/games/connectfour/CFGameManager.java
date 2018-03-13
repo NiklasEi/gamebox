@@ -145,28 +145,21 @@ public class CFGameManager implements GameManager {
         }
         if (game.getState() != CFGameState.FINISHED) {
             game.cancel();
-            if (this.connectFour.getSettings().isEconEnabled() && game.getPlayedChips() >= game.getRule().getMinNumberOfPlayedChips()) {
-                if (!Permission.BYPASS_GAME.hasPermission(winner, connectFour.getGameID())) {
-                    GameBox.econ.depositPlayer(winner, game.getRule().getCost());
-                    winner.sendMessage(StringUtility.color(lang.PREFIX + lang.GAME_WON_MONEY_GAVE_UP.replaceAll("%reward%", game.getRule().getCost() + "").replaceAll("%loser%", loser.getName())));
-                } else {
-                    winner.sendMessage(StringUtility.color(lang.PREFIX + lang.GAME_OTHER_GAVE_UP.replaceAll("%loser%", loser.getName())));
-                }
-            } else if (connectFour.getSettings().isEconEnabled()) {
-                if (!Permission.BYPASS_GAME.hasPermission(winner, connectFour.getGameID())) {
-                    GameBox.econ.depositPlayer(winner, game.getRule().getCost());
-                    winner.sendMessage(StringUtility.color(lang.PREFIX + lang.GAME_WON_MONEY_GAVE_UP.replaceAll("%reward%", game.getRule().getCost() + "").replaceAll("%loser%", loser.getName())));
-                } else {
-                    winner.sendMessage(StringUtility.color(lang.PREFIX + lang.GAME_OTHER_GAVE_UP.replaceAll("%loser%", loser.getName())));
-                }
-            } else {
-                winner.sendMessage(StringUtility.color(lang.PREFIX + lang.GAME_OTHER_GAVE_UP.replaceAll("%loser%", loser.getName())));
-            }
             loser.sendMessage(StringUtility.color(lang.PREFIX + lang.GAME_GAVE_UP));
             nms.updateInventoryTitle(winner, lang.TITLE_WON);
             game.setState(CFGameState.FINISHED);
-            // pay out token and save stats in enabled
-            onGameEnd(winner, loser, game.getRule().getKey(), game.getPlayedChips());
+            if (game.getPlayedChips() >= game.getRule().getMinNumberOfPlayedChips()) {
+                connectFour.onGameWon(winner, game.getRule(), 1);
+            } else if (connectFour.getSettings().isEconEnabled()
+                    && game.getRule().getCost() > 0
+                    && !Permission.BYPASS_GAME.hasPermission(winner, connectFour.getGameID())) {
+                GameBox.econ.depositPlayer(winner, game.getRule().getCost());
+                winner.sendMessage(StringUtility.color(lang.PREFIX + lang.GAME_WON_MONEY_GAVE_UP
+                        .replace("%reward%", game.getRule().getCost() + "")
+                        .replace("%loser%", loser.getName())));
+            } else {
+                winner.sendMessage(lang.PREFIX + lang.GAME_OTHER_GAVE_UP.replace("%loser%", loser.getName()));
+            }
         }
     }
 
@@ -229,24 +222,24 @@ public class CFGameManager implements GameManager {
         return null;
     }
 
-    public void onGameEnd(Player winner, Player loser, String key, int chipsPlayed) {
-
-        CFGameRules rule = gameRules.get(key);
-
-        if (rule.isSaveStats()) {
-            addWin(winner.getUniqueId(), rule.getKey());
-        }
-        if (rule.getTokenToWin() > 0 && chipsPlayed >= rule.getMinNumberOfPlayedChips()) {
-            connectFour.getGameBox().wonTokens(winner.getUniqueId(), rule.getTokenToWin(), connectFour.getGameID());
-        }
-    }
-
-    public void addWin(UUID uuid, String key) {
-        statistics.addStatistics(uuid, connectFour.getGameID(), key, 1., SaveType.WINS);
-    }
-
     @Override
     public Inventory getInventory() {
         return null;
+    }
+
+    public void onGameEnd(Player winner, Player loser, String key, int chipsPlayed) {
+        CFGameRules rules = gameRules.get(key);
+        if (chipsPlayed >= rules.getMinNumberOfPlayedChips()) {
+            connectFour.onGameWon(winner, rules, 1);
+        } else if (connectFour.getSettings().isEconEnabled()
+                && rules.getCost() > 0
+                && !Permission.BYPASS_GAME.hasPermission(winner, connectFour.getGameID())) {
+            GameBox.econ.depositPlayer(winner, rules.getCost());
+            winner.sendMessage(StringUtility.color(lang.PREFIX + lang.GAME_WON_MONEY
+                    .replace("%reward%", rules.getCost() + "")
+                    .replace("%loser%", loser.getName())));
+        } else {
+            winner.sendMessage(lang.PREFIX + lang.GAME_WON.replace("%loser%", loser.getName()));
+        }
     }
 }
