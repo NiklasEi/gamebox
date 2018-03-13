@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * @author Niklas Eicker
  */
-public class FileManager {
+public class ConfigManager {
     private static final Map<String, FileConfiguration> moduleFileConfigurations = new HashMap<>();
     private static final Map<String, Language> moduleLanguages = new HashMap<>();
 

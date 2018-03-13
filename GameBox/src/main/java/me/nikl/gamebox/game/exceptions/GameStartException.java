@@ -9,6 +9,7 @@ public class GameStartException extends GameException {
     private Reason reason;
 
     public GameStartException(Reason reason) {
+        super();
         this.reason = reason;
     }
 

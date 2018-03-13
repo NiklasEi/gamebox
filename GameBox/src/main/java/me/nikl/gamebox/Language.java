@@ -1,6 +1,6 @@
 package me.nikl.gamebox;
 
-import me.nikl.gamebox.utility.FileManager;
+import me.nikl.gamebox.utility.ConfigManager;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -36,7 +36,7 @@ public abstract class Language {
     public Language(GameBox plugin, Module module) {
         this.plugin = plugin;
         this.module = module;
-        getLangFile(FileManager.getConfig(module));
+        getLangFile(ConfigManager.getConfig(module));
 
         PREFIX = getString("prefix");
         NAME = getString("name");

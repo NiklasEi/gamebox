@@ -18,7 +18,7 @@ import me.nikl.gamebox.inventory.gui.game.StartMultiplayerGamePage;
 import me.nikl.gamebox.inventory.gui.game.TopListPage;
 import me.nikl.gamebox.nms.NmsFactory;
 import me.nikl.gamebox.nms.NmsUtility;
-import me.nikl.gamebox.utility.FileManager;
+import me.nikl.gamebox.utility.ConfigManager;
 import me.nikl.gamebox.utility.FileUtility;
 import me.nikl.gamebox.utility.InventoryUtility;
 import me.nikl.gamebox.utility.ItemStackUtility;
@@ -76,25 +76,24 @@ public abstract class Game {
 
     public abstract void onDisable();
 
-    public void onEnable() {
-        gameBox.getPluginManager().registerGame(this);
+    public void onEnable() throws GameLoadException {
         GameBox.debug(" enabling the game: " + module.getModuleID());
         loadConfig();
         loadSettings();
         loadLanguage();
-        FileManager.registerModuleLanguage(module, gameLang);
-        if(!checkRequirements()) return;
+        ConfigManager.registerModuleLanguage(module, gameLang);
+        checkRequirements();
         // at this point the game can load any game specific stuff (e.g. from config)
         init();
         loadGameManager();
         hook();
     }
 
-    private boolean checkRequirements() {
-        return checkGameBoxVersion();
+    private void checkRequirements() throws GameLoadException {
+        checkGameBoxVersion();
     }
 
-    private boolean checkGameBoxVersion() {
+    private void checkGameBoxVersion() throws GameLoadException {
         String[] versionString = gameBox.getDescription().getVersion().replaceAll("[^0-9.]", "").split("\\.");
         String[] minVersionString = gameSettings.getGameBoxMinimumVersion().split("\\.");
         Integer[] version = new Integer[versionString.length];
@@ -105,12 +104,14 @@ public abstract class Game {
                 version[i] = Integer.valueOf(versionString[i]);
             } catch (NumberFormatException exception){
                 warn(" Failed to check required GameBox version!");
-                return true;
+                warn("     Lets hope it works...");
+                return;
             }
         }
         if (minVersion.length != version.length) {
             warn(" Failed to check required GameBox version!");
-            return true;
+            warn("     Lets hope it works...");
+            return;
         }
         for(int i = 0; i < minVersion.length; i++){
             if(minVersion[i] > version[i]) {
@@ -119,12 +120,11 @@ public abstract class Game {
                 warn(" https://www.spigotmc.org/resources/37273/");
                 warn(" You need at least version " + gameSettings.getGameBoxMinimumVersion());
                 warn(" for this game to work.");
-                return false;
+                throw new GameLoadException("GameBox version is not compatible!");
             }
             if(minVersion[i] == version[i]) continue;
-            return true;
+            return;
         }
-        return true;
     }
 
     /**
@@ -159,7 +159,7 @@ public abstract class Game {
      */
     public abstract void loadGameManager();
 
-    public boolean loadConfig() {
+    public void loadConfig() throws GameLoadException {
         GameBox.debug(" load config... (" + module.getModuleID() + ")");
         configFile = new File(gameBox.getDataFolder()
                 + File.separator + "games"
@@ -184,13 +184,12 @@ public abstract class Game {
             this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(configFile), "UTF-8"));
         } catch (UnsupportedEncodingException | FileNotFoundException e) {
             e.printStackTrace();
-            return false;
+            throw new GameLoadException("Failed to load the configuration", e);
         }
-        FileManager.registerModuleConfiguration(module, config);
-        return true;
+        ConfigManager.registerModuleConfiguration(module, config);
     }
 
-    private void hook() {
+    private void hook() throws GameLoadException {
         GUIManager guiManager = gameBox.getPluginManager().getGuiManager();
         int gameGuiSlots = gameSettings.getGameGuiSize();
         GameGui gameGui = new GameGui(gameBox, this, gameGuiSlots);
@@ -255,14 +254,16 @@ public abstract class Game {
                 }
             }
         }
-        getMainButton:
         if (config.isConfigurationSection("gameBox.mainButton")) {
             ConfigurationSection mainButtonSec = config.getConfigurationSection("gameBox.mainButton");
             if (!mainButtonSec.isString("materialData")) {
-                break getMainButton;
+                warn(" Missing or invalid material data for main button ");
+                throw new GameLoadException("Cannot load the main button from 'config.yml'");
             }
             ItemStack gameButton = ItemStackUtility.getItemStack(mainButtonSec.getString("materialData"));
             if (gameButton == null) {
+                warn(" Invalid material data for main button");
+                warn(" Using a default...");
                 gameButton = (new ItemStack(Material.STAINED_CLAY));
             }
             ItemMeta meta = gameButton.getItemMeta();
@@ -273,14 +274,12 @@ public abstract class Game {
             gameButton.setItemMeta(meta);
             guiManager.registerMainGameGUI(gameGui, gameButton);
         } else {
-            gameBox.getLogger().log(Level.WARNING, " Missing or wrong configured main button for " + gameLang.PLAIN_NAME + "!");
+            warn(" Missing or wrong configured main button");
+            throw new GameLoadException("Cannot load the main button from 'config.yml'");
         }
         Map<String, ? extends GameRule> gameRules = gameManager.getGameRules();
         if (gameRules == null || gameRules.isEmpty()) {
-            gameBox.getLogger().log(Level.WARNING, " While loading " + gameLang.DEFAULT_PLAIN_NAME
-                    + " the game manager failed to return any valid game rules!");
-            return;
-            // Todo: system to unregister from guis...
+            throw new GameLoadException("Game manager failed to return any valid game rules.");
         }
         // get top list buttons
         if (config.isConfigurationSection("gameBox.topListButtons")) {
@@ -290,23 +289,23 @@ public abstract class Game {
             for (String buttonID : topListButtons.getKeys(false)) {
                 buttonSec = topListButtons.getConfigurationSection(buttonID);
                 if (!gameRules.keySet().contains(buttonID)) {
-                    gameBox.getLogger().log(Level.WARNING, " the top list button 'gameBox.topListButtons." + buttonID + "' does not have a corresponding game button");
+                    warn(" the top list button 'gameBox.topListButtons." + buttonID + "' does not have a corresponding game button");
                     continue;
                 }
                 if (!gameRules.get(buttonID).isSaveStats()) {
-                    gameBox.getLogger().log(Level.WARNING, " There is a configured top list for '" + buttonID + "', but statistics is turned off!");
-                    gameBox.getLogger().log(Level.WARNING, " With these settings there is no top list to display...");
-                    gameBox.getLogger().log(Level.WARNING, " Set 'gameBox.gameButtons." + buttonID + ".saveStats' to 'true', to enable this top list.");
+                    warn(" There is a configured top list for '" + buttonID + "', but statistics is turned off!");
+                    warn(" With these settings there is no top list to display...");
+                    warn(" Set 'gameBox.gameButtons." + buttonID + ".saveStats' to 'true', to enable this top list.");
                     continue;
                 }
                 if (!buttonSec.isString("materialData")) {
-                    gameBox.getLogger().log(Level.WARNING, " missing material data: 'gameBox.topListButtons." + buttonID + "'. Cannot load the button!");
+                    warn(" missing material data: 'gameBox.topListButtons." + buttonID + "'. Cannot load the button!");
                     continue;
                 }
                 ItemStack mat = ItemStackUtility.getItemStack(buttonSec.getString("materialData"));
                 if (mat == null) {
-                    gameBox.getLogger().log(Level.WARNING, " error loading: gameBox.topListButtons." + buttonID);
-                    gameBox.getLogger().log(Level.WARNING, "     invalid material data");
+                    warn(" error loading: gameBox.topListButtons." + buttonID);
+                    warn("     invalid material data");
                     continue;
                 }
                 Button button = new Button(mat);

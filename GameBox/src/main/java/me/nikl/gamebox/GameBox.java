@@ -7,8 +7,6 @@ import me.nikl.gamebox.data.database.FileDB;
 import me.nikl.gamebox.data.database.MysqlDB;
 import me.nikl.gamebox.external.CalendarEventsHook;
 import me.nikl.gamebox.external.PlaceholderAPIHook;
-import me.nikl.gamebox.game.Game;
-import me.nikl.gamebox.game.GameLanguage;
 import me.nikl.gamebox.input.InvitationHandler;
 import me.nikl.gamebox.input.InviteInputHandler;
 import me.nikl.gamebox.inventory.GUIManager;
@@ -16,7 +14,7 @@ import me.nikl.gamebox.inventory.InventoryTitleMessenger;
 import me.nikl.gamebox.listeners.EnterGameBoxListener;
 import me.nikl.gamebox.listeners.LeftGameBoxListener;
 import me.nikl.gamebox.nms.NmsFactory;
-import me.nikl.gamebox.utility.FileManager;
+import me.nikl.gamebox.utility.ConfigManager;
 import me.nikl.gamebox.utility.FileUtility;
 import net.milkbowl.vault.economy.Economy;
 import org.bstats.bukkit.Metrics;
@@ -322,7 +320,7 @@ public class GameBox extends JavaPlugin {
             e.printStackTrace();
             return false;
         }
-        FileManager.registerModuleConfiguration(gameBoxModule, config);
+        ConfigManager.registerModuleConfiguration(gameBoxModule, config);
         return true;
     }
 
@@ -374,7 +372,7 @@ public class GameBox extends JavaPlugin {
      * @return the original name'
      */
     private String getOriginalGameName(String gameID) {
-        return FileManager.getGameLanguage(gameID).DEFAULT_PLAIN_NAME;
+        return ConfigManager.getGameLanguage(gameID).DEFAULT_PLAIN_NAME;
     }
 
     public static void debug(String message) {

@@ -1,6 +1,7 @@
 package me.nikl.gamebox;
 
 import me.nikl.gamebox.game.Game;
+import me.nikl.gamebox.game.exceptions.GameLoadException;
 import me.nikl.gamebox.utility.FileUtility;
 
 import java.lang.reflect.Constructor;
@@ -90,11 +91,16 @@ public class GameRegistry {
         try {
             Constructor<Game> ctor = ((Class<Game>) clazz).getConstructor(GameBox.class);
             Game game = ctor.newInstance(gameBox);
+            gameBox.getPluginManager().registerGame(game);
             game.onEnable();
         } catch (NoSuchMethodException | IllegalAccessException
                 | InstantiationException | InvocationTargetException e) {
             gameBox.warning(" The game class needs a public constructor taking only a GameBox object!");
             e.printStackTrace();
+            gameBox.getPluginManager().unregisterGame(module.getModuleID());
+        } catch (GameLoadException e) {
+            e.printStackTrace();
+            gameBox.getPluginManager().unregisterGame(module.getModuleID());
         }
     }
 

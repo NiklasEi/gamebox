@@ -47,6 +47,11 @@ public enum Permission {
         GameBox.debug("registered permissions for: " + moduleID);
     }
 
+    public static void unregisterModuleID(String moduleID) {
+        Permission.moduleIDs.remove(moduleID);
+        GameBox.debug("unregistered permissions for: " + moduleID);
+    }
+
     /**
      * Check sender for the permission.
      *
@@ -80,4 +85,5 @@ public enum Permission {
     public String getPermission() {
         return this.perm;
     }
+
 }

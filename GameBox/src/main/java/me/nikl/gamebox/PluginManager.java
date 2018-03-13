@@ -514,6 +514,12 @@ public class PluginManager implements Listener {
         gamesRegistered++;
     }
 
+    public void unregisterGame(String gameID) {
+        if (!games.containsKey(gameID)) return;
+        gamesRegistered --;
+        Permission.unregisterModuleID(gameID);
+    }
+
     public GameManager getGameManager(String gameID) {
         Game game = getGame(gameID);
         return game == null ? null : game.getGameManager();

@@ -7,6 +7,7 @@ import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.data.toplist.PlayerScore;
 import me.nikl.gamebox.data.toplist.SaveType;
 import me.nikl.gamebox.data.toplist.TopList;
+import me.nikl.gamebox.utility.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -479,12 +480,13 @@ public class MysqlDB extends DataBase {
 
             @Override
             public void run() {
-                sender.sendMessage(plugin.getLanguage(GameBox.MODULE_GAMEBOX).PREFIX + " Starting async conversion.");
-                sender.sendMessage(plugin.getLanguage(GameBox.MODULE_GAMEBOX).PREFIX + " Additional output in the console!");
+                final String prefix = ConfigManager.getLanguage(GameBox.MODULE_GAMEBOX).PREFIX;
+                sender.sendMessage(prefix + " Starting async conversion.");
+                sender.sendMessage(prefix + " Additional output in the console!");
                 fromDB.load(false);
                 fromDB.convertToMySQL();
                 fromDB.onShutDown();
-                sender.sendMessage(plugin.getLanguage(GameBox.MODULE_GAMEBOX).PREFIX + " Conversion is completed.");
+                sender.sendMessage(prefix + " Conversion is completed.");
             }
         }.runTaskAsynchronously(plugin);
     }
