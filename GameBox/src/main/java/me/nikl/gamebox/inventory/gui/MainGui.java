@@ -119,6 +119,9 @@ public class MainGui extends AGui implements TokenListener {
             if (button != null && button.getAction() == ClickAction.OPEN_GAME_GUI && button.getArgs()[0].equals(gameID)) {
                 grid[i] = null;
                 inventory.setItem(i, null);
+                for (Inventory inventory : openInventories.values()) {
+                    inventory.setItem(i, null);
+                }
             }
         }
     }
