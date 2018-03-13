@@ -471,10 +471,15 @@ public abstract class Game {
     private void payOut(Player player, GameRuleRewards rule, double score) {
         if((rule.getSaveType().isHigherScore() && score < rule.getMinOrMaxScore())
                 || (!rule.getSaveType().isHigherScore() && score > rule.getMinOrMaxScore())) return;
-        if(GameBoxSettings.econEnabled && gameSettings.isEconEnabled()) {
+        if(GameBoxSettings.econEnabled && gameSettings.isEconEnabled() && rule.getMoneyToWin() > 0) {
             GameBox.econ.depositPlayer(player, rule.getMoneyToWin());
         }
-        if(GameBoxSettings.tokensEnabled) gameBox.getApi().giveToken(player, rule.getTokenToWin());
+        if(GameBoxSettings.tokensEnabled && rule.getTokenToWin() > 0) {
+            gameBox.getApi().giveToken(player, rule.getTokenToWin());
+            player.sendMessage(gbLang.PREFIX + gbLang.WON_TOKEN
+                    .replace("%tokens%", String.valueOf(rule.getTokenToWin()))
+                    .replace("%game%", gameLang.PLAIN_NAME));
+        }
     }
 
     private void payOut(Player player, GameRuleMultiRewards rule, double score) {
@@ -483,7 +488,12 @@ public abstract class Game {
         if(GameBoxSettings.econEnabled && gameSettings.isEconEnabled() && money > 0) {
             GameBox.econ.depositPlayer(player, money);
         }
-        if(GameBoxSettings.tokensEnabled && token > 0) gameBox.getApi().giveToken(player, token);
+        if(GameBoxSettings.tokensEnabled && token > 0) {
+            gameBox.getApi().giveToken(player, token);
+            player.sendMessage(gbLang.PREFIX + gbLang.WON_TOKEN
+                    .replace("%tokens%", String.valueOf(token))
+                    .replace("%game%", gameLang.PLAIN_NAME));
+        }
     }
 
     private boolean hasBypassPermission(Player winner) {
