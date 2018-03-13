@@ -515,9 +515,28 @@ public class PluginManager implements Listener {
     }
 
     public void unregisterGame(String gameID) {
+        GameBox.debug("trying to unregister " + gameID);
         if (!games.containsKey(gameID)) return;
         gamesRegistered --;
         Permission.unregisterModuleID(gameID);
+        GameBox.debug("unregistered permissions");
+        Game game = games.get(gameID);
+        if (game != null && game.getGameManager() != null) {
+            GameBox.debug("kicking players...");
+            GameManager gameManager = game.getGameManager();
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                if (gameManager.isInGame(player.getUniqueId())) {
+                    player.closeInventory();
+                    leaveGameBox(player);
+                }
+            }
+        }
+        GameBox.debug("unregister in gui manager...");
+        guiManager.unregisterGame(gameID);
+        GameBox.debug("unregister module...");
+        plugin.getGameRegistry().unregisterGame(gameID);
+        GameBox.debug("done");
+        games.remove(gameID);
     }
 
     public GameManager getGameManager(String gameID) {
@@ -633,17 +652,6 @@ public class PluginManager implements Listener {
 
     public List<String> getBlockedWorlds() {
         return this.blockedWorlds;
-    }
-
-    public boolean wonTokens(UUID player, int tokens, String gameID) {
-        GBPlayer gbPlayer = gbPlayers.get(player);
-        if (gbPlayer == null) return false;
-
-        gbPlayer.setTokens(gbPlayer.getTokens() + tokens);
-        Bukkit.getPlayer(player).sendMessage(lang.PREFIX + lang.WON_TOKEN
-                .replace("%tokens%", String.valueOf(tokens))
-                .replace("%game%", getGame(gameID).getGameLang().PLAIN_NAME));
-        return true;
     }
 
     public void setItemsToKeep(Player player) {

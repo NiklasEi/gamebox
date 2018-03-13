@@ -241,4 +241,9 @@ public class GUIManager {
     public int getTitleMessageSeconds() {
         return titleMessageSeconds;
     }
+
+    public void unregisterGame(String gameID) {
+        gameGuis.remove(gameID);
+        mainGui.unregisterGame(gameID);
+    }
 }

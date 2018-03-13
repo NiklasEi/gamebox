@@ -6,6 +6,7 @@ import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.data.TokenListener;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
+import me.nikl.gamebox.inventory.button.AButton;
 import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.button.ButtonFactory;
 import me.nikl.gamebox.inventory.button.DisplayButton;
@@ -30,33 +31,23 @@ import java.util.UUID;
 public class MainGui extends AGui implements TokenListener {
     private Map<UUID, ToggleButton> soundButtons = new HashMap<>();
     private Map<UUID, DisplayButton> tokenButtons = new HashMap<>();
-
-
     private int soundToggleSlot = 52;
     private int tokenButtonSlot = 45;
     private int shopSlot = 46;
 
     public MainGui(GameBox plugin, GUIManager guiManager) {
         super(plugin, guiManager, 54, new String[]{}, plugin.lang.TITLE_MAIN_GUI);
-
         Button help = new Button(NmsFactory.getNmsUtility().addGlow(ItemStackUtility.createBookWithText(plugin.lang.BUTTON_MAIN_MENU_INFO)));
         help.setAction(ClickAction.NOTHING);
         setButton(help, 53);
-
-
         ToggleButton soundToggle = ButtonFactory.createToggleButton(plugin.lang);
         setButton(soundToggle, soundToggleSlot);
-
-
         if (GameBoxSettings.tokensEnabled) {
             GBPlayer.addTokenListener(this);
             DisplayButton tokens = ButtonFactory.createTokenButton(plugin.lang, 0);
             setButton(tokens, tokenButtonSlot);
         }
-
-
         Map<Integer, ItemStack> hotBarButtons = plugin.getPluginManager().getHotBarButtons();
-
         // set lower grid
         if (hotBarButtons.containsKey(GameBoxSettings.exitButtonSlot)) {
             Button exit = new Button(hotBarButtons.get(GameBoxSettings.exitButtonSlot));
@@ -70,7 +61,6 @@ public class MainGui extends AGui implements TokenListener {
     public void registerShop() {
         setButton(guiManager.getShopManager().getMainButton(), shopSlot);
     }
-
 
     @Override
     public boolean open(Player player) {
@@ -120,5 +110,16 @@ public class MainGui extends AGui implements TokenListener {
         soundButtons.remove(uuid);
         tokenButtons.remove(uuid);
         super.removePlayer(uuid);
+    }
+
+    public void unregisterGame(String gameID) {
+        AButton button;
+        for (int i = 0; i < grid.length; i++) {
+            button = grid[i];
+            if (button != null && button.getAction() == ClickAction.OPEN_GAME_GUI && button.getArgs()[0].equals(gameID)) {
+                grid[i] = null;
+                inventory.setItem(i, null);
+            }
+        }
     }
 }

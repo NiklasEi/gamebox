@@ -45,4 +45,9 @@ public class TestCommands extends ConsoleBaseCommand {
             dataBase.addStatistics(uuid, GameBox.MODULE_COOKIECLICKER, "weekly", random.nextInt(5000), SaveType.HIGH_NUMBER_SCORE);
         }
     }
+
+    @Subcommand("unregister")
+    public void unregisterGame(CommandSender sender, String gameID) {
+        gameBox.getPluginManager().unregisterGame(gameID);
+    }
 }

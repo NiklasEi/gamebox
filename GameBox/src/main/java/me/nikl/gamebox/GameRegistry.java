@@ -138,6 +138,20 @@ public class GameRegistry {
     }
 
     public Module getModuleBySubCommand(String subCommand) {
+        GameBox.debug("grab module of " + subCommand);
         return subCommands.get(subCommand);
+    }
+
+    public void unregisterGame(String gameID) {
+        Module module = modules.get(gameID);
+        if (module == null) return;
+        Set<String> subCommands = bundledSubCommands.get(module);
+        modules.remove(gameID);
+        if (subCommands == null || subCommands.isEmpty()) return;
+        for (String subCommand : subCommands) {
+            GameBox.debug("   remove " + subCommand);
+            this.subCommands.remove(subCommand);
+        }
+        bundledSubCommands.remove(gameID);
     }
 }
