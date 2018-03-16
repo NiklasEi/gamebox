@@ -1,45 +1,67 @@
-# GameBox v2
+# GameBox
 
-Collection of several inventory games with nice GUIs and high configurability. Games can be added by additional plugins in the form of modules ([see example project][example-project]).
+GameBox is a minecraft plugin written with the Bukkit API. It is published on [Spigot].
+
+A high number of inventory games can be added to GameBox. All of them are accessible for the players through one GUI. The plugin is configurable and all messages can be changed in the language files.
 
 ## Features
 
-* A growing number of single and multiplayer games. For a complete list of games please refer to the [list of all GameBox games][GameBox-games].
-* Customize the GUI, messages, titles and game modes.
-* Gives access to a token system with configurable shop (see [shop](#shop))
+* Growing number of single and multiplayer games
+  * [List of all GameBox games][GameBox-games]
+  * [Template game][example-project]
+* Customisable GUIs, messages, titles and game modes
+* Statistics and top lists
+* Support for MySQL and file storage
+* Token system with configurable [shop](#shop)
 
-GameBox uses language files for messages and inventory titles. You can add your own file or use one of the default files (german, english, spanish and mandarin) that are included in the plugin. The name of the used language file is specified in the configuration file of GameBox.
+GameBox uses language files for messages and inventory titles. You can add your own file or use one of the default files (german, english, spanish and mandarin).
 
-All games have their own language files. The system for the games is the same as for GameBox.
+All games have their own configuration and language files.
 
 ### Token
 
-Token are a currency provided by GameBox. They can be awarded for won games and can be used to sell items or other things in the [GameBox shop](#shop). 
+Token are a currency provided by GameBox. They can be awarded for winning games and can be used to sell items or other things in the [token shop](#shop). 
 
 They can be accessed and given/taken through the [API](#api) and through admin commands.
 
 ### Shop
 
-The GameBox shop consists of a Menu that lists all shop categories and of pages full of shop items for each category. Navigation is done by 'Forward' and 'Backward' buttons.
+The token shop consists of a Menu that lists all shop categories and of pages full of shop items for each category. Every shop category is automatically paginated.
 
-Per default access to the shop is given through a button on the main gui. The needed permission is **`gamebox.shop`**
-and is given to all players by default.
+Per default access to the shop is given through a button on the main GUI. The needed permission for players is **`gamebox.shop`**
+and is given by default.
 
-* Sell items for token and/or money.
-* Run commands for token and/or money.
-  * There is a special option for commands that manipulate the players inventory.
-* Add your own Shop categories with configurable name, lore and button.
-* Items per category are basically unlimited. An automatic page system will create shop pages.
+You can
+* sell items for token and/or money.
+* sun commands for token and/or money.
+* add your own categories with configurable name, lore and button.
+* add as many items to any category as you want.
+
+Shop configuration is done in the file 'tokenShop.yml' which is generated in the GameBox folder.
 
 ### API
 
-GameBox provides an API.
+GameBox provides an small API.
 
-Currently implemented features in the API:
+Currently implemented features:
 * Give/take/set token for online and offline players.
-* Get the amount of token a (offline-) player has.
+* Get the token count for an online or offline player.
 
-[API source](GameBox/src/main/java/me/nikl/gamebox/GameBoxAPI.java)
+[API source](src/main/java/me/nikl/gamebox/GameBoxAPI.java)
+
+## Installation
+
+1. Download the newest version from [Spigot].
+2. Download all the GameBox games you can find on Spigot.
+3. Drop it in your servers plugin folder.
+4. Restart your server.
+5. Configure GameBox:
+   1. Change the used language file in config.yml (if you need something else then english).
+   2. You should enable the hub mode ;)
+   3. You can customise your tokenShop.yml and open the shop for your players.
+6. Optional: configure the games
+   1. The games' configuration files are in `GameBox/games/<gameID>`
+   2. The games' language files are in `GameBox/language/<gameID>`
 
 ## Commands and permissions
 
@@ -49,6 +71,10 @@ Please refer to the plugins page for a detailed list of commands and permissions
 
 [Permissions list][GameBox-perms]
 
+The permissions allow for different players having access to different games. By default all players can play all games! To change that one has to take the permission `gamebox.play.*` from all players. Then add the game specific play permissions `gamebox.play.<gameID>`. The unique ids of all games can be found [on my homepage][gamebox-ids].
+
+[Spigot]: https://www.spigotmc.org/resources/37273/
+[gamebox-ids]: https://www.nikl.me/projects/gamebox/#ids
 [GameBox-games]: https://www.nikl.me/projects/gamebox/#games
 [GameBox-cmds]: https://www.nikl.me/projects/gamebox/#commands
 [GameBox-perms]: https://www.nikl.me/projects/gamebox/#permissions
