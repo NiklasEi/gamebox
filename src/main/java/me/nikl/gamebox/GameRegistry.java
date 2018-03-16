@@ -1,9 +1,7 @@
 package me.nikl.gamebox;
 
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import me.nikl.gamebox.game.Game;
 import me.nikl.gamebox.game.exceptions.GameLoadException;
-import me.nikl.gamebox.utility.ConfigManager;
 import me.nikl.gamebox.utility.FileUtility;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;

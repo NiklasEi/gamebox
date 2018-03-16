@@ -4,7 +4,6 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Subcommand;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.commands.ConsoleBaseCommand;
-import me.nikl.gamebox.commands.GameBoxBaseCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

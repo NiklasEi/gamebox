@@ -1,17 +1,14 @@
 package me.nikl.gamebox.commands.admin;
 
 import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Single;
 import co.aikar.commands.annotation.Subcommand;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.commands.ConsoleBaseCommand;
-import me.nikl.gamebox.commands.GameBoxBaseCommand;
 import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.data.database.DataBase;
 import me.nikl.gamebox.data.database.MysqlDB;
 import me.nikl.gamebox.data.toplist.SaveType;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;

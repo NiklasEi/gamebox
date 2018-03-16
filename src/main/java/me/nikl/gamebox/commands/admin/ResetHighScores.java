@@ -9,7 +9,6 @@ import me.nikl.gamebox.commands.GameBoxBaseCommand;
 import me.nikl.gamebox.data.database.DataBase;
 import me.nikl.gamebox.data.toplist.SaveType;
 import me.nikl.gamebox.utility.Permission;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 

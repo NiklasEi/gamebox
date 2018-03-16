@@ -1,7 +1,6 @@
 package me.nikl.gamebox.commands.general;
 
 import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Subcommand;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.utility.Permission;
