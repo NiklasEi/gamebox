@@ -1,5 +1,6 @@
 package me.nikl.gamebox;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import me.nikl.gamebox.game.Game;
 import me.nikl.gamebox.game.exceptions.GameLoadException;
 import me.nikl.gamebox.utility.ConfigManager;
@@ -20,6 +21,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -36,6 +38,7 @@ public class GameRegistry {
     private final Set<String> disabledModules = new HashSet<>();
     private GameBox gameBox;
     private Map<String, Module> modules = new HashMap<>();
+    private Map<String, Module> declinedModules = new HashMap<>();
     private Map<String, Module> subCommands = new HashMap<>();
     private Map<Module, Set<String>> bundledSubCommands = new HashMap<>();
     private boolean enableNewGamesByDefault;
@@ -81,6 +84,7 @@ public class GameRegistry {
             return false;
         }
         if (disabledModules.contains(module.getModuleID())) {
+            declinedModules.put(module.getModuleID(), module);
             gameBox.warning("The game " + module.getModuleID() + " is disabled in 'games.yml'");
             return false;
         }
@@ -127,8 +131,14 @@ public class GameRegistry {
     public void reload() {
         reloadGamesConfiguration();
         loadDisabledModules();
-        for (Module module : modules.values()) {
+        modules.putAll(declinedModules);
+        declinedModules.clear();
+        Iterator<Module> iterator = modules.values().iterator();
+        while (iterator.hasNext()) {
+            Module module = iterator.next();
             if (disabledModules.contains(module.getModuleID())) {
+                iterator.remove();
+                declinedModules.put(module.getModuleID(), module);
                 gameBox.warning("The game " + module.getModuleID() + " is disabled in 'games.yml'");
                 continue;
             }
