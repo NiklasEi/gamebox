@@ -62,6 +62,7 @@ public class GameBox extends JavaPlugin {
     private EnterGameBoxListener enterGameBoxListener;
     private GameBoxCommands commands;
     private Module gameBoxModule;
+    private CalendarEventsHook calendarEventsHook;
 
     @Override
     public void onEnable() {
@@ -328,15 +329,31 @@ public class GameBox extends JavaPlugin {
             new PlaceholderAPIHook(this);
             Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Hooked into PlaceholderAPI");
         }
-        if (Bukkit.getPluginManager().isPluginEnabled("CalendarEvents")) {
-            new CalendarEventsHook(this);
-            Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Hooked into CalendarEvents");
-        }
+        hookCalendarEvents();
         // send data with bStats if not opt out
         if (GameBoxSettings.bStatsMetrics) {
             setupMetrics();
         } else {
             Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " You have opt out bStats... That's sad!");
+        }
+    }
+
+    private void hookCalendarEvents() {
+        if (Bukkit.getPluginManager().isPluginEnabled("CalendarEvents")) {
+            try {
+                String [] version = Bukkit.getPluginManager().getPlugin("CalendarEvents").getDescription().getVersion().split("\\.");
+                int minorVersion = Integer.valueOf(version[1]);
+                int majorVersion = Integer.valueOf(version[0]);
+                if (minorVersion < 4 && majorVersion == 1) {
+                    getLogger().warning(" CalendarEvents has to be version 1.4.0 or above!");
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                getLogger().warning(" CalendarEvents has to be version 1.4.0 or above!");
+                return;
+            }
+            calendarEventsHook = new CalendarEventsHook(this);
+            Bukkit.getConsoleSender().sendMessage(lang.PREFIX + " Hooked into CalendarEvents");
         }
     }
 
@@ -386,5 +403,9 @@ public class GameBox extends JavaPlugin {
 
     public InventoryTitleMessenger getInventoryTitleMessenger() {
         return inventoryTitleMessenger;
+    }
+
+    public CalendarEventsHook getCalendarEventsHook() {
+        return calendarEventsHook;
     }
 }
