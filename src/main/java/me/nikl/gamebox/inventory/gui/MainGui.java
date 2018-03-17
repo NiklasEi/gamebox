@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Created by niklas on 2/5/17.
+ * @author Niklas Eicker
  */
 public class MainGui extends AGui implements TokenListener {
     private Map<UUID, ToggleButton> soundButtons = new HashMap<>();

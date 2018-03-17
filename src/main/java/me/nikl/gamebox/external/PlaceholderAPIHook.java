@@ -6,7 +6,7 @@ import me.nikl.gamebox.game.Game;
 import org.bukkit.entity.Player;
 
 /**
- * Created by Niklas
+ * @author Niklas Eicker
  *
  * Provide GameBox placeholders through Placeholder API
  */

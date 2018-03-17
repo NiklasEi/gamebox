@@ -9,7 +9,7 @@ import org.bukkit.event.HandlerList;
 import javax.annotation.Nullable;
 
 /**
- * Created by Niklas
+ * @author Niklas Eicker
  *
  * Event called when a player enters a GameBox GUI or game
  *

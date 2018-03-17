@@ -37,7 +37,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 /**
- * Created by niklas on 10/27/16.
+ * @author Niklas Eicker
  *
  * Main class of the plugin GameBox
  */

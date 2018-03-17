@@ -1,7 +1,7 @@
 package me.nikl.gamebox.inventory;
 
 /**
- * Created by niklas on 2/5/17.
+ * @author Niklas Eicker
  */
 public enum ClickAction {
     START_GAME,

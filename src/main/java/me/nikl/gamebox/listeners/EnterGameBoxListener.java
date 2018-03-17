@@ -9,7 +9,7 @@ import org.bukkit.event.EventHandler;
 import java.util.List;
 
 /**
- * Created by Niklas
+ * @author Niklas Eicker
  */
 public class EnterGameBoxListener extends GameBoxListener {
     private List<String> commands;

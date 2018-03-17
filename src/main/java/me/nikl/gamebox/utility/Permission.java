@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 /**
- * Created by niklas on 10/27/16.
+ * @author Niklas Eicker
  *
  * easier permission storage
  * just change the permission nodes here
@@ -54,13 +54,13 @@ public enum Permission {
     }
 
     /**
-     * Check sender for the permission.
-     *
+     * Check sender for a module specific permission.
+     * For general permissions use {@link #hasPermission(CommandSender)}.
      * If the passed moduleID is null, only the wildcard permission is checked.
      *
      * @param sender to check permission for
      * @param moduleID for module specific permissions
-     * @return permission is set
+     * @return sender has permission
      */
     public boolean hasPermission(CommandSender sender, @Nullable String moduleID) {
         if (moduleID == null) {

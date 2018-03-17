@@ -3,7 +3,7 @@ package me.nikl.gamebox.inventory.button;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * Created by niklas on 2/5/17.
+ * @author Niklas Eicker
  */
 public class Button extends AButton {
     public Button(ItemStack item) {

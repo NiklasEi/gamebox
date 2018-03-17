@@ -258,18 +258,4 @@ public abstract class Language {
     protected String getString(String path) {
         return getString(path, true);
     }
-
-    // Todo (from admin command)
-    protected boolean createDiffFile() {
-        File diffFile = new File(languageFile.getAbsolutePath() + "(missingKeys)");
-        int copy = 0;
-        while (diffFile.exists()) {
-            copy++;
-            diffFile = new File(languageFile.getAbsolutePath() + "(missingKeys)(" + String.valueOf(copy) + ")");
-        }
-
-        FileConfiguration diffConfiguration = YamlConfiguration.loadConfiguration(diffFile);
-
-        return false;
-    }
 }

@@ -55,7 +55,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 /**
- * Created by niklas on 10/17/16.
+ * @author Niklas Eicker
  *
  * register all games
  * Clicks are managed here

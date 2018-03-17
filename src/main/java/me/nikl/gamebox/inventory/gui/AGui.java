@@ -351,22 +351,14 @@ public abstract class AGui implements GameBoxHolder {
                 break;
             case NOT_ENOUGH_MONEY_FIRST_PLAYER:
                 sentInventoryTitleMessage(player[0], gameBox.lang.TITLE_NOT_ENOUGH_MONEY);
-                if (args.length == 3) {
-                    if (guiManager.isInGUI(player[1].getUniqueId())) {
-                        sentInventoryTitleMessage(player[1], gameBox.lang.TITLE_OTHER_PLAYER_NOT_ENOUGH_MONEY);
-                    } else {
-                        //ToDo
-                        player[1].sendMessage(player[0].getName() + " Does not have enough money to start the game!");
-                    }
-                }
                 break;
             case NOT_ENOUGH_MONEY_SECOND_PLAYER:
                 if (args.length == 3) {
                     if (guiManager.isInGUI(player[1].getUniqueId())) {
                         sentInventoryTitleMessage(player[1], gameBox.lang.TITLE_NOT_ENOUGH_MONEY);
                     } else {
-                        //ToDo
-                        player[1].sendMessage(player[0].getName() + " tried starting a game with you. But you do not have enough money!");
+                        player[1].sendMessage(gameBox.lang.PREFIX + " " + player[0].getName() + " tried starting a game with you.");
+                        player[1].sendMessage(gameBox.lang.PREFIX + " But you do not have enough money!");
                     }
                 }
                 sentInventoryTitleMessage(player[0], gameBox.lang.TITLE_OTHER_PLAYER_NOT_ENOUGH_MONEY);

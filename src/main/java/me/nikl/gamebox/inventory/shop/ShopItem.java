@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Niklas.
+ * @author Niklas Eicker
  */
 public class ShopItem {
     private List<String> commands = new ArrayList<>();

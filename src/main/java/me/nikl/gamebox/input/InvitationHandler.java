@@ -73,10 +73,6 @@ public class InvitationHandler extends BukkitRunnable {
                 if (player != null) player.sendMessage(plugin.lang.INVITATION_ALREADY_THERE);
                 return false;
             }
-            if (inv.player1.equals(player2) && inv.player2.equals(player1)) {
-                //ToDO: accept invite automatically
-                // for now just continue and allow it
-            }
         }
         Player first = Bukkit.getPlayer(player1);
         Player second = Bukkit.getPlayer(player2);

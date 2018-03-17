@@ -6,7 +6,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 /**
- * Created by Niklas
+ * @author Niklas Eicker
  *
  * Event called after a player left GameBox and
  * the players inventory was restored.

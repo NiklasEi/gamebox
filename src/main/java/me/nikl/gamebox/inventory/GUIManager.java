@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Created by niklas on 2/4/17.
+ * @author Niklas Eicker
  *
  * each game gets such a manager
  * listen for events called in the game's guis and pages
