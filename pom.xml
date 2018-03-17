@@ -72,6 +72,10 @@
                             <include>org.slf4j:*</include>
                             <include>co.aikar:*</include>
                             <include>net.jodah:expiringmap</include>
+                            <!-- games -->
+                            <include>me.nikl:cookieclicker</include>
+                            <include>me.nikl:connectfour</include>
+                            <include>me.nikl:matchit</include>
                         </includes>
                     </artifactSet>
                     <relocations>
@@ -106,6 +110,19 @@
                         <relocation>
                             <pattern>net.jodah.expiringmap</pattern>
                             <shadedPattern>me.nikl.gamebox.common.expiringmap</shadedPattern>
+                        </relocation>
+                        <!-- included default games -->
+                        <relocation>
+                            <pattern>me.nikl.cookieclicker</pattern>
+                            <shadedPattern>me.nikl.gamebox.games.cookieclicker</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>me.nikl.connectfour</pattern>
+                            <shadedPattern>me.nikl.gamebox.games.connectfour</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>me.nikl.matchit</pattern>
+                            <shadedPattern>me.nikl.gamebox.games.matchit</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -205,11 +222,26 @@
             <artifactId>acf-bukkit</artifactId>
             <version>0.5.0-SNAPSHOT</version>
         </dependency>
-
         <!-- nms modules -->
         <dependency>
             <groupId>me.nikl.nmsutilities</groupId>
             <artifactId>nmsutilities</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <!-- games -->
+        <dependency>
+            <groupId>me.nikl</groupId>
+            <artifactId>cookieclicker</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>me.nikl</groupId>
+            <artifactId>connectfour</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>me.nikl</groupId>
+            <artifactId>matchit</artifactId>
             <version>1.0.0</version>
         </dependency>
     </dependencies>
