@@ -4,6 +4,8 @@ GameBox is a minecraft plugin written with the Bukkit API. It is published on [S
 
 A high number of inventory games can be added to GameBox. All of them are accessible for the players through one GUI. The plugin is configurable and all messages can be changed in the language files.
 
+![GameBox main menu](gamebox.png "GameBox main menu with ten installed games")
+
 ## Features
 
 * Growing number of single and multiplayer games
