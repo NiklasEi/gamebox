@@ -145,9 +145,7 @@ public class GameBox extends JavaPlugin {
             info(ChatColor.RED + " GameBox will shorten too long titles (marked by '...') to prevent errors.");
             info(ChatColor.RED + " To fix this ('...'), create your own language file with shorter titles.");
         }
-
-        // Todo if (GameBoxSettings.runLanguageChecksAutomatically) adminCommand.printIncompleteLangFilesInfo();
-
+        if (GameBoxSettings.runLanguageChecksAutomatically) ConfigManager.printIncompleteLangFilesInfo(this);
         if (PluginManager.gamesRegistered == 0) {
             info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
             info(ChatColor.RED + " There are no registered games!");
@@ -229,7 +227,6 @@ public class GameBox extends JavaPlugin {
             dataBase.onShutDown();
             dataBase = null;
         }
-
         this.dataBase = new FileDB(this);
         if (!dataBase.load(false)) {
             getLogger().log(Level.SEVERE, " Something went wrong with the data file");
@@ -243,7 +240,6 @@ public class GameBox extends JavaPlugin {
             dataBase.onShutDown();
             dataBase = null;
         }
-
         this.dataBase = new MysqlDB(this);
         if (!dataBase.load(false)) {
             getLogger().log(Level.SEVERE, " Falling back to file storage...");
@@ -253,12 +249,14 @@ public class GameBox extends JavaPlugin {
     }
 
     private boolean prepareForReload() {
+        ConfigManager.clear();
         if (!reloadConfiguration()) {
             getLogger().severe(" Failed to load config file!");
             return false;
         }
         FileUtility.copyDefaultLanguageFiles();
         this.lang = new GameBoxLanguage(this);
+        ConfigManager.registerModuleLanguage(gameBoxModule, lang);
         this.api = new GameBoxAPI(this);
         GameBoxSettings.loadSettings(this);
         return true;
