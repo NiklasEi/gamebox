@@ -6,6 +6,7 @@ import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.commands.GameBoxCommands;
 import me.nikl.gamebox.inventory.gui.game.StartMultiplayerGamePage;
+import me.nikl.nmsutilities.NmsFactory;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -81,9 +82,7 @@ public class InvitationHandler extends BukkitRunnable {
                 second.sendMessage(plugin.lang.PREFIX + message.replace("%player%", first.getName()).replace("%game%", pluginManager.getGame(args[0]).getGameLang().PLAIN_NAME));
             }
             if (GameBoxSettings.sendInviteClickMessage) {
-                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "tellraw "
-                        + second.getName()
-                        + buildClickMessage(args));
+                NmsFactory.getNmsUtility().sendJSON(second, buildClickMessage(args));
             }
         } else {
             return false;
