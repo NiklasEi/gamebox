@@ -244,6 +244,17 @@
             <artifactId>matchit</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <!-- other stuff -->
+        <dependency>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.7</version>
+        </dependency>
     </dependencies>
 
     <properties>
