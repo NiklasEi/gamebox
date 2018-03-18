@@ -146,6 +146,10 @@ others:
     notInviteYourself: " &cYou cannot invite yourself."
   invitation:
   - " &3%player%&r invited you to &3%game%"
+  invitationTitleMessage:
+    title: "&1Invite for &3%game%"
+    subTitle: "by &3%player%"
+  invitationActionbarMessage: "&3%player%&r invited you to &3%game%"
 
   # this message is sent in the JSON format and has to be customised differently
 

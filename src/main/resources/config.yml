@@ -68,6 +68,16 @@ settings:
       # The click message provides an easy and fast way to navigate to the invitation.
       enabled: true
 
+    # Actionbar message send on invitation by a player.
+    # The text can be customised in the language files.
+    actionBarMessage:
+      enabled: false
+
+    # Title message send on invitation by a player.
+    # The text can be customised in the language files.
+    titleMessage:
+      enabled: false
+
   # Close the inventory (either GUI or game) when a player is damaged.
   # If false the inventory stays open until the player dies.
   closeInventoryOnDamage: true

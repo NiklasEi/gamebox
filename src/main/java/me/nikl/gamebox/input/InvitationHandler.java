@@ -7,6 +7,7 @@ import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.commands.GameBoxCommands;
 import me.nikl.gamebox.inventory.gui.game.StartMultiplayerGamePage;
 import me.nikl.nmsutilities.NmsFactory;
+import me.nikl.nmsutilities.NmsUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -27,6 +28,7 @@ public class InvitationHandler extends BukkitRunnable {
     private Set<Invitation> invitations = new HashSet<>();
     private PluginManager pluginManager;
     private GameBox plugin;
+    private NmsUtility nmsUtility;
     private GameBoxLanguage lang;
     private String clickMessagePartOne;
     private String getClickMessagePartTwo;
@@ -34,6 +36,7 @@ public class InvitationHandler extends BukkitRunnable {
     public InvitationHandler(GameBox plugin) {
         pluginManager = plugin.getPluginManager();
         this.plugin = plugin;
+        this.nmsUtility = NmsFactory.getNmsUtility();
         this.lang = plugin.lang;
         cacheClickMessageParts();
         this.runTaskTimerAsynchronously(plugin, 20, 10);
@@ -82,7 +85,16 @@ public class InvitationHandler extends BukkitRunnable {
                 second.sendMessage(plugin.lang.PREFIX + message.replace("%player%", first.getName()).replace("%game%", pluginManager.getGame(args[0]).getGameLang().PLAIN_NAME));
             }
             if (GameBoxSettings.sendInviteClickMessage) {
-                NmsFactory.getNmsUtility().sendJSON(second, buildClickMessage(args));
+                nmsUtility.sendJSON(second, buildClickMessage(args));
+            }
+            if (GameBoxSettings.sendInviteActionbarMessage) {
+                nmsUtility.sendActionbar(second, lang.INVITE_ACTIONBAR_MESSAGE.replace("%player%", first.getName()).replace("%game%", pluginManager.getGame(args[0]).getGameLang().PLAIN_NAME));
+            }
+            if (GameBoxSettings.sendInviteTitleMessage) {
+                nmsUtility.sendTitle(second
+                        , lang.INVITE_TITLE_MESSAGE.replace("%player%", first.getName()).replace("%game%", pluginManager.getGame(args[0]).getGameLang().PLAIN_NAME)
+                        , lang.INVITE_SUBTITLE_MESSAGE.replace("%player%", first.getName()).replace("%game%", pluginManager.getGame(args[0]).getGameLang().PLAIN_NAME)
+                        , 80);
             }
         } else {
             return false;

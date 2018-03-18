@@ -40,6 +40,9 @@ public class GameBoxLanguage extends Language {
     public List<String> INPUT_HELP_MESSAGE;
     public String WON_TOKEN;
     public List<String> INVITE_MESSAGE;
+    public String INVITE_TITLE_MESSAGE;
+    public String INVITE_SUBTITLE_MESSAGE;
+    public String INVITE_ACTIONBAR_MESSAGE;
 
     GameBoxLanguage(GameBox plugin) {
         super(plugin, GameBox.MODULE_GAMEBOX);
@@ -92,6 +95,9 @@ public class GameBoxLanguage extends Language {
         this.INVITATION_NOT_YOURSELF = getString("others.playerInput.notInviteYourself");
         this.WON_TOKEN = getString("others.wonToken");
         this.INVITE_MESSAGE = getStringList("others.invitation");
+        this.INVITE_TITLE_MESSAGE = getString("others.invitationTitleMessage.title");
+        this.INVITE_SUBTITLE_MESSAGE = getString("others.invitationTitleMessage.subTitle");
+        this.INVITE_ACTIONBAR_MESSAGE = getString("others.invitationActionbarMessage");
     }
 
     private void getButtons() {

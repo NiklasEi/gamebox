@@ -26,6 +26,8 @@ public class GameBoxSettings {
     public static boolean tokensEnabled = false;
     public static boolean keepArmorWhileInGame = false;
     public static boolean sendInviteClickMessage = true;
+    public static boolean sendInviteTitleMessage = false;
+    public static boolean sendInviteActionbarMessage = false;
     public static boolean bStatsMetrics = true;
     public static boolean hubModeEnabled = false;
     public static boolean closeInventoryOnDamage = true;
@@ -90,6 +92,8 @@ public class GameBoxSettings {
 
     private static void invitationSettings() {
         sendInviteClickMessage = configuration.getBoolean("settings.invitations.clickMessage.enabled", true);
+        sendInviteTitleMessage = configuration.getBoolean("settings.invitations.titleMessage.enabled", false);
+        sendInviteActionbarMessage = configuration.getBoolean("settings.invitations.actionBarMessage.enabled", false);
         inviteValidDuration = configuration.getInt("settings.invitations.inviteValidDuration", 60);
         inviteInputDuration = configuration.getInt("settings.invitations.inviteInputDuration", 30);
     }
