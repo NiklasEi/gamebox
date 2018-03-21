@@ -24,7 +24,7 @@ import java.util.UUID;
  * @author Niklas Eicker
  */
 public class GameBoxCommands extends BukkitCommandManager {
-    public static final String INVITE_CLICK_COMMAND = "Click-command-" + UUID.randomUUID().toString().substring(0, 13);
+    public static final String INVITE_CLICK_COMMAND = "click-" + UUID.randomUUID().toString().substring(0, 13);
     private GameBox gameBox;
     private DefaultExceptionHandler defaultExceptionHandler;
 

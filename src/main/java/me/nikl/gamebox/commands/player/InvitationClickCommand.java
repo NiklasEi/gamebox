@@ -19,7 +19,7 @@ public class InvitationClickCommand extends PlayerBaseCommand {
     }
 
     @Subcommand("%INVITE_CLICK_COMMAND")
-    public void onInvitationMessageClick(Player player, String... args) {
+    public void onInvitationMessageClick(Player player, String[] args) {
         guiManager.openGameGui(player, args);
     }
 }

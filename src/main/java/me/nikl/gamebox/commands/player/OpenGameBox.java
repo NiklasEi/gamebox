@@ -29,7 +29,6 @@ public class OpenGameBox extends PlayerBaseCommand {
     }
 
     @Default
-    @UnknownHandler
     public void openGamebox(Player player, @Optional String subCommand){
         if (subCommand == null || subCommand.isEmpty()) {
             guiManager.openMainGui(player);
