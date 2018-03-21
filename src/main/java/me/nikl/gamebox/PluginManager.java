@@ -579,7 +579,7 @@ public class PluginManager implements Listener {
     public GBPlayer getPlayer(UUID uuid) {
         GBPlayer gbPlayer = gbPlayers.get(uuid);
         if (gbPlayer == null)
-            plugin.warning(" requesting not loaded player!");
+            throw new IllegalArgumentException("requesting not loaded player!");
         return gbPlayer;
     }
 
