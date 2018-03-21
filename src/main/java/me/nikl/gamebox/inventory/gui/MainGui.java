@@ -65,7 +65,7 @@ public class MainGui extends AGui implements TokenListener {
     @Override
     public boolean open(Player player) {
         if (!openInventories.containsKey(player.getUniqueId())) {
-            loadMainGui(pluginManager.getPlayer(player.getUniqueId()));
+            if (!loadMainGui(player)) return false;
         }
         if (super.open(player)) {
             if (pluginManager.getGames().isEmpty()) {
@@ -80,20 +80,26 @@ public class MainGui extends AGui implements TokenListener {
         return soundButtons.get(uuid);
     }
 
-    public void loadMainGui(GBPlayer player) {
-        String title = this.title.replace("%player%", Bukkit.getPlayer(player.getUuid()).getName());
+    public boolean loadMainGui(Player player) {
+        GBPlayer gbPlayer = pluginManager.getPlayer(player.getUniqueId());
+        if (gbPlayer == null) {
+            pluginManager.loadPlayer(player.getUniqueId());
+            return false;
+        }
+        String title = this.title.replace("%player%", player.getName());
         Inventory inventory = InventoryUtility.createInventory(this, this.inventory.getSize(), title);
         inventory.setContents(this.inventory.getContents().clone());
         ToggleButton soundToggle = ButtonFactory.createToggleButton(gameBox.lang);
-        soundToggle = player.isPlaySounds() ? soundToggle : soundToggle.toggle();
-        soundButtons.put(player.getUuid(), soundToggle);
+        soundToggle = gbPlayer.isPlaySounds() ? soundToggle : soundToggle.toggle();
+        soundButtons.put(gbPlayer.getUuid(), soundToggle);
         inventory.setItem(soundToggleSlot, soundToggle);
         if (GameBoxSettings.tokensEnabled) {
-            DisplayButton tokens = ButtonFactory.createTokenButton(gameBox.lang, player.getTokens());
-            tokenButtons.put(player.getUuid(), tokens);
+            DisplayButton tokens = ButtonFactory.createTokenButton(gameBox.lang, gbPlayer.getTokens());
+            tokenButtons.put(gbPlayer.getUuid(), tokens);
             inventory.setItem(tokenButtonSlot, tokens);
         }
-        openInventories.putIfAbsent(player.getUuid(), inventory);
+        openInventories.putIfAbsent(gbPlayer.getUuid(), inventory);
+        return true;
     }
 
     @Override
