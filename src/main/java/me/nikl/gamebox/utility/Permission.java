@@ -20,7 +20,6 @@ public enum Permission {
     CMD_INFO("info"),
     CMD_HELP("help"),
     CMD_TOKEN("token"),
-    BYPASS_ALL("bypass"),
     BYPASS_GAME("bypass", true),
     OPEN_SHOP("shop"),
     ADMIN_SETTINGS("admin.settings"),
