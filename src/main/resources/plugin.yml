@@ -5,6 +5,8 @@ version: 2.0.0-BETA
 website: nikl.me
 softdepend: [Vault, PlaceholderAPI, CalendarEvents]
 
+# you can configure the commands in the config.yml file
+
 permissions:
   gamebox.*:
     description: Gives all permissions
