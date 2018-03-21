@@ -100,9 +100,14 @@ public class PluginManager implements Listener {
         for (World world : Bukkit.getWorlds()) {
             if (blockedWorlds.contains(world.getName())) continue;
             for (Player player : world.getPlayers()) {
-                gbPlayers.putIfAbsent(player.getUniqueId(), new GBPlayer(plugin, player.getUniqueId()));
+                loadPlayer(player.getUniqueId());
             }
         }
+    }
+
+    public void loadPlayer(UUID uniqueId) {
+        GameBox.debug("loading gb player: " + uniqueId);
+        gbPlayers.putIfAbsent(uniqueId, new GBPlayer(plugin, uniqueId));
     }
 
     private void setHotBar() {
@@ -277,6 +282,7 @@ public class PluginManager implements Listener {
                 }
                 return;
             }
+            return;
         }
         if (event.getInventory().getHolder() instanceof AGui) {
             GameBox.debug("found aGui");
@@ -309,7 +315,7 @@ public class PluginManager implements Listener {
     public void onWorldChange(PlayerChangedWorldEvent event) {
         if (!blockedWorlds.contains(event.getPlayer().getLocation().getWorld().getName())) {
             if (!gbPlayers.containsKey(event.getPlayer().getUniqueId())) {
-                gbPlayers.put(event.getPlayer().getUniqueId(), new GBPlayer(plugin, event.getPlayer().getUniqueId()));
+                loadPlayer(event.getPlayer().getUniqueId());
             }
             // hub stuff
             if (GameBoxSettings.hubModeEnabled && hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName()) && setOnWorldJoin) {
@@ -348,7 +354,7 @@ public class PluginManager implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         if (!blockedWorlds.contains(event.getPlayer().getLocation().getWorld().getName())) {
-            gbPlayers.putIfAbsent(event.getPlayer().getUniqueId(), new GBPlayer(plugin, event.getPlayer().getUniqueId()));
+            loadPlayer(event.getPlayer().getUniqueId());
         }
         if (GameBoxSettings.hubModeEnabled && hubWorlds.contains(event.getPlayer().getLocation().getWorld().getName()) && setOnWorldJoin) {
             GameBox.debug("in the hub world!");
@@ -571,7 +577,10 @@ public class PluginManager implements Listener {
     }
 
     public GBPlayer getPlayer(UUID uuid) {
-        return gbPlayers.get(uuid);
+        GBPlayer gbPlayer = gbPlayers.get(uuid);
+        if (gbPlayer == null)
+            plugin.warning(" requesting not loaded player!");
+        return gbPlayer;
     }
 
     public boolean isInGame(UUID uuid) {
