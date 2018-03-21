@@ -57,6 +57,6 @@ public class GameBoxCommands extends BukkitCommandManager {
 
     @Override
     public void registerCommand(BaseCommand baseCommand) {
-        super.registerCommand(baseCommand.setExceptionHandler(defaultExceptionHandler));
+        super.registerCommand(baseCommand.setExceptionHandler(defaultExceptionHandler), true);
     }
 }
