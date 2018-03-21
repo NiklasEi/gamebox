@@ -41,6 +41,7 @@ public class GBPlayer {
         this.allowInvites = allowInvites;
         this.playSounds = playSounds;
 
+        for (TokenListener tokenListener : tokenListeners) tokenListener.updateToken(this);
         this.loaded = true;
     }
 
@@ -53,6 +54,7 @@ public class GBPlayer {
         this.allowInvites = allowInvites;
         this.playSounds = playSounds;
 
+        for (TokenListener tokenListener : tokenListeners) tokenListener.updateToken(this);
         this.loaded = true;
     }
 
