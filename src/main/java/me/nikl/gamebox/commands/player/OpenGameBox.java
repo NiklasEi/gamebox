@@ -1,9 +1,7 @@
 package me.nikl.gamebox.commands.player;
 
 import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Optional;
-import co.aikar.commands.annotation.UnknownHandler;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.Module;
@@ -15,7 +13,6 @@ import org.bukkit.entity.Player;
 /**
  * @author Niklas Eicker
  */
-@CommandAlias("%mainCommand")
 public class OpenGameBox extends PlayerBaseCommand {
     private PluginManager pManager;
     private GUIManager guiManager;
@@ -28,7 +25,7 @@ public class OpenGameBox extends PlayerBaseCommand {
         this.lang = gameBox.lang;
     }
 
-    @Default
+    @CommandAlias("%mainCommand")
     public void openGamebox(Player player, @Optional String subCommand){
         if (subCommand == null || subCommand.isEmpty()) {
             guiManager.openMainGui(player);
