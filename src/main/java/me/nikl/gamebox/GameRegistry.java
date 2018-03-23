@@ -38,6 +38,7 @@ public class GameRegistry {
     private Map<String, Module> modules = new HashMap<>();
     private Map<String, Module> declinedModules = new HashMap<>();
     private Map<String, Module> subCommands = new HashMap<>();
+    private Map<String, Integer> preferredMainMenuSlots = new HashMap<>();
     private Map<Module, Set<String>> bundledSubCommands = new HashMap<>();
     private boolean enableNewGamesByDefault;
     private FileConfiguration gamesConfiguration;
@@ -87,7 +88,7 @@ public class GameRegistry {
             return false;
         }
         if (!module.getModuleID().equals(GameBox.MODULE_GAMEBOX))
-            registerModuleInSettingsFile(module.getModuleID());
+            handleModuleSettings(module);
         modules.put(module.getModuleID(), module);
         if (module.getExternalPlugin() != null) {
             if (!FileUtility.copyExternalResources(gameBox, module)) {
@@ -103,11 +104,27 @@ public class GameRegistry {
         return true;
     }
 
-    private void registerModuleInSettingsFile(String moduleID) {
+    private void handleModuleSettings(Module module) {
+        String moduleID = module.getModuleID();
         if (!gamesConfiguration.isSet("games." + moduleID)) {
-            gamesConfiguration.set("games." + moduleID + ".enabled", enableNewGamesByDefault);
-            saveGameSettings();
+            setDefaultModuleSettings(module);
+            return;
+        } else {
+            // overwrite default sub commands
+            if (module.isGame() && gamesConfiguration.isList("games." + moduleID + ".subCommands")) {
+                List<String> subCommands = gamesConfiguration.getStringList("games." + moduleID + ".subCommands");
+                if (subCommands != null && !subCommands.isEmpty()) module.setSubCommands(subCommands);
+            }
+            preferredMainMenuSlots.put(moduleID, gamesConfiguration.getInt("games." + moduleID + ".preferredSlot", -1));
         }
+    }
+
+    private void setDefaultModuleSettings(Module module) {
+        String moduleID = module.getModuleID();
+        gamesConfiguration.set("games." + moduleID + ".enabled", enableNewGamesByDefault);
+        gamesConfiguration.set("games." + moduleID + ".subCommands", module.getSubCommands());
+        gamesConfiguration.set("games." + moduleID + ".preferredSlot", -1);
+        saveGameSettings();
     }
 
     public boolean isRegistered(Module module) {
@@ -131,6 +148,8 @@ public class GameRegistry {
         loadDisabledModules();
         modules.putAll(declinedModules);
         declinedModules.clear();
+        subCommands.clear();
+        bundledSubCommands.clear();
         Iterator<Module> iterator = modules.values().iterator();
         while (iterator.hasNext()) {
             Module module = iterator.next();
@@ -141,10 +160,20 @@ public class GameRegistry {
                 continue;
             }
             if (module.isGame()) {
+                reloadGameData(module);
                 loadGame(module);
-                registerSubCommands(module);
             }
         }
+    }
+
+    private void reloadGameData(Module module) {
+        String moduleID = module.getModuleID();
+        if (gamesConfiguration.isList("games." + moduleID + ".subCommands")) {
+            List<String> subCommands = gamesConfiguration.getStringList("games." + moduleID + ".subCommands");
+            if (subCommands != null && !subCommands.isEmpty()) module.setSubCommands(subCommands);
+        }
+        preferredMainMenuSlots.put(moduleID, gamesConfiguration.getInt("games." + moduleID + ".preferredSlot", -1));
+        registerSubCommands(module);
     }
 
     private void loadGame(Module module) {
@@ -181,7 +210,7 @@ public class GameRegistry {
 
     private void registerSubCommands(Module module) {
         if (module.getSubCommands() == null || module.getSubCommands().isEmpty()) {
-            bundledSubCommands.putIfAbsent(module, new HashSet<>());
+            bundledSubCommands.put(module, new HashSet<>());
             return;
         }
         List<String> subCommands = module.getSubCommands();
@@ -240,6 +269,10 @@ public class GameRegistry {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public int getPreferredMainMenuSlot(String moduleID) {
+        return preferredMainMenuSlots.getOrDefault(moduleID, -1);
     }
 
     public boolean isDisabledModule(String moduleID) {

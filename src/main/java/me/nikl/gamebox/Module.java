@@ -57,4 +57,8 @@ public class Module {
     public List<String> getSubCommands() {
         return subCommands;
     }
+
+    void setSubCommands(List<String> subCommands) {
+        this.subCommands = subCommands;
+    }
 }

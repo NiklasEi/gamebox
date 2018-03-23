@@ -3,6 +3,7 @@ package me.nikl.gamebox.inventory;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.GameBoxSettings;
+import me.nikl.gamebox.GameRegistry;
 import me.nikl.gamebox.events.EnterGameBoxEvent;
 import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.gui.AGui;
@@ -195,7 +196,7 @@ public class GUIManager {
         gameButton.setItemMeta(button.getItemMeta());
         gameButton.setAction(ClickAction.OPEN_GAME_GUI);
         gameButton.setArgs(args[0], args[1]);
-        mainGui.setButton(gameButton);
+        mainGui.registerGameButton(gameButton, plugin.getGameRegistry().getPreferredMainMenuSlot(args[0]));
     }
 
     public AGui getCurrentGui(UUID uuid) {

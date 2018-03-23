@@ -20,8 +20,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -31,6 +34,7 @@ import java.util.UUID;
 public class MainGui extends AGui implements TokenListener {
     private Map<UUID, ToggleButton> soundButtons = new HashMap<>();
     private Map<UUID, DisplayButton> tokenButtons = new HashMap<>();
+    private Map<AButton, Integer> preferredSlotsOfGameButtons = new HashMap<>();
     private int soundToggleSlot = 52;
     private int tokenButtonSlot = 45;
     private int shopSlot = 46;
@@ -56,6 +60,14 @@ public class MainGui extends AGui implements TokenListener {
             exit.setAction(ClickAction.CLOSE);
             setLowerButton(exit, GameBoxSettings.exitButtonSlot);
         }
+
+        // game buttons are registered after gamebox finished loading up. Since they can define preferred slots, we need to collect all buttons and slots first, then place them.
+        new BukkitRunnable(){
+            @Override
+            public void run() {
+                placeGameButtons();
+            }
+        }.runTask(plugin);
     }
 
     public void registerShop() {
@@ -129,6 +141,54 @@ public class MainGui extends AGui implements TokenListener {
                     inventory.setItem(i, null);
                 }
             }
+        }
+    }
+
+    public void registerGameButton(Button gameButton, int preferredMainMenuSlot) {
+        preferredSlotsOfGameButtons.put(gameButton, preferredMainMenuSlot);
+    }
+
+    private void placeGameButtons() {
+        boolean complications = false;
+        List<AButton> noPreferredSlotButtons = new ArrayList<>();
+        Map<Integer, AButton> preferredSlots = new HashMap<>();
+        for (Map.Entry<AButton, Integer> entry : preferredSlotsOfGameButtons.entrySet()) {
+            int preferredSlot = entry.getValue();
+            if (preferredSlot < 0) {
+                noPreferredSlotButtons.add(entry.getKey());
+                continue;
+            }
+            if (preferredSlots.keySet().contains(entry.getValue())) {
+                gameBox.warning("The preferred slot for " + entry.getKey().getArgs()[0] + " is already taken!");
+                complications = true;
+                noPreferredSlotButtons.add(entry.getKey());
+                continue;
+            }
+            if (entry.getValue() > 44) {
+                gameBox.warning("The preferred slot for " + entry.getKey().getArgs()[0] + " is > 44!");
+                complications = true;
+                noPreferredSlotButtons.add(entry.getKey());
+                continue;
+            }
+            preferredSlots.put(entry.getValue(), entry.getKey());
+        }
+        if (complications) {
+            gameBox.warning("Please fix the problem(s) above in 'games.yml'");
+            gameBox.warning("Until then these preferred slots are ignored.");
+        }
+        placeGameButtonsInPreferredSlots(preferredSlots);
+        placeGameButtons(noPreferredSlotButtons);
+    }
+
+    private void placeGameButtons(List<AButton> noPreferredSlotButtons) {
+        for (AButton button : noPreferredSlotButtons) {
+            setButton(button);
+        }
+    }
+
+    private void placeGameButtonsInPreferredSlots(Map<Integer, AButton> preferredSlots) {
+        for (Map.Entry<Integer, AButton> entry : preferredSlots.entrySet()) {
+            setButton(entry.getValue(), entry.getKey());
         }
     }
 }
