@@ -30,6 +30,13 @@ public class SettingsCommand extends GameBoxBaseCommand {
         }
         return false;
     }
+
+    @Subcommand("settings help")
+    public void onHelp(CommandSender sender) {
+        sender.sendMessage(gameBox.lang.PREFIX + " Settings help:");
+        sendHelp(sender, "<gameID>");
+    }
+
     @Subcommand("settings game")
     public void gameSettings(CommandSender sender) {
         sender.sendMessage(gameBox.lang.PREFIX + " options:");
