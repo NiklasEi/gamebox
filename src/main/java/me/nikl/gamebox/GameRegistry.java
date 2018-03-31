@@ -197,6 +197,10 @@ public class GameRegistry {
         } catch (GameLoadException e) {
             e.printStackTrace();
             gameBox.getPluginManager().unregisterGame(module.getModuleID());
+        } catch (Throwable throwable) {
+            gameBox.warning("unexpected error while loading a game...");
+            throwable.printStackTrace();
+            gameBox.getPluginManager().unregisterGame(module.getModuleID());
         }
     }
 
