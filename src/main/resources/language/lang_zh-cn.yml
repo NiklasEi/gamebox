@@ -46,6 +46,17 @@ commandMessages:
     footer:
     - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
   tokenInfo: ' &2%player% 拥有 %token% 筹码'
+  ownTokenInfo: ' &2你拥有 %token% 筹码'
+  gaveToken: ' &2将 %token% 筹码给予 %player%.'
+  tookToken: ' &2拿走 %token% 筹码，被操作者 %player%.'
+  notEnoughToken: ' &4失败! %player% 只有 %token% 筹码了'
+  setToken: ' &2%player% 现在有 %token% 筹码'
+  settingsCommand:
+    gameDisableSuccess: " &a你禁用了 %gameID%."
+    gameDisableFail: " &4该游戏未启用"
+    gameEnableSuccess: " &a你启用了 %gameID%."
+    gameEnableFail: " &4该游戏已启用"
+    gameInvalidSetting: " &4无效游戏设置!"
   reload:
     fail: " &c重载GameBox和所有游戏失败!"
     success: " &a成功重载GameBox和所有游戏!"
@@ -128,6 +139,10 @@ others:
   invitation:
   - " &3%player%&r 邀请你玩 &3%game%"
   - " 请打开游戏 &3%game%&r 的相应模式来接受邀请"
+  invitationTitleMessage:
+    title: "&1邀请游戏 &3%game%"
+    subTitle: "邀请者 &3%player%"
+  invitationActionbarMessage: "&3%player%&r 邀请你来玩 &3%game%"
 
   # 邀请信息JSON消息可选颜色:
   #   black, white, dark_blue, dark_green, dark_aqua, dark_red, dark_purple, gold, gray
