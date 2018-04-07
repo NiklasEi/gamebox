@@ -115,7 +115,7 @@ public class FileDB extends DataBase {
                 return;
         }
         // top value of player was corrected
-        updateCachedTopList(topListIdentifier, new PlayerScore(uuid, value, saveType));
+        updateCachedTopList(gameID, gameTypeID, saveType, new PlayerScore(uuid, value, saveType));
     }
 
     private String buildTopListIdentifier(String gameID, String gameTypeID, SaveType saveType) {

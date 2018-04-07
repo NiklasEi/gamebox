@@ -119,7 +119,7 @@ public class MysqlDB extends DataBase {
                     @Override
                     public void run() {
                         GameBox.debug("update top list score: " + uuid.toString() + "    " + newValue + "      " + saveType.toString());
-                        getTopList(gameID, gameTypeID, saveType).update(new PlayerScore(uuid, newValue, saveType));
+                        updateCachedTopList(gameID, gameTypeID, saveType, new PlayerScore(uuid, newValue, saveType));
                     }
                 };
                 if (async) update.runTask(plugin);

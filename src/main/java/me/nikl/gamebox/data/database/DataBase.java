@@ -61,8 +61,8 @@ public abstract class DataBase {
         save(false);
     }
 
-    protected void updateCachedTopList(String topListIdentifier, PlayerScore playerScore) {
-        TopList cachedTopList = cachedTopLists.get(topListIdentifier);
+    protected void updateCachedTopList(String gameID, String gameTypeID, SaveType saveType, PlayerScore playerScore) {
+        TopList cachedTopList = getTopList(gameID, gameTypeID, saveType);
         if (cachedTopList == null) return;
         cachedTopList.update(playerScore);
     }

@@ -25,9 +25,13 @@ public class TopList {
         topListUsers = new HashSet<>();
     }
 
-    public void update(PlayerScore playerScore) {
+    public boolean update(PlayerScore playerScore) {
         GameBox.debug("score: " + playerScore.getValue());
-        if (updateSingleScore(playerScore)) updateUsers();
+        if (updateSingleScore(playerScore)) {
+            updateUsers();
+            return true;
+        }
+        return false;
     }
 
     public void updatePlayerScores(List<PlayerScore> playerScores) {
@@ -39,7 +43,9 @@ public class TopList {
     }
 
     private boolean updateSingleScore(PlayerScore playerScore) {
-        if (updateIfInList(playerScore)) return false;
+        if (isInList(playerScore.getUuid())) {
+            return updateInListScore(playerScore);
+        }
         if (playerScores.size() >= TOP_LIST_LENGTH && !playerScore.isBetterThen(playerScores.get(TOP_LIST_LENGTH - 1)))
             return false;
         addNewScoreEntry(playerScore);
@@ -49,15 +55,14 @@ public class TopList {
         return true;
     }
 
-    private boolean updateIfInList(PlayerScore playerScore) {
+    private boolean updateInListScore(PlayerScore playerScore) {
         PlayerScore oldScore = getPlayerScoreFromTopList(playerScore.getUuid());
-        if (oldScore == null) return false;
         if (playerScore.isBetterThen(oldScore)) {
             removePlayerScore(playerScore.getUuid());
             addNewScoreEntry(playerScore);
-            updateUsers();
+            return true;
         }
-        return true;
+        return false;
     }
 
     private void updateUsers() {
