@@ -11,6 +11,7 @@ import me.nikl.gamebox.utility.NumberUtility;
 import me.nikl.gamebox.utility.StringUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -54,19 +55,27 @@ public class TopListPage extends GameGuiPage implements TopListUser {
             player = Bukkit.getOfflinePlayer(stat.getUuid());
             // checking for name == null is important to prevent NPEs after player data reset on server
             if (player == null || player.getName() == null) {
-                GameBox.debug("player is invalid, or doesn't have a name");
-                continue;
+                skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+                skullMeta = (SkullMeta) skull.getItemMeta();
+                List<String> skullLore = getSkullLoreForScore(stat);
+                for (int i = 0; i < skullLore.size(); i++) {
+                    skullLore.set(i, skullLore.get(i).replace("%player%", ChatColor.stripColor(gameBox.lang.UNKNOWN_SKULL_NAME)).replace("%rank%", String.valueOf(rank)));
+                }
+                skullLore.addAll(gameBox.lang.UNKNOWN_SKULL_LORE);
+                skullMeta.setDisplayName(gameBox.lang.UNKNOWN_SKULL_NAME);
+                skullMeta.setLore(skullLore);
+            } else {
+                String name = player.getName();
+                skull = ItemStackUtility.getPlayerHead(name);
+                skullMeta = (SkullMeta) skull.getItemMeta();
+                List<String> skullLore = getSkullLoreForScore(stat);
+                // chat color is already handled when loading the lore from the configuration file
+                for (int i = 0; i < skullLore.size(); i++) {
+                    skullLore.set(i, skullLore.get(i).replace("%player%", name).replace("%rank%", String.valueOf(rank)));
+                }
+                skullMeta.setDisplayName(ChatColor.BLUE + name);
+                skullMeta.setLore(skullLore);
             }
-            String name = player.getName();
-            skull = ItemStackUtility.getPlayerHead(name);
-            skullMeta = (SkullMeta) skull.getItemMeta();
-            List<String> skullLore = getSkullLoreForScore(stat);
-            // chat color is already handled when loading the lore from the configuration file
-            for (int i = 0; i < skullLore.size(); i++) {
-                skullLore.set(i, skullLore.get(i).replace("%player%", name).replace("%rank%", String.valueOf(rank)));
-            }
-            skullMeta.setLore(skullLore);
-            skullMeta.setDisplayName(ChatColor.BLUE + name);
             skull.setItemMeta(skullMeta);
             inventory.setItem(getSlotByRank(rank), skull);
         }
