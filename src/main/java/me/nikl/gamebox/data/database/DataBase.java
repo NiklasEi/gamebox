@@ -3,6 +3,7 @@ package me.nikl.gamebox.data.database;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.data.GBPlayer;
+import me.nikl.gamebox.data.bungee.BukkitBridge;
 import me.nikl.gamebox.data.toplist.PlayerScore;
 import me.nikl.gamebox.data.toplist.SaveType;
 import me.nikl.gamebox.data.toplist.TopList;
@@ -29,6 +30,7 @@ public abstract class DataBase {
     protected GameBox plugin;
     protected Map<String, TopList> cachedTopLists = new HashMap<>();
     private BukkitRunnable autoSave;
+    private BukkitBridge bukkitBridge;
 
     public DataBase(GameBox plugin) {
         this.plugin = plugin;
@@ -64,7 +66,9 @@ public abstract class DataBase {
     protected void updateCachedTopList(String gameID, String gameTypeID, SaveType saveType, PlayerScore playerScore) {
         TopList cachedTopList = getTopList(gameID, gameTypeID, saveType);
         if (cachedTopList == null) return;
-        cachedTopList.update(playerScore);
+        if (cachedTopList.update(playerScore) && GameBoxSettings.bungeeMode && bukkitBridge != null) {
+            bukkitBridge.sendTopListUpdate(gameID, gameTypeID, playerScore);
+        }
     }
 
     public abstract boolean load(boolean async);
@@ -92,6 +96,12 @@ public abstract class DataBase {
     public abstract void resetHighScores(String gameID, String gameTypeID, SaveType saveType);
 
     public abstract void getTopNPlayerScores(int n, String gameID, String gameTypeID, SaveType saveType, Callback<List<PlayerScore>> callback);
+
+    public abstract void updateTopLists();
+
+    public void registerBukkitBridge(BukkitBridge bukkitBridge) {
+        this.bukkitBridge = bukkitBridge;
+    }
 
     public interface Callback<T> {
         void onSuccess(T done);

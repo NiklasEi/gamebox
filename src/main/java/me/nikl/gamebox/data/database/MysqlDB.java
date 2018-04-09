@@ -242,6 +242,21 @@ public class MysqlDB extends DataBase {
         getTopNPlayerScores(n, identifier, saveType, callback);
     }
 
+    @Override
+    public void updateTopLists() {
+        for (TopList topList : cachedTopLists.values()) {
+            topList.clearTopList();
+            String id = topList.getIdentifier();
+            String[] parts = id.split("\\.");
+            if (parts.length != 3) {
+                plugin.warning("Error while updating top lists");
+                plugin.warning("   skipping: " + id);
+                continue;
+            }
+            initialiseNewTopList(topList, SaveType.valueOf(parts[2].toUpperCase()));
+        }
+    }
+
     private void getTopNPlayerScores(int n, String identifier, SaveType saveType, Callback<List<PlayerScore>> callback) {
         new BukkitRunnable() {
             @Override

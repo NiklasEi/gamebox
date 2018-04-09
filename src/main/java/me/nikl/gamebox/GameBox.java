@@ -1,5 +1,6 @@
 package me.nikl.gamebox;
 
+import me.nikl.gamebox.data.bungee.BukkitBridge;
 import me.nikl.gamebox.commands.GameBoxCommands;
 import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.data.database.DataBase;
@@ -63,6 +64,7 @@ public class GameBox extends JavaPlugin {
     private GameBoxCommands commands;
     private Module gameBoxModule;
     private CalendarEventsHook calendarEventsHook;
+    private BukkitBridge bukkitBridge;
 
     @Override
     public void onEnable() {
@@ -189,6 +191,8 @@ public class GameBox extends JavaPlugin {
         // and the plugin falls back to file storage
         if (!GameBoxSettings.useMysql) {
             if (!setUpFileDB()) return false;
+        } else if (GameBoxSettings.bungeeMode) {
+            dataBase.registerBukkitBridge(bukkitBridge==null?(bukkitBridge = new BukkitBridge(this)):bukkitBridge);
         }
 
         if (GameBoxSettings.econEnabled) {

@@ -128,6 +128,11 @@ public class FileDB extends DataBase {
         if (cachedTopLists.containsKey(topListIdentifier)) return cachedTopLists.get(topListIdentifier);
         TopList newTopList = new TopList(topListIdentifier, new ArrayList<>());
         cachedTopLists.put(topListIdentifier, newTopList);
+        getAndSetTopListContents(newTopList, gameID, gameTypeID, saveType);
+        return newTopList;
+    }
+
+    private void getAndSetTopListContents(TopList newTopList, String gameID, String gameTypeID, SaveType saveType) {
         getTopNPlayerScores(TopList.TOP_LIST_LENGTH, gameID, gameTypeID, saveType, new Callback<List<PlayerScore>>() {
             @Override
             public void onSuccess(List<PlayerScore> done) {
@@ -140,7 +145,6 @@ public class FileDB extends DataBase {
                 if (throwable != null) throwable.printStackTrace();
             }
         });
-        return newTopList;
     }
 
     private UUID getBestScore(Map<UUID, Double> valuesMap, boolean higher) {
@@ -252,6 +256,21 @@ public class FileDB extends DataBase {
                 }.runTask(plugin);
             }
         }.runTaskAsynchronously(plugin);
+    }
+
+    @Override
+    public void updateTopLists() {
+        for (TopList topList : cachedTopLists.values()) {
+            topList.clearTopList();
+            String id = topList.getIdentifier();
+            String[] parts = id.split("\\.");
+            if (parts.length != 3) {
+                plugin.warning("Error while updating top lists");
+                plugin.warning("   skipping: " + id);
+                continue;
+            }
+            getAndSetTopListContents(topList, parts[0], parts[1], SaveType.valueOf(parts[2].toUpperCase()));
+        }
     }
 
     public void convertToMySQL() {
