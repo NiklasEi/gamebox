@@ -19,6 +19,7 @@ public class GameBoxSettings {
     public static Sound successfulClick, unsuccessfulClick;
     public static boolean checkInventoryLength = false;
     public static boolean useMysql = false;
+    public static boolean bungeeMode = false;
     public static boolean version1_8 = false;
     public static int inviteInputDuration = 30; // time in seconds for inputs
     public static int inviteValidDuration = 60; // time in seconds for invitations
@@ -48,13 +49,18 @@ public class GameBoxSettings {
         configuration = plugin.getConfig();
         loadSpecialVersionSettings();
         loadCommands();
-        useMysql = configuration.getBoolean("mysql.enabled", false);
+        loadDatabaseSettings();
         hubModeEnabled = configuration.getBoolean("hubMode.enabled", false);
         checkInventoryLength = checkInventoryTitleLength();
         guiSettings();
         generalSettings();
         invitationSettings();
         economySettings();
+    }
+
+    private static void loadDatabaseSettings() {
+        useMysql = configuration.getBoolean("mysql.enabled", false);
+        bungeeMode = useMysql && configuration.getBoolean("mysql.bungeeMode", false);
     }
 
     private static void loadSpecialVersionSettings() {

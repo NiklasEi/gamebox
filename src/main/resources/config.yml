@@ -150,6 +150,10 @@ mysql:
   database: "Database"
   username: "User"
   password: "Password"
+  # This enables synchronisation of top lists through your network
+  # NOT supported for file storage!
+  # All servers have to use the same database
+  bungeeMode: false
 
 
 # HubMode makes playing GameBox games easier.
