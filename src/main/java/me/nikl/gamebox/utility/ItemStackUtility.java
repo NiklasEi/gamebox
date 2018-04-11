@@ -1,11 +1,13 @@
 package me.nikl.gamebox.utility;
 
+import me.nikl.nmsutilities.NmsFactory;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.MaterialData;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +19,7 @@ import java.util.Map;
  * Utility class for ItemStacks
  */
 public class ItemStackUtility {
-    public static final String MAT = "materialData";
+    public static final String MATERIAL = "materialData";
     public static final String LORE = "lore";
     public static final String NAME = "displayName";
     public static final String GLOW = "glow";
@@ -76,7 +78,7 @@ public class ItemStackUtility {
     }
 
     public static ItemStack loadItem(ConfigurationSection section) {
-        ItemStack toReturn = getItemStack(section.getString(MAT));
+        ItemStack toReturn = getItemStack(section.getString(MATERIAL));
         if (toReturn == null) return null;
         ItemMeta meta = toReturn.getItemMeta();
         if (section.isString(NAME)) {
@@ -84,6 +86,9 @@ public class ItemStackUtility {
         }
         if (section.isList(LORE)) {
             meta.setLore(StringUtility.color(section.getStringList(LORE)));
+        }
+        if (section.getBoolean(GLOW, false)) {
+            toReturn = NmsFactory.getNmsUtility().addGlow(toReturn);
         }
         toReturn.setItemMeta(meta);
         return toReturn;
