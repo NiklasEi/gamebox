@@ -1,6 +1,7 @@
 package me.nikl.gamebox.commands.player;
 
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.Private;
 import co.aikar.commands.annotation.Subcommand;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.inventory.GUIManager;
@@ -19,6 +20,7 @@ public class InvitationClickCommand extends PlayerBaseCommand {
     }
 
     @Subcommand("%INVITE_CLICK_COMMAND")
+    @Private
     public void onInvitationMessageClick(Player player, String[] args) {
         guiManager.openGameGui(player, args);
     }
