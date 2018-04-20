@@ -83,15 +83,13 @@ public class GUIManager {
     }
 
     public boolean openGameGui(Player whoClicked, String... args) {
-        if (!plugin.getPluginManager().hasSavedContents(whoClicked.getUniqueId())) {
-            if (!plugin.getPluginManager().enterGameBox(whoClicked, args[0], args[1])) return false;
+        if (args == null || args.length != 2) {
+            GameBox.debug("unknown number of arguments in GUIManager.openGameGui");
+            return false;
         }
 
-        if (args.length != 2) {
-            Bukkit.getConsoleSender().sendMessage("unknown number of arguments in GUIManager.openGameGui");
-            if (!isInGUI(whoClicked.getUniqueId()) && !plugin.getPluginManager().isInGame(whoClicked.getUniqueId()))
-                plugin.getPluginManager().leaveGameBox(whoClicked);
-            return false;
+        if (!plugin.getPluginManager().hasSavedContents(whoClicked.getUniqueId())) {
+            if (!plugin.getPluginManager().enterGameBox(whoClicked, args[0], args[1])) return false;
         }
 
         String gameID = args[0], key = args[1];
