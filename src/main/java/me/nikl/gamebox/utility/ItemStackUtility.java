@@ -1,13 +1,15 @@
 package me.nikl.gamebox.utility;
 
+import me.nikl.gamebox.GameBox;
 import me.nikl.nmsutilities.NmsFactory;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.material.MaterialData;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +26,7 @@ public class ItemStackUtility {
     public static final String NAME = "displayName";
     public static final String GLOW = "glow";
     private static final Map<String, ItemStack> cachedPlayerHeads = new HashMap<>();
+    private static final Inventory dummy = Bukkit.createInventory(null, 54, "dummy inv.");
 
     public static ItemStack getItemStack(String matDataString) {
         Material mat;
@@ -57,7 +60,6 @@ public class ItemStackUtility {
             return (mat == null ? null : new ItemStack(mat, 1));
         }
     }
-
 
     public static ItemStack createBookWithText(List<String> text) {
         return createItemWithText(text, new MaterialData(Material.BOOK_AND_QUILL));
@@ -95,13 +97,18 @@ public class ItemStackUtility {
     }
 
     public static ItemStack getPlayerHead(String name) {
+        GameBox.debug("Grabbing head for " + name);
         ItemStack skull = cachedPlayerHeads.get(name);
         if (skull != null) return skull;
+        GameBox.debug("Not cached yet...");
         skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
         skullMeta.setOwner(name);
         skull.setItemMeta(skullMeta);
+        // force profile lookup
+        dummy.setItem(0, skull);
         cachedPlayerHeads.put(name, skull);
+        GameBox.debug(name + "'s head is cached now");
         return skull;
     }
 }

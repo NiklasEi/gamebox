@@ -53,7 +53,7 @@ public class TopListPage extends GameGuiPage implements TopListUser {
             stat = topListScores.get(rank);
             rank++;
             player = Bukkit.getOfflinePlayer(stat.getUuid());
-            // checking for name == null is important to prevent NPEs after player data reset on server
+            // checking for name == null is important to prevent NPEs after player data reset on server. This also happens with bungeecord networks
             if (player == null || player.getName() == null) {
                 skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
                 skullMeta = (SkullMeta) skull.getItemMeta();
