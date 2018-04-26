@@ -6,3 +6,5 @@
    - new setting
    - sync top lists (only MySQL)
    - allow unknown players in top lists
+- bump cookieclicker to 2.1.0
+   - sync of saves for Bungeecord with MySQL 

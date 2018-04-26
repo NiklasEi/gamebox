@@ -526,4 +526,8 @@ public class MysqlDB extends DataBase {
         }
         return toReturn;
     }
+
+    public HikariDataSource getHikariDataSource() {
+        return this.hikari;
+    }
 }
