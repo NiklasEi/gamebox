@@ -10,8 +10,10 @@ import java.util.ArrayList;
 /**
  * @author Niklas Eicker
  *
- * easier permission storage
- * just change the permission nodes here
+ * Permission enums
+ * A permission can be game specific. In general there are wildcard permissions for these game permissions.
+ * {@link me.nikl.gamebox.utility.Permission#hasPermission(CommandSender, Module)} will check a game specific permission for the given module.
+ * The wildcard permissions are always checked.
  */
 public enum Permission {
     USE("use"),
@@ -22,6 +24,7 @@ public enum Permission {
     CMD_TOKEN("token"),
     BYPASS_GAME("bypass", true),
     OPEN_SHOP("shop"),
+    ADMIN_GAME("admin.game", true),
     ADMIN_SETTINGS("admin.settings"),
     ADMIN_LANGUAGE("admin.language"),
     ADMIN_RELOAD("admin.reload"),

@@ -23,11 +23,15 @@ permissions:
     description: Gives permission to use all admin commands
     default: false
     children:
+      gamebox.admin.game.*: true
       gamebox.admin.settings: true
       gamebox.admin.database: true
       gamebox.admin.language: true
       gamebox.admin.reload: true
       gamebox.admin.token: true
+  gamebox.admin.game.*:
+    description: Gives permission to use game specific admin commands
+    default: false
   gamebox.admin.settings:
     description: Player can manipulate settings
     default: false

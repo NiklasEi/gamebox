@@ -2,6 +2,7 @@ package me.nikl.gamebox.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.BukkitCommandManager;
+import co.aikar.commands.annotation.CommandAlias;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.commands.admin.DatabaseConverter;
@@ -34,6 +35,7 @@ public class GameBoxCommands extends BukkitCommandManager {
         getCommandReplacements().addReplacement("INVITE_CLICK_COMMAND", INVITE_CLICK_COMMAND);
         getCommandReplacements().addReplacement("mainCommand", GameBoxSettings.mainCommand);
         getCommandReplacements().addReplacement("adminCommand", GameBoxSettings.adminCommand);
+        getCommandReplacements().addReplacement("adminGameCommand", GameBoxSettings.adminCommand + " game");
         defaultExceptionHandler = new DefaultExceptionHandler();
         registerCommands();
     }
@@ -57,6 +59,8 @@ public class GameBoxCommands extends BukkitCommandManager {
 
     @Override
     public void registerCommand(BaseCommand baseCommand) {
+        GameBox.debug("registering " + baseCommand.getClass().getSimpleName());
+        GameBox.debug("   annotated -> " + (baseCommand.getClass().getAnnotation(CommandAlias.class) != null?baseCommand.getClass().getAnnotation(CommandAlias.class).value():"null"));
         super.registerCommand(baseCommand.setExceptionHandler(defaultExceptionHandler), true);
     }
 }
