@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>gamebox</artifactId>
+        <groupId>me.nikl</groupId>
+        <version>2.1.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>gamebox-distribution</artifactId>
+
+    <build>
+        <defaultGoal>clean package</defaultGoal>
+        <finalName>GameBox</finalName>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <directory>../target</directory>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <artifactSet>
+                        <includes>
+                            <include>me.nikl:gamebox-core</include>
+                            <include>me.nikl:cookieclicker</include>
+                            <include>me.nikl:connectfour</include>
+                            <include>me.nikl:matchit</include>
+                        </includes>
+                    </artifactSet>
+                    <relocations>
+                        <relocation>
+                            <pattern>me.nikl.cookieclicker</pattern>
+                            <shadedPattern>me.nikl.gamebox.games.cookieclicker</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>me.nikl.connectfour</pattern>
+                            <shadedPattern>me.nikl.gamebox.games.connectfour</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>me.nikl.matchit</pattern>
+                            <shadedPattern>me.nikl.gamebox.games.matchit</shadedPattern>
+                        </relocation>
+                    </relocations>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>nikl-repo</id>
+            <url>http://repo.nikl.me/artifactory/repositories</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>me.nikl</groupId>
+            <artifactId>gamebox-core</artifactId>
+            <version>2.1.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- games -->
+        <dependency>
+            <groupId>me.nikl</groupId>
+            <artifactId>cookieclicker</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>me.nikl</groupId>
+            <artifactId>connectfour</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>me.nikl</groupId>
+            <artifactId>matchit</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+    </dependencies>
+</project>

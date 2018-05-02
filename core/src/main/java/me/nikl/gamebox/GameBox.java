@@ -410,4 +410,8 @@ public class GameBox extends JavaPlugin {
     public CalendarEventsHook getCalendarEventsHook() {
         return calendarEventsHook;
     }
+
+    public GameBoxCommands getCommands() {
+        return commands;
+    }
 }

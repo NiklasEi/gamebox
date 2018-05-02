@@ -208,6 +208,10 @@ public class GameRegistry {
         return Collections.unmodifiableSet(modules.keySet());
     }
 
+    public Set<Module> getModules() {
+        return Collections.unmodifiableSet(new HashSet<>(modules.values()));
+    }
+
     public Set<String> getModuleSubCommands(Module module) {
         return Collections.unmodifiableSet(bundledSubCommands.get(module));
     }
