@@ -1,5 +1,7 @@
 # Changelog
 
+### v 2.1.1
+- update CookieClicker to 2.1.1
 
 ### v 2.1.0
 - Bungee mode
