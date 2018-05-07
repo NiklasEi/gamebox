@@ -1,5 +1,8 @@
 # Changelog
 
+### v 2.1.2
+- update CookieClicker to 2.1.2
+
 ### v 2.1.1
 - update CookieClicker to 2.1.1
 
