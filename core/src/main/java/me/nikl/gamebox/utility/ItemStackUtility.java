@@ -99,7 +99,7 @@ public class ItemStackUtility {
     public static ItemStack getPlayerHead(String name) {
         GameBox.debug("Grabbing head for " + name);
         ItemStack skull = cachedPlayerHeads.get(name);
-        if (skull != null) return skull;
+        if (skull != null) return skull.clone();
         GameBox.debug("Not cached yet...");
         skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
