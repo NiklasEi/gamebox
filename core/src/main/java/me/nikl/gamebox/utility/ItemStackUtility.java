@@ -109,6 +109,6 @@ public class ItemStackUtility {
         dummy.setItem(0, skull);
         cachedPlayerHeads.put(name, skull);
         GameBox.debug(name + "'s head is cached now");
-        return skull;
+        return skull.clone();
     }
 }
