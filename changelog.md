@@ -1,4 +1,6 @@
 # Changelog
+- cache and clone (player-)skulls
+- bump shade plugin to fix problems with higher versions of Java
 
 ### v 2.1.2
 - update CookieClicker to 2.1.2
