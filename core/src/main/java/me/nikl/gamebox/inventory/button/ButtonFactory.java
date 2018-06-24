@@ -26,7 +26,7 @@ public class ButtonFactory {
     }
 
     public static ToggleButton createToggleButton(GameBoxLanguage language) {
-        ItemStack toggle = new MaterialData(Material.RECORD_6).toItemStack(1);
+        ItemStack toggle = new MaterialData(Material.RECORD_2).toItemStack(1);
         ToggleButton soundToggle = new ToggleButton(toggle, new MaterialData(Material.RECORD_4));
         ItemMeta meta = soundToggle.getItemMeta();
         meta.addItemFlags(ItemFlag.values());
