@@ -1,5 +1,9 @@
 # Changelog
 
+### v 2.1.4
+- use green record as symbol for "sound on"
+- supply new utility method for logic puzzles plugin
+
 ### v 2.1.3
 - cache and clone (player-)skulls
 - bump shade plugin to fix problems with higher versions of Java

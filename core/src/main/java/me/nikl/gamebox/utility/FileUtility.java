@@ -7,6 +7,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -178,5 +180,49 @@ public class FileUtility {
         } catch (IOException var10) {
             gameBox.getLogger().log(Level.SEVERE, "Could not save " + outFile.getName() + " to " + outFile, var10);
         }
+    }
+
+    /**
+     * Retrieves the line separator used in a file.
+     *
+     * Using this method resolves a few problems users had with OSs that did not
+     * convert the line separation chars in puzzle files.
+     * @param file file to check
+     * @return used line separation
+     */
+    public static String retrieveLineSeparator(File file) {
+        char current;
+        String lineSeparator = "";
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(file);
+            while (fis.available() > 0) {
+                current = (char) fis.read();
+                if ((current == '\n') || (current == '\r')) {
+                    lineSeparator += current;
+                    if (fis.available() > 0) {
+                        char next = (char) fis.read();
+                        if ((next != current)
+                                && ((next == '\r') || (next == '\n'))) {
+                            lineSeparator += next;
+                        }
+                    }
+                    return lineSeparator;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fis!=null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
     }
 }
