@@ -1,10 +1,12 @@
 package me.nikl.gamebox.utility;
 
+import org.bukkit.configuration.ConfigurationSection;
+
 /**
  * @author Niklas Eicker
  */
 public class NumberUtility {
-    private static final String SHORTNAMES[] = new String[]{
+    private static final String DEFAULT_SHORTNAMES[] = new String[]{
             "",
             " M",
             " B",
@@ -27,7 +29,7 @@ public class NumberUtility {
             " Novemdec",
             " Vigint",
     };
-    private static final String NAMES[] = new String[]{
+    private static final String DEFAULT_NAMES[] = new String[]{
             "",
             " Million",
             " Billion",
@@ -50,6 +52,9 @@ public class NumberUtility {
             " Novemdecillion",
             " Vigintillion",
     };
+    // small workaround after some requests to make the high number names customizable
+    private static String[] SHORTNAMES;
+    private static String[] NAMES;
 
     public static String convertHugeNumber(double number) {
         return convertHugeNumber(number, true);
@@ -103,6 +108,40 @@ public class NumberUtility {
                 numberStr = split[0] + "." + split[1].substring(0, 1);
             }
             return numberStr;
+        }
+    }
+
+    /**
+     * Overwrite the default high number names with customizable ones
+     * from a section of the language file.
+     * @param section ConfigurationSection containing the names
+     */
+    public static void overwriteShortnames(ConfigurationSection section) {
+        if (section == null) SHORTNAMES = DEFAULT_SHORTNAMES;
+        SHORTNAMES = new String[DEFAULT_SHORTNAMES.length];
+        for (int i = 0; i < SHORTNAMES.length; i++) {
+            if (!section.isString(String.valueOf(i))) {
+                SHORTNAMES[i] = DEFAULT_SHORTNAMES[i];
+                continue;
+            }
+            SHORTNAMES[i] = section.getString(String.valueOf(i));
+        }
+    }
+
+    /**
+     * Overwrite the default high number names with customizable ones
+     * from a section of the language file.
+     * @param section ConfigurationSection containing the names
+     */
+    public static void overwriteNames(ConfigurationSection section) {
+        if (section == null) NAMES = DEFAULT_NAMES;
+        NAMES = new String[DEFAULT_NAMES.length];
+        for (int i = 0; i < NAMES.length; i++) {
+            if (!section.isString(String.valueOf(i))) {
+                NAMES[i] = DEFAULT_NAMES[i];
+                continue;
+            }
+            NAMES[i] = section.getString(String.valueOf(i));
         }
     }
 }

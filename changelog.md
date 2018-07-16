@@ -1,5 +1,7 @@
 # Changelog
 
+- add high number (short-)names to the language file
+
 ### v 2.1.5
 - update CookieClicker to 2.1.3
 - update MatchIt to 1.0.1
@@ -24,4 +26,4 @@
    - sync top lists (only MySQL)
    - allow unknown players in top lists
 - bump cookieclicker to 2.1.0
-   - sync of saves for Bungeecord with MySQL 
+   - sync of saves for Bungeecord with MySQL

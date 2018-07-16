@@ -1,7 +1,9 @@
 package me.nikl.gamebox;
 
+import me.nikl.gamebox.utility.NumberUtility;
 import org.bukkit.ChatColor;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -64,6 +66,14 @@ public class GameBoxLanguage extends Language {
         getOthers();
         getShop();
         getTopList();
+        loadHighNumberNames();
+    }
+
+    private void loadHighNumberNames() {
+        if (!language.isConfigurationSection("highNumberNames")) NumberUtility.overwriteNames(defaultLanguage.getConfigurationSection("highNumberNames"));
+        else NumberUtility.overwriteNames(language.getConfigurationSection("highNumberNames"));
+        if (!language.isConfigurationSection("highNumberShortNames")) NumberUtility.overwriteShortnames(defaultLanguage.getConfigurationSection("highNumberShortNames"));
+        else NumberUtility.overwriteShortnames(language.getConfigurationSection("highNumberShortNames"));
     }
 
     private void getTopList() {
@@ -177,6 +187,17 @@ public class GameBoxLanguage extends Language {
         this.SHOP_FREE = getString("shop.freeItem");
         this.SHOP_MONEY = getString("shop.moneyItem");
         this.SHOP_TOKEN = getString("shop.tokenItem");
+    }
+
+    @Override
+    public List<String> findMissingStringMessages() {
+        List<String> toReturn = super.findMissingStringMessages();
+        Iterator<String> iterator = toReturn.listIterator();
+        while (iterator.hasNext()) {
+            String next = iterator.next();
+            if (next.contains("highNumberNames.") || next.contains("highNumberShortNames.")) iterator.remove();
+        }
+        return toReturn;
     }
 }
 

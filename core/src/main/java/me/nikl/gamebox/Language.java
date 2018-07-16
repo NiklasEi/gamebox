@@ -71,7 +71,6 @@ public abstract class Language {
      */
     protected void getLangFile(FileConfiguration config) {
         String moduleID = module.getModuleID();
-
         // load default language
         try {
             String defaultLangName = moduleID.equals(GameBox.MODULE_GAMEBOX) ? "language/lang_en.yml" : "language/" + module.getModuleID() + "/lang_en.yml";
@@ -84,14 +83,11 @@ public abstract class Language {
             plugin.getLogger().warning("Failed to load default language file for namespace: " + module.getModuleID());
             e2.printStackTrace();
         }
-
         String fileName = config.getString("langFile");
-
         if (fileName != null && (fileName.equalsIgnoreCase("default") || fileName.equalsIgnoreCase("default.yml"))) {
             language = defaultLanguage;
             return;
         }
-
         if (fileName == null || !fileName.endsWith(".yml")) {
             String path = moduleID.equals(GameBox.MODULE_GAMEBOX) ? "'config.yml'" : "'games" + "/" + moduleID + "/config.yml'";
             plugin.getLogger().warning("Language file for " + moduleID + " is not specified or not valid.");
@@ -101,14 +97,12 @@ public abstract class Language {
             language = defaultLanguage;
             return;
         }
-
         languageFile = moduleID.equals(GameBox.MODULE_GAMEBOX) ?
                 new File(plugin.getDataFolder().toString() + File.separatorChar + "language" + File.separatorChar
                         + fileName)
                 :
                 new File(plugin.getDataFolder().toString() + File.separatorChar + "language" + File.separatorChar
                         + moduleID + File.separatorChar + fileName);
-
         if (!languageFile.exists()) {
             String path = moduleID.equals(GameBox.MODULE_GAMEBOX) ? "'config.yml'"
                     : "'games" + "/" + moduleID + "/config.yml'";
@@ -117,7 +111,6 @@ public abstract class Language {
             language = defaultLanguage;
             return;
         }
-
         // File exists
         try {
             language = YamlConfiguration
@@ -127,7 +120,6 @@ public abstract class Language {
             e.printStackTrace();
             language = defaultLanguage;
         }
-
         return;
     }
 
@@ -142,11 +134,8 @@ public abstract class Language {
      * @return list of all missing keys (can be empty list)
      */
     public List<String> findMissingStringMessages() {
-
         List<String> toReturn = new ArrayList<>();
-
         if (defaultLanguage.equals(language)) return toReturn;
-
         for (String key : defaultLanguage.getKeys(true)) {
             if (defaultLanguage.isString(key)) {
                 if (!language.isString(key)) {
@@ -168,11 +157,8 @@ public abstract class Language {
      * @return list of all missing keys (can be empty list)
      */
     public List<String> findMissingListMessages() {
-
         List<String> toReturn = new ArrayList<>();
-
         if (defaultLanguage.equals(language)) return toReturn;
-
         for (String key : defaultLanguage.getKeys(true)) {
             if (defaultLanguage.isList(key)) {
                 if (!language.isList(key)) {
@@ -199,7 +185,6 @@ public abstract class Language {
      */
     protected List<String> getStringList(String path, boolean color) {
         List<String> toReturn;
-
         // load from default file if path is not valid
         if (!language.isList(path)) {
             toReturn = defaultLanguage.getStringList(path);
@@ -212,7 +197,6 @@ public abstract class Language {
             }
             return toReturn;
         }
-
         // load from language file
         toReturn = language.getStringList(path);
         if (color && toReturn != null) {

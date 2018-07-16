@@ -179,3 +179,58 @@ topList:
   - ""
   - "This player has not joined"
   - "   the server before."
+
+# Names of high numbers used for visualization
+# Let the numbers be 'n' then the names are used for 10^(3*n)
+# meaning 1 -> 1 000
+#         2 -> 1 000 000
+#         4 -> 1 000 000 000 000
+# You can skip numbers and the default name will be used
+# max number: 21 (corresponding to 10^63)
+# FYI: The number settings are optional and are not listed as missing messages, if they are not in a custom language file.
+highNumberNames:
+  1: ""
+  2: "Million"
+  3: "Billion"
+  4: "Trillion"
+  5: "Quadrillion"
+  6: "Quintillion"
+  7: "Sextillion"
+  8: "Septillion"
+  9: "Octillion"
+  10: "Nonillion"
+  11: "Decillion"
+  12: "Undecillion"
+  13: "Duodecillion"
+  14: "Tredecillion"
+  15: "Quattuordecillion"
+  16: "Quindecillion"
+  17: "Sexdecillion"
+  18: "Septendecillion"
+  19: "Octodecillion"
+  20: "Novemdecillion"
+  21: "Vigintillion"
+
+# Short-names of high numbers used for visualization
+highNumberShortNames:
+  1: ""
+  2: "M"
+  3: "B"
+  4: "T"
+  5: "Quad"
+  6: "Quin"
+  7: "Sext"
+  8: "Sept"
+  9: "Oct"
+  10: "Non"
+  11: "Dec"
+  12: "Undec"
+  13: "Duodec"
+  14: "Tredec"
+  15: "Quattuordec"
+  16: "Quindec"
+  17: "Sexdec"
+  18: "Septendec"
+  19: "Octodec"
+  20: "Novemdec"
+  21: "Vigint"
