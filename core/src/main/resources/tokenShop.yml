@@ -17,7 +17,7 @@ shop:
      # lore of the item (optional)
      lore:
      - ""
-     - "&1Click to open the shop"
+     - "&bClick to open the shop"
      glow: true
   categories:
     # unique key of the category
@@ -29,8 +29,8 @@ shop:
       # lore of the button
       lore:
       - ""
-      - "&1Useless blocks"
-      - "&1Just for demonstration, you should change this!"
+      - "&bUseless blocks"
+      - "&bJust for demonstration, you should change this!"
       # should it glow?
       glow: false
       # items in the pages of the shop
@@ -45,7 +45,7 @@ shop:
           # optional lore of the sold item
           lore:
           - ""
-          - "&1smells very special..."
+          - "&bsmells very special..."
           # optional glow of the sold item
           glow: true
           # price in token (optional)
@@ -66,13 +66,13 @@ shop:
 
             # optional lore added to the default shop lore that already contains the price of the item/command
             additionalLore:
-            - "&1Personal greeting by the server"
+            - "&bPersonal greeting by the server"
             - ""
-            - "&1Have the permissions:"
+            - "&bHave the permissions:"
             - "&6   gamebox.testing1"
             - "&6   gamebox.testing2"
             - ""
-            - "&1Do not have the permissions:"
+            - "&bDo not have the permissions:"
             - "&6   gamebox.play.battleship"
             - "&6   gamebox.play.*"
 
@@ -117,8 +117,8 @@ shop:
           tokens: 1
           buttonItem:
             additionalLore:
-            - "&1You need the following permission"
-            - "&1  to buy this item:"
+            - "&bYou need the following permission"
+            - "&b  to buy this item:"
             - " "
             - "&6  my.server.builder"
           requirements:
@@ -140,13 +140,13 @@ shop:
             materialData: "nether_star"
             displayName: "&9&lExample Command"
             additionalLore:
-            - "&1If you buy this, the server"
-            - "&1  will thank you ;)"
+            - "&bIf you buy this, the server"
+            - "&b  will thank you ;)"
             - " "
-            - "&1Do not have the permission:"
+            - "&bDo not have the permission:"
             - "&6  my.server.builder"
             - " "
-            - "&1Have the permission:"
+            - "&bHave the permission:"
             - "&6  gamebox.play.*"
           requirements:
             permissions:
@@ -166,8 +166,8 @@ shop:
             materialData: "obsidian"
             displayName: "&9&lExample give Command"
             additionalLore:
-            - "&1Gives you 59 obsidian per command"
-            - "   &1If you have"
+            - "&bGives you 59 obsidian per command"
+            - "   &bIf you have"
             - "   &6my.server.builder"
             glow: true
           requirements:
@@ -267,10 +267,10 @@ shop:
           money: 1
     glow:
       materialData: "159:1"
-      displayName: "&1&lMysterious glowing example section"
+      displayName: "&b&lMysterious glowing example section"
       lore:
       - ""
-      - "&1Buy Stuff"
+      - "&bBuy Stuff"
       - "&4&lYou should really customize this ;)"
       glow: true
       items:
