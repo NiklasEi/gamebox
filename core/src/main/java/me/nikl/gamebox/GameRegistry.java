@@ -191,14 +191,15 @@ public class GameRegistry {
             game.onEnable();
         } catch (NoSuchMethodException | IllegalAccessException
                 | InstantiationException | InvocationTargetException e) {
-            gameBox.warning(" The game class needs a public constructor taking only a GameBox object!");
+            gameBox.warning(" The game class of '" + module.getModuleID() + "' needs a public constructor taking only a GameBox object!");
             e.printStackTrace();
             gameBox.getPluginManager().unregisterGame(module.getModuleID());
         } catch (GameLoadException e) {
+            gameBox.warning(" Exception while loading '" + module.getModuleID() + "'!");
             e.printStackTrace();
             gameBox.getPluginManager().unregisterGame(module.getModuleID());
         } catch (Throwable throwable) {
-            gameBox.warning("unexpected error while loading a game...");
+            gameBox.warning("unexpected error while loading '" + module.getModuleID() + "'...");
             throwable.printStackTrace();
             gameBox.getPluginManager().unregisterGame(module.getModuleID());
         }

@@ -23,7 +23,7 @@ shop:
     # unique key of the category
     blocks:
       # material data of the button for the category
-      materialData: "159:1"
+      materialData: "stained_clay:1"
       # display name of the button
       displayName: "&3&lExample Block section with several pages"
       # lore of the button
@@ -127,7 +127,7 @@ shop:
 
         # selling a glowing item
         blueClayd37:
-          materialData: "452"
+          materialData: "iron_nugget"
           tokens: 100
           money: 1000
           glow: true
@@ -186,67 +186,67 @@ shop:
           manipulatesInventory: true
 
         blueClay1:
-          materialData: "159:6"
+          materialData: "stained_clay:6"
           tokens: 1
         yellowClay1:
-          materialData: "159:4"
+          materialData: "stained_clay:4"
           tokens: 1
           money: 1
         blueClay2:
-          materialData: "159:11"
+          materialData: "stained_clay:11"
           tokens: 1
           money: 0
         yellowClay2:
-          materialData: "159:4"
+          materialData: "stained_clay:4"
           tokens: 1
           money: 1
         blueClay3:
-          materialData: "159:11"
+          materialData: "stained_clay:11"
           tokens: 1
           money: 0
         yellowClay3:
-          materialData: "159:4"
+          materialData: "stained_clay:4"
           tokens: 1
           money: 1
         blueClay4:
-          materialData: "159:11"
+          materialData: "stained_clay:11"
           tokens: 1
           money: 0
         yellowClay4:
-          materialData: "159:4"
+          materialData: "stained_clay:4"
           tokens: 1
           money: 1
         blueClay5:
-          materialData: "159:11"
+          materialData: "stained_clay:11"
           tokens: 1
           money: 0
         yellowClay5:
-          materialData: "159:4"
+          materialData: "stained_clay:4"
           tokens: 1
           money: 1
         blueClay6:
-          materialData: "159:11"
+          materialData: "stained_clay:11"
           tokens: 1
         yellowClay6:
-          materialData: "159:4"
+          materialData: "stained_clay:4"
           tokens: 1
           money: 1
         blueClay27:
-          materialData: "159:11"
+          materialData: "stained_clay:11"
           tokens: 1
         yellowClay27:
-          materialData: "159:4"
+          materialData: "stained_clay:4"
           tokens: 1
           money: 1
         blueClay37:
-          materialData: "159:11"
+          materialData: "stained_clay:11"
           tokens: 1
         yellowClay37:
-          materialData: "159:4"
+          materialData: "stained_clay:4"
           tokens: 1
           money: 1
         blueClay47:
-          materialData: "159:11"
+          materialData: "stained_clay:11"
           tokens: 1
           money: 0
     food:
@@ -266,7 +266,7 @@ shop:
           tokens: 1
           money: 1
     glow:
-      materialData: "159:1"
+      materialData: "stained_clay:1"
       displayName: "&1&lMysterious glowing example section"
       lore:
       - ""

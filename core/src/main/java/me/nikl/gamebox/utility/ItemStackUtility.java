@@ -33,12 +33,16 @@ public class ItemStackUtility {
         short data;
         if (matDataString == null) return null;
         String[] obj = matDataString.split(":");
+        try {
+            mat = Material.matchMaterial(obj[0]);
+        } catch (Exception e) {
+            Bukkit.getLogger().warning(matDataString + " cannot be matched to a material");
+            return null;
+        }
+        if (mat == null) {
+            Bukkit.getLogger().warning("matched " + matDataString + " to null");
+        }
         if (obj.length == 2) {
-            try {
-                mat = Material.matchMaterial(obj[0]);
-            } catch (Exception e) {
-                return null; // material name doesn't exist
-            }
             try {
                 data = Short.valueOf(obj[1]);
             } catch (NumberFormatException e) {
@@ -46,16 +50,10 @@ public class ItemStackUtility {
                 return null; // data not a number
             }
             //noinspection deprecation
-            if (mat == null) return null;
             ItemStack stack = new ItemStack(mat, 1);
             stack.setDurability(data);
             return stack;
         } else {
-            try {
-                mat = Material.matchMaterial(obj[0]);
-            } catch (Exception e) {
-                return null; // material name doesn't exist
-            }
             //noinspection deprecation
             return (mat == null ? null : new ItemStack(mat, 1));
         }
