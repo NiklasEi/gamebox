@@ -185,7 +185,7 @@ hubMode:
      # Lore of the item (optional).
      lore:
      - ""
-     - "&1Click with this to play awesome games"
+     - "&bClick with this to play awesome games"
 
 
 # Plugin intern listeners are able to run some basic code during GameBox events for you.
