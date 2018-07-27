@@ -1,6 +1,10 @@
 # Changelog
 
+### v 2.2.0
+- compatibility with minecraft 1.13
+- improved default colors in tokenShop and messages
 - add high number (short-)names to the language file
+- fixed debugging of the games...
 
 ### v 2.1.5
 - update CookieClicker to 2.1.3
