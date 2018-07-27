@@ -53,7 +53,6 @@ import java.util.logging.Level;
  * Abstract Game class to be extended by every GB game
  */
 public abstract class Game {
-    protected static boolean debug = false;
     protected GameBox gameBox;
     protected FileConfiguration config;
     protected Module module;
@@ -380,11 +379,11 @@ public abstract class Game {
     }
 
     public void debug(String debugMessage) {
-        if (debug) Bukkit.getLogger().info(gameLang.PREFIX + " " + debugMessage);
+        if (GameBox.debug) Bukkit.getLogger().info(gameLang.PREFIX + " " + debugMessage);
     }
 
     public void debug(ArrayList<String> debugMessages) {
-        if (!debug) return;
+        if (!GameBox.debug) return;
         for (String message : debugMessages) {
             Bukkit.getLogger().info(gameLang.PREFIX + " " + message);
         }

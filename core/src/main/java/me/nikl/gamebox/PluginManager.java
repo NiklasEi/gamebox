@@ -165,24 +165,11 @@ public class PluginManager implements Listener {
             GameBoxSettings.hubModeEnabled = false;
             return;
         }
-        String matString = hubSec.getString("item.materialData");
-        String[] matStrings = matString.split(":");
-        Material mat = Material.getMaterial(matStrings[0]);
-        if (mat == null) {
+        hubItem = ItemStackUtility.getItemStack(hubSec.getString("item.materialData", "CHEST"));
+        if (hubItem == null) {
             Bukkit.getLogger().log(Level.WARNING, " invalid material in the 'hubMode' section");
             GameBoxSettings.hubModeEnabled = false;
             return;
-        }
-        hubItem = new ItemStack(mat);
-        if (matStrings.length == 2) {
-            try {
-                Short.parseShort(matStrings[1]);
-            } catch (NumberFormatException exception) {
-                exception.printStackTrace();
-                GameBoxSettings.hubModeEnabled = false;
-                return;
-            }
-            hubItem.setDurability(Short.parseShort(matStrings[1]));
         }
         ItemMeta meta = hubItem.getItemMeta();
         meta.setDisplayName(StringUtility.color(hubSec.getString("item.displayName")));
