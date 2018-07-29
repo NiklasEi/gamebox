@@ -36,11 +36,11 @@ public class ItemStackUtility {
         try {
             mat = Material.matchMaterial(obj[0]);
         } catch (Exception e) {
-            Bukkit.getLogger().warning(matDataString + " cannot be matched to a material");
+            GameBox.debug(matDataString + " cannot be matched to a material");
             return null;
         }
         if (mat == null) {
-            Bukkit.getLogger().warning("matched " + matDataString + " to null");
+            GameBox.debug("matched " + matDataString + " to null");
             return null;
         }
         if (obj.length == 2) {

@@ -1,6 +1,7 @@
 # Changelog
 
 - fix ItemStackUtility throwing error on invalid materials, when a data value is given
+- hide leftover debug messages
 
 ### v 2.2.0
 - compatibility with minecraft 1.13
