@@ -41,6 +41,7 @@ public class ItemStackUtility {
         }
         if (mat == null) {
             Bukkit.getLogger().warning("matched " + matDataString + " to null");
+            return null;
         }
         if (obj.length == 2) {
             try {
@@ -49,13 +50,11 @@ public class ItemStackUtility {
                 e.printStackTrace();
                 return null; // data not a number
             }
-            //noinspection deprecation
             ItemStack stack = new ItemStack(mat, 1);
             stack.setDurability(data);
             return stack;
         } else {
-            //noinspection deprecation
-            return (mat == null ? null : new ItemStack(mat, 1));
+            return new ItemStack(mat, 1);
         }
     }
 

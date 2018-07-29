@@ -1,5 +1,7 @@
 # Changelog
 
+- fix ItemStackUtility throwing error on invalid materials, when a data value is given
+
 ### v 2.2.0
 - compatibility with minecraft 1.13
 - improved default colors in tokenShop and messages
