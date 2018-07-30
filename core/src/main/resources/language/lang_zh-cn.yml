@@ -107,6 +107,10 @@ inventoryTitles:
   alreadyInAnotherGame: '     &4已经在另一个游戏里了'
 
 
+topList:
+  playerSkullName: "&1%player%"
+
+
 shop:
   freeItem: "&9免费"
   moneyItem: "&9需要金钱: &4%money%"

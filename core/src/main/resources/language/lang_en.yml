@@ -173,6 +173,7 @@ others:
     afterColor: "blue"
 
 topList:
+  playerSkullName: "&1%player%"
   unknownSkullName: "&1Unknown Player"
   # Will be added below the rank information for unknown players
   unknownSkullLore:

@@ -73,7 +73,7 @@ public class TopListPage extends GameGuiPage implements TopListUser {
                 for (int i = 0; i < skullLore.size(); i++) {
                     skullLore.set(i, skullLore.get(i).replace("%player%", name).replace("%rank%", String.valueOf(rank)));
                 }
-                skullMeta.setDisplayName(ChatColor.BLUE + name);
+                skullMeta.setDisplayName(gameBox.lang.PLAYER_SKULL_NAME.replace("%player%", name));
                 skullMeta.setLore(skullLore);
             }
             skull.setItemMeta(skullMeta);

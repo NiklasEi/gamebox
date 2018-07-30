@@ -1,5 +1,6 @@
 # Changelog
 
+- make skull display names in top lists configurable
 - fix ItemStackUtility throwing error on invalid materials, when a data value is given
 - hide leftover debug messages
 

@@ -45,7 +45,7 @@ public class GameBoxLanguage extends Language {
     public String INVITE_TITLE_MESSAGE;
     public String INVITE_SUBTITLE_MESSAGE;
     public String INVITE_ACTIONBAR_MESSAGE;
-    public String UNKNOWN_SKULL_NAME;
+    public String UNKNOWN_SKULL_NAME, PLAYER_SKULL_NAME;
     public List<String> UNKNOWN_SKULL_LORE;
 
     GameBoxLanguage(GameBox plugin) {
@@ -79,6 +79,7 @@ public class GameBoxLanguage extends Language {
     private void getTopList() {
         this.UNKNOWN_SKULL_NAME = getString("topList.unknownSkullName");
         this.UNKNOWN_SKULL_LORE = getStringList("topList.unknownSkullLore");
+        this.PLAYER_SKULL_NAME = getString("topList.playerSkullName");
     }
 
     private void loadClickableInvitationMessages() {

@@ -104,6 +104,15 @@ inventoryTitles:
   otherPlayerNotEnoughMoney: '   &4Der andere Spieler hat nicht genug Geld'
   alreadyInAnotherGame: '     &4Bereits in einem anderen Spiel'
 
+topList:
+  playerSkullName: "&1%player%"
+  unknownSkullName: "&1Unbekannter Spieler"
+  # Will be added below the rank information for unknown players
+  unknownSkullLore:
+  - ""
+  - "Dieser Spieler wurde"
+  - "noch nie auf diesem"
+  - "Server gesehen..."
 
 shop:
   freeItem: "&9Umsonst"

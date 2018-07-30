@@ -137,7 +137,7 @@ public class ConfigManager {
     public static void printIncompleteLangFilesInfo(GameBox gameBox) {
         if (missingLanguageKeys == null) checkLanguageFiles();
         if (missingLanguageKeys.isEmpty()) {
-            gameBox.info(ChatColor.GREEN + " No missing messages in your language files :)");
+            gameBox.info(ChatColor.GREEN + " No missing messages in your language file :)");
             return;
         }
         gameBox.info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - +");
