@@ -143,6 +143,7 @@ others:
     notValidPlayerName: " &1%player%&4 ist kein gültiger Spielername."
     notOnline: " &cEs ist kein &5%player%&c online."
     notInviteYourself: " &cDu kannst dich nicht selber einladen..."
+    otherInDisabledWorld: " &5%player%&c ist in einer verbotenen Welt."
   invitation:
   - " &3%player%&r hat dich zu &3%game% eingeladen"
 

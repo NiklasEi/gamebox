@@ -144,6 +144,7 @@ others:
     notValidPlayerName: " &1%player%&4 is not a valid player name."
     notOnline: " &cThere is no &5%player%&c online."
     notInviteYourself: " &cYou cannot invite yourself."
+    otherInDisabledWorld: " &5%player%&c is in a disabled world."
   invitation:
   - " &3%player%&r invited you to &3%game%"
   invitationTitleMessage:

@@ -714,4 +714,8 @@ public class PluginManager implements Listener {
         }
         new LeftGameBoxEvent(player);
     }
+
+    public boolean isBlockedWorld(String worldName) {
+        return blockedWorlds.contains(worldName);
+    }
 }

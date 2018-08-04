@@ -67,7 +67,7 @@ public class InviteInputHandler extends BukkitRunnable {
                     player.sendMessage(plugin.lang.INVITATION_NOT_VALID_PLAYER_NAME.replace("%player%", message));
                     return;
                 }
-                // color strip only for compatibility with plugins that color player names in chat
+                // color strip for compatibility with plugins that color player names in chat
                 Player player2 = Bukkit.getPlayer(ChatColor.stripColor(message));
                 if (player2 == null) {
                     player.sendMessage(plugin.lang.INVITATION_NOT_ONLINE.replace("%player%", message));
@@ -76,6 +76,10 @@ public class InviteInputHandler extends BukkitRunnable {
                 UUID uuid = player.getUniqueId();
                 if (player2.getUniqueId().equals(uuid)) {
                     player.sendMessage(plugin.lang.INVITATION_NOT_YOURSELF);
+                    return;
+                }
+                if (plugin.getPluginManager().isBlockedWorld(player2.getWorld().getName())) {
+                    player.sendMessage(plugin.lang.INVITATION_OTHER_IN_DISABLED_WORLD.replace("%player%", message));
                     return;
                 }
                 Waiting waiting = waitings.get(uuid);

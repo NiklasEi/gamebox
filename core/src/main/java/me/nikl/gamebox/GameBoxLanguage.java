@@ -35,7 +35,8 @@ public class GameBoxLanguage extends Language {
     public String INPUT_START_MESSAGE, INPUT_TIME_RAN_OUT, INVITATION_SUCCESSFUL, INVITATION_ALREADY_THERE
             , INVITATION_NOT_VALID_PLAYER_NAME, INVITATION_NOT_ONLINE, INPUT_CLOSED, INVITATION_NOT_YOURSELF
             , INVITATION_PRE_TEXT, INVITATION_PRE_COLOR, INVITATION_CLICK_TEXT, INVITATION_CLICK_COLOR
-            , INVITATION_HOVER_TEXT, INVITATION_HOVER_COLOR, INVITATION_AFTER_TEXT, INVITATION_AFTER_COLOR;
+            , INVITATION_HOVER_TEXT, INVITATION_HOVER_COLOR, INVITATION_AFTER_TEXT, INVITATION_AFTER_COLOR
+            , INVITATION_OTHER_IN_DISABLED_WORLD;
 
     public String JSON_PREFIX_PRE_TEXT, JSON_PREFIX_PRE_COLOR, JSON_PREFIX_TEXT, JSON_PREFIX_COLOR
             , JSON_PREFIX_AFTER_TEXT, JSON_PREFIX_AFTER_COLOR;
@@ -110,6 +111,7 @@ public class GameBoxLanguage extends Language {
         this.INVITATION_ALREADY_THERE = getString("others.playerInput.sameInvitation");
         this.INVITATION_NOT_VALID_PLAYER_NAME = getString("others.playerInput.notValidPlayerName");
         this.INVITATION_NOT_ONLINE = getString("others.playerInput.notOnline");
+        this.INVITATION_OTHER_IN_DISABLED_WORLD = getString("others.playerInput.otherInDisabledWorld");
         this.INPUT_CLOSED = getString("others.playerInput.inputClosed");
         this.INVITATION_NOT_YOURSELF = getString("others.playerInput.notInviteYourself");
         this.WON_TOKEN = getString("others.wonToken");
