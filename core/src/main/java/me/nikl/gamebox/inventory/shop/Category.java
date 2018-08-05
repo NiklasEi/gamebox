@@ -12,7 +12,6 @@ import me.nikl.gamebox.utility.ItemStackUtility;
 import me.nikl.gamebox.utility.StringUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -50,21 +49,17 @@ public class Category {
         loadShopItems();
     }
 
-
     private void loadShopItems() {
         ConfigurationSection pageSection = shop.getConfigurationSection("shop.categories." + key + ".items");
         if (pageSection == null) return;
-
         Map<Integer, Button> allItems = new HashMap<>();
         ItemStack itemStack;
         ItemMeta meta;
         List<String> lore = new ArrayList<>();
         int counter = 0, token = 0, money = 0, amount = 0;
         for (String itemKey : pageSection.getKeys(false)) {
-
             // if null no item will be given
             itemStack = ItemStackUtility.getItemStack(pageSection.getString(itemKey + ".materialData"));
-
             // load the prices of the item
             if (pageSection.isSet(itemKey + ".tokens") && pageSection.isInt(itemKey + ".tokens")) {
                 token = pageSection.getInt(itemKey + ".tokens");
@@ -79,12 +74,10 @@ public class Category {
             } else {
                 money = pageSection.getInt(itemKey + ".money");
             }
-
             // get the amount of the item (default = 1). Check for MaxStackSize!
             if (itemStack != null) {
                 if (pageSection.isSet(itemKey + ".count") && pageSection.isInt(itemKey + ".count")) {
                     amount = pageSection.getInt(itemKey + ".count");
-
                     if (amount > itemStack.getMaxStackSize()) {
                         itemStack.setAmount(itemStack.getMaxStackSize());
                     } else {
@@ -94,15 +87,12 @@ public class Category {
                 if (pageSection.getBoolean(itemKey + ".glow", false)) {
                     itemStack = NmsFactory.getNmsUtility().addGlow(itemStack);
                 }
-
                 meta = itemStack.getItemMeta();
                 if (pageSection.isString(itemKey + ".displayName")) {
                     meta.setDisplayName(StringUtility.color(pageSection.getString(itemKey + ".displayName")));
                 }
-
                 if (pageSection.isList(itemKey + ".lore")) {
                     lore = new ArrayList<>(pageSection.getStringList(itemKey + ".lore"));
-
                     for (int i = 0; i < lore.size(); i++) {
                         lore.set(i, StringUtility.color(lore.get(i)));
                     }
@@ -117,37 +107,26 @@ public class Category {
                 Bukkit.getConsoleSender().sendMessage(plugin.lang.PREFIX + ChatColor.RED + "   Skipping...");
                 continue;
             }
-
-
             // load shop item
             ShopItem shopItem = new ShopItem();
-
             if (itemStack != null) {
                 shopItem.setItemStack(new ItemStack(itemStack));
             }
-
             if (pageSection.isList(itemKey + ".requirements" + ".permissions")) {
                 shopItem.setPermissions(pageSection.getStringList(itemKey + ".requirements" + ".permissions"));
             }
-
             if (pageSection.isList(itemKey + ".requirements" + ".noPermissions")) {
                 shopItem.setNoPermissions(pageSection.getStringList(itemKey + ".requirements" + ".noPermissions"));
             }
-
             if (pageSection.getBoolean(itemKey + ".manipulatesInventory", false)) {
                 shopItem.setManipulatesInventory(true);
             }
-
             if (pageSection.isList(itemKey + ".commands")) {
                 shopItem.setCommands(pageSection.getStringList(itemKey + ".commands"));
             }
-
-
             // load button
             Button button = new Button(buttonItem);
             button.setAction(ClickAction.BUY);
-
-
             meta = button.getItemMeta();
             lore.clear();
             lore.add("");
@@ -159,30 +138,19 @@ public class Category {
             if (money != 0) {
                 lore.add(this.plugin.lang.SHOP_MONEY.replace("%money%", String.valueOf(money)));
             }
-
             if (meta.hasLore()) lore.addAll(meta.getLore());
-
             meta.setLore(lore);
             button.setItemMeta(meta);
-
             button.setArgs(key, String.valueOf(counter), String.valueOf(token), String.valueOf(money));
-
             allItems.put(counter, button);
-
             shopItems.put(String.valueOf(counter), shopItem);
-
             counter++;
-        }
-        GameBox.debug("All loaded items of page " + key + ":");
-        for (int number : allItems.keySet()) {
-            GameBox.debug("     " + allItems.get(number).toString());
         }
         counter++;
         int pageNum = counter / itemsPerPage + (counter % itemsPerPage == 0 ? 0 : 1);
         counter = 0;
         Page page = null;
         while (!allItems.isEmpty()) {
-            GameBox.debug(allItems.keySet().size() + " Items left to sort");
             if ((counter) % itemsPerPage == 0) {
                 pages.put(counter / itemsPerPage, (page = new Page(plugin, guiManager, slots, counter / itemsPerPage, shopManager, new String[]{key, String.valueOf(counter / itemsPerPage)})));
                 if (counter / itemsPerPage == 0) {
@@ -206,31 +174,24 @@ public class Category {
         if (presentItem == null && itemStack == null) {
             return null;
         }
-
         if (presentItem == null) {
             presentItem = new ItemStack(itemStack);
         }
-
         if (pageSection.getBoolean(path + ".glow", false)) {
             presentItem = NmsFactory.getNmsUtility().addGlow(presentItem);
         }
-
         if (pageSection.isInt(path + ".count")) {
             presentItem.setAmount(pageSection.getInt(path + ".count"));
         }
-
         ItemMeta meta = presentItem.getItemMeta();
-
         if (pageSection.isString(path + ".displayName")) {
             meta.setDisplayName(StringUtility.color(pageSection.getString(path + ".displayName")));
         }
-
         if (pageSection.isList(path + ".additionalLore")) {
             List<String> lore = new ArrayList<>();
             lore.add(" ");
             lore.add(ChatColor.GOLD + "- - - - - - - - - - - - - - - - - - -");
             lore.add(" ");
-
             List<String> addLore = new ArrayList<>(pageSection.getStringList(path + ".additionalLore"));
             for (int i = 0; i < addLore.size(); i++) {
                 addLore.set(i, StringUtility.color(addLore.get(i)));
@@ -238,10 +199,7 @@ public class Category {
             lore.addAll(addLore);
             meta.setLore(lore);
         }
-
         presentItem.setItemMeta(meta);
-
-
         return presentItem;
     }
 

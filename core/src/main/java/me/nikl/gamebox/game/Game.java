@@ -86,6 +86,17 @@ public abstract class Game {
         init();
         loadGameManager();
         hook();
+        // load anything that needs the game manager
+        finish();
+    }
+
+    /**
+     * Load anything that depends on a fully initialized GameManger and a successful hook into GameBox
+     *
+     * example: Game commands that need a list of game types
+     */
+    protected void finish() {
+        // to be Overridden
     }
 
     private void checkRequirements() throws GameLoadException {

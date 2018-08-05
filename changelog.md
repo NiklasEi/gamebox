@@ -1,8 +1,12 @@
 # Changelog
 
+### v 2.2.1
+- implement option for games to add commands to the gamebox commands
+- cancel game invitations when the other player is in a disabled world
 - make skull display names in top lists configurable
 - fix ItemStackUtility throwing error on invalid materials, when a data value is given
 - hide leftover debug messages
+- fix high number names loaded from langauge file
 
 ### v 2.2.0
 - compatibility with minecraft 1.13
