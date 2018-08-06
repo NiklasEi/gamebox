@@ -1,6 +1,10 @@
 # Changelog
 
+- stop picking up items when the event was canceled by another plugin
+
 ### v 2.2.1
+- cookieclicker -> v 2.2.1
+  - command to manipulate number of cookies
 - implement option for games to add commands to the gamebox commands
 - cancel game invitations when the other player is in a disabled world
 - make skull display names in top lists configurable

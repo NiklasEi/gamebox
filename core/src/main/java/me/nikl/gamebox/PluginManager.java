@@ -1,5 +1,6 @@
 package me.nikl.gamebox;
 
+import javafx.scene.layout.Priority;
 import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.events.EnterGameBoxEvent;
 import me.nikl.gamebox.events.LeftGameBoxEvent;
@@ -373,8 +374,9 @@ public class PluginManager implements Listener {
      *
      * @param playerPickupItemEvent called Event
      */
-    @EventHandler
+    @EventHandler (priority = EventPriority.HIGHEST)
     public void onPickUp(PlayerPickupItemEvent playerPickupItemEvent) {
+        if (playerPickupItemEvent.isCancelled()) return;
         if (!isInGame(playerPickupItemEvent.getPlayer().getUniqueId()) && !guiManager.isInGUI(playerPickupItemEvent.getPlayer().getUniqueId()) && !guiManager.getShopManager().inShop(playerPickupItemEvent.getPlayer().getUniqueId()))
             return;
         // ToDo: change #addItem() and this method to allow for partial pick up
