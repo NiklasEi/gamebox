@@ -1,6 +1,8 @@
 # Changelog
 
 - stop picking up items when the event was canceled by another plugin
+- fix removing of glow for mc version 1.13+
+- add support for mc 1.13.1
 
 ### v 2.2.1
 - cookieclicker -> v 2.2.1
