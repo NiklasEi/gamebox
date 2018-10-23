@@ -146,6 +146,10 @@ public abstract class AGui implements GameBoxHolder {
                             sentInventoryTitleMessage(player[0], gameBox.lang.TITLE_ALREADY_IN_ANOTHER_GAME);
                             return false;
                         }
+                        if (gameBox.getPluginManager().getBlockedWorlds().contains(player[1].getLocation().getWorld().getName())) {
+                            sentInventoryTitleMessage(player[0], gameBox.lang.TITLE_OTHER_PLAYER_IN_BLOCKED_WORLD);
+                            return false;
+                        }
                         if (!guiManager.isInGUI(player[1].getUniqueId())
                                 && !guiManager.getShopManager().inShop(player[1].getUniqueId())) {
                             if (!pluginManager.enterGameBox(player[1], args[0], args[1])) {

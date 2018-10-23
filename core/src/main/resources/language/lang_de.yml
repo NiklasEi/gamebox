@@ -101,7 +101,8 @@ inventoryTitles:
   noPermMessage: '          &4&lKeine Erlaubnis'
   notEnoughMoney: '        &4&lNicht genug Geld'
   notEnoughTokens: '        &4&lNicht genug Token'
-  otherPlayerNotEnoughMoney: '   &4Der andere Spieler hat nicht genug Geld'
+  otherPlayerNotEnoughMoney: '&4Anderer Spieler: nicht genug Geld'
+  otherPlayerInBlockedWorld: '&4Anderer Spieler: geblockte Welt'
   alreadyInAnotherGame: '     &4Bereits in einem anderen Spiel'
 
 topList:
