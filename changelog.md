@@ -1,5 +1,8 @@
 # Changelog
 
+### v 2.2.3
+- stop players from accepting invitations in blocked worlds
+
 ### v 2.2.2
 - stop picking up items when the event was canceled by another plugin
 - fix removing of glow for mc version 1.13+
