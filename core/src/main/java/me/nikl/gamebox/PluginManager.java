@@ -566,10 +566,7 @@ public class PluginManager implements Listener {
     }
 
     public GBPlayer getPlayer(UUID uuid) {
-        GBPlayer gbPlayer = gbPlayers.get(uuid);
-        if (gbPlayer == null)
-            throw new IllegalArgumentException("requesting not loaded player!");
-        return gbPlayer;
+        return gbPlayers.get(uuid);
     }
 
     public boolean isInGame(UUID uuid) {
