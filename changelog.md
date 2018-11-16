@@ -1,4 +1,6 @@
 # Changelog
+
+### v 2.2.4
 - return null instead of throwing exception, when gb-player is unknown (expected behaviour)
    - fixes #57
 - link to GitHub wiki for more info on token shop
