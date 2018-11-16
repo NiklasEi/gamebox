@@ -8,6 +8,7 @@
 #   set it to true to enable shopping
 open: false
 
+# More info about the token shop can be found on the GitHub wiki: https://github.com/NiklasEi/gamebox/wiki/Token-Shop
 shop:
   button:
      # define the Material and data for the item (format: 'material:data')
