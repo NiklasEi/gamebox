@@ -287,4 +287,8 @@ public class GameRegistry {
     public boolean isDisabledModule(String moduleID) {
         return disabledModules.contains(moduleID);
     }
+
+    public Set<String> getSubcommands() {
+        return Collections.unmodifiableSet(subCommands.keySet());
+    }
 }

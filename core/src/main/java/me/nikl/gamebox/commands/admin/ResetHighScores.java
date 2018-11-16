@@ -1,6 +1,7 @@
 package me.nikl.gamebox.commands.admin;
 
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.PreCommand;
 import co.aikar.commands.annotation.Single;
 import co.aikar.commands.annotation.Subcommand;
@@ -35,6 +36,7 @@ public class ResetHighScores extends GameBoxBaseCommand {
     }
 
     @Subcommand("resetstats")
+    @CommandCompletion("@gameIDs check_your_game_config @SaveTypes")
     public void resetHighScores(CommandSender sender, String gameID, String gameTypeID, @Single String saveTypeStr) {
         DataBase dataBase = gameBox.getDataBase();
         try {
@@ -43,7 +45,7 @@ public class ResetHighScores extends GameBoxBaseCommand {
             sender.sendMessage( " High score reset successful");
             gameBox.reload();
         } catch (IllegalArgumentException exception) {
-            sender.sendMessage("Valid saveTyps: " + SaveType.values().toString());
+            sender.sendMessage("Valid saveTypes: " + SaveType.values().toString());
         }
     }
 

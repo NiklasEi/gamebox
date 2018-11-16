@@ -1,6 +1,7 @@
 package me.nikl.gamebox.commands.player;
 
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.Optional;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
@@ -26,6 +27,7 @@ public class OpenGameBox extends PlayerBaseCommand {
     }
 
     @CommandAlias("%mainCommand")
+    @CommandCompletion("@SubCommands")
     public void openGamebox(Player player, @Optional String subCommand){
         if (subCommand == null || subCommand.isEmpty()) {
             guiManager.openMainGui(player);

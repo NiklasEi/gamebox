@@ -1,6 +1,7 @@
 package me.nikl.gamebox.commands.admin;
 
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.PreCommand;
 import co.aikar.commands.annotation.Single;
 import co.aikar.commands.annotation.Subcommand;
@@ -37,6 +38,7 @@ public class TokenCommands extends GameBoxBaseCommand {
     }
 
     @Subcommand("token")
+    @CommandCompletion("@players")
     public void getToken(CommandSender sender, @Single String playerName) {
         OfflinePlayer player = Bukkit.getOfflinePlayer(playerName);
         if (player == null || !player.hasPlayedBefore()) {
@@ -69,6 +71,7 @@ public class TokenCommands extends GameBoxBaseCommand {
     }
 
     @Subcommand("token give|g")
+    @CommandCompletion("@players 1|5|10|25|50")
     public void giveToken(CommandSender sender, String playerName, int token) {
         OfflinePlayer player = Bukkit.getOfflinePlayer(playerName);
         if (player == null || !player.hasPlayedBefore()) {
@@ -86,6 +89,7 @@ public class TokenCommands extends GameBoxBaseCommand {
     }
 
     @Subcommand("token take|t")
+    @CommandCompletion("@players 1|5|10|25|50")
     public void tokenToken(CommandSender sender, String playerName, int token) {
         OfflinePlayer player = Bukkit.getOfflinePlayer(playerName);
         if (player == null || !player.hasPlayedBefore()) {
@@ -124,6 +128,7 @@ public class TokenCommands extends GameBoxBaseCommand {
     }
 
     @Subcommand("token set|s")
+    @CommandCompletion("@players 1|5|10|25|50")
     public void setToken(CommandSender sender, String playerName, int token) {
         OfflinePlayer player = Bukkit.getOfflinePlayer(playerName);
         if (player == null || !player.hasPlayedBefore()) {

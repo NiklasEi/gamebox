@@ -1,6 +1,7 @@
 package me.nikl.gamebox.commands.admin;
 
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.PreCommand;
 import co.aikar.commands.annotation.Subcommand;
 import me.nikl.gamebox.GameBox;
@@ -44,6 +45,7 @@ public class SettingsCommand extends GameBoxBaseCommand {
     }
 
     @Subcommand("settings game")
+    @CommandCompletion("@gameIDs")
     public void gameSettings(CommandSender sender, String gameID, String[] args) {
         if (args == null || args.length == 0) {
             sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_SETTINGS_GAME_INVALID_SETTING);

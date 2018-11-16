@@ -19,6 +19,11 @@ public class InvitationClickCommand extends PlayerBaseCommand {
         this.guiManager = gameBox.getPluginManager().getGuiManager();
     }
 
+    /**
+     * This command is used internally to open a gui when clicking a message in the chat.
+     * @param player for whom the GUI will open
+     * @param args arguments for the opening GUI
+     */
     @Subcommand("%INVITE_CLICK_COMMAND")
     @Private
     public void onInvitationMessageClick(Player player, String[] args) {

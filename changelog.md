@@ -1,6 +1,8 @@
 # Changelog
 - return null instead of throwing exception, when gb-player is unknown (expected behaviour)
    - fixes #57
+- link to GitHub wiki for more info on token shop
+- add command completion to all commands with arguments (#48)
 
 ### v 2.2.3
 - stop players from accepting invitations in blocked worlds

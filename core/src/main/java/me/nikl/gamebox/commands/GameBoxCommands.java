@@ -3,6 +3,7 @@ package me.nikl.gamebox.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.BukkitCommandManager;
 import co.aikar.commands.annotation.CommandAlias;
+import com.sun.javafx.collections.MappingChange;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.commands.admin.DatabaseConverter;
@@ -18,7 +19,11 @@ import me.nikl.gamebox.commands.general.InfoCommand;
 import me.nikl.gamebox.commands.player.GetTokenCount;
 import me.nikl.gamebox.commands.player.InvitationClickCommand;
 import me.nikl.gamebox.commands.player.OpenGameBox;
+import me.nikl.gamebox.data.toplist.SaveType;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -37,7 +42,23 @@ public class GameBoxCommands extends BukkitCommandManager {
         getCommandReplacements().addReplacement("adminCommand", GameBoxSettings.adminCommand);
         getCommandReplacements().addReplacement("adminGameCommand", GameBoxSettings.adminCommand + " game");
         defaultExceptionHandler = new DefaultExceptionHandler();
+        registerCommandCompletions();
         registerCommands();
+    }
+
+    private void registerCommandCompletions() {
+        getCommandCompletions().registerCompletion("gameIDs", c ->
+                gameBox.getPluginManager().getGames().keySet()
+        );
+        getCommandCompletions().registerCompletion("SaveTypes", c ->
+                Arrays.asList(Arrays.stream(SaveType.values()).map(Object::toString).toArray(String[]::new))
+        );
+        getCommandCompletions().registerCompletion("moduleIDs", c ->
+                gameBox.getGameRegistry().getModuleIDs()
+        );
+        getCommandCompletions().registerCompletion("SubCommands", c ->
+                gameBox.getGameRegistry().getSubcommands()
+        );
     }
 
     private void registerCommands() {

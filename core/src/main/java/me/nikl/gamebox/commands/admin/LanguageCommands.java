@@ -1,6 +1,7 @@
 package me.nikl.gamebox.commands.admin;
 
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.PreCommand;
 import co.aikar.commands.annotation.Single;
 import co.aikar.commands.annotation.Subcommand;
@@ -48,6 +49,7 @@ public class LanguageCommands extends GameBoxBaseCommand {
     }
 
     @Subcommand("language|lang")
+    @CommandCompletion("@moduleIDs")
     public void onLanguageCommand(CommandSender sender, @Single String moduleID) {
         if (!ConfigManager.getModuleIdsWithMissingKeys().contains(moduleID.toLowerCase())) {
             gameBox.info(" Module '" + moduleID.toLowerCase() + "' does not exist or has no missing keys.");
