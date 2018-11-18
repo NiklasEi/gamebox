@@ -3,7 +3,6 @@ package me.nikl.gamebox.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.BukkitCommandManager;
 import co.aikar.commands.annotation.CommandAlias;
-import com.sun.javafx.collections.MappingChange;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.commands.admin.DatabaseConverter;

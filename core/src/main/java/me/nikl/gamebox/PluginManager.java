@@ -1,6 +1,5 @@
 package me.nikl.gamebox;
 
-import javafx.scene.layout.Priority;
 import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.events.EnterGameBoxEvent;
 import me.nikl.gamebox.events.LeftGameBoxEvent;
