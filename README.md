@@ -16,7 +16,7 @@ A high number of inventory games can be added to GameBox. All of them are access
 * Support for MySQL and file storage
 * Token system with configurable [shop](#shop)
 
-GameBox uses language files for messages and inventory titles. You can add your own file or use one of the default files (german, english, spanish and mandarin).
+GameBox uses language files for messages and inventory titles. You can add your own file or use one of the default files (german, english, spanish and mandarin). [More info on the Wiki](https://github.com/NiklasEi/gamebox/wiki/Language).
 
 All games have their own configuration and language files.
 
@@ -27,6 +27,8 @@ Token are a currency provided by GameBox. They can be awarded for winning games 
 They can be accessed and given/taken through the [API](#api) and through admin commands.
 
 ### Shop
+
+[Wiki page](https://github.com/NiklasEi/gamebox/wiki/Token-Shop)
 
 The token shop consists of a Menu that lists all shop categories and of pages full of shop items for each category. Every shop category is automatically paginated.
 
@@ -65,6 +67,12 @@ Currently implemented features:
    1. The games' configuration files are in `GameBox/games/<gameID>`
    2. The games' language files are in `GameBox/language/<gameID>`
 
+### Custom builds
+
+Just fork and clone this repository and run 'mvn package'. The jar ready for distribution will be in the target folder in the root directory.
+
+The included games and my nmsutilities are hosted on [my Artifactory server][artifactory]. You can check there for up to date versions.
+
 ## Commands and permissions
 
 Please refer to the plugins page for a detailed list of commands and permissions.
@@ -81,3 +89,4 @@ The permissions allow for different players having access to different games. By
 [GameBox-cmds]: https://www.nikl.me/projects/gamebox/#commands
 [GameBox-perms]: https://www.nikl.me/projects/gamebox/#permissions
 [example-project]: https://github.com/NiklasEi/GameBox_Template
+[artifactory]: https://repo.nikl.me
