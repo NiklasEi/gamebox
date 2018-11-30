@@ -40,7 +40,7 @@ public class ResetHighScores extends GameBoxBaseCommand {
     public void resetHighScores(CommandSender sender, String gameID, String gameTypeID, @Single String saveTypeStr) {
         DataBase dataBase = gameBox.getDataBase();
         try {
-            SaveType saveType = SaveType.valueOf(saveTypeStr);
+            SaveType saveType = SaveType.valueOf(saveTypeStr.toUpperCase());
             dataBase.resetHighScores(gameID, gameTypeID, saveType);
             sender.sendMessage( " High score reset successful");
             gameBox.reload();
