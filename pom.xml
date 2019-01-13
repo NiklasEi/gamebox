@@ -19,6 +19,11 @@
         </repository>
     </distributionManagement>
 
+    <scm>
+        <url>https://github.com/NiklasEi/gamebox</url>
+        <connection>git@github.com:NiklasEi/gamebox.git</connection>
+    </scm>
+
     <build>
         <plugins>
             <plugin>
