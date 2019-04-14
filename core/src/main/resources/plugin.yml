@@ -1,7 +1,7 @@
 name: GameBox
 author: Nikl
 main: me.nikl.gamebox.GameBox
-version: 2.2.4
+version: 2.2.5
 website: nikl.me
 softdepend: [Vault, PlaceholderAPI, CalendarEvents]
 
