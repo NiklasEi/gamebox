@@ -232,10 +232,13 @@ public class GameBox extends JavaPlugin {
             dataBase = null;
         }
         this.dataBase = new FileDB(this);
+        info(" Loading database...");
+        info(" If this takes too long, you should switch to MySQL!");
         if (!dataBase.load(false)) {
             getLogger().log(Level.SEVERE, " Something went wrong with the data file");
             return false;
         }
+        info(" ...done loading the database.");
         return true;
     }
 
