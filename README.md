@@ -37,7 +37,8 @@ and is given by default.
 
 You can
 * sell items for token and/or money.
-* sun commands for token and/or money.
+* run commands in exchange for token and/or money.
+* disable shop items for players based on the permissions they have or don't have.
 * add your own categories with configurable name, lore and button.
 * add as many items to any category as you want.
 
@@ -45,7 +46,7 @@ Shop configuration is done in the file 'tokenShop.yml' which is generated in the
 
 ### API
 
-GameBox provides an small API.
+GameBox provides an API.
 
 Currently implemented features:
 * Give/take/set token for online and offline players.
@@ -81,7 +82,7 @@ Please refer to the plugins page for a detailed list of commands and permissions
 
 [Permissions list][GameBox-perms]
 
-The permissions allow for different players having access to different games. By default all players can play all games! To change that one has to take the permission `gamebox.play.*` from all players. Then add the game specific play permissions `gamebox.play.<gameID>`. The unique ids of all games can be found [on my homepage][gamebox-ids].
+The permissions allow for different players having access to different games. By default all players can play all games! To change that one has to take the permission `gamebox.play.*` from all players. Then add the game specific play permissions `gamebox.play.<gameID>`. The unique ids of all games can be found [on the project page][gamebox-ids].
 
 [Spigot]: https://www.spigotmc.org/resources/37273/
 [gamebox-ids]: https://www.nikl.me/projects/gamebox/#ids
