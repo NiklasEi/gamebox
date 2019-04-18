@@ -2,6 +2,8 @@
 
 ### v 2.2.5
 - cookieclicker -> v 2.2.2
+- log loading of flatfile db (#67)
+- only save players in the flatfile db if their settings were changed (#65)
 
 ### v 2.2.4
 - return null instead of throwing exception, when gb-player is unknown (expected behaviour)
