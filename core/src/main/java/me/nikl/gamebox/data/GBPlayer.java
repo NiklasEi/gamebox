@@ -24,6 +24,8 @@ public class GBPlayer {
 
     private boolean loaded = false;
 
+    private boolean updated = false;
+
     public GBPlayer(GameBox plugin, UUID uuid) {
         this.uuid = uuid;
         this.plugin = plugin;
@@ -67,10 +69,12 @@ public class GBPlayer {
     }
 
     public void setPlaySounds(boolean playSounds) {
+        this.updated = true;
         this.playSounds = playSounds;
     }
 
     public void toggleSound() {
+        this.updated = true;
         this.playSounds = !playSounds;
     }
 
@@ -79,6 +83,7 @@ public class GBPlayer {
     }
 
     public void setTokens(int newTokens) {
+        this.updated = true;
         this.tokens = newTokens;
         for (TokenListener tokenListener : tokenListeners) tokenListener.updateToken(this);
     }
@@ -99,7 +104,10 @@ public class GBPlayer {
     }
 
     public void save(boolean async) {
-        dataBase.savePlayer(this, async);
+        // only save the player data, if settings were changed
+        // for the file db, this means players are not written in the file as long as they didn't play or changed their settings
+        // in case of a MySQL db, the statements loading the player also save the default settings
+        if (updated) dataBase.savePlayer(this, async);
     }
 
     public boolean isLoaded() {
@@ -108,6 +116,12 @@ public class GBPlayer {
 
     public boolean allowsInvites() {
         return allowInvites;
+    }
+
+    // ToDo: settings menu
+    public void setAllowInvites(boolean allowInvites) {
+        this.updated = true;
+        this.allowInvites = allowInvites;
     }
 
     public Player getPlayer() {
