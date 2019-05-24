@@ -100,7 +100,7 @@ public abstract class AGui implements GameBoxHolder {
         switch (action) {
             case OPEN_GAME_GUI:
                 if (args.length != 2) {
-                    Bukkit.getConsoleSender().sendMessage("wrong number of arguments to open a game gui: " + args.length);
+                    gameBox.getLogger().warning("wrong number of arguments to open a game gui: " + args.length);
                 }
                 if (guiManager.openGameGui((Player) event.getWhoClicked(), args[0], args[1])) {
                     inGui.remove(event.getWhoClicked().getUniqueId());
