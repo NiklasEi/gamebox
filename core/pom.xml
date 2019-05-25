@@ -60,15 +60,19 @@
                         </relocation>
                         <relocation>
                             <pattern>co.aikar.timings.lib</pattern>
-                            <shadedPattern>me.nikl.gamebox.common.timings</shadedPattern>
+                            <shadedPattern>me.nikl.gamebox.common.aikar.timings</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>co.aikar.commands</pattern>
-                            <shadedPattern>me.nikl.gamebox.common.acf</shadedPattern>
+                            <shadedPattern>me.nikl.gamebox.common.aikar.acf</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>co.aikar.locales</pattern>
-                            <shadedPattern>me.nikl.gamebox.common.locales</shadedPattern>
+                            <shadedPattern>me.nikl.gamebox.common.aikar.locales</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>co.aikar.util</pattern>
+                            <shadedPattern>me.nikl.gamebox.common.aikar.util</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>net.jodah.expiringmap</pattern>
@@ -111,7 +115,7 @@
         </repository>
         <repository>
             <id>nikl-repo</id>
-            <url>http://repo.nikl.me/artifactory/public</url>
+            <url>https://repo.nikl.me/artifactory/public</url>
         </repository>
         <repository>
             <id>aikar</id>

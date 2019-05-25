@@ -396,7 +396,7 @@ public class PluginManager implements Listener {
     public void onPlayerDeath(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
         if (guiManager == null) {
-            plugin.getLogger().warning("The plugin dit not start correctly. Please check for previous errors!");
+            plugin.getLogger().warning("The plugin did not start correctly. Please check for previous errors!");
             return;
         }
         // if player is in gui or in game close the inventory
