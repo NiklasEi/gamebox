@@ -60,19 +60,19 @@
                         </relocation>
                         <relocation>
                             <pattern>co.aikar.timings.lib</pattern>
-                            <shadedPattern>me.nikl.gamebox.common.aikar.timings</shadedPattern>
+                            <shadedPattern>me.nikl.gamebox.common.timings</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>co.aikar.commands</pattern>
-                            <shadedPattern>me.nikl.gamebox.common.aikar.acf</shadedPattern>
+                            <shadedPattern>me.nikl.gamebox.common.acf</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>co.aikar.locales</pattern>
-                            <shadedPattern>me.nikl.gamebox.common.aikar.locales</shadedPattern>
+                            <shadedPattern>me.nikl.gamebox.common.locales</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>co.aikar.util</pattern>
-                            <shadedPattern>me.nikl.gamebox.common.aikar.util</shadedPattern>
+                            <shadedPattern>me.nikl.gamebox.common.util</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>net.jodah.expiringmap</pattern>
