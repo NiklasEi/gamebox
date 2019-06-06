@@ -2,6 +2,7 @@ package me.nikl.gamebox.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.BukkitCommandManager;
+import co.aikar.commands.BukkitRootCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
@@ -20,10 +21,7 @@ import me.nikl.gamebox.commands.player.InvitationClickCommand;
 import me.nikl.gamebox.commands.player.OpenGameBox;
 import me.nikl.gamebox.data.toplist.SaveType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author Niklas Eicker
@@ -82,5 +80,13 @@ public class GameBoxCommands extends BukkitCommandManager {
         GameBox.debug("registering " + baseCommand.getClass().getSimpleName());
         GameBox.debug("   annotated -> " + (baseCommand.getClass().getAnnotation(CommandAlias.class) != null?baseCommand.getClass().getAnnotation(CommandAlias.class).value():"null"));
         super.registerCommand(baseCommand.setExceptionHandler(defaultExceptionHandler), true);
+    }
+
+    /**
+     * Prevent https://github.com/NiklasEi/gamebox/issues/71
+     */
+    @Override
+    public void unregisterCommands() {
+        while (!this.registeredCommands.isEmpty()) this.unregisterCommand(this.registeredCommands.values().iterator().next());
     }
 }
