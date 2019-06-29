@@ -6,6 +6,7 @@
 - only save players in the flatfile db if their settings were changed ([#65](https://github.com/NiklasEi/gamebox/issues/65))
 - prevent exception on disable due to ACF ([#71](https://github.com/NiklasEi/gamebox/issues/71))
 - remove old placeholder hook and adapt to new expansion system
+- some cleanup of log messages
 
 ### v 2.2.4
 - return null instead of throwing exception, when gb-player is unknown (expected behaviour)
