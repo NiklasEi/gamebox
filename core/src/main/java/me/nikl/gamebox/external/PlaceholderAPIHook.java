@@ -1,6 +1,6 @@
 package me.nikl.gamebox.external;
 
-import me.clip.placeholderapi.external.EZPlaceholderHook;
+import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.game.Game;
 import org.bukkit.entity.Player;
@@ -10,13 +10,37 @@ import org.bukkit.entity.Player;
  *
  * Provide GameBox placeholders through Placeholder API
  */
-public class PlaceholderAPIHook extends EZPlaceholderHook {
+public class PlaceholderAPIHook extends PlaceholderExpansion {
     private GameBox plugin;
 
     public PlaceholderAPIHook(GameBox plugin) {
-        super(plugin, GameBox.MODULE_GAMEBOX);
         this.plugin = plugin;
-        this.hook();
+        register();
+    }
+
+    @Override
+    public boolean persist(){
+        return true;
+    }
+
+    @Override
+    public boolean canRegister(){
+        return true;
+    }
+
+    @Override
+    public String getAuthor(){
+        return plugin.getDescription().getAuthors().toString();
+    }
+
+    @Override
+    public String getIdentifier(){
+        return GameBox.MODULE_GAMEBOX;
+    }
+
+    @Override
+    public String getVersion(){
+        return plugin.getDescription().getVersion();
     }
 
     @Override
