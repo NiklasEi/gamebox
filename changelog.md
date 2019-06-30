@@ -1,5 +1,10 @@
 # Changelog
 
+### v 2.2.6
+- cookieclicker -> 2.2.3
+  - Fix NPE on game startup
+  - Fix issues with game saves on shutdown
+
 ### v 2.2.5
 - cookieclicker -> v 2.2.2
 - log loading of flatfile db ([#67](https://github.com/NiklasEi/gamebox/issues/67))
