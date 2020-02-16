@@ -21,6 +21,15 @@ import java.util.Map;
  * Utility class for ItemStacks
  */
 public class ItemStackUtility {
+    public static final Material DARK_OAK_DOOR = Material.DARK_OAK_DOOR;
+    public static final Material BIRCH_DOOR = Material.BIRCH_DOOR;
+    public static final Material BARRIER = Material.BARRIER;
+    public static final Material STAINED_HARDENED_CLAY = Material.CLAY;
+    public static final Material CHEST_MINECART = Material.CHEST_MINECART;
+    public static final Material PLAYER_HEAD = Material.PLAYER_HEAD;
+    public static final Material MUSIC_DISC_GREEN = Material.MUSIC_DISC_CAT;
+    public static final Material MUSIC_DISC_RED = Material.MUSIC_DISC_BLOCKS;
+    public static final Material WRITABLE_BOOK = Material.WRITABLE_BOOK;
     public static final String MATERIAL = "materialData";
     public static final String LORE = "lore";
     public static final String NAME = "displayName";
@@ -59,7 +68,7 @@ public class ItemStackUtility {
     }
 
     public static ItemStack createBookWithText(List<String> text) {
-        return createItemWithText(text, new MaterialData(Material.BOOK_AND_QUILL));
+        return createItemWithText(text, new MaterialData(WRITABLE_BOOK));
     }
 
     public static ItemStack createItemWithText(List<String> text, MaterialData materialData) {
@@ -98,7 +107,7 @@ public class ItemStackUtility {
         ItemStack skull = cachedPlayerHeads.get(name);
         if (skull != null) return skull.clone();
         GameBox.debug("Not cached yet...");
-        skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+        skull = new ItemStack(PLAYER_HEAD, 1);
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
         skullMeta.setOwner(name);
         skull.setItemMeta(skullMeta);

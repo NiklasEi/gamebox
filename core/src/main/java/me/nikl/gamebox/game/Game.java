@@ -27,7 +27,6 @@ import me.nikl.gamebox.utility.Sound;
 import me.nikl.gamebox.utility.StringUtility;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -274,7 +273,7 @@ public abstract class Game {
             if (gameButton == null) {
                 warn(" Invalid material data for main button");
                 warn(" Using a default...");
-                gameButton = (new ItemStack(Material.STAINED_CLAY));
+                gameButton = (new ItemStack(ItemStackUtility.STAINED_HARDENED_CLAY));
             }
             ItemMeta meta = gameButton.getItemMeta();
             meta.setDisplayName(StringUtility.color(mainButtonSec.getString("displayName", gameLang.PLAIN_NAME)));

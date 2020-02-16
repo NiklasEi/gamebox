@@ -4,6 +4,7 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.button.Button;
+import me.nikl.gamebox.utility.ItemStackUtility;
 import me.nikl.nmsutilities.NmsFactory;
 import me.nikl.gamebox.utility.InventoryUtility;
 import org.bukkit.Bukkit;
@@ -89,8 +90,7 @@ public class StartMultiplayerGamePage extends GameGuiPage {
             if (i >= inventory.getSize()) break;
             Player player1 = Bukkit.getPlayer(uuid1);
             if (player1 == null) continue;
-            Button skull = new Button(new MaterialData(Material.SKULL_ITEM).toItemStack(1));
-            skull.setDurability((short) 3);
+            Button skull = new Button(new MaterialData(ItemStackUtility.PLAYER_HEAD).toItemStack(1));
             SkullMeta meta = (SkullMeta) skull.getItemMeta();
             meta.setOwner(player1.getName());
             meta.setDisplayName(gameBox.lang.BUTTON_INVITE_SKULL_NAME.replace("%player%", player1.getName()));

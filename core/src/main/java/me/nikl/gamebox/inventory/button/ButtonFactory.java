@@ -2,6 +2,7 @@ package me.nikl.gamebox.inventory.button;
 
 import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.inventory.ClickAction;
+import me.nikl.gamebox.utility.ItemStackUtility;
 import me.nikl.nmsutilities.NmsFactory;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
@@ -26,8 +27,8 @@ public class ButtonFactory {
     }
 
     public static ToggleButton createToggleButton(GameBoxLanguage language) {
-        ItemStack toggle = new MaterialData(Material.GREEN_RECORD).toItemStack(1);
-        ToggleButton soundToggle = new ToggleButton(toggle, new MaterialData(Material.RECORD_4));
+        ItemStack toggle = new MaterialData(ItemStackUtility.MUSIC_DISC_GREEN).toItemStack(1);
+        ToggleButton soundToggle = new ToggleButton(toggle, new MaterialData(ItemStackUtility.MUSIC_DISC_RED));
         ItemMeta meta = soundToggle.getItemMeta();
         meta.addItemFlags(ItemFlag.values());
         meta.setDisplayName(language.BUTTON_SOUND_ON_NAME);
