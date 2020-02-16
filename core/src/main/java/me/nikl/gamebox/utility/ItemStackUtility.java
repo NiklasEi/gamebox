@@ -7,9 +7,9 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.material.MaterialData;
 
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +39,7 @@ public class ItemStackUtility {
 
     public static ItemStack getItemStack(String matDataString) {
         Material mat;
-        short data;
+        int data;
         if (matDataString == null) return null;
         String[] obj = matDataString.split(":");
         try {
@@ -54,13 +54,16 @@ public class ItemStackUtility {
         }
         if (obj.length == 2) {
             try {
-                data = Short.valueOf(obj[1]);
+                data = Integer.valueOf(obj[1]);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 return null; // data not a number
             }
             ItemStack stack = new ItemStack(mat, 1);
-            stack.setDurability(data);
+            ItemMeta meta = stack.getItemMeta();
+            if(meta instanceof Damageable) {
+                ((Damageable) meta).setDamage(data);
+            }
             return stack;
         } else {
             return new ItemStack(mat, 1);
@@ -68,11 +71,11 @@ public class ItemStackUtility {
     }
 
     public static ItemStack createBookWithText(List<String> text) {
-        return createItemWithText(text, new MaterialData(WRITABLE_BOOK));
+        return createItemWithText(text, WRITABLE_BOOK);
     }
 
-    public static ItemStack createItemWithText(List<String> text, MaterialData materialData) {
-        ItemStack helpItem = materialData.toItemStack(1);
+    public static ItemStack createItemWithText(List<String> text, Material material) {
+        ItemStack helpItem = new ItemStack(material, 1);
         ItemMeta meta = helpItem.getItemMeta();
         if (text != null) {
             if (text.size() > 0) meta.setDisplayName(text.get(0));
