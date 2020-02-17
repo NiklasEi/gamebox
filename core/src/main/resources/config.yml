@@ -130,8 +130,8 @@ guiSettings:
 
     # button materials
     exitMaterial: "BARRIER"
-    mainMenuMaterial: "DARK_OAK_DOOR_ITEM"
-    gameMenuMaterial: "BIRCH_DOOR_ITEM"
+    mainMenuMaterial: "DARK_OAK_DOOR"
+    gameMenuMaterial: "BIRCH_DOOR"
 
   # You can define slots in which the items are kept.
   # Valid slots range from 0 to 8.

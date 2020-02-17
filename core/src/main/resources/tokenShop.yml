@@ -12,7 +12,7 @@ open: false
 shop:
   button:
      # define the Material and data for the item (format: 'material:data')
-     materialData: "STORAGE_MINECART"
+     materialData: "CHEST_MINECART"
      # display name of the button
      displayName: "&3&lShop"
      # lore of the item (optional)
