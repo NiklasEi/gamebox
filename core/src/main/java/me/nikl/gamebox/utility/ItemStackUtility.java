@@ -7,9 +7,9 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.material.MaterialData;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +21,15 @@ import java.util.Map;
  * Utility class for ItemStacks
  */
 public class ItemStackUtility {
+    public static final Material DARK_OAK_DOOR = Material.DARK_OAK_DOOR;
+    public static final Material BIRCH_DOOR = Material.BIRCH_DOOR;
+    public static final Material BARRIER = Material.BARRIER;
+    public static final Material STAINED_HARDENED_CLAY = Material.CLAY;
+    public static final Material CHEST_MINECART = Material.CHEST_MINECART;
+    public static final Material PLAYER_HEAD = Material.PLAYER_HEAD;
+    public static final Material MUSIC_DISC_GREEN = Material.MUSIC_DISC_CAT;
+    public static final Material MUSIC_DISC_RED = Material.MUSIC_DISC_BLOCKS;
+    public static final Material WRITABLE_BOOK = Material.WRITABLE_BOOK;
     public static final String MATERIAL = "materialData";
     public static final String LORE = "lore";
     public static final String NAME = "displayName";
@@ -30,7 +39,7 @@ public class ItemStackUtility {
 
     public static ItemStack getItemStack(String matDataString) {
         Material mat;
-        short data;
+        int data;
         if (matDataString == null) return null;
         String[] obj = matDataString.split(":");
         try {
@@ -45,13 +54,16 @@ public class ItemStackUtility {
         }
         if (obj.length == 2) {
             try {
-                data = Short.valueOf(obj[1]);
+                data = Integer.valueOf(obj[1]);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
                 return null; // data not a number
             }
             ItemStack stack = new ItemStack(mat, 1);
-            stack.setDurability(data);
+            ItemMeta meta = stack.getItemMeta();
+            if(meta instanceof Damageable) {
+                ((Damageable) meta).setDamage(data);
+            }
             return stack;
         } else {
             return new ItemStack(mat, 1);
@@ -59,11 +71,11 @@ public class ItemStackUtility {
     }
 
     public static ItemStack createBookWithText(List<String> text) {
-        return createItemWithText(text, new MaterialData(Material.BOOK_AND_QUILL));
+        return createItemWithText(text, WRITABLE_BOOK);
     }
 
-    public static ItemStack createItemWithText(List<String> text, MaterialData materialData) {
-        ItemStack helpItem = materialData.toItemStack(1);
+    public static ItemStack createItemWithText(List<String> text, Material material) {
+        ItemStack helpItem = new ItemStack(material, 1);
         ItemMeta meta = helpItem.getItemMeta();
         if (text != null) {
             if (text.size() > 0) meta.setDisplayName(text.get(0));
@@ -98,7 +110,7 @@ public class ItemStackUtility {
         ItemStack skull = cachedPlayerHeads.get(name);
         if (skull != null) return skull.clone();
         GameBox.debug("Not cached yet...");
-        skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+        skull = new ItemStack(PLAYER_HEAD, 1);
         SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
         skullMeta.setOwner(name);
         skull.setItemMeta(skullMeta);

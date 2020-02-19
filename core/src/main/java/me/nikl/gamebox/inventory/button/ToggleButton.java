@@ -3,7 +3,6 @@ package me.nikl.gamebox.inventory.button;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.material.MaterialData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,34 +12,29 @@ import java.util.List;
  * @author Niklas Eicker
  */
 public class ToggleButton extends Button {
-    private boolean toggled = false;
-    private MaterialData toggleData;
+    private ItemStack toggle;
     private String toggleDisplayName = "missing name";
     private List<String> toggleLore = new ArrayList<>(Arrays.asList("missing lore"));
 
-    // ToDo: get rid of MaterialData / Data usage for mc 1.13
 
-    @Deprecated
-    public ToggleButton(ItemStack item, MaterialData mat2) {
+    public ToggleButton(ItemStack item, ItemStack toggle) {
         super(item);
-        this.toggleData = mat2;
+        this.toggle = toggle;
     }
 
-    @SuppressWarnings("deprecation")
     public ToggleButton toggle() {
-        toggled = !toggled;
-        MaterialData mat = toggleData;
+        ItemStack newData = this.toggle.clone();
         ItemMeta meta = getItemMeta();
         String displayName = toggleDisplayName;
         ArrayList<String> lore = new ArrayList<>(toggleLore);
 
-        toggleData = getData();
+        this.toggle.setData(getData());
+        this.toggle.setType(getData().getItemType());
         toggleDisplayName = meta.getDisplayName();
         toggleLore = new ArrayList<>(meta.getLore());
 
-        setData(mat);
-        setType(mat.getItemType());
-        setDurability(mat.getData());
+        setData(newData.getData());
+        setType(newData.getType());
         meta.setDisplayName(displayName);
         meta.setLore(lore);
         meta.addItemFlags(ItemFlag.values());
@@ -58,10 +52,10 @@ public class ToggleButton extends Button {
 
     @Override
     public Button clone() {
-        ToggleButton clone = new ToggleButton(this, toggled ? getData() : toggleData);
+        ToggleButton clone = new ToggleButton(this, toggle);
         clone.setActionAndArgs(this.action, this.args);
-        clone.setToggleDisplayName(toggled ? getItemMeta().getDisplayName() : toggleDisplayName);
-        clone.setToggleLore(toggled ? getItemMeta().getLore() : toggleLore);
+        clone.setToggleDisplayName(this.toggleDisplayName);
+        clone.setToggleLore(this.toggleLore);
         return clone;
     }
 }

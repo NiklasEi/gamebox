@@ -4,15 +4,16 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.button.Button;
+import me.nikl.gamebox.utility.ItemStackUtility;
 import me.nikl.nmsutilities.NmsFactory;
 import me.nikl.gamebox.utility.InventoryUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.material.MaterialData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +33,7 @@ public class StartMultiplayerGamePage extends GameGuiPage {
         super(plugin, guiManager, slots, gameID, key, title);
 
 
-        Button button = new Button(new MaterialData(Material.IRON_BLOCK).toItemStack(1));
+        Button button = new Button(new ItemStack(Material.IRON_BLOCK, 1));
         button.setAction(ClickAction.START_PLAYER_INPUT);
         button.setArgs(gameID, key);
         ItemMeta meta = button.getItemMeta();
@@ -89,8 +90,7 @@ public class StartMultiplayerGamePage extends GameGuiPage {
             if (i >= inventory.getSize()) break;
             Player player1 = Bukkit.getPlayer(uuid1);
             if (player1 == null) continue;
-            Button skull = new Button(new MaterialData(Material.SKULL_ITEM).toItemStack(1));
-            skull.setDurability((short) 3);
+            Button skull = new Button(new ItemStack(ItemStackUtility.PLAYER_HEAD, 1));
             SkullMeta meta = (SkullMeta) skull.getItemMeta();
             meta.setOwner(player1.getName());
             meta.setDisplayName(gameBox.lang.BUTTON_INVITE_SKULL_NAME.replace("%player%", player1.getName()));

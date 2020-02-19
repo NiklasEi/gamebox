@@ -69,7 +69,7 @@ public class ShopManager {
     }
 
     private void loadShopButton() {
-        ItemStack mainItem = ItemStackUtility.getItemStack(shop.getString("shop.button.materialData", Material.STORAGE_MINECART.toString()));
+        ItemStack mainItem = ItemStackUtility.getItemStack(shop.getString("shop.button.materialData", ItemStackUtility.CHEST_MINECART.toString()));
         if (shop.getBoolean("shop.button.glow")) mainItem = NmsFactory.getNmsUtility().addGlow(mainItem);
         mainButton = new Button(mainItem);
         ItemMeta meta = mainItem.getItemMeta();
