@@ -26,7 +26,7 @@ shop:
     example:
 
       # material data of the button for the category
-      materialData: "stained_clay:1"
+      materialData: "light_blue_glazed_terracotta"
 
       # display name of the button
       displayName: "&3&lExample category"
@@ -47,7 +47,7 @@ shop:
         # minimalistic example
         #   the following item is a free jungle sapling
         minimalExample:
-          materialData: "sapling:3"
+          materialData: "JUNGLE_SAPLING"
 
         # example with all the possible features
         #
@@ -126,7 +126,7 @@ shop:
           manipulatesInventory: false
 
         # item only for people with special permission
-        blueClay:
+        specialPermission:
           materialData: "obsidian"
           tokens: 1
           buttonItem:
@@ -140,8 +140,8 @@ shop:
             - "my.server.builder"
 
         # selling a glowing item
-        blueClayd37:
-          materialData: "iron_nugget"
+        glowingTerracotta:
+          materialData: "purple_glazed_terracotta"
           tokens: 100
           money: 1000
           glow: true
@@ -181,7 +181,7 @@ shop:
             displayName: "&9&lExample give Command"
             additionalLore:
             - "&bGives you 59 obsidian per command"
-            - "   &bIf you have"
+            - "   &bIf you have the perm."
             - "   &6my.server.builder"
             glow: true
           requirements:
@@ -198,3 +198,18 @@ shop:
           #    if there is no other solution
           #      like building the custom item with the lore and display name and sell it the normal way
           manipulatesInventory: true
+    secondPage:
+      materialData: "gold_block"
+      displayName: "&1&lEmpty second category"
+      lore:
+        - ""
+        - "&bThis is just here to demonstrate"
+        - "&b  the possibility to add more"
+        - "&b  pages to the shop!"
+      glow: true
+      items:
+        onSecondPage:
+          materialData: "red_glazed_terracotta"
+          lore:
+            - "&1I'm on the second page ;)"
+            - "&1 ... and for free"
