@@ -1,6 +1,5 @@
 package me.nikl.gamebox.utility;
 
-import me.nikl.gamebox.GameBoxSettings;
 import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -11,9 +10,6 @@ import org.bukkit.inventory.InventoryHolder;
  */
 public class InventoryUtility {
     public static Inventory createInventory(InventoryHolder owner, int size, String title) {
-        if (GameBoxSettings.checkInventoryLength && title.length() > 32) {
-            title = StringUtility.shorten(title, 32);
-        }
         if (owner == null) throw new IllegalArgumentException("InventoryHolder cannot be null");
         return Bukkit.createInventory(owner, size, title);
     }
