@@ -50,6 +50,11 @@ public class Module {
         return moduleID.equalsIgnoreCase(((Module) module).moduleID);
     }
 
+    @Override
+    public int hashCode() {
+        return moduleID.hashCode();
+    }
+
     public JavaPlugin getExternalPlugin() {
         return externalPlugin;
     }

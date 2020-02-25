@@ -25,6 +25,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -32,7 +33,6 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -260,6 +260,7 @@ public class PluginManager implements Listener {
                         }
                     } else if (event.getSlot() == GameBoxSettings.exitButtonSlot) {
                         event.getWhoClicked().closeInventory();
+                        //noinspection deprecation Todo: remove, when alternative given
                         ((Player) event.getWhoClicked()).updateInventory();
                         if (GameBoxSettings.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
                             ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.CLICK.bukkitSound(), volume, pitch);
@@ -371,18 +372,22 @@ public class PluginManager implements Listener {
      * It there is space in the saved inventory the item is added.
      * Otherwise the PickUpEvent is cancelled.
      *
-     * @param playerPickupItemEvent called Event
+     * @param entityPickupItemEvent called Event
      */
     @EventHandler (priority = EventPriority.HIGHEST)
-    public void onPickUp(PlayerPickupItemEvent playerPickupItemEvent) {
-        if (playerPickupItemEvent.isCancelled()) return;
-        if (!isInGame(playerPickupItemEvent.getPlayer().getUniqueId()) && !guiManager.isInGUI(playerPickupItemEvent.getPlayer().getUniqueId()) && !guiManager.getShopManager().inShop(playerPickupItemEvent.getPlayer().getUniqueId()))
+    public void onPickUp(EntityPickupItemEvent entityPickupItemEvent) {
+        if (!(entityPickupItemEvent.getEntity() instanceof Player)) {
+            return;
+        }
+        Player player = (Player) entityPickupItemEvent.getEntity();
+        if (entityPickupItemEvent.isCancelled()) return;
+        if (!isInGame(player.getUniqueId()) && !guiManager.isInGUI(player.getUniqueId()) && !guiManager.getShopManager().inShop(player.getUniqueId()))
             return;
         // ToDo: change #addItem() and this method to allow for partial pick up
-        if (addItem(playerPickupItemEvent.getPlayer().getUniqueId(), playerPickupItemEvent.getItem().getItemStack())) {
-            playerPickupItemEvent.getItem().remove();
+        if (addItem(player.getUniqueId(), entityPickupItemEvent.getItem().getItemStack())) {
+            entityPickupItemEvent.getItem().remove();
         }
-        playerPickupItemEvent.setCancelled(true);
+        entityPickupItemEvent.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -696,6 +701,7 @@ public class PluginManager implements Listener {
         }
     }
 
+    @SuppressWarnings("deprecation")
     public void leaveGameBox(Player player) {
         restoreInventory(player);
         plugin.getInventoryTitleMessenger().removeTitleMessage(player.getUniqueId());

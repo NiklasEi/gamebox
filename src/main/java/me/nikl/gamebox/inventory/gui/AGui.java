@@ -192,6 +192,7 @@ public abstract class AGui implements GameBoxHolder {
             case CLOSE:
                 // do i need to do more here?
                 event.getWhoClicked().closeInventory();
+                //noinspection deprecation
                 ((Player) event.getWhoClicked()).updateInventory();
                 return true;
 
@@ -212,6 +213,7 @@ public abstract class AGui implements GameBoxHolder {
                         , timeStamp + GameBoxSettings.inviteInputDuration * 1000, args);
                 if (inputStarted) {
                     event.getWhoClicked().closeInventory();
+                    //noinspection deprecation
                     ((Player) event.getWhoClicked()).updateInventory();
                     event.getWhoClicked().sendMessage(gameBox.lang.PREFIX + gameBox.lang.INPUT_START_MESSAGE);
                     for (String message : gameBox.lang.INPUT_HELP_MESSAGE) {
@@ -230,6 +232,7 @@ public abstract class AGui implements GameBoxHolder {
                                 , ((MainGui) this).getSoundToggleButton(event.getWhoClicked().getUniqueId()).toggle());
                     }
                 }
+                //noinspection deprecation
                 ((Player) event.getWhoClicked()).updateInventory();
                 return true;
 

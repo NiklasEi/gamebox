@@ -92,7 +92,7 @@ public class StartMultiplayerGamePage extends GameGuiPage {
             if (player1 == null) continue;
             Button skull = new Button(new ItemStack(ItemStackUtility.PLAYER_HEAD, 1));
             SkullMeta meta = (SkullMeta) skull.getItemMeta();
-            meta.setOwner(player1.getName());
+            meta.setOwningPlayer(player1);
             meta.setDisplayName(gameBox.lang.BUTTON_INVITE_SKULL_NAME.replace("%player%", player1.getName()));
             meta.setLore(gameBox.lang.BUTTON_INVITE_SKULL_LORE);
             skull.setItemMeta(meta);

@@ -177,15 +177,15 @@ public class GameRegistry {
     }
 
     private void loadGame(Module module) {
-        Class clazz = null;
+        Class<Game> clazz = null;
         try {
-            clazz = Class.forName(module.getClassPath());
-        } catch (ClassNotFoundException e) {
+            clazz = (Class<Game>) Class.forName(module.getClassPath());
+        } catch (ClassNotFoundException | ClassCastException e) {
             e.printStackTrace();
         }
         if (clazz == null) return;
         try {
-            Constructor<Game> ctor = ((Class<Game>) clazz).getConstructor(GameBox.class);
+            Constructor<Game> ctor = clazz.getConstructor(GameBox.class);
             Game game = ctor.newInstance(gameBox);
             gameBox.getPluginManager().registerGame(game);
             game.onEnable();

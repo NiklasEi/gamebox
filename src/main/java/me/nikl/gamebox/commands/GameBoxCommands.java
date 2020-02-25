@@ -2,7 +2,6 @@ package me.nikl.gamebox.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.BukkitCommandManager;
-import co.aikar.commands.BukkitRootCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
@@ -29,7 +28,6 @@ import java.util.*;
 public class GameBoxCommands extends BukkitCommandManager {
     public static final String INVITE_CLICK_COMMAND = "click-" + UUID.randomUUID().toString().substring(0, 13);
     private GameBox gameBox;
-    private DefaultExceptionHandler defaultExceptionHandler;
 
     public GameBoxCommands(GameBox gameBox) {
         super(gameBox);
@@ -38,7 +36,6 @@ public class GameBoxCommands extends BukkitCommandManager {
         getCommandReplacements().addReplacement("mainCommand", GameBoxSettings.mainCommand);
         getCommandReplacements().addReplacement("adminCommand", GameBoxSettings.adminCommand);
         getCommandReplacements().addReplacement("adminGameCommand", GameBoxSettings.adminCommand + " game");
-        defaultExceptionHandler = new DefaultExceptionHandler();
         registerCommandCompletions();
         registerCommands();
     }
@@ -79,14 +76,10 @@ public class GameBoxCommands extends BukkitCommandManager {
     public void registerCommand(BaseCommand baseCommand) {
         GameBox.debug("registering " + baseCommand.getClass().getSimpleName());
         GameBox.debug("   annotated -> " + (baseCommand.getClass().getAnnotation(CommandAlias.class) != null?baseCommand.getClass().getAnnotation(CommandAlias.class).value():"null"));
-        super.registerCommand(baseCommand.setExceptionHandler(defaultExceptionHandler), true);
-    }
-
-    /**
-     * Prevent https://github.com/NiklasEi/gamebox/issues/71
-     */
-    @Override
-    public void unregisterCommands() {
-        while (!this.registeredCommands.isEmpty()) this.unregisterCommand(this.registeredCommands.values().iterator().next());
+        super.registerCommand(baseCommand.setExceptionHandler((command, registeredCommand, sender, args, throwable) -> {
+            sender.sendMessage("Caught exception in command " + baseCommand.getName() + ":");
+            throwable.printStackTrace();
+            return true;
+        }), true);
     }
 }
