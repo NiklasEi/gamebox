@@ -51,7 +51,6 @@ public class GameBoxSettings {
         loadCommands();
         loadDatabaseSettings();
         hubModeEnabled = configuration.getBoolean("hubMode.enabled", false);
-        checkInventoryLength = checkInventoryTitleLength();
         guiSettings();
         generalSettings();
         invitationSettings();
@@ -166,14 +165,5 @@ public class GameBoxSettings {
                 it.remove();
             if (slot < 0 || slot > 8) it.remove();
         }
-    }
-
-    private static boolean checkInventoryTitleLength() {
-        try {
-            Bukkit.createInventory(null, 27, "This title is longer then 32 characters!");
-        } catch (Exception e) {
-            return true;
-        }
-        return false;
     }
 }

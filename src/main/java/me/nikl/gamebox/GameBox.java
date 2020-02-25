@@ -142,11 +142,6 @@ public class GameBox extends JavaPlugin {
     }
 
     private void runLateChecks() {
-        if (GameBoxSettings.checkInventoryLength) {
-            info(ChatColor.RED + " Your server version can't handle more then 32 characters in inventory titles!");
-            info(ChatColor.RED + " GameBox will shorten too long titles (marked by '...') to prevent errors.");
-            info(ChatColor.RED + " To fix this ('...'), create your own language file with shorter titles.");
-        }
         if (GameBoxSettings.runLanguageChecksAutomatically) ConfigManager.printIncompleteLangFilesInfo(this);
         if (PluginManager.gamesRegistered == 0) {
             info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
