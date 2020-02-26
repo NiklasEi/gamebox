@@ -11,15 +11,15 @@ open: false
 # More info about the token shop can be found on the GitHub wiki: https://github.com/NiklasEi/gamebox/wiki/Token-Shop
 shop:
   button:
-     # define the Material and data for the item (format: 'material:data')
-     materialData: "CHEST_MINECART"
-     # display name of the button
-     displayName: "&3&lShop"
-     # lore of the item (optional)
-     lore:
-     - ""
-     - "&bClick to open the shop"
-     glow: true
+    # define the Material and data for the item (format: 'material:data')
+    materialData: "CHEST_MINECART"
+    # display name of the button
+    displayName: "&3&lShop"
+    # lore of the item (optional)
+    lore:
+      - ""
+      - "&bClick to open the shop"
+    glow: true
   categories:
 
     # unique key of the category
@@ -33,10 +33,10 @@ shop:
 
       # lore of the button
       lore:
-      - ""
-      - "&bA category contains pages with items."
-      - "&bEach one can contain infinite shop items"
-      - "&b  due to an automatic page system!"
+        - ""
+        - "&bA category contains pages with items."
+        - "&bEach one can contain infinite shop items"
+        - "&b  due to an automatic page system!"
 
       # should it glow?
       glow: false
@@ -60,8 +60,8 @@ shop:
           displayName: "&2Special dirt"
           # Lore of the sold item (optional)
           lore:
-          - ""
-          - "&bThis item is a maximum example"
+            - ""
+            - "&bThis item is a maximum example"
           # Amount (optional)
           #   Only up to max stack size of the particular item.
           #   Default is 1
@@ -85,15 +85,15 @@ shop:
 
             # optional lore added to the default shop lore that already contains the price of the item/command
             additionalLore:
-            - "&bPersonal greeting by the server"
-            - ""
-            - "&bHave the permissions:"
-            - "&6   gamebox.testing1"
-            - "&6   gamebox.testing2"
-            - ""
-            - "&bDo not have the permissions:"
-            - "&6   gamebox.play.battleship"
-            - "&6   gamebox.play.*"
+              - "&bPersonal greeting by the server"
+              - ""
+              - "&bHave the permissions:"
+              - "&6   gamebox.testing1"
+              - "&6   gamebox.testing2"
+              - ""
+              - "&bDo not have the permissions:"
+              - "&6   gamebox.play.battleship"
+              - "&6   gamebox.play.*"
 
             # optional display name
             displayName: "&2Example"
@@ -104,18 +104,18 @@ shop:
 
             # the player must have all of these permissions!
             permissions:
-            - "gamebox.testing1"
-            - "gamebox.testing2"
+              - "gamebox.testing1"
+              - "gamebox.testing2"
 
             # the player is not allowed to have any of these permissions
             noPermissions:
-            - "gamebox.play.battleship"
-            - "gamebox.play.*"
+              - "gamebox.play.battleship"
+              - "gamebox.play.*"
 
           # optional commands to run when the player buys this
           #   %player% will be replaced by the player name
           commands:
-          - "tell %player% Hi"
+            - "tell %player% Hi"
 
           # optional! default: false
           #    see 'commandManipulatingInventoryExample' for an example usage
@@ -131,13 +131,13 @@ shop:
           tokens: 1
           buttonItem:
             additionalLore:
-            - "&bYou need the following permission"
-            - "&b  to buy this item:"
-            - " "
-            - "&6  my.server.builder"
+              - "&bYou need the following permission"
+              - "&b  to buy this item:"
+              - " "
+              - "&6  my.server.builder"
           requirements:
             permissions:
-            - "my.server.builder"
+              - "my.server.builder"
 
         # selling a glowing item
         glowingTerracotta:
@@ -154,21 +154,21 @@ shop:
             materialData: "nether_star"
             displayName: "&9&lExample Command"
             additionalLore:
-            - "&bIf you buy this, the server"
-            - "&b  will thank you ;)"
-            - " "
-            - "&bDo not have the permission:"
-            - "&6  my.server.builder"
-            - " "
-            - "&bHave the permission:"
-            - "&6  gamebox.play.*"
+              - "&bIf you buy this, the server"
+              - "&b  will thank you ;)"
+              - " "
+              - "&bDo not have the permission:"
+              - "&6  my.server.builder"
+              - " "
+              - "&bHave the permission:"
+              - "&6  gamebox.play.*"
           requirements:
             permissions:
-            - "gamebox.play.*"
+              - "gamebox.play.*"
             noPermissions:
-            - "my.server.builder"
+              - "my.server.builder"
           commands:
-          - "tell %player% Thanks for buying, %player%!"
+            - "tell %player% Thanks for buying, %player%!"
 
         # run /give command if player has/hasn't some permission
         #    you shouldn't give items in this way
@@ -180,18 +180,18 @@ shop:
             materialData: "obsidian"
             displayName: "&9&lExample give Command"
             additionalLore:
-            - "&bGives you 59 obsidian per command"
-            - "   &bIf you have the perm."
-            - "   &6my.server.builder"
+              - "&bGives you 59 obsidian per command"
+              - "   &bIf you have the perm."
+              - "   &6my.server.builder"
             glow: true
           requirements:
             permissions:
-            - "my.server.builder"
+              - "my.server.builder"
 
           # this command will manipulate the players inventory
           #   thus the option below is set
           commands:
-          - "give %player% obsidian 59"
+            - "give %player% obsidian 59"
 
           # caution with this option
           #    you should only use commands that manipulate the player inventory

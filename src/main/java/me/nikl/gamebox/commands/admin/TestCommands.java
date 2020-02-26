@@ -20,31 +20,31 @@ import java.util.UUID;
  */
 @CommandAlias("%adminCommand")
 public class TestCommands extends ConsoleBaseCommand {
-    public TestCommands(GameBox gameBox) {
-        super(gameBox);
-    }
+  public TestCommands(GameBox gameBox) {
+    super(gameBox);
+  }
 
-    @Subcommand("findColumns")
-    public void findColumns(CommandSender sender, @Single String columnNameBeginning) {
-        DataBase dataBase = gameBox.getDataBase();
-        if (!(dataBase instanceof MysqlDB)) return;
-        List<String> columns = ((MysqlDB) dataBase).getHighScoreColumnsBeginningWith(columnNameBeginning);
-        sender.sendMessage(String.join(", ", columns));
-    }
+  @Subcommand("findColumns")
+  public void findColumns(CommandSender sender, @Single String columnNameBeginning) {
+    DataBase dataBase = gameBox.getDataBase();
+    if (!(dataBase instanceof MysqlDB)) return;
+    List<String> columns = ((MysqlDB) dataBase).getHighScoreColumnsBeginningWith(columnNameBeginning);
+    sender.sendMessage(String.join(", ", columns));
+  }
 
-    @Subcommand("hundredrandom")
-    public void addHundredRandomStats(CommandSender sender) {
-        DataBase dataBase = gameBox.getDataBase();
-        Random random = new Random();
-        for (int i = 0; i < 100; i++) {
-            UUID uuid = UUID.randomUUID();
-            dataBase.savePlayer(new GBPlayer(gameBox, uuid, 0, true, true), true);
-            dataBase.addStatistics(uuid, GameBox.MODULE_COOKIECLICKER, "weekly", random.nextInt(5000), SaveType.HIGH_NUMBER_SCORE);
-        }
+  @Subcommand("hundredrandom")
+  public void addHundredRandomStats(CommandSender sender) {
+    DataBase dataBase = gameBox.getDataBase();
+    Random random = new Random();
+    for (int i = 0; i < 100; i++) {
+      UUID uuid = UUID.randomUUID();
+      dataBase.savePlayer(new GBPlayer(gameBox, uuid, 0, true, true), true);
+      dataBase.addStatistics(uuid, GameBox.MODULE_COOKIECLICKER, "weekly", random.nextInt(5000), SaveType.HIGH_NUMBER_SCORE);
     }
+  }
 
-    @Subcommand("unregister")
-    public void unregisterGame(CommandSender sender, String gameID) {
-        gameBox.getPluginManager().unregisterGame(gameID);
-    }
+  @Subcommand("unregister")
+  public void unregisterGame(CommandSender sender, String gameID) {
+    gameBox.getPluginManager().unregisterGame(gameID);
+  }
 }

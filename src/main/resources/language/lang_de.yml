@@ -26,28 +26,28 @@ commandMessages:
   onlyAsPlayer: ' &4Das geht nur als Spieler'
   pluginReloaded: ' &2Plugin wurde neu geladen'
   wrongUsage:
-  - ' Benutze &2/gb&r um das GUI zu öffnen'
-  - ' Für mehr Informationen benutze &2/gb help&r'
+    - ' Benutze &2/gb&r um das GUI zu öffnen'
+    - ' Für mehr Informationen benutze &2/gb help&r'
   help:
-  - ' Benutze &2/gb&r um das GUI zu öffnen'
-  - ' Die einzelnen Spiele lassen sich über das GUI öffnen'
-  - ' Oder öffne die Spiel GUIs mit: &2/gb <game>&r'
-  - '   &2/gb info&r für Informationen über die Spiele'
+    - ' Benutze &2/gb&r um das GUI zu öffnen'
+    - ' Die einzelnen Spiele lassen sich über das GUI öffnen'
+    - ' Oder öffne die Spiel GUIs mit: &2/gb <game>&r'
+    - '   &2/gb info&r für Informationen über die Spiele'
   inDisabledWorld: ' &4Nicht in dieser Welt'
   # customize info output here
   #   the first output will always be version and author
   info:
     header:
-    - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
-    - ' &6&lListe aller installierten Spiele:'
+      - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
+      - ' &6&lListe aller installierten Spiele:'
     # use %name% for the game name
     # %shorts will be replaced by all available shortcut commands%
     # %playerNum% will give the number of players needed per game
     perGame:
-    - ' &3&l%name%&r (%playerNum% Spieler)'
-    - '   &2/gb <%shorts%>'
+      - ' &3&l%name%&r (%playerNum% Spieler)'
+      - '   &2/gb <%shorts%>'
     footer:
-    - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
+      - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
   tokenInfo: ' &2%player% hat %token% Token.'
   ownTokenInfo: ' &2Du hast %token% Token.'
   gaveToken: ' &2%token% Token wurden %player% gegeben.'
@@ -66,32 +66,32 @@ mainButtons:
   forwardButton: "&2Vor"
   backwardButton: "&2Zur\u00fcck"
   infoMainMenu:
-  - '&1Hier befinden sich alle Spiele'
-  - '&1Klicke auf einen Button um'
-  - '  &1in das Spielmenü zu gelangen.'
+    - '&1Hier befinden sich alle Spiele'
+    - '&1Klicke auf einen Button um'
+    - '  &1in das Spielmenü zu gelangen.'
   # %tokens% will be replaced with the players number of tokens
   tokensButton: "&1Token: &2%tokens%"
   soundToggle:
     onDisplayName: "&1Sounds an"
     onLore:
-    - ""
-    - "&1Klicke zum stumm schalten"
+      - ""
+      - "&1Klicke zum stumm schalten"
     offDisplayName: "&4Sounds aus"
     offLore:
-    - ""
-    - "&1Klicke um Geräusche zu erlauben"
+      - ""
+      - "&1Klicke um Geräusche zu erlauben"
   inviteButton:
     displayName: "&eLade jemanden ein"
     lore:
-    - ""
-    - "&1Klicke hier, um jemanden über den chat einzuladen"
+      - ""
+      - "&1Klicke hier, um jemanden über den chat einzuladen"
   # this is the name and lore of an invite. It is the players skull in the invitation GUI.
   invitationSkull:
     # %player% will be replaced by the players name
     displayName: "&e%player%"
     lore:
-    - ""
-    - "&1Klicke um die Einladung zu akzeptieren"
+      - ""
+      - "&1Klicke um die Einladung zu akzeptieren"
 
 inventoryTitles:
   # use %player% for the player name
@@ -110,10 +110,10 @@ topList:
   unknownSkullName: "&1Unbekannter Spieler"
   # Will be added below the rank information for unknown players
   unknownSkullLore:
-  - ""
-  - "Dieser Spieler wurde"
-  - "noch nie auf diesem"
-  - "Server gesehen..."
+    - ""
+    - "Dieser Spieler wurde"
+    - "noch nie auf diesem"
+    - "Server gesehen..."
 
 shop:
   freeItem: "&9Umsonst"
@@ -135,8 +135,8 @@ others:
   playerInput:
     openingMessage: " &l&2Gebe den Namen eines Spielers ein, um ihn einzuladen."
     helpMessage:
-    - " &2Du hast &5%seconds% &2Sekunden Zeit."
-    - " &2Um die Eingabe zu stoppen sende &c'%'&2."
+      - " &2Du hast &5%seconds% &2Sekunden Zeit."
+      - " &2Um die Eingabe zu stoppen sende &c'%'&2."
     timeRanOut: " &cDie Eingabe-zeit ist vorbei."
     inputSuccessful: " &5%player%&2 wurde eingeladen."
     inputClosed: " &2Die Eingabe wurde beendet."
@@ -146,7 +146,7 @@ others:
     notInviteYourself: " &cDu kannst dich nicht selber einladen..."
     otherInDisabledWorld: " &5%player%&c ist in einer verbotenen Welt."
   invitation:
-  - " &3%player%&r hat dich zu &3%game% eingeladen"
+    - " &3%player%&r hat dich zu &3%game% eingeladen"
 
   # this message is sent in the JSON format and has to be customised differently
 

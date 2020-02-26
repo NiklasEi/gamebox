@@ -12,18 +12,18 @@ import org.bukkit.entity.Player;
  */
 @CommandAlias("%mainCommand")
 public class GetTokenCount extends PlayerBaseCommand {
-    public GetTokenCount(GameBox gameBox) {
-        super(gameBox);
-    }
+  public GetTokenCount(GameBox gameBox) {
+    super(gameBox);
+  }
 
-    @Subcommand("token|t")
-    public void getOwnTokenCount(Player player) {
-        if (!Permission.CMD_TOKEN.hasPermission(player)) {
-            player.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_NO_PERM);
-            return;
-        }
-        GBPlayer gbPlayer = gameBox.getPluginManager().getPlayer(player.getUniqueId());
-        if (gbPlayer == null) return;
-        player.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_OWN_TOKEN_INFO.replace("%token%", String.valueOf(gbPlayer.getTokens())));
+  @Subcommand("token|t")
+  public void getOwnTokenCount(Player player) {
+    if (!Permission.CMD_TOKEN.hasPermission(player)) {
+      player.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_NO_PERM);
+      return;
     }
+    GBPlayer gbPlayer = gameBox.getPluginManager().getPlayer(player.getUniqueId());
+    if (gbPlayer == null) return;
+    player.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_OWN_TOKEN_INFO.replace("%token%", String.valueOf(gbPlayer.getTokens())));
+  }
 }

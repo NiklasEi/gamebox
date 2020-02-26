@@ -12,24 +12,24 @@ import java.util.List;
  * @author Niklas Eicker
  */
 public class LeftGameBoxListener extends GameBoxListener {
-    private List<String> commands;
+  private List<String> commands;
 
-    public LeftGameBoxListener(GameBox gameBox) {
-        super(gameBox);
-        if (gameBox.getConfig().isSet("listeners.leftGameBox")) {
-            ConfigurationSection listener = gameBox.getConfig().getConfigurationSection("listeners.leftGameBox");
-            if (listener.isList("commands")) {
-                this.commands = listener.getStringList("commands");
-            }
-        }
+  public LeftGameBoxListener(GameBox gameBox) {
+    super(gameBox);
+    if (gameBox.getConfig().isSet("listeners.leftGameBox")) {
+      ConfigurationSection listener = gameBox.getConfig().getConfigurationSection("listeners.leftGameBox");
+      if (listener.isList("commands")) {
+        this.commands = listener.getStringList("commands");
+      }
     }
+  }
 
-    @EventHandler
-    public void onLeftGameBox(LeftGameBoxEvent event) {
-        if (commands != null) {
-            for (String cmd : commands) {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", event.getPlayer().getName()));
-            }
-        }
+  @EventHandler
+  public void onLeftGameBox(LeftGameBoxEvent event) {
+    if (commands != null) {
+      for (String cmd : commands) {
+        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replace("%player%", event.getPlayer().getName()));
+      }
     }
+  }
 }

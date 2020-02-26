@@ -14,22 +14,22 @@ import org.bukkit.command.CommandSender;
  */
 @CommandAlias("%adminCommand")
 public class Reload extends GameBoxBaseCommand {
-    public Reload(GameBox gameBox) {
-        super(gameBox);
-    }
+  public Reload(GameBox gameBox) {
+    super(gameBox);
+  }
 
-    @Subcommand("reload")
-    public void onReload(CommandSender sender) {
-        if (!Permission.ADMIN_RELOAD.hasPermission(sender)) {
-            sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_NO_PERM);
-            return;
-        }
-        sender.sendMessage(gameBox.lang.PREFIX + ChatColor.GREEN + " Reloading...");
-        if (gameBox.reload()) {
-            sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.RELOAD_SUCCESS);
-        } else {
-            sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.RELOAD_FAIL);
-            Bukkit.getPluginManager().disablePlugin(gameBox);
-        }
+  @Subcommand("reload")
+  public void onReload(CommandSender sender) {
+    if (!Permission.ADMIN_RELOAD.hasPermission(sender)) {
+      sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_NO_PERM);
+      return;
     }
+    sender.sendMessage(gameBox.lang.PREFIX + ChatColor.GREEN + " Reloading...");
+    if (gameBox.reload()) {
+      sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.RELOAD_SUCCESS);
+    } else {
+      sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.RELOAD_FAIL);
+      Bukkit.getPluginManager().disablePlugin(gameBox);
+    }
+  }
 }

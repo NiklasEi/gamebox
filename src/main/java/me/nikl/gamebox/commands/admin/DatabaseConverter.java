@@ -15,21 +15,21 @@ import org.bukkit.command.CommandSender;
  */
 @CommandAlias("%adminCommand")
 public class DatabaseConverter extends GameBoxBaseCommand {
-    public DatabaseConverter(GameBox gameBox) {
-        super(gameBox);
-    }
+  public DatabaseConverter(GameBox gameBox) {
+    super(gameBox);
+  }
 
-    @Subcommand("filetomysql")
-    public void onConvertFileToMySQL (CommandSender sender) {
-        if (!Permission.ADMIN_DATABASE.hasPermission(sender)) {
-            sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_NO_PERM);
-            return;
-        }
-        DataBase dataBase = gameBox.getDataBase();
-        if (!(dataBase instanceof MysqlDB)) {
-            sender.sendMessage(gameBox.lang.PREFIX + ChatColor.RED + " You must have MySQL enabled to do this!");
-            return;
-        }
-        ((MysqlDB) dataBase).convertFromFile(sender);
+  @Subcommand("filetomysql")
+  public void onConvertFileToMySQL(CommandSender sender) {
+    if (!Permission.ADMIN_DATABASE.hasPermission(sender)) {
+      sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_NO_PERM);
+      return;
     }
+    DataBase dataBase = gameBox.getDataBase();
+    if (!(dataBase instanceof MysqlDB)) {
+      sender.sendMessage(gameBox.lang.PREFIX + ChatColor.RED + " You must have MySQL enabled to do this!");
+      return;
+    }
+    ((MysqlDB) dataBase).convertFromFile(sender);
+  }
 }

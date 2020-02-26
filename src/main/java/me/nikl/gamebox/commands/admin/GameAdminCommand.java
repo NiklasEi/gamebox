@@ -12,22 +12,22 @@ import org.bukkit.command.CommandSender;
  * @author Niklas Eicker
  */
 public class GameAdminCommand extends GameBoxBaseCommand {
-    private Module module;
+  private Module module;
 
-    public GameAdminCommand(GameBox gameBox, Module module) {
-        super(gameBox);
-        Validate.notNull(module, "The GameAdminCommand needs a valid module!");
-        this.module = module;
-    }
+  public GameAdminCommand(GameBox gameBox, Module module) {
+    super(gameBox);
+    Validate.notNull(module, "The GameAdminCommand needs a valid module!");
+    this.module = module;
+  }
 
-    @Override
-    @PreCommand
-    public boolean preCommand(CommandSender sender) {
-        GameBox.debug("in GameAdminCommand pre command");
-        if (!Permission.ADMIN_GAME.hasPermission(sender, module)) {
-            sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_NO_PERM);
-            return true;
-        }
-        return false;
+  @Override
+  @PreCommand
+  public boolean preCommand(CommandSender sender) {
+    GameBox.debug("in GameAdminCommand pre command");
+    if (!Permission.ADMIN_GAME.hasPermission(sender, module)) {
+      sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_NO_PERM);
+      return true;
     }
+    return false;
+  }
 }

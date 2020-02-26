@@ -10,58 +10,58 @@ import javax.annotation.Nullable;
 
 /**
  * @author Niklas Eicker
- *
+ * <p>
  * Event called when a player enters a GameBox GUI or game
- *
+ * <p>
  * This is called before the player inventory is stored and cleared
  */
 public class EnterGameBoxEvent extends Event implements Cancellable {
-    private static final HandlerList handlers = new HandlerList();
-    private boolean cancelled = false;
-    private String cancelMessage;
-    private String[] args;
-    private Player player;
+  private static final HandlerList handlers = new HandlerList();
+  private boolean cancelled = false;
+  private String cancelMessage;
+  private String[] args;
+  private Player player;
 
-    public EnterGameBoxEvent(Player player, String... args) {
-        this.player = player;
-        this.args = args;
-        Bukkit.getPluginManager().callEvent(this);
-    }
+  public EnterGameBoxEvent(Player player, String... args) {
+    this.player = player;
+    this.args = args;
+    Bukkit.getPluginManager().callEvent(this);
+  }
 
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
+  @SuppressWarnings("unused")
+  public static HandlerList getHandlerList() {
+    return handlers;
+  }
 
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
-    }
+  @Override
+  public HandlerList getHandlers() {
+    return handlers;
+  }
 
-    @Override
-    public boolean isCancelled() {
-        return cancelled;
-    }
+  @Override
+  public boolean isCancelled() {
+    return cancelled;
+  }
 
-    @Override
-    public void setCancelled(boolean b) {
-        this.cancelled = b;
-    }
+  @Override
+  public void setCancelled(boolean b) {
+    this.cancelled = b;
+  }
 
-    public Player getPlayer() {
-        return player;
-    }
+  public Player getPlayer() {
+    return player;
+  }
 
-    public @Nullable
-    String getCancelMessage() {
-        return cancelMessage;
-    }
+  public @Nullable
+  String getCancelMessage() {
+    return cancelMessage;
+  }
 
-    public void setCancelMessage(String message) {
-        this.cancelMessage = message;
-    }
+  public void setCancelMessage(String message) {
+    this.cancelMessage = message;
+  }
 
-    public String[] getArgs() {
-        return args;
-    }
+  public String[] getArgs() {
+    return args;
+  }
 }

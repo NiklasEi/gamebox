@@ -14,120 +14,120 @@ import java.util.UUID;
  * @author Niklas Eicker
  */
 public class TopList {
-    public static final int TOP_LIST_LENGTH = 25;
-    private String identifier;
-    private List<PlayerScore> playerScores = new ArrayList<>();
-    private Set<TopListUser> topListUsers;
+  public static final int TOP_LIST_LENGTH = 25;
+  private String identifier;
+  private List<PlayerScore> playerScores = new ArrayList<>();
+  private Set<TopListUser> topListUsers;
 
-    public TopList(String identifier, List<PlayerScore> playerScores) {
-        this.identifier = identifier;
-        this.playerScores = playerScores;
-        topListUsers = new HashSet<>();
-    }
+  public TopList(String identifier, List<PlayerScore> playerScores) {
+    this.identifier = identifier;
+    this.playerScores = playerScores;
+    topListUsers = new HashSet<>();
+  }
 
-    public boolean update(PlayerScore playerScore) {
-        GameBox.debug("score: " + playerScore.getValue());
-        if (updateSingleScore(playerScore)) {
-            updateUsers();
-            return true;
-        }
-        return false;
+  public boolean update(PlayerScore playerScore) {
+    GameBox.debug("score: " + playerScore.getValue());
+    if (updateSingleScore(playerScore)) {
+      updateUsers();
+      return true;
     }
+    return false;
+  }
 
-    public void updatePlayerScores(List<PlayerScore> playerScores) {
-        boolean changed = false;
-        for (PlayerScore playerScore : playerScores) {
-            if (updateSingleScore(playerScore)) changed = true;
-        }
-        if (changed) updateUsers();
+  public void updatePlayerScores(List<PlayerScore> playerScores) {
+    boolean changed = false;
+    for (PlayerScore playerScore : playerScores) {
+      if (updateSingleScore(playerScore)) changed = true;
     }
+    if (changed) updateUsers();
+  }
 
-    private boolean updateSingleScore(PlayerScore playerScore) {
-        if (isInList(playerScore.getUuid())) {
-            return updateInListScore(playerScore);
-        }
-        if (playerScores.size() >= TOP_LIST_LENGTH && !playerScore.isBetterThen(playerScores.get(TOP_LIST_LENGTH - 1)))
-            return false;
-        addNewScoreEntry(playerScore);
-        if (playerScores.size() > TOP_LIST_LENGTH) {
-            playerScores = playerScores.subList(0, TOP_LIST_LENGTH);
-        }
-        return true;
+  private boolean updateSingleScore(PlayerScore playerScore) {
+    if (isInList(playerScore.getUuid())) {
+      return updateInListScore(playerScore);
     }
+    if (playerScores.size() >= TOP_LIST_LENGTH && !playerScore.isBetterThen(playerScores.get(TOP_LIST_LENGTH - 1)))
+      return false;
+    addNewScoreEntry(playerScore);
+    if (playerScores.size() > TOP_LIST_LENGTH) {
+      playerScores = playerScores.subList(0, TOP_LIST_LENGTH);
+    }
+    return true;
+  }
 
-    private boolean updateInListScore(PlayerScore playerScore) {
-        PlayerScore oldScore = getPlayerScoreFromTopList(playerScore.getUuid());
-        if (playerScore.isBetterThen(oldScore)) {
-            removePlayerScore(playerScore.getUuid());
-            addNewScoreEntry(playerScore);
-            return true;
-        }
-        return false;
+  private boolean updateInListScore(PlayerScore playerScore) {
+    PlayerScore oldScore = getPlayerScoreFromTopList(playerScore.getUuid());
+    if (playerScore.isBetterThen(oldScore)) {
+      removePlayerScore(playerScore.getUuid());
+      addNewScoreEntry(playerScore);
+      return true;
     }
+    return false;
+  }
 
-    private void updateUsers() {
-        for (TopListUser topListUser : topListUsers) {
-            topListUser.update();
-        }
+  private void updateUsers() {
+    for (TopListUser topListUser : topListUsers) {
+      topListUser.update();
     }
+  }
 
-    private PlayerScore getPlayerScoreFromTopList(UUID uuid) {
-        Iterator<PlayerScore> playerScoreIterator = playerScores.iterator();
-        PlayerScore current;
-        while (playerScoreIterator.hasNext()) {
-            current = playerScoreIterator.next();
-            if (!current.getUuid().equals(uuid)) continue;
-            return current;
-        }
-        return null;
+  private PlayerScore getPlayerScoreFromTopList(UUID uuid) {
+    Iterator<PlayerScore> playerScoreIterator = playerScores.iterator();
+    PlayerScore current;
+    while (playerScoreIterator.hasNext()) {
+      current = playerScoreIterator.next();
+      if (!current.getUuid().equals(uuid)) continue;
+      return current;
     }
+    return null;
+  }
 
-    private void removePlayerScore(UUID uuid) {
-        Iterator<PlayerScore> playerScoreIterator = playerScores.iterator();
-        while (playerScoreIterator.hasNext()) {
-            if (playerScoreIterator.next().getUuid().equals(uuid)) {
-                playerScoreIterator.remove();
-                return;
-            }
-        }
+  private void removePlayerScore(UUID uuid) {
+    Iterator<PlayerScore> playerScoreIterator = playerScores.iterator();
+    while (playerScoreIterator.hasNext()) {
+      if (playerScoreIterator.next().getUuid().equals(uuid)) {
+        playerScoreIterator.remove();
+        return;
+      }
     }
+  }
 
-    private void addNewScoreEntry(PlayerScore playerScore) {
-        int position = getNewScorePosition(playerScore);
-        GameBox.debug(" add new score in position " + position);
-        playerScores.add(position, playerScore);
-    }
+  private void addNewScoreEntry(PlayerScore playerScore) {
+    int position = getNewScorePosition(playerScore);
+    GameBox.debug(" add new score in position " + position);
+    playerScores.add(position, playerScore);
+  }
 
-    private int getNewScorePosition(PlayerScore playerScore) {
-        for (int position = 0; position < playerScores.size(); position++) {
-            if (playerScore.isBetterThen(playerScores.get(position))) {
-                return position;
-            }
-        }
-        return playerScores.size();
+  private int getNewScorePosition(PlayerScore playerScore) {
+    for (int position = 0; position < playerScores.size(); position++) {
+      if (playerScore.isBetterThen(playerScores.get(position))) {
+        return position;
+      }
     }
+    return playerScores.size();
+  }
 
-    public List<PlayerScore> getPlayerScores() {
-        return Collections.unmodifiableList(this.playerScores);
-    }
+  public List<PlayerScore> getPlayerScores() {
+    return Collections.unmodifiableList(this.playerScores);
+  }
 
-    private boolean isInList(UUID uuid) {
-        for (PlayerScore score : playerScores) {
-            if (score.getUuid().equals(uuid)) return true;
-        }
-        return false;
+  private boolean isInList(UUID uuid) {
+    for (PlayerScore score : playerScores) {
+      if (score.getUuid().equals(uuid)) return true;
     }
+    return false;
+  }
 
-    public void registerTopListUser(TopListUser topListUser) {
-        topListUsers.add(topListUser);
-    }
+  public void registerTopListUser(TopListUser topListUser) {
+    topListUsers.add(topListUser);
+  }
 
-    public String getIdentifier() {
-        return identifier;
-    }
+  public String getIdentifier() {
+    return identifier;
+  }
 
-    public void clearTopList() {
-        playerScores.clear();
-        updateUsers();
-    }
+  public void clearTopList() {
+    playerScores.clear();
+    updateUsers();
+  }
 }

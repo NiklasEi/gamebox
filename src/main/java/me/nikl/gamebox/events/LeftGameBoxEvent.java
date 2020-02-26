@@ -7,30 +7,30 @@ import org.bukkit.event.HandlerList;
 
 /**
  * @author Niklas Eicker
- *
+ * <p>
  * Event called after a player left GameBox and
  * the players inventory was restored.
  */
 public class LeftGameBoxEvent extends Event {
-    private static final HandlerList handlers = new HandlerList();
-    private Player player;
+  private static final HandlerList handlers = new HandlerList();
+  private Player player;
 
-    public LeftGameBoxEvent(Player player) {
-        this.player = player;
-        Bukkit.getPluginManager().callEvent(this);
-    }
+  public LeftGameBoxEvent(Player player) {
+    this.player = player;
+    Bukkit.getPluginManager().callEvent(this);
+  }
 
-    @SuppressWarnings("unused")
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
+  @SuppressWarnings("unused")
+  public static HandlerList getHandlerList() {
+    return handlers;
+  }
 
-    @Override
-    public HandlerList getHandlers() {
-        return handlers;
-    }
+  @Override
+  public HandlerList getHandlers() {
+    return handlers;
+  }
 
-    public Player getPlayer() {
-        return player;
-    }
+  public Player getPlayer() {
+    return player;
+  }
 }

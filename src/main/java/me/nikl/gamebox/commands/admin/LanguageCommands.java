@@ -19,45 +19,45 @@ import org.bukkit.entity.Player;
 @CommandAlias("%adminCommand")
 public class LanguageCommands extends GameBoxBaseCommand {
 
-    public LanguageCommands(GameBox gameBox) {
-        super(gameBox);
-    }
+  public LanguageCommands(GameBox gameBox) {
+    super(gameBox);
+  }
 
-    @Override
-    @PreCommand
-    public boolean preCommand(CommandSender sender) {
-        GameBox.debug("in LanguageCommands pre command");
-        if (!Permission.ADMIN_LANGUAGE.hasPermission(sender)) {
-            sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_NO_PERM);
-            return true;
-        }
-        if (sender instanceof Player) {
-            sender.sendMessage(gameBox.lang.PREFIX + " Only from the console!");
-            return true;
-        }
-        return false;
+  @Override
+  @PreCommand
+  public boolean preCommand(CommandSender sender) {
+    GameBox.debug("in LanguageCommands pre command");
+    if (!Permission.ADMIN_LANGUAGE.hasPermission(sender)) {
+      sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_NO_PERM);
+      return true;
     }
+    if (sender instanceof Player) {
+      sender.sendMessage(gameBox.lang.PREFIX + " Only from the console!");
+      return true;
+    }
+    return false;
+  }
 
-    @Subcommand("language|lang")
-    public void onLanguageCommand(CommandSender sender) {
-        ConfigManager.printIncompleteLangFilesInfo(gameBox);
-    }
+  @Subcommand("language|lang")
+  public void onLanguageCommand(CommandSender sender) {
+    ConfigManager.printIncompleteLangFilesInfo(gameBox);
+  }
 
-    @Subcommand("language|lang all")
-    public void onLanguageAllCommand(CommandSender sender) {
-        ConfigManager.printMissingKeys(gameBox);
-    }
+  @Subcommand("language|lang all")
+  public void onLanguageAllCommand(CommandSender sender) {
+    ConfigManager.printMissingKeys(gameBox);
+  }
 
-    @Subcommand("language|lang")
-    @CommandCompletion("@moduleIDs")
-    public void onLanguageCommand(CommandSender sender, @Single String moduleID) {
-        if (!ConfigManager.getModuleIdsWithMissingKeys().contains(moduleID.toLowerCase())) {
-            gameBox.info(" Module '" + moduleID.toLowerCase() + "' does not exist or has no missing keys.");
-            gameBox.info(" Valid options: " + String.join(", ", ConfigManager.getModuleIdsWithMissingKeys()));
-            return;
-        }
-        gameBox.info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - +");
-        ConfigManager.printMissingModuleKeys(gameBox, moduleID.toLowerCase());
-        gameBox.info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - +");
+  @Subcommand("language|lang")
+  @CommandCompletion("@moduleIDs")
+  public void onLanguageCommand(CommandSender sender, @Single String moduleID) {
+    if (!ConfigManager.getModuleIdsWithMissingKeys().contains(moduleID.toLowerCase())) {
+      gameBox.info(" Module '" + moduleID.toLowerCase() + "' does not exist or has no missing keys.");
+      gameBox.info(" Valid options: " + String.join(", ", ConfigManager.getModuleIdsWithMissingKeys()));
+      return;
     }
+    gameBox.info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - +");
+    ConfigManager.printMissingModuleKeys(gameBox, moduleID.toLowerCase());
+    gameBox.info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - +");
+  }
 }

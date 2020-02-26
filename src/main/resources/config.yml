@@ -166,7 +166,7 @@ hubMode:
 
   # HubMode will only work in these worlds
   enabledWorlds:
-  - "world"
+    - "world"
 
   # Whenever a player joins one of the enabled worlds his inventory is checked for the hubitem.
   # If he doesn't have the item, it will be added to his inventory.
@@ -178,14 +178,14 @@ hubMode:
 
   # Configuration for the hubitem
   item:
-     # Material and data of the item (format: 'material:data')
-     materialData: "CHEST"
-     # Display name of the item.
-     displayName: "&3&lGameBox"
-     # Lore of the item (optional).
-     lore:
-     - ""
-     - "&bClick with this to play awesome games"
+    # Material and data of the item (format: 'material:data')
+    materialData: "CHEST"
+    # Display name of the item.
+    displayName: "&3&lGameBox"
+    # Lore of the item (optional).
+    lore:
+      - ""
+      - "&bClick with this to play awesome games"
 
 
 # Plugin intern listeners are able to run some basic code during GameBox events for you.

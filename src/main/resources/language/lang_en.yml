@@ -26,29 +26,29 @@ commandMessages:
   onlyAsPlayer: ' &4You can only do that as a player'
   pluginReloaded: ' &2Plugin was reloaded'
   wrongUsage:
-  - ' Do &2/gb&r to display the main GUI'
-  - ' For more information do &2/gb help&r'
+    - ' Do &2/gb&r to display the main GUI'
+    - ' For more information do &2/gb help&r'
   help:
-  - ' Do &2/gb&r to display the main GUI'
-  - ' you will get to the games through the menu'
-  - ' Use shortcut commands like this: &2/gb <game>&r'
-  - '   to get information about all installed games'
-  - '   do &2/gb info&r'
+    - ' Do &2/gb&r to display the main GUI'
+    - ' you will get to the games through the menu'
+    - ' Use shortcut commands like this: &2/gb <game>&r'
+    - '   to get information about all installed games'
+    - '   do &2/gb info&r'
   inDisabledWorld: ' &4Not possible in this world'
   # customize info output here
   #   the first output will always be version and author
   info:
     header:
-    - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
-    - ' &6&lListing all installed games:'
+      - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
+      - ' &6&lListing all installed games:'
     # use %name% for the game name
     # %shorts will be replaced by all available shortcut commands%
     # %playerNum% will give the number of players needed per game
     perGame:
-    - ' &3&l%name% &r(%playerNum% player)'
-    - '   &2/gb <%shorts%>'
+      - ' &3&l%name% &r(%playerNum% player)'
+      - '   &2/gb <%shorts%>'
     footer:
-    - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
+      - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
   tokenInfo: ' &2%player% has %token% token.'
   ownTokenInfo: ' &2You have %token% token.'
   gaveToken: ' &2Gave %token% token to %player%.'
@@ -73,32 +73,32 @@ mainButtons:
   forwardButton: "&2&lNext →"
   backwardButton: "&2&lBack ←"
   infoMainMenu:
-  - '&bHere you find all the games'
-  - '&bClick on one of the buttons'
-  - '  &bto open the games menu.'
+    - '&bHere you find all the games'
+    - '&bClick on one of the buttons'
+    - '  &bto open the games menu.'
   # %tokens% will be replaced with the players number of tokens
   tokensButton: "&bTokens: &2%tokens%"
   soundToggle:
     onDisplayName: "&aSound on"
     onLore:
-    - ""
-    - "&bClick to turn sounds off"
+      - ""
+      - "&bClick to turn sounds off"
     offDisplayName: "&4Sound off"
     offLore:
-    - ""
-    - "&bClick to turn sounds on"
+      - ""
+      - "&bClick to turn sounds on"
   inviteButton:
     displayName: "&eInvite someone"
     lore:
-    - ""
-    - "&bClick to invite someone over chat"
+      - ""
+      - "&bClick to invite someone over chat"
   # this is the name and lore of an invite. It is the players skull in the invitation GUI.
   invitationSkull:
     # %player% will be replaced by the players name
     displayName: "&e%player%"
     lore:
-    - ""
-    - "&bClick to accept the invitation"
+      - ""
+      - "&bClick to accept the invitation"
 
 
 
@@ -136,8 +136,8 @@ others:
   playerInput:
     openingMessage: " &l&2Please enter the name of the player you would like to invite."
     helpMessage:
-    - " &2You got &5%seconds% &2seconds."
-    - " &2To stop the input now send &c'%'&2."
+      - " &2You got &5%seconds% &2seconds."
+      - " &2To stop the input now send &c'%'&2."
     timeRanOut: " &cThe time for your input ran out."
     inputSuccessful: " &5%player%&2 was invited."
     inputClosed: " &2Input was closed."
@@ -147,7 +147,7 @@ others:
     notInviteYourself: " &cYou cannot invite yourself."
     otherInDisabledWorld: " &5%player%&c is in a disabled world."
   invitation:
-  - " &3%player%&r invited you to &3%game%"
+    - " &3%player%&r invited you to &3%game%"
   invitationTitleMessage:
     title: "&1Invite for &3%game%"
     subTitle: "by &3%player%"
@@ -179,9 +179,9 @@ topList:
   unknownSkullName: "&1Unknown Player"
   # Will be added below the rank information for unknown players
   unknownSkullLore:
-  - ""
-  - "This player has not joined"
-  - "   the server before."
+    - ""
+    - "This player has not joined"
+    - "   the server before."
 
 # Names of high numbers used for visualization
 # Let the numbers be 'n' then the names are used for 10^(3*n)

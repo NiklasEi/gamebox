@@ -11,18 +11,18 @@ import org.bukkit.command.CommandSender;
  */
 @CommandAlias("%mainCommand")
 public class HelpCommand extends GeneralBaseCommand {
-    public HelpCommand(GameBox gameBox) {
-        super(gameBox);
-    }
+  public HelpCommand(GameBox gameBox) {
+    super(gameBox);
+  }
 
-    @Subcommand("help|?")
-    public void onHelp(CommandSender sender) {
-        if (!Permission.CMD_HELP.hasPermission(sender)) {
-            sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_NO_PERM);
-            return;
-        }
-        for (String message : gameBox.lang.CMD_HELP) {
-            sender.sendMessage(gameBox.lang.PREFIX + message);
-        }
+  @Subcommand("help|?")
+  public void onHelp(CommandSender sender) {
+    if (!Permission.CMD_HELP.hasPermission(sender)) {
+      sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_NO_PERM);
+      return;
     }
+    for (String message : gameBox.lang.CMD_HELP) {
+      sender.sendMessage(gameBox.lang.PREFIX + message);
+    }
+  }
 }

@@ -12,17 +12,17 @@ import org.bukkit.entity.Player;
  */
 @CommandAlias("%adminCommand")
 public class ToggleDebug extends ConsoleBaseCommand {
-    public ToggleDebug(GameBox gameBox) {
-        super(gameBox);
-    }
+  public ToggleDebug(GameBox gameBox) {
+    super(gameBox);
+  }
 
-    @Subcommand("debug")
-    public void toggleDebug(CommandSender sender) {
-        if (sender instanceof Player) {
-            sender.sendMessage(gameBox.lang.PREFIX + " Only as console...");
-            return;
-        }
-        GameBox.debug = !GameBox.debug;
-        sender.sendMessage(gameBox.lang.PREFIX + " Set debug mode to: " + GameBox.debug);
+  @Subcommand("debug")
+  public void toggleDebug(CommandSender sender) {
+    if (sender instanceof Player) {
+      sender.sendMessage(gameBox.lang.PREFIX + " Only as console...");
+      return;
     }
+    GameBox.debug = !GameBox.debug;
+    sender.sendMessage(gameBox.lang.PREFIX + " Set debug mode to: " + GameBox.debug);
+  }
 }
