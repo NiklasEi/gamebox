@@ -1,0 +1,215 @@
+# this file contains the whole shop
+# it is sorted in categories that will be selectable on the first Main-page of the shop
+# The number of items per category is basically infinite (fun bug I had: the plugin kept putting the same item in one page. At ~9 million items the server crashed)
+
+# A page system will automatically open new pages and build the 'next' and 'back' buttons accordingly
+
+# this is to make sure that you customized the shop before players can buy stuff
+#   set it to true to enable shopping
+open: false
+
+# More info about the token shop can be found on the GitHub wiki: https://github.com/NiklasEi/gamebox/wiki/Token-Shop
+shop:
+  button:
+    # define the Material and data for the item (format: 'material:data')
+    materialData: "CHEST_MINECART"
+    # display name of the button
+    displayName: "&3&lShop"
+    # lore of the item (optional)
+    lore:
+      - ""
+      - "&bClick to open the shop"
+    glow: true
+  categories:
+
+    # unique key of the category
+    example:
+
+      # material data of the button for the category
+      materialData: "light_blue_glazed_terracotta"
+
+      # display name of the button
+      displayName: "&3&lExample category"
+
+      # lore of the button
+      lore:
+        - ""
+        - "&bA category contains pages with items."
+        - "&bEach one can contain infinite shop items"
+        - "&b  due to an automatic page system!"
+
+      # should it glow?
+      glow: false
+
+      # items in the pages of the shop
+      items:
+
+        # minimalistic example
+        #   the following item is a free jungle sapling
+        minimalExample:
+          materialData: "JUNGLE_SAPLING"
+
+        # example with all the possible features
+        #
+        # Please refer to the wiki for more info: https://github.com/NiklasEi/gamebox/wiki/Token-Shop
+        maximumExample:
+          # Material data of item to be given to the player (optional)
+          #   If not set, no item will be given to the player, as long as the 'buttonItem' below is defined.
+          materialData: "dirt"
+          # Display name of the sold item (optional)
+          displayName: "&2Special dirt"
+          # Lore of the sold item (optional)
+          lore:
+            - ""
+            - "&bThis item is a maximum example"
+          # Amount (optional)
+          #   Only up to max stack size of the particular item.
+          #   Default is 1
+          count: 2
+          # Glowing state of the item that is given to the player (optional)
+          glow: true
+          # Price in token (optional)
+          #   If both (token AND money) are set, players have to pay both!
+          tokens: 1
+          # Money price (optional)
+          money: 1
+
+          # This item is the item that is displayed in the shop.
+          #   If it is not configured, the item that is sold to the player is used.
+          #   If this item is defined, the 'materialData' key above can be removed and no item
+          #     will be given to the player. This can be used to "sell commands".
+          buttonItem:
+            # only the displayed item will glow
+            #   the sold item is normal dirt
+            glow: true
+
+            # optional lore added to the default shop lore that already contains the price of the item/command
+            additionalLore:
+              - "&bPersonal greeting by the server"
+              - ""
+              - "&bHave the permissions:"
+              - "&6   gamebox.testing1"
+              - "&6   gamebox.testing2"
+              - ""
+              - "&bDo not have the permissions:"
+              - "&6   gamebox.play.battleship"
+              - "&6   gamebox.play.*"
+
+            # optional display name
+            displayName: "&2Example"
+
+          # if not all requirements are fulfilled, a message will be send over the inventory title
+          #   you can customize the message in the language file
+          requirements:
+
+            # the player must have all of these permissions!
+            permissions:
+              - "gamebox.testing1"
+              - "gamebox.testing2"
+
+            # the player is not allowed to have any of these permissions
+            noPermissions:
+              - "gamebox.play.battleship"
+              - "gamebox.play.*"
+
+          # optional commands to run when the player buys this
+          #   %player% will be replaced by the player name
+          commands:
+            - "tell %player% Hi"
+
+          # optional! default: false
+          #    see 'commandManipulatingInventoryExample' for an example usage
+          # caution with this option
+          #    you should only use commands that manipulate the player inventory
+          #    if there is no other solution
+          #      like building the custom item with the lore and display name and sell it the normal way
+          manipulatesInventory: false
+
+        # item only for people with special permission
+        specialPermission:
+          materialData: "obsidian"
+          tokens: 1
+          buttonItem:
+            additionalLore:
+              - "&bYou need the following permission"
+              - "&b  to buy this item:"
+              - " "
+              - "&6  my.server.builder"
+          requirements:
+            permissions:
+              - "my.server.builder"
+
+        # selling a glowing item
+        glowingTerracotta:
+          materialData: "purple_glazed_terracotta"
+          tokens: 100
+          money: 1000
+          glow: true
+
+        # run command if player has/hasn't some permission
+        commandExample:
+          tokens: 1
+          money: 1
+          buttonItem:
+            materialData: "nether_star"
+            displayName: "&9&lExample Command"
+            additionalLore:
+              - "&bIf you buy this, the server"
+              - "&b  will thank you ;)"
+              - " "
+              - "&bDo not have the permission:"
+              - "&6  my.server.builder"
+              - " "
+              - "&bHave the permission:"
+              - "&6  gamebox.play.*"
+          requirements:
+            permissions:
+              - "gamebox.play.*"
+            noPermissions:
+              - "my.server.builder"
+          commands:
+            - "tell %player% Thanks for buying, %player%!"
+
+        # run /give command if player has/hasn't some permission
+        #    you shouldn't give items in this way
+        #    here you could simply sell the obsidian the normal way instead
+        commandManipulatingInventoryExample:
+          tokens: 1
+          money: 1
+          buttonItem:
+            materialData: "obsidian"
+            displayName: "&9&lExample give Command"
+            additionalLore:
+              - "&bGives you 59 obsidian per command"
+              - "   &bIf you have the perm."
+              - "   &6my.server.builder"
+            glow: true
+          requirements:
+            permissions:
+              - "my.server.builder"
+
+          # this command will manipulate the players inventory
+          #   thus the option below is set
+          commands:
+            - "give %player% obsidian 59"
+
+          # caution with this option
+          #    you should only use commands that manipulate the player inventory
+          #    if there is no other solution
+          #      like building the custom item with the lore and display name and sell it the normal way
+          manipulatesInventory: true
+    secondPage:
+      materialData: "gold_block"
+      displayName: "&1&lEmpty second category"
+      lore:
+        - ""
+        - "&bThis is just here to demonstrate"
+        - "&b  the possibility to add more"
+        - "&b  pages to the shop!"
+      glow: true
+      items:
+        onSecondPage:
+          materialData: "red_glazed_terracotta"
+          lore:
+            - "&1I'm on the second page ;)"
+            - "&1 ... and for free"
