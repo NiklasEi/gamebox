@@ -10,6 +10,7 @@ import me.nikl.gamebox.input.InviteInputHandler;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.GameBoxHolder;
 import me.nikl.gamebox.inventory.gui.AGui;
+import me.nikl.gamebox.module.NewGameBoxModule;
 import me.nikl.gamebox.utility.ItemStackUtility;
 import me.nikl.gamebox.utility.Permission;
 import me.nikl.gamebox.utility.Sound;
@@ -544,7 +545,7 @@ public class PluginManager implements Listener {
     return game == null ? null : game.getGameManager();
   }
 
-  public GameManager getGameManager(GameBoxModule gameBoxModule) {
+  public GameManager getGameManager(NewGameBoxModule gameBoxModule) {
     return getGameManager(gameBoxModule.getModuleID());
   }
 
@@ -666,7 +667,7 @@ public class PluginManager implements Listener {
     return this.games;
   }
 
-  public Game getGame(GameBoxModule gameBoxModule) {
+  public Game getGame(NewGameBoxModule gameBoxModule) {
     return getGame(gameBoxModule.getModuleID());
   }
 

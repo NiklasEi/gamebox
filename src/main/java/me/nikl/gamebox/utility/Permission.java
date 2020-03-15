@@ -1,7 +1,8 @@
 package me.nikl.gamebox.utility;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.GameBoxModule;
+import me.nikl.gamebox.GameBoxSettings;
+import me.nikl.gamebox.module.NewGameBoxModule;
 import org.bukkit.command.CommandSender;
 
 import javax.annotation.Nullable;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
  * <p>
  * Permission enums
  * A permission can be game specific. In general there are wildcard permissions for these game permissions.
- * {@link me.nikl.gamebox.utility.Permission#hasPermission(CommandSender, GameBoxModule)} will check a game specific permission for the given module.
+ * {@link me.nikl.gamebox.utility.Permission#hasPermission(CommandSender, NewGameBoxModule)} will check a game specific permission for the given module.
  * The wildcard permissions are always checked.
  */
 public enum Permission {
@@ -34,7 +35,7 @@ public enum Permission {
   private static ArrayList<String> moduleIDs = new ArrayList<>();
   private boolean perGame;
   private String perm;
-  private String preNode = GameBox.MODULE_GAMEBOX;
+  private String preNode = "gamebox";
 
   Permission(String perm, boolean perGame) {
     this.perm = preNode + "." + perm + (perGame ? ".%moduleID%" : "");
@@ -76,7 +77,7 @@ public enum Permission {
     }
   }
 
-  public boolean hasPermission(CommandSender sender, GameBoxModule gameBoxModule) {
+  public boolean hasPermission(CommandSender sender, NewGameBoxModule gameBoxModule) {
     return hasPermission(sender, gameBoxModule.getModuleID());
   }
 

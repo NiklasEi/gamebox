@@ -494,7 +494,7 @@ public class MysqlDB extends DataBase {
 
       @Override
       public void run() {
-        final String prefix = ConfigManager.getLanguage(GameBox.MODULE_GAMEBOX).PREFIX;
+        final String prefix = ConfigManager.getLanguage(GameBoxSettings.getGameBoxModuleInfo().getId()).PREFIX;
         sender.sendMessage(prefix + " Starting async conversion.");
         sender.sendMessage(prefix + " Additional output in the console!");
         fromDB.load(false);

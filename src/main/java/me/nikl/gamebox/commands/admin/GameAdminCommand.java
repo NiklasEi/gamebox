@@ -2,7 +2,7 @@ package me.nikl.gamebox.commands.admin;
 
 import co.aikar.commands.annotation.PreCommand;
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.GameBoxModule;
+import me.nikl.gamebox.module.NewGameBoxModule;
 import me.nikl.gamebox.commands.GameBoxBaseCommand;
 import me.nikl.gamebox.utility.Permission;
 import org.apache.commons.lang.Validate;
@@ -12,9 +12,9 @@ import org.bukkit.command.CommandSender;
  * @author Niklas Eicker
  */
 public class GameAdminCommand extends GameBoxBaseCommand {
-  private GameBoxModule gameBoxModule;
+  private NewGameBoxModule gameBoxModule;
 
-  public GameAdminCommand(GameBox gameBox, GameBoxModule gameBoxModule) {
+  public GameAdminCommand(GameBox gameBox, NewGameBoxModule gameBoxModule) {
     super(gameBox);
     Validate.notNull(gameBoxModule, "The GameAdminCommand needs a valid module!");
     this.gameBoxModule = gameBoxModule;

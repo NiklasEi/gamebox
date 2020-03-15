@@ -2,6 +2,7 @@ package me.nikl.gamebox.external;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.game.Game;
 import org.bukkit.entity.Player;
 
@@ -35,7 +36,7 @@ public class PlaceholderAPIHook extends PlaceholderExpansion {
 
   @Override
   public String getIdentifier() {
-    return GameBox.MODULE_GAMEBOX;
+    return GameBoxSettings.getGameBoxModuleInfo().getId();
   }
 
   @Override

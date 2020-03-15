@@ -242,6 +242,10 @@ public class ModulesManager {
         // prepare language files
         FileUtility.copyDefaultLanguageFiles(instance, localModule);
         loadedModules.put(localModule.getId(), instance);
+        if (!gameBox.getGameRegistry().registerModule(instance)) {
+            gameBox.getLogger().severe("Failed to register " + localModule.getName() + " @" + localModule.getVersionData().getVersion().toString());
+            return;
+        }
         try {
             instance.onEnable();
         } catch (Exception e) { // catch all and skip module if there is an exception in onEnable

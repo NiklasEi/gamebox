@@ -1,7 +1,7 @@
 package me.nikl.gamebox.utility;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.GameBoxModule;
+import me.nikl.gamebox.module.NewGameBoxModule;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -62,11 +62,11 @@ public class FileUtility {
   }
 
 
-  public static boolean copyExternalResources(GameBox gameBox, GameBoxModule gameBoxModule) {
-    JavaPlugin external = gameBoxModule.getExternalPlugin();
+  public static boolean copyExternalResources(GameBox gameBox, NewGameBoxModule gameBoxModule) {
+    File external = gameBoxModule.getModuleData().getModuleJar();
     if (external == null) return false;
     try {
-      JarFile jar = new JarFile(URLDecoder.decode(external.getClass().getProtectionDomain().getCodeSource().getLocation().getFile(), "UTF-8"));
+      JarFile jar = new JarFile(external);
       boolean foundDefaultLang = false;
       boolean foundConfig = false;
       for (Enumeration list = jar.entries(); list.hasMoreElements(); ) {
@@ -89,7 +89,7 @@ public class FileUtility {
           File file = new File(gbPath);
           if (!file.exists()) {
             file.getParentFile().mkdirs();
-            saveResourceToGBFolder(entry.getName(), gbPath, external);
+            saveResourceToGBFolder(entry.getName(), gbPath, jar.getInputStream(entry));
           }
         } else if (folderName.equalsIgnoreCase("games")) {
           if (entry.isDirectory()) continue;
@@ -119,7 +119,7 @@ public class FileUtility {
           File file = new File(gbPath);
           if (!file.exists()) {
             file.getParentFile().mkdirs();
-            saveResourceToGBFolder(entry.getName(), gbPath, external);
+            saveResourceToGBFolder(entry.getName(), gbPath, jar.getInputStream(entry));
           }
         }
       }
@@ -147,18 +147,14 @@ public class FileUtility {
    *
    * @param resourcePath path to the resource in the external plugin
    * @param gbPath       wanted path for the resource in gameBox
-   * @param plugin       external plugin
+   * @param inputStream  input stream to save
    */
-  static private void saveResourceToGBFolder(String resourcePath, String gbPath, JavaPlugin plugin) {
+  static private void saveResourceToGBFolder(String resourcePath, String gbPath, InputStream inputStream) {
     if (resourcePath == null || resourcePath.isEmpty()) {
       throw new IllegalArgumentException("ResourcePath cannot be null or empty");
     }
     Plugin gameBox = Bukkit.getPluginManager().getPlugin("GameBox");
     resourcePath = resourcePath.replace('\\', '/');
-    InputStream in = plugin.getResource(resourcePath);
-    if (in == null) {
-      throw new IllegalArgumentException("The embedded resource '" + resourcePath + "' cannot be found in " + plugin.getName());
-    }
     File outFile = new File(gbPath);
     int lastIndex = resourcePath.lastIndexOf(47);
     File outDir = new File(gameBox.getDataFolder(), resourcePath.substring(0, lastIndex >= 0 ? lastIndex : 0));
@@ -170,11 +166,11 @@ public class FileUtility {
       OutputStream out = new FileOutputStream(outFile);
       byte[] buf = new byte[1024];
       int len;
-      while ((len = in.read(buf)) > 0) {
+      while ((len = inputStream.read(buf)) > 0) {
         out.write(buf, 0, len);
       }
       out.close();
-      in.close();
+      inputStream.close();
     } catch (IOException var10) {
       gameBox.getLogger().log(Level.SEVERE, "Could not save " + outFile.getName() + " to " + outFile, var10);
     }

@@ -5,9 +5,9 @@ import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.Optional;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
-import me.nikl.gamebox.GameBoxModule;
 import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.inventory.GUIManager;
+import me.nikl.gamebox.module.NewGameBoxModule;
 import me.nikl.gamebox.utility.Permission;
 import org.bukkit.entity.Player;
 
@@ -33,7 +33,7 @@ public class OpenGameBox extends PlayerBaseCommand {
       guiManager.openMainGui(player);
       return;
     }
-    GameBoxModule gameBoxModule = gameBox.getGameRegistry().getModuleBySubCommand(subCommand);
+    NewGameBoxModule gameBoxModule = gameBox.getGameRegistry().getModuleBySubCommand(subCommand);
     if (gameBoxModule != null) {
       // this will be checked again when opening the gui but checking it here
       //   removes the necessity to save and later restore the inventory of the player

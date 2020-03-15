@@ -19,11 +19,11 @@
 package me.nikl.gamebox.module;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.GameBoxModule;
 import me.nikl.gamebox.game.GameLanguage;
 import me.nikl.gamebox.module.local.LocalModule;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Module base class
@@ -45,14 +45,14 @@ public abstract class NewGameBoxModule {
 
     public File getModuleFolder() {
         if (moduleFolder != null) return moduleFolder;
-        moduleFolder = new File(gameBox.getModulesManager().getModulesDir(), getIdentifier());
+        moduleFolder = new File(gameBox.getModulesManager().getModulesDir(), getModuleID());
         if (!moduleFolder.isDirectory()) moduleFolder.mkdirs();
         return moduleFolder;
     }
 
     public File getLanguageFolder() {
         if (languageFolder != null) return languageFolder;
-        languageFolder = new File(gameBox.getLanguageDir(), getIdentifier());
+        languageFolder = new File(gameBox.getLanguageDir(), getModuleID());
         if (!languageFolder.isDirectory()) languageFolder.mkdirs();
         return languageFolder;
     }
@@ -65,7 +65,7 @@ public abstract class NewGameBoxModule {
         return this.moduleData;
     }
 
-    public String getIdentifier() {
+    public String getModuleID() {
         return this.moduleData.getId();
     }
 
@@ -79,16 +79,20 @@ public abstract class NewGameBoxModule {
         this.moduleData = moduleData;
     }
 
+    public List<String> getSubCommands() {
+        return moduleData.getSubCommands();
+    }
+
     @Override
     public boolean equals(Object module) {
         if (!(module instanceof NewGameBoxModule)) {
             return false;
         }
-        return getIdentifier().equalsIgnoreCase(((NewGameBoxModule) module).getIdentifier());
+        return getModuleID().equalsIgnoreCase(((NewGameBoxModule) module).getModuleID());
     }
 
     @Override
     public int hashCode() {
-        return getIdentifier().hashCode();
+        return getModuleID().hashCode();
     }
 }

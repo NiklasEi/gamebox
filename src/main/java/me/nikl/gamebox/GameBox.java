@@ -15,6 +15,7 @@ import me.nikl.gamebox.inventory.InventoryTitleMessenger;
 import me.nikl.gamebox.listeners.EnterGameBoxListener;
 import me.nikl.gamebox.listeners.LeftGameBoxListener;
 import me.nikl.gamebox.module.ModulesManager;
+import me.nikl.gamebox.module.NewGameBoxModule;
 import me.nikl.gamebox.utility.ConfigManager;
 import me.nikl.gamebox.utility.FileUtility;
 import me.nikl.nmsutilities.NmsFactory;
@@ -44,10 +45,6 @@ import java.util.logging.Level;
  * Main class of the plugin GameBox
  */
 public class GameBox extends JavaPlugin {
-  public static final String MODULE_GAMEBOX = "gamebox";
-  public static final String MODULE_CONNECTFOUR = "connectfour";
-  public static final String MODULE_COOKIECLICKER = "cookieclicker";
-  public static final String MODULE_MATCHIT = "matchit";
   public static boolean debug = false;
   // toggle to stop inventory contents from being restored when a new gui is opened
   public static boolean openingNewGUI = false;
@@ -63,7 +60,6 @@ public class GameBox extends JavaPlugin {
   private LeftGameBoxListener leftGameBoxListener;
   private EnterGameBoxListener enterGameBoxListener;
   private GameBoxCommands commands;
-  private GameBoxModule gameBoxModule;
   private CalendarEventsHook calendarEventsHook;
   private BukkitBridge bukkitBridge;
   private ModulesManager modulesManager;
@@ -81,15 +77,13 @@ public class GameBox extends JavaPlugin {
     }
 
     this.gameRegistry = new GameRegistry(this);
-    gameBoxModule = new GameBoxModule(this, MODULE_GAMEBOX, null, null);
 
     if (!reload()) {
       getLogger().severe(" Problem while loading the plugin! Plugin was disabled!");
       Bukkit.getPluginManager().disablePlugin(this);
       return;
     }
-    // At this point all managers are set up and games can be registered
-    registerGames();
+    // Todo load local modules
     establishHooksAndMetric();
   }
 
@@ -159,19 +153,6 @@ public class GameBox extends JavaPlugin {
     } else {
       info(ChatColor.GREEN + " " + PluginManager.gamesRegistered + " games were registered. Have fun :)");
     }
-  }
-
-  private void registerGames() {
-    // Default games:
-    new GameBoxModule(this, MODULE_CONNECTFOUR
-            , "me.nikl.gamebox.games.connectfour.ConnectFour", null
-            , GameBox.MODULE_CONNECTFOUR, "connect4", "c4");
-    new GameBoxModule(this, MODULE_COOKIECLICKER
-            , "me.nikl.gamebox.games.cookieclicker.CookieClicker", null
-            , GameBox.MODULE_COOKIECLICKER, "cookies", "cc");
-    new GameBoxModule(this, MODULE_MATCHIT
-            , "me.nikl.gamebox.games.matchit.MatchIt", null
-            , GameBox.MODULE_MATCHIT, "mi");
   }
 
   /**
@@ -265,7 +246,7 @@ public class GameBox extends JavaPlugin {
     }
     FileUtility.copyDefaultLanguageFiles();
     this.lang = new GameBoxLanguage(this);
-    ConfigManager.registerModuleLanguage(gameBoxModule, lang);
+    ConfigManager.registerModuleLanguage(GameBoxSettings.getGameBoxModuleInfo().getId(), lang);
     this.api = new GameBoxAPI(this);
     GameBoxSettings.loadSettings(this);
     return true;
@@ -327,7 +308,7 @@ public class GameBox extends JavaPlugin {
       e.printStackTrace();
       return false;
     }
-    ConfigManager.registerModuleConfiguration(gameBoxModule, config);
+    ConfigManager.registerModuleConfiguration(GameBoxSettings.getGameBoxModuleInfo().getId(), config);
     return true;
   }
 

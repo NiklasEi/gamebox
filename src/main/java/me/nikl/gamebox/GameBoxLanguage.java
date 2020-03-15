@@ -39,7 +39,7 @@ public class GameBoxLanguage extends Language {
   public List<String> UNKNOWN_SKULL_LORE;
 
   GameBoxLanguage(GameBox plugin) {
-    super(plugin, GameBox.MODULE_GAMEBOX);
+    super(plugin, GameBoxSettings.getGameBoxModuleInfo().getId());
   }
 
   @Override

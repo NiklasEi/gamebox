@@ -19,6 +19,7 @@
 package me.nikl.gamebox.utilities;
 
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.game.exceptions.GameLoadException;
 import me.nikl.gamebox.module.NewGameBoxModule;
 import me.nikl.gamebox.module.local.LocalModule;
 import org.bukkit.Bukkit;
@@ -36,10 +37,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
@@ -209,6 +207,23 @@ public class FileUtility {
         if (url == null) throw new IOException("Resource '" + filename + "' not found");
         URLConnection connection = url.openConnection();
         return connection.getInputStream();
+    }
+
+    public static InputStream getExternalResource(String totalFilename, File jar) throws GameLoadException {
+        JarFile jarFile = null;
+        try {
+            jarFile = new JarFile(jar);
+            JarEntry entry = jarFile.getJarEntry(totalFilename);
+            return jarFile.getInputStream(entry);
+        } catch (IOException e) {
+            throw new GameLoadException("Exception while loading default language from " + totalFilename + " in the jar " + jar.getName());
+        } finally {
+            try {
+                if(jarFile != null) jarFile.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static void copyResource(String resourceName, File targetFile) throws IOException {

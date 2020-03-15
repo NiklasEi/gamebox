@@ -1,15 +1,14 @@
 package me.nikl.gamebox;
 
+import me.nikl.gamebox.game.exceptions.GameLoadException;
+import me.nikl.gamebox.module.NewGameBoxModule;
 import me.nikl.gamebox.utility.ConfigManager;
+import me.nikl.gamebox.utility.FileUtility;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,12 +27,12 @@ public abstract class Language {
   public String PLAIN_NAME = ChatColor.stripColor(NAME);
   public String DEFAULT_NAME, DEFAULT_PLAIN_NAME;
   protected GameBox plugin;
-  protected GameBoxModule gameBoxModule;
+  protected NewGameBoxModule gameBoxModule;
   protected File languageFile;
   protected FileConfiguration defaultLanguage;
   protected FileConfiguration language;
 
-  public Language(GameBox plugin, GameBoxModule gameBoxModule) {
+  public Language(GameBox plugin, NewGameBoxModule gameBoxModule) {
     this.plugin = plugin;
     this.gameBoxModule = gameBoxModule;
     getLangFile(ConfigManager.getConfig(gameBoxModule));
@@ -73,13 +72,10 @@ public abstract class Language {
     String moduleID = gameBoxModule.getModuleID();
     // load default language
     try {
-      String defaultLangName = moduleID.equals(GameBox.MODULE_GAMEBOX) ? "language/lang_en.yml" : "language/" + gameBoxModule.getModuleID() + "/lang_en.yml";
-      defaultLanguage = YamlConfiguration.loadConfiguration(
-              new InputStreamReader(gameBoxModule.getExternalPlugin() == null
-                      ? plugin.getResource(defaultLangName)
-                      : gameBoxModule.getExternalPlugin().getResource(defaultLangName)
-                      , "UTF-8"));
-    } catch (UnsupportedEncodingException e2) {
+      String defaultLangName = moduleID.equals(GameBoxSettings.getGameBoxModuleInfo().getId()) ? "language/lang_en.yml" : "language/" + gameBoxModule.getModuleID() + "/lang_en.yml";
+      InputStream defaultLangStream = me.nikl.gamebox.utilities.FileUtility.getExternalResource(defaultLangName, gameBoxModule.getModuleData().getModuleJar());
+      defaultLanguage = YamlConfiguration.loadConfiguration(new InputStreamReader(defaultLangStream));
+    } catch (GameLoadException e2) {
       plugin.getLogger().warning("Failed to load default language file for namespace: " + gameBoxModule.getModuleID());
       e2.printStackTrace();
     }
@@ -89,7 +85,7 @@ public abstract class Language {
       return;
     }
     if (fileName == null || !fileName.endsWith(".yml")) {
-      String path = moduleID.equals(GameBox.MODULE_GAMEBOX) ? "'config.yml'" : "'games" + "/" + moduleID + "/config.yml'";
+      String path = moduleID.equals(GameBoxSettings.getGameBoxModuleInfo().getId()) ? "'config.yml'" : "'games" + "/" + moduleID + "/config.yml'";
       plugin.getLogger().warning("Language file for " + moduleID + " is not specified or not valid.");
       plugin.getLogger().warning("Did you forget to give the file ending '.yml'?");
       plugin.getLogger().warning("Should be set in " + path + " as value of 'langFile'");
@@ -97,14 +93,14 @@ public abstract class Language {
       language = defaultLanguage;
       return;
     }
-    languageFile = moduleID.equals(GameBox.MODULE_GAMEBOX) ?
+    languageFile = moduleID.equals(GameBoxSettings.getGameBoxModuleInfo().getId()) ?
             new File(plugin.getDataFolder().toString() + File.separatorChar + "language" + File.separatorChar
                     + fileName)
             :
             new File(plugin.getDataFolder().toString() + File.separatorChar + "language" + File.separatorChar
                     + moduleID + File.separatorChar + fileName);
     if (!languageFile.exists()) {
-      String path = moduleID.equals(GameBox.MODULE_GAMEBOX) ? "'config.yml'"
+      String path = moduleID.equals(GameBoxSettings.getGameBoxModuleInfo().getId()) ? "'config.yml'"
               : "'games" + "/" + moduleID + "/config.yml'";
       plugin.getLogger().warning("The in " + path + " as 'langFile' configured file '" + fileName + "' does not exist!");
       plugin.getLogger().warning("Falling back to the default file...");

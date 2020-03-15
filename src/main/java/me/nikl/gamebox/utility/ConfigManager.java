@@ -2,7 +2,7 @@ package me.nikl.gamebox.utility;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.Language;
-import me.nikl.gamebox.GameBoxModule;
+import me.nikl.gamebox.module.NewGameBoxModule;
 import me.nikl.gamebox.game.GameLanguage;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -21,15 +21,15 @@ public class ConfigManager {
   private static final Map<String, Language> moduleLanguages = new HashMap<>();
   private static HashMap<String, HashMap<String, List<String>>> missingLanguageKeys;
 
-  public static void registerModuleConfiguration(GameBoxModule gameBoxModule, FileConfiguration configuration) {
-    moduleFileConfigurations.put(gameBoxModule.getModuleID(), configuration);
+  public static void registerModuleConfiguration(String moduleId, FileConfiguration configuration) {
+    moduleFileConfigurations.put(moduleId, configuration);
   }
 
-  public static <T extends Language> void registerModuleLanguage(GameBoxModule gameBoxModule, T language) {
-    moduleLanguages.put(gameBoxModule.getModuleID(), language);
+  public static <T extends Language> void registerModuleLanguage(String moduleId, T language) {
+    moduleLanguages.put(moduleId, language);
   }
 
-  public static Language getLanguage(GameBoxModule gameBoxModule) {
+  public static Language getLanguage(NewGameBoxModule gameBoxModule) {
     return getLanguage(gameBoxModule.getModuleID());
   }
 
@@ -37,7 +37,7 @@ public class ConfigManager {
     return moduleLanguages.get(moduleID);
   }
 
-  public static GameLanguage getGameLanguage(GameBoxModule gameBoxModule) {
+  public static GameLanguage getGameLanguage(NewGameBoxModule gameBoxModule) {
     return getGameLanguage(gameBoxModule.getModuleID());
   }
 
@@ -48,7 +48,7 @@ public class ConfigManager {
     return (GameLanguage) language;
   }
 
-  public static FileConfiguration getConfig(GameBoxModule gameBoxModule) {
+  public static FileConfiguration getConfig(NewGameBoxModule gameBoxModule) {
     return getConfig(gameBoxModule.getModuleID());
   }
 

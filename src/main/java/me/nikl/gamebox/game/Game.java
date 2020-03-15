@@ -3,7 +3,6 @@ package me.nikl.gamebox.game;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.GameBoxSettings;
-import me.nikl.gamebox.GameBoxModule;
 import me.nikl.gamebox.data.toplist.SaveType;
 import me.nikl.gamebox.game.exceptions.GameLoadException;
 import me.nikl.gamebox.game.manager.GameManager;
@@ -16,6 +15,7 @@ import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.gui.game.GameGui;
 import me.nikl.gamebox.inventory.gui.game.StartMultiplayerGamePage;
 import me.nikl.gamebox.inventory.gui.game.TopListPage;
+import me.nikl.gamebox.module.NewGameBoxModule;
 import me.nikl.gamebox.utility.ConfigManager;
 import me.nikl.gamebox.utility.FileUtility;
 import me.nikl.gamebox.utility.InventoryUtility;
@@ -54,7 +54,7 @@ import java.util.logging.Level;
 public abstract class Game {
   protected GameBox gameBox;
   protected FileConfiguration config;
-  protected GameBoxModule gameBoxModule;
+  protected NewGameBoxModule gameBoxModule;
   protected GameManager gameManager;
   protected GameSettings gameSettings;
   protected GameLanguage gameLang;
@@ -79,7 +79,7 @@ public abstract class Game {
     loadConfig();
     loadSettings();
     loadLanguage();
-    ConfigManager.registerModuleLanguage(gameBoxModule, gameLang);
+    ConfigManager.registerModuleLanguage(gameBoxModule.getModuleID(), gameLang);
     checkRequirements();
     // at this point the game can load any game specific stuff (e.g. from config)
     init();
@@ -177,7 +177,7 @@ public abstract class Game {
     if (!configFile.exists()) {
       GameBox.debug(" default config missing in GB folder (" + gameBoxModule.getModuleID() + ")");
       configFile.getParentFile().mkdirs();
-      if (gameBoxModule.getExternalPlugin() != null) {
+      if (gameBoxModule.getModuleData().getModuleJar() != null) {
         FileUtility.copyExternalResources(gameBox, gameBoxModule);
       } else {
         gameBox.saveResource("games"
@@ -195,7 +195,7 @@ public abstract class Game {
       e.printStackTrace();
       throw new GameLoadException("Failed to load the configuration", e);
     }
-    ConfigManager.registerModuleConfiguration(gameBoxModule, config);
+    ConfigManager.registerModuleConfiguration(gameBoxModule.getModuleID(), config);
   }
 
   private void hook() throws GameLoadException {
@@ -360,7 +360,7 @@ public abstract class Game {
     return config;
   }
 
-  public GameBoxModule getGameBoxModule() {
+  public NewGameBoxModule getGameBoxModule() {
     return gameBoxModule;
   }
 

@@ -37,6 +37,10 @@ public class CloudModuleData implements ModuleBasicData, Serializable {
     @Expose
     private List<String> authors;
 
+    @SerializedName("subCommands")
+    @Expose
+    private List<String> subCommands;
+
     @SerializedName("name")
     @Expose
     private String name;
@@ -89,6 +93,19 @@ public class CloudModuleData implements ModuleBasicData, Serializable {
 
     public CloudModuleData withAuthors(List<String> authors) {
         this.authors = authors;
+        return this;
+    }
+
+    public List<String> getSubCommands() {
+        return subCommands;
+    }
+
+    public void setSubCommands(List<String> subCommands) {
+        this.subCommands = subCommands;
+    }
+
+    public CloudModuleData withSubCommands(List<String> subCommands) {
+        this.subCommands = subCommands;
         return this;
     }
 

@@ -4,6 +4,7 @@ import me.nikl.calendarevents.CalendarEvent;
 import me.nikl.calendarevents.CalendarEvents;
 import me.nikl.calendarevents.CalendarEventsApi;
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.GameBoxSettings;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -28,7 +29,7 @@ public class CalendarEventsHook implements Listener {
   }
 
   public boolean addEvent(String label, String occasions, String timings, CalendarEventCallBack callBack) {
-    String fullLabel = GameBox.MODULE_GAMEBOX + label + randomEventSuffix;
+    String fullLabel = GameBoxSettings.getGameBoxModuleInfo().getId() + label + randomEventSuffix;
     if (apiCalendarEvents.addEvent(fullLabel, occasions, timings)) {
       registeredEventCallbacks.put(fullLabel, callBack);
       return true;
@@ -37,7 +38,7 @@ public class CalendarEventsHook implements Listener {
   }
 
   public void removeEvent(String label) {
-    String fullLabel = GameBox.MODULE_GAMEBOX + label + randomEventSuffix;
+    String fullLabel = GameBoxSettings.getGameBoxModuleInfo().getId() + label + randomEventSuffix;
     apiCalendarEvents.removeEvent(fullLabel);
     registeredEventCallbacks.remove(fullLabel);
   }
@@ -46,7 +47,7 @@ public class CalendarEventsHook implements Listener {
   public void onCalendarEvent(CalendarEvent event) {
     for (String label : registeredEventCallbacks.keySet()) {
       if (event.getLabels().contains(label)) {
-        String originalLabel = label.replace(randomEventSuffix, "").substring(GameBox.MODULE_GAMEBOX.length());
+        String originalLabel = label.replace(randomEventSuffix, "").substring(GameBoxSettings.getGameBoxModuleInfo().getId().length());
         registeredEventCallbacks.get(label).onCalendarEvent(originalLabel);
       }
     }
