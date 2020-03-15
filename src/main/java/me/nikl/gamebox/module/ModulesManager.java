@@ -58,7 +58,7 @@ public class ModulesManager {
     private File modulesFile;
     private ModulesSettings modulesSettings;
     private Map<String, LocalModule> localModules = new HashMap<>();
-    private Map<String, GameBoxModule> loadedModules = new HashMap<>();
+    private Map<String, NewGameBoxModule> loadedModules = new HashMap<>();
     private Set<String> hasUpdateAvailable = new HashSet<>();
 
     public ModulesManager(GameBox gameBox) {
@@ -226,10 +226,10 @@ public class ModulesManager {
     }
 
     private void loadModule(LocalModule localModule) {
-        GameBoxModule instance;
+        NewGameBoxModule instance;
         try {
             gameBox.getLogger().info("    instantiating");
-            instance = (GameBoxModule) FileUtility.getClassesFromJar(localModule.getModuleJar(), GameBoxModule.class).get(0).newInstance();
+            instance = (NewGameBoxModule) FileUtility.getClassesFromJar(localModule.getModuleJar(), NewGameBoxModule.class).get(0).newInstance();
             gameBox.getLogger().info("    done.");
         } catch (InstantiationException | IllegalAccessException e) {
             gameBox.getLogger().warning("Failed to instantiate module '" + localModule.getName() + "' from the jar '" + localModule.getModuleJar().getName() + "'");
@@ -254,7 +254,7 @@ public class ModulesManager {
 
     private void unloadModule(LocalModule localModule) {
         // ToDo: unload parent modules first!
-        GameBoxModule instance = loadedModules.get(localModule.getId());
+        NewGameBoxModule instance = loadedModules.get(localModule.getId());
         if (instance != null) {
             try {
                 instance.onDisable();
@@ -303,7 +303,7 @@ public class ModulesManager {
      * @param moduleID the module to get
      * @return module instance or null
      */
-    public GameBoxModule getModuleInstance(String moduleID) {
+    public NewGameBoxModule getModuleInstance(String moduleID) {
         return loadedModules.get(moduleID);
     }
 }

@@ -19,7 +19,8 @@
 package me.nikl.gamebox.module;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.language.ModuleLanguage;
+import me.nikl.gamebox.GameBoxModule;
+import me.nikl.gamebox.game.GameLanguage;
 import me.nikl.gamebox.module.local.LocalModule;
 
 import java.io.File;
@@ -29,14 +30,14 @@ import java.io.File;
  *
  * @author Niklas Eicker
  */
-public abstract class GameBoxModule {
+public abstract class NewGameBoxModule {
     private LocalModule moduleData;
     private GameBox gameBox;
     private File languageFolder;
     private File moduleFolder;
-    protected ModuleLanguage moduleLanguage;
+    protected GameLanguage moduleLanguage;
 
-    protected GameBoxModule() {}
+    protected NewGameBoxModule() {}
 
     public abstract void onEnable();
 
@@ -76,5 +77,18 @@ public abstract class GameBoxModule {
     void setModuleData(LocalModule moduleData) throws UnsupportedOperationException {
         if (this.moduleData != null) throw new UnsupportedOperationException("Cannot change the module data");
         this.moduleData = moduleData;
+    }
+
+    @Override
+    public boolean equals(Object module) {
+        if (!(module instanceof NewGameBoxModule)) {
+            return false;
+        }
+        return getIdentifier().equalsIgnoreCase(((NewGameBoxModule) module).getIdentifier());
+    }
+
+    @Override
+    public int hashCode() {
+        return getIdentifier().hashCode();
     }
 }

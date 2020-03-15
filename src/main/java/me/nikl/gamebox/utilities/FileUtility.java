@@ -19,10 +19,9 @@
 package me.nikl.gamebox.utilities;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.module.GameBoxModule;
+import me.nikl.gamebox.module.NewGameBoxModule;
 import me.nikl.gamebox.module.local.LocalModule;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -61,7 +60,7 @@ public class FileUtility {
         }
     }
 
-    public static void copyDefaultLanguageFiles(GameBoxModule module, LocalModule localModule) {
+    public static void copyDefaultLanguageFiles(NewGameBoxModule module, LocalModule localModule) {
         try {
             String jarFile = URLDecoder.decode(localModule.getModuleJar().getAbsolutePath(), "UTF-8");
             copyDefaultLanguageFiles(jarFile, module.getLanguageFolder());

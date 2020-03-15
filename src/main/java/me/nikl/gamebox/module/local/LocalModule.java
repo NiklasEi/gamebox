@@ -19,7 +19,7 @@
 package me.nikl.gamebox.module.local;
 
 import me.nikl.gamebox.exceptions.module.InvalidModuleException;
-import me.nikl.gamebox.module.GameBoxModule;
+import me.nikl.gamebox.module.NewGameBoxModule;
 import me.nikl.gamebox.module.data.*;
 import me.nikl.gamebox.utilities.FileUtility;
 import me.nikl.gamebox.utilities.GameBoxYmlBuilder;
@@ -47,6 +47,7 @@ public class LocalModule extends VersionedModule {
     private String description;
     private String sourceUrl;
     private List<String> authors;
+    private List<String> subCommands;
     private VersionData versionData;
     private File moduleJar;
 
@@ -62,26 +63,8 @@ public class LocalModule extends VersionedModule {
         this.sourceUrl = localModuleData.getSourceUrl();
         this.authors = localModuleData.getAuthors();
         this.versionData = localModuleData.getVersionData();
+        this.subCommands = localModuleData.getSubCommands();
     }
-
-    /*public static LocalModule fromCloudModuleData(CloudModuleData moduleData) throws ModuleVersionException {
-        return fromCloudModuleData(moduleData, moduleData.getLatestVersion());
-    }
-
-    public static LocalModule fromCloudModuleData(CloudModuleData moduleData, String version) throws ModuleVersionException {
-        VersionData matchingVersion = null;
-        for (VersionData versionData : moduleData.getVersions()) {
-            if (versionData.getVersion().equals(version)) {
-                matchingVersion = versionData;
-                break;
-            }
-        }
-        if (matchingVersion == null) {
-            throw new ModuleVersionException("Version '" + version + "' cannot be found");
-        }
-        LocalModule instance =  new LocalModule(moduleData.getId(), matchingVersion);
-        return instance.fillInfo(moduleData);
-    }**/
 
     public static LocalModule fromJar(File jar) throws InvalidModuleException {
         JarFile jarFile;
@@ -115,7 +98,7 @@ public class LocalModule extends VersionedModule {
     }
 
     public void setModuleJar(File moduleJar) throws InvalidModuleException {
-        List<Class<?>> clazzes = FileUtility.getClassesFromJar(moduleJar, GameBoxModule.class);
+        List<Class<?>> clazzes = FileUtility.getClassesFromJar(moduleJar, NewGameBoxModule.class);
         if (clazzes.size() < 1) throw new InvalidModuleException("No class extending GameBoxModule was found in '" + getName() + "'");
         if (clazzes.size() > 1) throw new InvalidModuleException("More then one class extending GameBoxModule was found in '" + getName() + "'");
         this.moduleJar = moduleJar;
@@ -145,6 +128,11 @@ public class LocalModule extends VersionedModule {
     @Override
     public String getId() {
         return this.moduleId;
+    }
+
+    @Override
+    public List<String> getSubCommands() {
+        return subCommands;
     }
 
     public List<String> getAuthors() {

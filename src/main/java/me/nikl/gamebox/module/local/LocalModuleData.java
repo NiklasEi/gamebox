@@ -33,6 +33,7 @@ public class LocalModuleData implements ModuleBasicData, VersionedModuleData, Mo
     private String sourceUrl;
     private long updatedAt = -1;
     private List<String> releaseNotes = new ArrayList<>();
+    private List<String> subCommands = new ArrayList<>();
     private SemanticVersion version;
     private List<DependencyData> dependencies = new ArrayList<>();
 
@@ -49,6 +50,20 @@ public class LocalModuleData implements ModuleBasicData, VersionedModuleData, Mo
 
     public LocalModuleData withId(String id) {
         this.id = id;
+        return this;
+    }
+
+    @Override
+    public List<String> getSubCommands() {
+        return subCommands;
+    }
+
+    public void setSubCommands(List<String> subCommands) {
+        this.subCommands = subCommands;
+    }
+
+    public LocalModuleData withSubCommands(List<String> subCommands) {
+        this.subCommands = subCommands;
         return this;
     }
 

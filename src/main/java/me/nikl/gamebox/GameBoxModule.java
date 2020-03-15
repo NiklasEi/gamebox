@@ -8,7 +8,9 @@ import java.util.List;
 
 /**
  * @author Niklas Eicker
+ * @deprecated Use {@link me.nikl.gamebox.module.NewGameBoxModule} instead
  */
+@Deprecated
 public class GameBoxModule {
   private String moduleID, classPath;
   private boolean isGame = false;

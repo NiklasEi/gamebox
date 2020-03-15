@@ -19,12 +19,13 @@
 package me.nikl.gamebox.exceptions.module;
 
 import me.nikl.gamebox.exceptions.GameBoxException;
+import me.nikl.gamebox.module.NewGameBoxModule;
 
 /**
  * To be thrown, if a module is invalid
  *
  * For example, by not having a module.yml file,
- * or no class extending {@link me.nikl.gamebox.module.GameBoxModule} is found.
+ * or no class extending {@link NewGameBoxModule} is found.
  */
 public class InvalidModuleException extends GameBoxException {
     private static final long serialVersionUID = 1L;

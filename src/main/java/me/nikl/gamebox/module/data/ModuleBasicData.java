@@ -23,6 +23,8 @@ import java.util.List;
 public interface ModuleBasicData {
     String getId();
 
+    List<String> getSubCommands();
+
     List<String> getAuthors();
 
     String getName();
