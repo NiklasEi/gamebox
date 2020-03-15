@@ -6,7 +6,7 @@
 
     <groupId>me.nikl</groupId>
     <artifactId>gamebox</artifactId>
-    <name>gamebox</name>
+    <name>GameBox</name>
     <packaging>jar</packaging>
     <version>3.0.0-beta</version>
     <description>Collection of inventory games</description>
@@ -28,6 +28,7 @@
         <defaultGoal>clean package</defaultGoal>
         <sourceDirectory>src/main/java</sourceDirectory>
         <directory>target</directory>
+        <finalName>GameBox</finalName>
         <resources>
             <resource>
                 <targetPath>.</targetPath>
