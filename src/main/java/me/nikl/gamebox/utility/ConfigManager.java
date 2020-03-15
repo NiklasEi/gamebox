@@ -2,7 +2,7 @@ package me.nikl.gamebox.utility;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.Language;
-import me.nikl.gamebox.Module;
+import me.nikl.gamebox.GameBoxModule;
 import me.nikl.gamebox.game.GameLanguage;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -21,24 +21,24 @@ public class ConfigManager {
   private static final Map<String, Language> moduleLanguages = new HashMap<>();
   private static HashMap<String, HashMap<String, List<String>>> missingLanguageKeys;
 
-  public static void registerModuleConfiguration(Module module, FileConfiguration configuration) {
-    moduleFileConfigurations.put(module.getModuleID(), configuration);
+  public static void registerModuleConfiguration(GameBoxModule gameBoxModule, FileConfiguration configuration) {
+    moduleFileConfigurations.put(gameBoxModule.getModuleID(), configuration);
   }
 
-  public static <T extends Language> void registerModuleLanguage(Module module, T language) {
-    moduleLanguages.put(module.getModuleID(), language);
+  public static <T extends Language> void registerModuleLanguage(GameBoxModule gameBoxModule, T language) {
+    moduleLanguages.put(gameBoxModule.getModuleID(), language);
   }
 
-  public static Language getLanguage(Module module) {
-    return getLanguage(module.getModuleID());
+  public static Language getLanguage(GameBoxModule gameBoxModule) {
+    return getLanguage(gameBoxModule.getModuleID());
   }
 
   public static Language getLanguage(String moduleID) {
     return moduleLanguages.get(moduleID);
   }
 
-  public static GameLanguage getGameLanguage(Module module) {
-    return getGameLanguage(module.getModuleID());
+  public static GameLanguage getGameLanguage(GameBoxModule gameBoxModule) {
+    return getGameLanguage(gameBoxModule.getModuleID());
   }
 
   public static GameLanguage getGameLanguage(String moduleID) {
@@ -48,8 +48,8 @@ public class ConfigManager {
     return (GameLanguage) language;
   }
 
-  public static FileConfiguration getConfig(Module module) {
-    return getConfig(module.getModuleID());
+  public static FileConfiguration getConfig(GameBoxModule gameBoxModule) {
+    return getConfig(gameBoxModule.getModuleID());
   }
 
   public static FileConfiguration getConfig(String moduleID) {

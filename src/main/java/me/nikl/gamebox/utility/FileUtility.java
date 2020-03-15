@@ -1,7 +1,7 @@
 package me.nikl.gamebox.utility;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.Module;
+import me.nikl.gamebox.GameBoxModule;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -62,8 +62,8 @@ public class FileUtility {
   }
 
 
-  public static boolean copyExternalResources(GameBox gameBox, Module module) {
-    JavaPlugin external = module.getExternalPlugin();
+  public static boolean copyExternalResources(GameBox gameBox, GameBoxModule gameBoxModule) {
+    JavaPlugin external = gameBoxModule.getExternalPlugin();
     if (external == null) return false;
     try {
       JarFile jar = new JarFile(URLDecoder.decode(external.getClass().getProtectionDomain().getCodeSource().getLocation().getFile(), "UTF-8"));
@@ -78,14 +78,14 @@ public class FileUtility {
             continue;
           }
           // subfolder in language folder
-          if (!pathParts[1].equalsIgnoreCase(module.getModuleID())) continue;
+          if (!pathParts[1].equalsIgnoreCase(gameBoxModule.getModuleID())) continue;
           String fileName = pathParts[pathParts.length - 1];
           if (fileName.equals("lang_en.yml")) {
             foundDefaultLang = true;
           }
           String gbPath = gameBox.getDataFolder().toString() + File.separatorChar
                   + "language" + File.separatorChar
-                  + module.getModuleID() + File.separatorChar + fileName;
+                  + gameBoxModule.getModuleID() + File.separatorChar + fileName;
           File file = new File(gbPath);
           if (!file.exists()) {
             file.getParentFile().mkdirs();
@@ -98,7 +98,7 @@ public class FileUtility {
             continue;
           }
           // check module folder
-          if (!pathParts[1].equalsIgnoreCase(module.getModuleID())) {
+          if (!pathParts[1].equalsIgnoreCase(gameBoxModule.getModuleID())) {
             // resource of other module
             continue;
           }
@@ -115,7 +115,7 @@ public class FileUtility {
           }
           String gbPath = gameBox.getDataFolder().toString() + File.separatorChar
                   + "games" + File.separatorChar
-                  + module.getModuleID() + File.separatorChar + fileName;
+                  + gameBoxModule.getModuleID() + File.separatorChar + fileName;
           File file = new File(gbPath);
           if (!file.exists()) {
             file.getParentFile().mkdirs();
@@ -125,12 +125,12 @@ public class FileUtility {
       }
       jar.close();
       if (!foundDefaultLang) {
-        gameBox.warning(" Failed to locate default language file for the module '" + module.getModuleID() + "'");
-        gameBox.warning(" " + jar.getName() + " is missing the file 'language/" + module.getModuleID() + "/lang_en.yml'");
+        gameBox.warning(" Failed to locate default language file for the module '" + gameBoxModule.getModuleID() + "'");
+        gameBox.warning(" " + jar.getName() + " is missing the file 'language/" + gameBoxModule.getModuleID() + "/lang_en.yml'");
       }
       if (!foundConfig) {
-        gameBox.warning(" Failed to locate the configuration of the module '" + module.getModuleID() + "'");
-        gameBox.warning(" " + jar.getName() + " is missing the file 'games/" + module.getModuleID() + "/config.yml'");
+        gameBox.warning(" Failed to locate the configuration of the module '" + gameBoxModule.getModuleID() + "'");
+        gameBox.warning(" " + jar.getName() + " is missing the file 'games/" + gameBoxModule.getModuleID() + "/config.yml'");
       }
       if (!foundConfig || !foundDefaultLang) {
         return false;

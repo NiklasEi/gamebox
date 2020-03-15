@@ -35,7 +35,7 @@ public class InfoCommand extends GeneralBaseCommand {
       if (game == null) continue;
 
       // get subcommands
-      Set<String> subCmds = gameBox.getGameRegistry().getModuleSubCommands(game.getModule());
+      Set<String> subCmds = gameBox.getGameRegistry().getModuleSubCommands(game.getGameBoxModule());
       if (subCmds != null && !subCmds.isEmpty()) {
         allSubCommands = String.join(":", subCmds);
       } else {

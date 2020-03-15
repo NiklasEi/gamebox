@@ -1,10 +1,18 @@
 package me.nikl.gamebox;
 
+import me.nikl.gamebox.module.data.VersionedModuleData;
+import me.nikl.gamebox.module.local.LocalModule;
+import me.nikl.gamebox.module.local.LocalModuleData;
+import me.nikl.gamebox.module.local.VersionedModule;
+import me.nikl.gamebox.utilities.versioning.SemanticVersion;
 import me.nikl.gamebox.utility.Sound;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -44,6 +52,7 @@ public class GameBoxSettings {
   public static String adminCommand;
 
   private static FileConfiguration configuration;
+  private static VersionedModule gameBoxModuleInfo;
 
   public static void loadSettings(GameBox plugin) {
     configuration = plugin.getConfig();
@@ -55,6 +64,7 @@ public class GameBoxSettings {
     generalSettings();
     invitationSettings();
     economySettings();
+    loadGameBoxModuleInfo(plugin);
   }
 
   private static void loadDatabaseSettings() {
@@ -165,5 +175,25 @@ public class GameBoxSettings {
         it.remove();
       if (slot < 0 || slot > 8) it.remove();
     }
+  }
+
+  private static void loadGameBoxModuleInfo(GameBox plugin) {
+    try {
+      LocalModuleData data = new LocalModuleData()
+              .withAuthors(plugin.getDescription().getAuthors())
+              .withDependencies(Collections.emptyList())
+              .withDescription(plugin.getDescription().getDescription())
+              .withId("gamebox")
+              .withName(plugin.getDescription().getName())
+              .withVersion(new SemanticVersion(plugin.getDescription().getVersion()))
+              .withSourceUrl("https://github.com/NiklasEi/gamebox");
+      GameBoxSettings.gameBoxModuleInfo = new LocalModule(data);
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public static VersionedModule getGameBoxModuleInfo() {
+    return GameBoxSettings.gameBoxModuleInfo;
   }
 }

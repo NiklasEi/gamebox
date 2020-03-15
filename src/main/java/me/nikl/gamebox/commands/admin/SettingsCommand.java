@@ -5,7 +5,7 @@ import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.PreCommand;
 import co.aikar.commands.annotation.Subcommand;
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.Module;
+import me.nikl.gamebox.GameBoxModule;
 import me.nikl.gamebox.commands.GameBoxBaseCommand;
 import me.nikl.gamebox.utility.Permission;
 import org.bukkit.Bukkit;
@@ -72,8 +72,8 @@ public class SettingsCommand extends GameBoxBaseCommand {
   }
 
   private void disableGame(CommandSender sender, String gameID) {
-    Module module = gameBox.getGameRegistry().getModule(gameID);
-    if (module == null) {
+    GameBoxModule gameBoxModule = gameBox.getGameRegistry().getModule(gameID);
+    if (gameBoxModule == null) {
       sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_SETTINGS_GAME_DISABLE_FAIL);
       return;
     }

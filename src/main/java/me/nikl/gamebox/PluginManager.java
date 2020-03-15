@@ -544,8 +544,8 @@ public class PluginManager implements Listener {
     return game == null ? null : game.getGameManager();
   }
 
-  public GameManager getGameManager(Module module) {
-    return getGameManager(module.getModuleID());
+  public GameManager getGameManager(GameBoxModule gameBoxModule) {
+    return getGameManager(gameBoxModule.getModuleID());
   }
 
   public GUIManager getGuiManager() {
@@ -666,8 +666,8 @@ public class PluginManager implements Listener {
     return this.games;
   }
 
-  public Game getGame(Module module) {
-    return getGame(module.getModuleID());
+  public Game getGame(GameBoxModule gameBoxModule) {
+    return getGame(gameBoxModule.getModuleID());
   }
 
   public Game getGame(String gameID) {

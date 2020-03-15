@@ -62,7 +62,7 @@ public class GameBox extends JavaPlugin {
   private LeftGameBoxListener leftGameBoxListener;
   private EnterGameBoxListener enterGameBoxListener;
   private GameBoxCommands commands;
-  private Module gameBoxModule;
+  private GameBoxModule gameBoxModule;
   private CalendarEventsHook calendarEventsHook;
   private BukkitBridge bukkitBridge;
 
@@ -79,7 +79,7 @@ public class GameBox extends JavaPlugin {
     }
 
     this.gameRegistry = new GameRegistry(this);
-    gameBoxModule = new Module(this, MODULE_GAMEBOX, null, null);
+    gameBoxModule = new GameBoxModule(this, MODULE_GAMEBOX, null, null);
 
     if (!reload()) {
       getLogger().severe(" Problem while loading the plugin! Plugin was disabled!");
@@ -161,13 +161,13 @@ public class GameBox extends JavaPlugin {
 
   private void registerGames() {
     // Default games:
-    new Module(this, MODULE_CONNECTFOUR
+    new GameBoxModule(this, MODULE_CONNECTFOUR
             , "me.nikl.gamebox.games.connectfour.ConnectFour", null
             , GameBox.MODULE_CONNECTFOUR, "connect4", "c4");
-    new Module(this, MODULE_COOKIECLICKER
+    new GameBoxModule(this, MODULE_COOKIECLICKER
             , "me.nikl.gamebox.games.cookieclicker.CookieClicker", null
             , GameBox.MODULE_COOKIECLICKER, "cookies", "cc");
-    new Module(this, MODULE_MATCHIT
+    new GameBoxModule(this, MODULE_MATCHIT
             , "me.nikl.gamebox.games.matchit.MatchIt", null
             , GameBox.MODULE_MATCHIT, "mi");
   }
@@ -412,5 +412,9 @@ public class GameBox extends JavaPlugin {
 
   public GameBoxCommands getCommands() {
     return commands;
+  }
+
+  public File getLanguageDir() {
+    return new File(getDataFolder(), "language");
   }
 }

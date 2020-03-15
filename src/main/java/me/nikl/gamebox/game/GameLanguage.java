@@ -14,7 +14,7 @@ public abstract class GameLanguage extends Language {
   public String GAME_PAYED = " You payed %cost%", GAME_NOT_ENOUGH_MONEY = " Not enough money (cost: %cost%)";
 
   public GameLanguage(Game game) {
-    super(game.getGameBox(), game.getModule());
+    super(game.getGameBox(), game.getGameBoxModule());
 
     this.GAME_PAYED = getString("game.econ.payed");
     this.GAME_NOT_ENOUGH_MONEY = getString("game.econ.notEnoughMoney");

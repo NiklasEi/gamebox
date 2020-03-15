@@ -28,15 +28,15 @@ public abstract class Language {
   public String PLAIN_NAME = ChatColor.stripColor(NAME);
   public String DEFAULT_NAME, DEFAULT_PLAIN_NAME;
   protected GameBox plugin;
-  protected Module module;
+  protected GameBoxModule gameBoxModule;
   protected File languageFile;
   protected FileConfiguration defaultLanguage;
   protected FileConfiguration language;
 
-  public Language(GameBox plugin, Module module) {
+  public Language(GameBox plugin, GameBoxModule gameBoxModule) {
     this.plugin = plugin;
-    this.module = module;
-    getLangFile(ConfigManager.getConfig(module));
+    this.gameBoxModule = gameBoxModule;
+    getLangFile(ConfigManager.getConfig(gameBoxModule));
 
     PREFIX = getString("prefix");
     NAME = getString("name");
@@ -70,17 +70,17 @@ public abstract class Language {
    * @param config configuration of the module
    */
   protected void getLangFile(FileConfiguration config) {
-    String moduleID = module.getModuleID();
+    String moduleID = gameBoxModule.getModuleID();
     // load default language
     try {
-      String defaultLangName = moduleID.equals(GameBox.MODULE_GAMEBOX) ? "language/lang_en.yml" : "language/" + module.getModuleID() + "/lang_en.yml";
+      String defaultLangName = moduleID.equals(GameBox.MODULE_GAMEBOX) ? "language/lang_en.yml" : "language/" + gameBoxModule.getModuleID() + "/lang_en.yml";
       defaultLanguage = YamlConfiguration.loadConfiguration(
-              new InputStreamReader(module.getExternalPlugin() == null
+              new InputStreamReader(gameBoxModule.getExternalPlugin() == null
                       ? plugin.getResource(defaultLangName)
-                      : module.getExternalPlugin().getResource(defaultLangName)
+                      : gameBoxModule.getExternalPlugin().getResource(defaultLangName)
                       , "UTF-8"));
     } catch (UnsupportedEncodingException e2) {
-      plugin.getLogger().warning("Failed to load default language file for namespace: " + module.getModuleID());
+      plugin.getLogger().warning("Failed to load default language file for namespace: " + gameBoxModule.getModuleID());
       e2.printStackTrace();
     }
     String fileName = config.getString("langFile");

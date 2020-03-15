@@ -9,13 +9,13 @@ import java.util.List;
 /**
  * @author Niklas Eicker
  */
-public class Module {
+public class GameBoxModule {
   private String moduleID, classPath;
   private boolean isGame = false;
   private JavaPlugin externalPlugin;
   private List<String> subCommands;
 
-  public Module(GameBox gameBox, String moduleID, String classPath, JavaPlugin plugin, String... subCommands) {
+  public GameBoxModule(GameBox gameBox, String moduleID, String classPath, JavaPlugin plugin, String... subCommands) {
     Validate.isTrue(moduleID != null && !moduleID.isEmpty()
             , " moduleID cannot be null or empty!");
     if (classPath != null && !classPath.isEmpty()) {
@@ -44,10 +44,10 @@ public class Module {
 
   @Override
   public boolean equals(Object module) {
-    if (!(module instanceof Module)) {
+    if (!(module instanceof GameBoxModule)) {
       return false;
     }
-    return moduleID.equalsIgnoreCase(((Module) module).moduleID);
+    return moduleID.equalsIgnoreCase(((GameBoxModule) module).moduleID);
   }
 
   @Override

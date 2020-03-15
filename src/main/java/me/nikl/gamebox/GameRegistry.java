@@ -35,11 +35,11 @@ public class GameRegistry {
           new HashSet<>(Arrays.asList("all, game, games, info, token, t"));
   private final Set<String> disabledModules = new HashSet<>();
   private GameBox gameBox;
-  private Map<String, Module> modules = new HashMap<>();
-  private Map<String, Module> declinedModules = new HashMap<>();
-  private Map<String, Module> subCommands = new HashMap<>();
+  private Map<String, GameBoxModule> modules = new HashMap<>();
+  private Map<String, GameBoxModule> declinedModules = new HashMap<>();
+  private Map<String, GameBoxModule> subCommands = new HashMap<>();
   private Map<String, Integer> preferredMainMenuSlots = new HashMap<>();
-  private Map<Module, Set<String>> bundledSubCommands = new HashMap<>();
+  private Map<GameBoxModule, Set<String>> bundledSubCommands = new HashMap<>();
   private boolean enableNewGamesByDefault;
   private FileConfiguration gamesConfiguration;
   private File gamesFile;
@@ -73,69 +73,69 @@ public class GameRegistry {
     }
   }
 
-  public boolean registerModule(Module module) {
-    if (isRegistered(module.getModuleID())) {
+  public boolean registerModule(GameBoxModule gameBoxModule) {
+    if (isRegistered(gameBoxModule.getModuleID())) {
       gameBox.getLogger().log(Level.WARNING, "A Module tried registering with an already in use ID!");
       return false;
     }
-    if (forbiddenIDs.contains(module.getModuleID())) {
-      gameBox.getLogger().log(Level.WARNING, "A Module tried registering with a forbidden ID (" + module.getModuleID() + ")");
+    if (forbiddenIDs.contains(gameBoxModule.getModuleID())) {
+      gameBox.getLogger().log(Level.WARNING, "A Module tried registering with a forbidden ID (" + gameBoxModule.getModuleID() + ")");
       return false;
     }
-    if (disabledModules.contains(module.getModuleID())) {
-      declinedModules.put(module.getModuleID(), module);
-      gameBox.warning("The game " + module.getModuleID() + " is disabled in 'games.yml'");
+    if (disabledModules.contains(gameBoxModule.getModuleID())) {
+      declinedModules.put(gameBoxModule.getModuleID(), gameBoxModule);
+      gameBox.warning("The game " + gameBoxModule.getModuleID() + " is disabled in 'games.yml'");
       return false;
     }
-    if (!module.getModuleID().equals(GameBox.MODULE_GAMEBOX))
-      handleModuleSettings(module);
-    modules.put(module.getModuleID(), module);
-    if (module.getExternalPlugin() != null) {
-      if (!FileUtility.copyExternalResources(gameBox, module)) {
-        gameBox.info(" Failed to register the external module '" + module.getModuleID() + "'");
-        modules.remove(module.getModuleID());
+    if (!gameBoxModule.getModuleID().equals(GameBox.MODULE_GAMEBOX))
+      handleModuleSettings(gameBoxModule);
+    modules.put(gameBoxModule.getModuleID(), gameBoxModule);
+    if (gameBoxModule.getExternalPlugin() != null) {
+      if (!FileUtility.copyExternalResources(gameBox, gameBoxModule)) {
+        gameBox.info(" Failed to register the external module '" + gameBoxModule.getModuleID() + "'");
+        modules.remove(gameBoxModule.getModuleID());
         return false;
       }
     }
-    if (module.isGame()) {
-      loadGame(module);
-      registerSubCommands(module);
+    if (gameBoxModule.isGame()) {
+      loadGame(gameBoxModule);
+      registerSubCommands(gameBoxModule);
     }
     return true;
   }
 
-  private void handleModuleSettings(Module module) {
-    String moduleID = module.getModuleID();
+  private void handleModuleSettings(GameBoxModule gameBoxModule) {
+    String moduleID = gameBoxModule.getModuleID();
     if (!gamesConfiguration.isSet("games." + moduleID)) {
-      setDefaultModuleSettings(module);
+      setDefaultModuleSettings(gameBoxModule);
       return;
     } else {
       // overwrite default sub commands
-      if (module.isGame() && gamesConfiguration.isList("games." + moduleID + ".subCommands")) {
+      if (gameBoxModule.isGame() && gamesConfiguration.isList("games." + moduleID + ".subCommands")) {
         List<String> subCommands = gamesConfiguration.getStringList("games." + moduleID + ".subCommands");
-        if (subCommands != null && !subCommands.isEmpty()) module.setSubCommands(subCommands);
+        if (subCommands != null && !subCommands.isEmpty()) gameBoxModule.setSubCommands(subCommands);
       }
       preferredMainMenuSlots.put(moduleID, gamesConfiguration.getInt("games." + moduleID + ".preferredSlot", -1));
     }
   }
 
-  private void setDefaultModuleSettings(Module module) {
-    String moduleID = module.getModuleID();
+  private void setDefaultModuleSettings(GameBoxModule gameBoxModule) {
+    String moduleID = gameBoxModule.getModuleID();
     gamesConfiguration.set("games." + moduleID + ".enabled", enableNewGamesByDefault);
-    gamesConfiguration.set("games." + moduleID + ".subCommands", module.getSubCommands());
+    gamesConfiguration.set("games." + moduleID + ".subCommands", gameBoxModule.getSubCommands());
     gamesConfiguration.set("games." + moduleID + ".preferredSlot", -1);
     saveGameSettings();
   }
 
-  public boolean isRegistered(Module module) {
-    return isRegistered(module.getModuleID());
+  public boolean isRegistered(GameBoxModule gameBoxModule) {
+    return isRegistered(gameBoxModule.getModuleID());
   }
 
   public boolean isRegistered(String moduleID) {
     return modules.containsKey(moduleID.toLowerCase());
   }
 
-  public Module getModule(String moduleID) {
+  public GameBoxModule getModule(String moduleID) {
     return modules.get(moduleID);
   }
 
@@ -150,36 +150,36 @@ public class GameRegistry {
     declinedModules.clear();
     subCommands.clear();
     bundledSubCommands.clear();
-    Iterator<Module> iterator = modules.values().iterator();
+    Iterator<GameBoxModule> iterator = modules.values().iterator();
     while (iterator.hasNext()) {
-      Module module = iterator.next();
-      if (disabledModules.contains(module.getModuleID())) {
+      GameBoxModule gameBoxModule = iterator.next();
+      if (disabledModules.contains(gameBoxModule.getModuleID())) {
         iterator.remove();
-        declinedModules.put(module.getModuleID(), module);
-        gameBox.warning("The game " + module.getModuleID() + " is disabled in 'games.yml'");
+        declinedModules.put(gameBoxModule.getModuleID(), gameBoxModule);
+        gameBox.warning("The game " + gameBoxModule.getModuleID() + " is disabled in 'games.yml'");
         continue;
       }
-      if (module.isGame()) {
-        reloadGameData(module);
-        loadGame(module);
+      if (gameBoxModule.isGame()) {
+        reloadGameData(gameBoxModule);
+        loadGame(gameBoxModule);
       }
     }
   }
 
-  private void reloadGameData(Module module) {
-    String moduleID = module.getModuleID();
+  private void reloadGameData(GameBoxModule gameBoxModule) {
+    String moduleID = gameBoxModule.getModuleID();
     if (gamesConfiguration.isList("games." + moduleID + ".subCommands")) {
       List<String> subCommands = gamesConfiguration.getStringList("games." + moduleID + ".subCommands");
-      if (subCommands != null && !subCommands.isEmpty()) module.setSubCommands(subCommands);
+      if (subCommands != null && !subCommands.isEmpty()) gameBoxModule.setSubCommands(subCommands);
     }
     preferredMainMenuSlots.put(moduleID, gamesConfiguration.getInt("games." + moduleID + ".preferredSlot", -1));
-    registerSubCommands(module);
+    registerSubCommands(gameBoxModule);
   }
 
-  private void loadGame(Module module) {
+  private void loadGame(GameBoxModule gameBoxModule) {
     Class<Game> clazz = null;
     try {
-      clazz = (Class<Game>) Class.forName(module.getClassPath());
+      clazz = (Class<Game>) Class.forName(gameBoxModule.getClassPath());
     } catch (ClassNotFoundException | ClassCastException e) {
       e.printStackTrace();
     }
@@ -191,17 +191,17 @@ public class GameRegistry {
       game.onEnable();
     } catch (NoSuchMethodException | IllegalAccessException
             | InstantiationException | InvocationTargetException e) {
-      gameBox.warning(" The game class of '" + module.getModuleID() + "' needs a public constructor taking only a GameBox object!");
+      gameBox.warning(" The game class of '" + gameBoxModule.getModuleID() + "' needs a public constructor taking only a GameBox object!");
       e.printStackTrace();
-      gameBox.getPluginManager().unregisterGame(module.getModuleID());
+      gameBox.getPluginManager().unregisterGame(gameBoxModule.getModuleID());
     } catch (GameLoadException e) {
-      gameBox.warning(" Exception while loading '" + module.getModuleID() + "'!");
+      gameBox.warning(" Exception while loading '" + gameBoxModule.getModuleID() + "'!");
       e.printStackTrace();
-      gameBox.getPluginManager().unregisterGame(module.getModuleID());
+      gameBox.getPluginManager().unregisterGame(gameBoxModule.getModuleID());
     } catch (Throwable throwable) {
-      gameBox.warning("unexpected error while loading '" + module.getModuleID() + "'...");
+      gameBox.warning("unexpected error while loading '" + gameBoxModule.getModuleID() + "'...");
       throwable.printStackTrace();
-      gameBox.getPluginManager().unregisterGame(module.getModuleID());
+      gameBox.getPluginManager().unregisterGame(gameBoxModule.getModuleID());
     }
   }
 
@@ -209,20 +209,20 @@ public class GameRegistry {
     return Collections.unmodifiableSet(modules.keySet());
   }
 
-  public Set<Module> getModules() {
+  public Set<GameBoxModule> getModules() {
     return Collections.unmodifiableSet(new HashSet<>(modules.values()));
   }
 
-  public Set<String> getModuleSubCommands(Module module) {
-    return Collections.unmodifiableSet(bundledSubCommands.get(module));
+  public Set<String> getModuleSubCommands(GameBoxModule gameBoxModule) {
+    return Collections.unmodifiableSet(bundledSubCommands.get(gameBoxModule));
   }
 
-  private void registerSubCommands(Module module) {
-    if (module.getSubCommands() == null || module.getSubCommands().isEmpty()) {
-      bundledSubCommands.put(module, new HashSet<>());
+  private void registerSubCommands(GameBoxModule gameBoxModule) {
+    if (gameBoxModule.getSubCommands() == null || gameBoxModule.getSubCommands().isEmpty()) {
+      bundledSubCommands.put(gameBoxModule, new HashSet<>());
       return;
     }
-    List<String> subCommands = module.getSubCommands();
+    List<String> subCommands = gameBoxModule.getSubCommands();
     for (int i = 0; i < subCommands.size(); i++) {
       subCommands.set(i, subCommands.get(i).toLowerCase());
     }
@@ -232,25 +232,25 @@ public class GameRegistry {
         throw new IllegalArgumentException("Forbidden sub command: " + subCommands.get(i));
       if (this.subCommands.keySet().contains(subCommands.get(i)))
         continue;
-      this.subCommands.put(subCommands.get(i), module);
-      addSubCommandToBundle(module, subCommands.get(i));
+      this.subCommands.put(subCommands.get(i), gameBoxModule);
+      addSubCommandToBundle(gameBoxModule, subCommands.get(i));
     }
   }
 
-  private void addSubCommandToBundle(Module module, String subCommand) {
-    bundledSubCommands.putIfAbsent(module, new HashSet<>());
-    bundledSubCommands.get(module).add(subCommand);
+  private void addSubCommandToBundle(GameBoxModule gameBoxModule, String subCommand) {
+    bundledSubCommands.putIfAbsent(gameBoxModule, new HashSet<>());
+    bundledSubCommands.get(gameBoxModule).add(subCommand);
   }
 
-  public Module getModuleBySubCommand(String subCommand) {
+  public GameBoxModule getModuleBySubCommand(String subCommand) {
     GameBox.debug("grab module of " + subCommand);
     return subCommands.get(subCommand);
   }
 
   public void unregisterGame(String gameID) {
-    Module module = modules.get(gameID);
-    if (module == null) return;
-    Set<String> subCommands = bundledSubCommands.get(module);
+    GameBoxModule gameBoxModule = modules.get(gameID);
+    if (gameBoxModule == null) return;
+    Set<String> subCommands = bundledSubCommands.get(gameBoxModule);
     modules.remove(gameID);
     if (subCommands == null || subCommands.isEmpty()) return;
     for (String subCommand : subCommands) {

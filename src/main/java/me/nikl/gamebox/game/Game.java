@@ -3,7 +3,7 @@ package me.nikl.gamebox.game;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.GameBoxSettings;
-import me.nikl.gamebox.Module;
+import me.nikl.gamebox.GameBoxModule;
 import me.nikl.gamebox.data.toplist.SaveType;
 import me.nikl.gamebox.game.exceptions.GameLoadException;
 import me.nikl.gamebox.game.manager.GameManager;
@@ -54,7 +54,7 @@ import java.util.logging.Level;
 public abstract class Game {
   protected GameBox gameBox;
   protected FileConfiguration config;
-  protected Module module;
+  protected GameBoxModule gameBoxModule;
   protected GameManager gameManager;
   protected GameSettings gameSettings;
   protected GameLanguage gameLang;
@@ -64,8 +64,8 @@ public abstract class Game {
   private File configFile;
 
   protected Game(GameBox gameBox, String gameID) {
-    this.module = gameBox.getGameRegistry().getModule(gameID);
-    Validate.notNull(module, " You cannot initialize a game without registering it's module first!");
+    this.gameBoxModule = gameBox.getGameRegistry().getModule(gameID);
+    Validate.notNull(gameBoxModule, " You cannot initialize a game without registering it's module first!");
     this.gameBox = gameBox;
     this.gbLang = gameBox.lang;
     this.nms = NmsFactory.getNmsUtility();
@@ -75,11 +75,11 @@ public abstract class Game {
   public abstract void onDisable();
 
   public void onEnable() throws GameLoadException {
-    GameBox.debug(" enabling the game: " + module.getModuleID());
+    GameBox.debug(" enabling the game: " + gameBoxModule.getModuleID());
     loadConfig();
     loadSettings();
     loadLanguage();
-    ConfigManager.registerModuleLanguage(module, gameLang);
+    ConfigManager.registerModuleLanguage(gameBoxModule, gameLang);
     checkRequirements();
     // at this point the game can load any game specific stuff (e.g. from config)
     init();
@@ -169,16 +169,16 @@ public abstract class Game {
   public abstract void loadGameManager();
 
   public void loadConfig() throws GameLoadException {
-    GameBox.debug(" load config... (" + module.getModuleID() + ")");
+    GameBox.debug(" load config... (" + gameBoxModule.getModuleID() + ")");
     configFile = new File(gameBox.getDataFolder()
             + File.separator + "games"
             + File.separator + getGameID()
             + File.separator + "config.yml");
     if (!configFile.exists()) {
-      GameBox.debug(" default config missing in GB folder (" + module.getModuleID() + ")");
+      GameBox.debug(" default config missing in GB folder (" + gameBoxModule.getModuleID() + ")");
       configFile.getParentFile().mkdirs();
-      if (module.getExternalPlugin() != null) {
-        FileUtility.copyExternalResources(gameBox, module);
+      if (gameBoxModule.getExternalPlugin() != null) {
+        FileUtility.copyExternalResources(gameBox, gameBoxModule);
       } else {
         gameBox.saveResource("games"
                 + File.separator + getGameID()
@@ -195,7 +195,7 @@ public abstract class Game {
       e.printStackTrace();
       throw new GameLoadException("Failed to load the configuration", e);
     }
-    ConfigManager.registerModuleConfiguration(module, config);
+    ConfigManager.registerModuleConfiguration(gameBoxModule, config);
   }
 
   private void hook() throws GameLoadException {
@@ -360,12 +360,12 @@ public abstract class Game {
     return config;
   }
 
-  public Module getModule() {
-    return module;
+  public GameBoxModule getGameBoxModule() {
+    return gameBoxModule;
   }
 
   public String getGameID() {
-    return module.getModuleID();
+    return gameBoxModule.getModuleID();
   }
 
   public GameSettings getSettings() {
