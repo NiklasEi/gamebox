@@ -4,7 +4,6 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.Module;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -63,10 +62,8 @@ public class FileUtility {
 
 
   public static boolean copyExternalResources(GameBox gameBox, Module module) {
-    JavaPlugin external = module.getExternalPlugin();
-    if (external == null) return false;
     try {
-      JarFile jar = new JarFile(URLDecoder.decode(external.getClass().getProtectionDomain().getCodeSource().getLocation().getFile(), "UTF-8"));
+      JarFile jar = new JarFile(module.getJarFile());
       boolean foundDefaultLang = false;
       boolean foundConfig = false;
       for (Enumeration list = jar.entries(); list.hasMoreElements(); ) {
@@ -89,7 +86,7 @@ public class FileUtility {
           File file = new File(gbPath);
           if (!file.exists()) {
             file.getParentFile().mkdirs();
-            saveResourceToGBFolder(entry.getName(), gbPath, external);
+            saveResourceToGBFolder(jar.getInputStream(entry), gbPath);
           }
         } else if (folderName.equalsIgnoreCase("games")) {
           if (entry.isDirectory()) continue;
@@ -119,7 +116,7 @@ public class FileUtility {
           File file = new File(gbPath);
           if (!file.exists()) {
             file.getParentFile().mkdirs();
-            saveResourceToGBFolder(entry.getName(), gbPath, external);
+            saveResourceToGBFolder(jar.getInputStream(entry), gbPath);
           }
         }
       }
@@ -142,26 +139,27 @@ public class FileUtility {
     return true;
   }
 
+  static public InputStream getResource(File jarFile, String entry) {
+    try {
+      JarFile jar = new JarFile(jarFile);
+      return jar.getInputStream(jar.getEntry(entry));
+    } catch (IOException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
   /**
    * Slightly adapted method from Bukkit...
    *
-   * @param resourcePath path to the resource in the external plugin
+   * @param resource     the stream that is supposed to be saved
    * @param gbPath       wanted path for the resource in gameBox
-   * @param plugin       external plugin
    */
-  static private void saveResourceToGBFolder(String resourcePath, String gbPath, JavaPlugin plugin) {
-    if (resourcePath == null || resourcePath.isEmpty()) {
-      throw new IllegalArgumentException("ResourcePath cannot be null or empty");
-    }
+  static private void saveResourceToGBFolder(InputStream resource, String gbPath) {
     Plugin gameBox = Bukkit.getPluginManager().getPlugin("GameBox");
-    resourcePath = resourcePath.replace('\\', '/');
-    InputStream in = plugin.getResource(resourcePath);
-    if (in == null) {
-      throw new IllegalArgumentException("The embedded resource '" + resourcePath + "' cannot be found in " + plugin.getName());
-    }
     File outFile = new File(gbPath);
-    int lastIndex = resourcePath.lastIndexOf(47);
-    File outDir = new File(gameBox.getDataFolder(), resourcePath.substring(0, lastIndex >= 0 ? lastIndex : 0));
+    int lastIndex = gbPath.lastIndexOf(47);
+    File outDir = new File(gameBox.getDataFolder(), gbPath.substring(0, lastIndex >= 0 ? lastIndex : 0));
     if (!outDir.exists()) {
       outDir.mkdirs();
     }
@@ -170,11 +168,11 @@ public class FileUtility {
       OutputStream out = new FileOutputStream(outFile);
       byte[] buf = new byte[1024];
       int len;
-      while ((len = in.read(buf)) > 0) {
+      while ((len = resource.read(buf)) > 0) {
         out.write(buf, 0, len);
       }
       out.close();
-      in.close();
+      resource.close();
     } catch (IOException var10) {
       gameBox.getLogger().log(Level.SEVERE, "Could not save " + outFile.getName() + " to " + outFile, var10);
     }

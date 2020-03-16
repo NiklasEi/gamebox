@@ -86,8 +86,6 @@ public class GameBox extends JavaPlugin {
       Bukkit.getPluginManager().disablePlugin(this);
       return;
     }
-    // At this point all managers are set up and games can be registered
-    registerGames();
     establishHooksAndMetric();
   }
 
@@ -157,19 +155,6 @@ public class GameBox extends JavaPlugin {
     } else {
       info(ChatColor.GREEN + " " + PluginManager.gamesRegistered + " games were registered. Have fun :)");
     }
-  }
-
-  private void registerGames() {
-    // Default games:
-    new Module(this, MODULE_CONNECTFOUR
-            , "me.nikl.gamebox.games.connectfour.ConnectFour", null
-            , GameBox.MODULE_CONNECTFOUR, "connect4", "c4");
-    new Module(this, MODULE_COOKIECLICKER
-            , "me.nikl.gamebox.games.cookieclicker.CookieClicker", null
-            , GameBox.MODULE_COOKIECLICKER, "cookies", "cc");
-    new Module(this, MODULE_MATCHIT
-            , "me.nikl.gamebox.games.matchit.MatchIt", null
-            , GameBox.MODULE_MATCHIT, "mi");
   }
 
   /**

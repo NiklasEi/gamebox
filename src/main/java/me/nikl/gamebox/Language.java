@@ -1,6 +1,7 @@
 package me.nikl.gamebox;
 
 import me.nikl.gamebox.utility.ConfigManager;
+import me.nikl.gamebox.utility.FileUtility;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -75,9 +76,9 @@ public abstract class Language {
     try {
       String defaultLangName = moduleID.equals(GameBox.MODULE_GAMEBOX) ? "language/lang_en.yml" : "language/" + module.getModuleID() + "/lang_en.yml";
       defaultLanguage = YamlConfiguration.loadConfiguration(
-              new InputStreamReader(module.getExternalPlugin() == null
+              new InputStreamReader(module.getJarFile() == null
                       ? plugin.getResource(defaultLangName)
-                      : module.getExternalPlugin().getResource(defaultLangName)
+                      : FileUtility.getResource(module.getJarFile(), defaultLangName)
                       , "UTF-8"));
     } catch (UnsupportedEncodingException e2) {
       plugin.getLogger().warning("Failed to load default language file for namespace: " + module.getModuleID());

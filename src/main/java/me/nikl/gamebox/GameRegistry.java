@@ -90,7 +90,7 @@ public class GameRegistry {
     if (!module.getModuleID().equals(GameBox.MODULE_GAMEBOX))
       handleModuleSettings(module);
     modules.put(module.getModuleID(), module);
-    if (module.getExternalPlugin() != null) {
+    if (module.getJarFile() != null) {
       if (!FileUtility.copyExternalResources(gameBox, module)) {
         gameBox.info(" Failed to register the external module '" + module.getModuleID() + "'");
         modules.remove(module.getModuleID());

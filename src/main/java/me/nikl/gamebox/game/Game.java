@@ -177,7 +177,7 @@ public abstract class Game {
     if (!configFile.exists()) {
       GameBox.debug(" default config missing in GB folder (" + module.getModuleID() + ")");
       configFile.getParentFile().mkdirs();
-      if (module.getExternalPlugin() != null) {
+      if (module.getJarFile() != null) {
         FileUtility.copyExternalResources(gameBox, module);
       } else {
         gameBox.saveResource("games"
