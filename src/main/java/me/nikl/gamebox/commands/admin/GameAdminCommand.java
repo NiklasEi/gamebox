@@ -2,7 +2,7 @@ package me.nikl.gamebox.commands.admin;
 
 import co.aikar.commands.annotation.PreCommand;
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.Module;
+import me.nikl.gamebox.module.Module;
 import me.nikl.gamebox.commands.GameBoxBaseCommand;
 import me.nikl.gamebox.utility.Permission;
 import org.apache.commons.lang.Validate;

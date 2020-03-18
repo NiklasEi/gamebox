@@ -2,6 +2,7 @@ package me.nikl.gamebox;
 
 import me.nikl.gamebox.game.Game;
 import me.nikl.gamebox.game.exceptions.GameLoadException;
+import me.nikl.gamebox.module.Module;
 import me.nikl.gamebox.utility.FileUtility;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;

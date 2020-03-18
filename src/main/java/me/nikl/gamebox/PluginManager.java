@@ -10,6 +10,7 @@ import me.nikl.gamebox.input.InviteInputHandler;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.GameBoxHolder;
 import me.nikl.gamebox.inventory.gui.AGui;
+import me.nikl.gamebox.module.Module;
 import me.nikl.gamebox.utility.ItemStackUtility;
 import me.nikl.gamebox.utility.Permission;
 import me.nikl.gamebox.utility.Sound;

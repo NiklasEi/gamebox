@@ -1,7 +1,7 @@
 package me.nikl.gamebox.utility;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.Module;
+import me.nikl.gamebox.module.Module;
 import org.bukkit.command.CommandSender;
 
 import javax.annotation.Nullable;

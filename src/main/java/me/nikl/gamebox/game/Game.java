@@ -3,7 +3,7 @@ package me.nikl.gamebox.game;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.GameBoxSettings;
-import me.nikl.gamebox.Module;
+import me.nikl.gamebox.module.Module;
 import me.nikl.gamebox.data.toplist.SaveType;
 import me.nikl.gamebox.game.exceptions.GameLoadException;
 import me.nikl.gamebox.game.manager.GameManager;

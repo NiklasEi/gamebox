@@ -2,7 +2,7 @@ package me.nikl.gamebox.utility;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.Language;
-import me.nikl.gamebox.Module;
+import me.nikl.gamebox.module.Module;
 import me.nikl.gamebox.game.GameLanguage;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;

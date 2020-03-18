@@ -5,7 +5,7 @@ import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.PreCommand;
 import co.aikar.commands.annotation.Subcommand;
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.Module;
+import me.nikl.gamebox.module.Module;
 import me.nikl.gamebox.commands.GameBoxBaseCommand;
 import me.nikl.gamebox.utility.Permission;
 import org.bukkit.Bukkit;

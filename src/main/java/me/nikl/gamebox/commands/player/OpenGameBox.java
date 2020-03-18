@@ -5,7 +5,7 @@ import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.Optional;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
-import me.nikl.gamebox.Module;
+import me.nikl.gamebox.module.Module;
 import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.utility.Permission;

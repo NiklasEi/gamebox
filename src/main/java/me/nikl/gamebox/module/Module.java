@@ -1,5 +1,6 @@
-package me.nikl.gamebox;
+package me.nikl.gamebox.module;
 
+import me.nikl.gamebox.GameBox;
 import org.apache.commons.lang.Validate;
 
 import java.io.File;
@@ -59,7 +60,7 @@ public class Module {
     return subCommands;
   }
 
-  void setSubCommands(List<String> subCommands) {
+  public void setSubCommands(List<String> subCommands) {
     this.subCommands = subCommands;
   }
 
