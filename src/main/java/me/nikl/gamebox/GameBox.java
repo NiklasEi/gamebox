@@ -15,6 +15,7 @@ import me.nikl.gamebox.inventory.InventoryTitleMessenger;
 import me.nikl.gamebox.listeners.EnterGameBoxListener;
 import me.nikl.gamebox.listeners.LeftGameBoxListener;
 import me.nikl.gamebox.module.Module;
+import me.nikl.gamebox.module.ModulesManager;
 import me.nikl.gamebox.utility.ConfigManager;
 import me.nikl.gamebox.utility.FileUtility;
 import me.nikl.nmsutilities.NmsFactory;
@@ -66,6 +67,7 @@ public class GameBox extends JavaPlugin {
   private Module gameBoxModule;
   private CalendarEventsHook calendarEventsHook;
   private BukkitBridge bukkitBridge;
+  private ModulesManager modulesManager;
 
   public static void debug(String message) {
     if (debug) Bukkit.getConsoleSender().sendMessage(message);
@@ -73,6 +75,7 @@ public class GameBox extends JavaPlugin {
 
   @Override
   public void onEnable() {
+    GameBoxSettings.defineGameBoxData(this);
     if ((NmsFactory.getNmsUtility()) == null) {
       sendVersionError();
       Bukkit.getPluginManager().disablePlugin(this);
@@ -398,5 +401,9 @@ public class GameBox extends JavaPlugin {
 
   public GameBoxCommands getCommands() {
     return commands;
+  }
+
+  public ModulesManager getModulesManager() {
+    return modulesManager;
   }
 }

@@ -5,19 +5,15 @@ import me.nikl.gamebox.module.Module;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.JarURLConnection;
-import java.net.URL;
-import java.net.URLDecoder;
+import java.io.*;
+import java.net.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.jar.JarInputStream;
 import java.util.logging.Level;
 
 /**
@@ -221,5 +217,121 @@ public class FileUtility {
       }
     }
     return null;
+  }
+
+  /**
+   * Collect all classes of the given type in the provided subfolder of the GameBox folder
+   *
+   * @param folder to check for classes
+   * @param type classes checked for
+   * @return list of found classes
+   */
+  public static List<Class<?>> getClasses(File folder, Class<?> type) {
+    return getClasses(folder, null, type);
+  }
+
+  /**
+   * Collect all classes of type `type` in the jar file with the provided name
+   * in the given subfolder of the GameBox folder
+   *
+   * @param folder to check for classes
+   * @param fileName look for jar with specific name
+   * @param type classes checked for
+   * @return list of found classes
+   */
+  public static List<Class<?>> getClasses(File folder, String fileName, Class<?> type) {
+    List<Class<?>> list = new ArrayList<>();
+    try {
+      if (!folder.exists()) {
+        return list;
+      }
+      FilenameFilter fileNameFilter = (dir, name) -> {
+        if (fileName != null) {
+          return name.endsWith(".jar") && name.replace(".jar", "")
+                  .equalsIgnoreCase(fileName.replace(".jar", ""));
+        }
+        return name.endsWith(".jar");
+      };
+      File[] jars = folder.listFiles(fileNameFilter);
+      if (jars == null) {
+        return list;
+      }
+      for (File jar : jars) {
+        list = gather(jar.toURI().toURL(), list, type);
+      }
+      return list;
+    } catch (MalformedURLException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  private static List<Class<?>> gather(URL jar, List<Class<?>> list, Class<?> clazz) {
+    if (list == null) {
+      list = new ArrayList<>();
+    }
+    try (
+            URLClassLoader classLoader = new URLClassLoader(new URL[]{jar}, clazz.getClassLoader());
+            JarInputStream jarInputStream = new JarInputStream(jar.openStream())
+    ) {
+      while (true) {
+        JarEntry jarEntry = jarInputStream.getNextJarEntry();
+        if (jarEntry == null) {
+          break;
+        }
+        String name = jarEntry.getName();
+        if (name == null || name.isEmpty()) {
+          continue;
+        }
+        if (name.endsWith(".class")) {
+          name = name.replace("/", ".");
+          String className = name.substring(0, name.lastIndexOf(".class"));
+          Class<?> jarEntryClass = classLoader.loadClass(className);
+          if (clazz.isAssignableFrom(jarEntryClass)) {
+            list.add(jarEntryClass);
+          }
+        }
+      }
+    } catch (ClassNotFoundException | IOException e) {
+      e.printStackTrace();
+    }
+    return list;
+  }
+
+  public static List<Class<?>> getClassesFromJar(File jar, Class<?> clazz) {
+    URL url = null;
+    try {
+      url = jar.toURI().toURL();
+    } catch (MalformedURLException e) {
+      e.printStackTrace();
+    }
+    return gather(url, null, clazz);
+  }
+
+  private static void streamToFile(InputStream initialStream, File targetFile) throws IOException {
+    byte[] buffer = new byte[initialStream.available()];
+    initialStream.read(buffer);
+    OutputStream outStream = new FileOutputStream(targetFile);
+    outStream.write(buffer);
+  }
+
+  public static List<File> getAllJars(File folder) {
+    if (!folder.exists()) {
+      return new ArrayList<>();
+    }
+    FilenameFilter fileNameFilter = (dir, name) -> name.endsWith(".jar");
+    return Arrays.asList(folder.listFiles(fileNameFilter));
+  }
+
+  public static InputStream getResource(String filename) throws IOException {
+    if (filename == null || filename.isEmpty()) throw new IllegalArgumentException("Filename cannot be null or empty");
+    URL url = GameBox.class.getClassLoader().getResource(filename);
+    if (url == null) throw new IOException("Resource '" + filename + "' not found");
+    URLConnection connection = url.openConnection();
+    return connection.getInputStream();
+  }
+
+  public static void copyResource(String resourceName, File targetFile) throws IOException {
+    streamToFile(getResource(resourceName), targetFile);
   }
 }

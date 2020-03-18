@@ -6,7 +6,7 @@
 
     <groupId>me.nikl</groupId>
     <artifactId>gamebox</artifactId>
-    <name>gamebox</name>
+    <name>GameBox</name>
     <packaging>jar</packaging>
     <version>3.0.0-beta</version>
     <description>Collection of inventory games</description>
@@ -28,7 +28,7 @@
         <defaultGoal>clean package</defaultGoal>
         <sourceDirectory>src/main/java</sourceDirectory>
         <directory>target</directory>
-        <finalName>GameBox</finalName>
+        <finalName>${name}</finalName>
         <resources>
             <resource>
                 <targetPath>.</targetPath>
@@ -159,6 +159,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <junit-jupiter.version>5.6.0</junit-jupiter.version>
+        <timestamp>${maven.build.timestamp}</timestamp>
+        <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss:SSS Z</maven.build.timestamp.format>
     </properties>
 
     <dependencies>
@@ -232,6 +234,12 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>${junit-jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

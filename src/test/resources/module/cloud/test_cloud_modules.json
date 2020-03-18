@@ -1,0 +1,101 @@
+[
+  {
+    "id": "test-module",
+    "authors": [
+      "Nikl"
+    ],
+    "name": "Test module",
+    "description": "This module is only for test purposes",
+    "sourceUrl": "https://github.com/hygames-team/api-hygames-co",
+    "latestVersion": "1.2.0",
+    "lastUpdateAt": 1240,
+    "versions": [
+      {
+        "version": "1.0.0",
+        "updatedAt": 1234,
+        "dependencies": [
+          {
+            "id": "gamebox",
+            "versionConstrain": "~> 1.0"
+          }
+        ],
+        "releaseNotes": [
+          "Changes:",
+          "One change",
+          "A very long change that most probably is over a line long and thus should show what happens if the release notes are written in one long line. This is a second sentence which is also quite long and utterly useless."
+        ]
+      },
+      {
+        "version": "1.1.0",
+        "updatedAt": 1239,
+        "dependencies": [
+          {
+            "id": "gamebox",
+            "versionConstrain": "~> 1.0"
+          }
+        ],
+        "releaseNotes": [
+          "Some updates..."
+        ]
+      },
+      {
+        "version": "1.2.0",
+        "updatedAt": 1240,
+        "dependencies": [
+          {
+            "id": "gamebox",
+            "versionConstrain": "~> 1.0"
+          }
+        ],
+        "releaseNotes": [
+          "Some updates..."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "test-module2",
+    "authors": [
+      "Nikl"
+    ],
+    "name": "Test module",
+    "description": "This module is only for test purposes",
+    "sourceUrl": "https://github.com/hygames-team/api-hygames-co",
+    "latestVersion": "1.1.0",
+    "lastUpdateAt": 1239,
+    "versions": [
+      {
+        "version": "1.0.0",
+        "updatedAt": 1234,
+        "dependencies": [
+          {
+            "id": "gamebox",
+            "versionConstrain": "~> 1.0"
+          }
+        ],
+        "releaseNotes": [
+          "Changes:",
+          "One change",
+          "A very long change that most probably is over a line long and thus should show what happens if the release notes are written in one long line. This is a second sentence which is also quite long and utterly useless."
+        ]
+      },
+      {
+        "version": "1.1.0",
+        "updatedAt": 1239,
+        "dependencies": [
+          {
+            "id": "gamebox",
+            "versionConstrain": "~> 1.0"
+          },
+          {
+            "id": "test-module",
+            "versionConstrain": "~> 1.1.0"
+          }
+        ],
+        "releaseNotes": [
+          "Some updates..."
+        ]
+      }
+    ]
+  }
+]

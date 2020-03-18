@@ -1,0 +1,11 @@
+id: "test-module"
+name: "Test module"
+authors: ["Nikl"]
+description: "This module is only for test purposes"
+sourceUrl: "https://github.com/hygames-team/gamebox-test-module"
+version: "1.0.0"
+dependencies:
+  - id: "gamebox"
+    versionConstrain: "~> 1.0"
+  - id: "lib-test-module"
+    versionConstrain: "~> 1.0, > 1.2"
