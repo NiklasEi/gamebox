@@ -24,6 +24,15 @@
         <connection>git@github.com:NiklasEi/gamebox.git</connection>
     </scm>
 
+    <developers>
+        <developer>
+            <id>Nikl</id>
+            <name>Niklas Eicker</name>
+            <email>hello@nikl.me</email>
+            <url>https://www.nikl.me</url>
+        </developer>
+    </developers>
+
     <build>
         <defaultGoal>clean package</defaultGoal>
         <sourceDirectory>src/main/java</sourceDirectory>
