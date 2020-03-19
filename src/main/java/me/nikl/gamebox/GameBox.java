@@ -212,6 +212,7 @@ public class GameBox extends JavaPlugin {
         runLateChecks();
       }
     }.runTask(this);
+    this.modulesManager = new ModulesManager(this);
     return true;
   }
 

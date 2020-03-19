@@ -114,7 +114,7 @@ public class LocalModule extends VersionedModule {
         return moduleJar;
     }
 
-    public void setModuleJar(File moduleJar) throws InvalidModuleException {
+    private void setModuleJar(File moduleJar) throws InvalidModuleException {
         List<Class<?>> clazzes = FileUtility.getClassesFromJar(moduleJar, GameBoxModule.class);
         if (clazzes.size() < 1) throw new InvalidModuleException("No class extending GameBoxModule was found in '" + getName() + "'");
         if (clazzes.size() > 1) throw new InvalidModuleException("More then one class extending GameBoxModule was found in '" + getName() + "'");
