@@ -31,7 +31,7 @@ public class LocalModuleData implements ModuleBasicData, VersionedModuleData, Mo
     private String name;
     private String description;
     private String sourceUrl;
-    private long updatedAt = -1;
+    private Long updatedAt;
     private List<String> releaseNotes = new ArrayList<>();
     private SemanticVersion version;
     private List<DependencyData> dependencies = new ArrayList<>();
@@ -127,7 +127,7 @@ public class LocalModuleData implements ModuleBasicData, VersionedModuleData, Mo
         return this.updatedAt;
     }
 
-    public void setUpdatedAt(long updatedAt) {
+    public void setUpdatedAt(Long updatedAt) {
         this.updatedAt = updatedAt;
     }
 

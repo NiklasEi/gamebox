@@ -28,6 +28,7 @@ import me.nikl.gamebox.utility.versioning.VersionRangeUtility;
 
 import java.text.ParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ModuleUtility {
 
@@ -139,6 +140,10 @@ public class ModuleUtility {
 
         public boolean isOk() {
             return removedModules.isEmpty();
+        }
+
+        public Map<String, LocalModule> filter(Map<String, LocalModule> modules) {
+            return modules.entrySet().stream().filter(entry -> !removedModules.contains(entry.getKey())).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         }
     }
 }

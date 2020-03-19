@@ -34,7 +34,6 @@ import me.nikl.gamebox.utility.FileUtility;
 import me.nikl.gamebox.utility.ModuleUtility;
 import me.nikl.gamebox.utility.versioning.SemanticVersion;
 import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.constructor.CustomClassLoaderConstructor;
 import org.yaml.snakeyaml.representer.Representer;
 
@@ -81,12 +80,13 @@ public class ModulesManager {
     private void checkDependencies() {
         ModuleUtility.DependencyReport report = ModuleUtility.checkDependencies(this.localModules);
         if (!report.isOk()) {
+            this.localModules = report.filter(this.localModules);
             gameBox.getLogger().severe("Dependency issues while loading local modules");
             report.getLog().forEach(s -> gameBox.getLogger().severe(s));
-            gameBox.getLogger().info("For more information please see:");
-            gameBox.getLogger().info("  Semantic versioning: https://semver.org/");
-            gameBox.getLogger().info("  Version ranges:      https://docs.npmjs.com/misc/semver#ranges");
-            gameBox.getLogger().info("                       https://thoughtbot.com/blog/rubys-pessimistic-operator");
+            gameBox.getLogger().severe("For more information please see:");
+            gameBox.getLogger().severe("  Semantic versioning: https://semver.org/");
+            gameBox.getLogger().severe("  Version ranges:      https://docs.npmjs.com/misc/semver#ranges");
+            gameBox.getLogger().severe("                       https://thoughtbot.com/blog/rubys-pessimistic-operator");
         }
     }
 
@@ -236,9 +236,9 @@ public class ModulesManager {
     private void loadModule(LocalModule localModule) {
         GameBoxModule gameBoxModule;
         try {
-            gameBox.getLogger().info("    instantiating");
+            GameBox.debug("    instantiating " + localModule.getName());
             gameBoxModule = (GameBoxModule) FileUtility.getClassesFromJar(localModule.getModuleJar(), GameBoxModule.class).get(0).newInstance();
-            gameBox.getLogger().info("    done.");
+            GameBox.debug("    done.");
         } catch (InstantiationException | IllegalAccessException e) {
             gameBox.getLogger().warning("Failed to instantiate module '" + localModule.getName() + "' from the jar '" + localModule.getModuleJar().getName() + "'");
             e.printStackTrace();
@@ -294,7 +294,7 @@ public class ModulesManager {
     }
 
     private void dumpModuleSettings() {
-        Constructor constructor = new Constructor(ModulesSettings.class);
+        CustomClassLoaderConstructor constructor = new CustomClassLoaderConstructor(ModulesSettings.class.getClassLoader());
         Yaml yaml = new Yaml(constructor);
         try {
             yaml.dump(modulesSettings, new FileWriter(modulesFile));

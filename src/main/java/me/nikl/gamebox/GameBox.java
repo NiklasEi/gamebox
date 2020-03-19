@@ -14,7 +14,7 @@ import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.InventoryTitleMessenger;
 import me.nikl.gamebox.listeners.EnterGameBoxListener;
 import me.nikl.gamebox.listeners.LeftGameBoxListener;
-import me.nikl.gamebox.module.Module;
+import me.nikl.gamebox.module.GameBoxGame;
 import me.nikl.gamebox.module.ModulesManager;
 import me.nikl.gamebox.utility.ConfigManager;
 import me.nikl.gamebox.utility.FileUtility;
@@ -64,7 +64,7 @@ public class GameBox extends JavaPlugin {
   private LeftGameBoxListener leftGameBoxListener;
   private EnterGameBoxListener enterGameBoxListener;
   private GameBoxCommands commands;
-  private Module gameBoxModule;
+  private GameBoxGame gameBoxModule;
   private CalendarEventsHook calendarEventsHook;
   private BukkitBridge bukkitBridge;
   private ModulesManager modulesManager;
@@ -83,7 +83,7 @@ public class GameBox extends JavaPlugin {
     }
 
     this.gameRegistry = new GameRegistry(this);
-    gameBoxModule = new Module(this, MODULE_GAMEBOX, null, null);
+    gameBoxModule = new GameBoxGame(this, MODULE_GAMEBOX, null, null);
 
     if (!reload()) {
       getLogger().severe(" Problem while loading the plugin! Plugin was disabled!");

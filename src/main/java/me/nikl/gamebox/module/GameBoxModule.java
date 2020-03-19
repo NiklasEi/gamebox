@@ -19,9 +19,8 @@
 package me.nikl.gamebox.module;
 
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.game.Game;
 import me.nikl.gamebox.module.local.LocalModule;
-
-import java.io.File;
 
 /**
  * Module base class
@@ -31,8 +30,6 @@ import java.io.File;
 public abstract class GameBoxModule {
     private LocalModule moduleData;
     private GameBox gameBox;
-    private File languageFolder;
-    private File moduleFolder;
 
     protected GameBoxModule() {}
 
@@ -50,6 +47,10 @@ public abstract class GameBoxModule {
 
     public String getIdentifier() {
         return this.moduleData.getId();
+    }
+
+    protected void registerGame(String moduleID, Class<? extends Game> gameClass, String... subCommands) {
+        new GameBoxGame(this.gameBox, moduleID, (Class<Game>) gameClass, this.moduleData.getModuleJar(), subCommands);
     }
 
     void setGameBox(GameBox gameBox) throws UnsupportedOperationException {

@@ -1,6 +1,6 @@
 package me.nikl.gamebox;
 
-import me.nikl.gamebox.module.Module;
+import me.nikl.gamebox.module.GameBoxGame;
 import me.nikl.gamebox.utility.ConfigManager;
 import me.nikl.gamebox.utility.FileUtility;
 import org.bukkit.ChatColor;
@@ -30,12 +30,12 @@ public abstract class Language {
   public String PLAIN_NAME = ChatColor.stripColor(NAME);
   public String DEFAULT_NAME, DEFAULT_PLAIN_NAME;
   protected GameBox plugin;
-  protected Module module;
+  protected GameBoxGame module;
   protected File languageFile;
   protected FileConfiguration defaultLanguage;
   protected FileConfiguration language;
 
-  public Language(GameBox plugin, Module module) {
+  public Language(GameBox plugin, GameBoxGame module) {
     this.plugin = plugin;
     this.module = module;
     getLangFile(ConfigManager.getConfig(module));

@@ -8,7 +8,7 @@
     <artifactId>gamebox</artifactId>
     <name>GameBox</name>
     <packaging>jar</packaging>
-    <version>3.0.0-beta</version>
+    <version>3.0.0-beta.2</version>
     <description>Collection of inventory games</description>
     <url>https://gamebox.nikl.me</url>
 
@@ -37,7 +37,7 @@
         <defaultGoal>clean package</defaultGoal>
         <sourceDirectory>src/main/java</sourceDirectory>
         <directory>target</directory>
-        <finalName>${name}</finalName>
+        <finalName>${project.name}</finalName>
         <resources>
             <resource>
                 <targetPath>.</targetPath>

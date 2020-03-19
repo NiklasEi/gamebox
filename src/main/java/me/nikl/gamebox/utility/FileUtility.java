@@ -1,7 +1,7 @@
 package me.nikl.gamebox.utility;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.module.Module;
+import me.nikl.gamebox.module.GameBoxGame;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
@@ -57,7 +57,7 @@ public class FileUtility {
   }
 
 
-  public static boolean copyExternalResources(GameBox gameBox, Module module) {
+  public static boolean copyExternalResources(GameBox gameBox, GameBoxGame module) {
     try {
       JarFile jar = new JarFile(module.getJarFile());
       boolean foundDefaultLang = false;

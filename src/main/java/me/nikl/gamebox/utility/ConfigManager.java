@@ -2,7 +2,7 @@ package me.nikl.gamebox.utility;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.Language;
-import me.nikl.gamebox.module.Module;
+import me.nikl.gamebox.module.GameBoxGame;
 import me.nikl.gamebox.game.GameLanguage;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -21,15 +21,15 @@ public class ConfigManager {
   private static final Map<String, Language> moduleLanguages = new HashMap<>();
   private static HashMap<String, HashMap<String, List<String>>> missingLanguageKeys;
 
-  public static void registerModuleConfiguration(Module module, FileConfiguration configuration) {
+  public static void registerModuleConfiguration(GameBoxGame module, FileConfiguration configuration) {
     moduleFileConfigurations.put(module.getModuleID(), configuration);
   }
 
-  public static <T extends Language> void registerModuleLanguage(Module module, T language) {
+  public static <T extends Language> void registerModuleLanguage(GameBoxGame module, T language) {
     moduleLanguages.put(module.getModuleID(), language);
   }
 
-  public static Language getLanguage(Module module) {
+  public static Language getLanguage(GameBoxGame module) {
     return getLanguage(module.getModuleID());
   }
 
@@ -37,7 +37,7 @@ public class ConfigManager {
     return moduleLanguages.get(moduleID);
   }
 
-  public static GameLanguage getGameLanguage(Module module) {
+  public static GameLanguage getGameLanguage(GameBoxGame module) {
     return getGameLanguage(module.getModuleID());
   }
 
@@ -48,7 +48,7 @@ public class ConfigManager {
     return (GameLanguage) language;
   }
 
-  public static FileConfiguration getConfig(Module module) {
+  public static FileConfiguration getConfig(GameBoxGame module) {
     return getConfig(module.getModuleID());
   }
 

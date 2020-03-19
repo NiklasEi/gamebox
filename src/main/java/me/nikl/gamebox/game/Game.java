@@ -3,7 +3,7 @@ package me.nikl.gamebox.game;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.GameBoxSettings;
-import me.nikl.gamebox.module.Module;
+import me.nikl.gamebox.module.GameBoxGame;
 import me.nikl.gamebox.data.toplist.SaveType;
 import me.nikl.gamebox.game.exceptions.GameLoadException;
 import me.nikl.gamebox.game.manager.GameManager;
@@ -54,7 +54,7 @@ import java.util.logging.Level;
 public abstract class Game {
   protected GameBox gameBox;
   protected FileConfiguration config;
-  protected Module module;
+  protected GameBoxGame module;
   protected GameManager gameManager;
   protected GameSettings gameSettings;
   protected GameLanguage gameLang;
@@ -80,7 +80,6 @@ public abstract class Game {
     loadSettings();
     loadLanguage();
     ConfigManager.registerModuleLanguage(module, gameLang);
-    checkRequirements();
     // at this point the game can load any game specific stuff (e.g. from config)
     init();
     loadGameManager();
@@ -96,44 +95,6 @@ public abstract class Game {
    */
   protected void finish() {
     // to be Overridden
-  }
-
-  private void checkRequirements() throws GameLoadException {
-    checkGameBoxVersion();
-  }
-
-  private void checkGameBoxVersion() throws GameLoadException {
-    String[] versionString = gameBox.getDescription().getVersion().replaceAll("[^0-9.]", "").split("\\.");
-    String[] minVersionString = gameSettings.getGameBoxMinimumVersion().split("\\.");
-    Integer[] version = new Integer[versionString.length];
-    Integer[] minVersion = new Integer[minVersionString.length];
-    for (int i = 0; i < minVersionString.length; i++) {
-      try {
-        minVersion[i] = Integer.valueOf(minVersionString[i]);
-        version[i] = Integer.valueOf(versionString[i]);
-      } catch (NumberFormatException exception) {
-        warn(" Failed to check required GameBox version!");
-        warn("     Lets hope it works...");
-        return;
-      }
-    }
-    if (minVersion.length != version.length) {
-      warn(" Failed to check required GameBox version!");
-      warn("     Lets hope it works...");
-      return;
-    }
-    for (int i = 0; i < minVersion.length; i++) {
-      if (minVersion[i] > version[i]) {
-        warn(" Your GameBox is outdated!");
-        warn(" Get the latest version on Spigot.");
-        warn(" https://www.spigotmc.org/resources/37273/");
-        warn(" You need at least version " + gameSettings.getGameBoxMinimumVersion());
-        warn(" for this game to work.");
-        throw new GameLoadException("GameBox version is not compatible!");
-      }
-      if (minVersion[i] == version[i]) continue;
-      return;
-    }
   }
 
   /**
@@ -360,7 +321,7 @@ public abstract class Game {
     return config;
   }
 
-  public Module getModule() {
+  public GameBoxGame getModule() {
     return module;
   }
 

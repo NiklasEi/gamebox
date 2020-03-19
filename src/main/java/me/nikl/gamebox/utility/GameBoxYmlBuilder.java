@@ -20,12 +20,12 @@ package me.nikl.gamebox.utility;
 
 import me.nikl.gamebox.module.local.LocalModuleData;
 import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
+import org.yaml.snakeyaml.constructor.CustomClassLoaderConstructor;
 import org.yaml.snakeyaml.representer.Representer;
 
 public class GameBoxYmlBuilder {
     public static Yaml buildLocalModuleDataYml() {
-        Constructor constructor = new Constructor(LocalModuleData.class);
+        CustomClassLoaderConstructor constructor = new CustomClassLoaderConstructor(LocalModuleData.class.getClassLoader());
         Representer representer = new Representer();
         representer.getPropertyUtils().setSkipMissingProperties(true);
         return new Yaml(constructor, representer);

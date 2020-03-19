@@ -1,6 +1,7 @@
 package me.nikl.gamebox.module;
 
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.game.Game;
 import org.apache.commons.lang.Validate;
 
 import java.io.File;
@@ -10,22 +11,23 @@ import java.util.List;
 /**
  * @author Niklas Eicker
  */
-public class Module {
-  private String moduleID, classPath;
+public class GameBoxGame {
+  private String moduleID;
+  private Class<Game> gameClass;
   private boolean isGame = false;
   private File jarFile;
   private List<String> subCommands;
 
-  public Module(GameBox gameBox, String moduleID, String classPath, File jarFile, String... subCommands) {
+  public GameBoxGame(GameBox gameBox, String moduleID, Class<Game> gameClass, File jarFile, String... subCommands) {
     Validate.isTrue(moduleID != null && !moduleID.isEmpty()
             , " moduleID cannot be null or empty!");
-    if (classPath != null && !classPath.isEmpty()) {
+    if (gameClass != null) {
       this.isGame = true;
     }
     if (subCommands != null && !(subCommands.length < 1)) {
       this.subCommands = Arrays.asList(subCommands);
     }
-    this.classPath = classPath;
+    this.gameClass = gameClass;
     this.moduleID = moduleID.toLowerCase();
     this.jarFile = jarFile;
     gameBox.getGameRegistry().registerModule(this);
@@ -35,8 +37,8 @@ public class Module {
     return moduleID;
   }
 
-  public String getClassPath() {
-    return classPath;
+  public Class<Game> getGameClass() {
+    return gameClass;
   }
 
   public boolean isGame() {
@@ -45,10 +47,10 @@ public class Module {
 
   @Override
   public boolean equals(Object module) {
-    if (!(module instanceof Module)) {
+    if (!(module instanceof GameBoxGame)) {
       return false;
     }
-    return moduleID.equalsIgnoreCase(((Module) module).moduleID);
+    return moduleID.equalsIgnoreCase(((GameBoxGame) module).moduleID);
   }
 
   @Override
