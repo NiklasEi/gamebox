@@ -53,9 +53,9 @@ public class CloudModuleData implements ModuleBasicData, Serializable {
     @Expose
     private SemanticVersion latestVersion;
 
-    @SerializedName("lastUpdateAt")
+    @SerializedName("updatedAt")
     @Expose
-    private Long lastUpdateAt;
+    private Long updatedAt;
 
     @SerializedName("versions")
     @Expose
@@ -131,16 +131,16 @@ public class CloudModuleData implements ModuleBasicData, Serializable {
         return this;
     }
 
-    public Long getLastUpdateAt() {
-        return lastUpdateAt;
+    public Long getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setLastUpdateAt(Long lastUpdateAt) {
-        this.lastUpdateAt = lastUpdateAt;
+    public void setUpdatedAt(Long updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public CloudModuleData withLastUpdateAt(Long lastUpdateAt) {
-        this.lastUpdateAt = lastUpdateAt;
+        this.updatedAt = lastUpdateAt;
         return this;
     }
 

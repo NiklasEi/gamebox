@@ -1,0 +1,21 @@
+{
+  "id": "cookieclicker",
+  "name": "CookieClicker",
+  "authors": [
+    "Nikl"
+  ],
+  "description": "The super addictive backing game",
+  "sourceUrl": "https://github.com/NiklasEi/cookieclicker-for-gamebox",
+  "version": "3.0.0-beta",
+  "updatedAt": 1584707798040,
+  "downloadUrl": "http://example.com/download/test-module@1.0.0.jar",
+  "releaseNotes": [
+    "This is the first release for GameBox v3 and is compatible with MC 1.14+"
+  ],
+  "dependencies":[
+    {
+      "id": "gamebox",
+      "versionConstrain": ">= 3.0.0-beta.2"
+    }
+  ]
+}

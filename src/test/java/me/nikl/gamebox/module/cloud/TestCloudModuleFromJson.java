@@ -31,10 +31,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -66,19 +63,20 @@ public class TestCloudModuleFromJson {
                         "A very long change that most probably is over a line long and thus should show what happens if the release notes are written in one long line. This is a second sentence which is also quite long and utterly useless."
                         )
                 )
+                .withDownloadUrl("http://example.com/download/test-module@1.0.0.jar")
         );
         versions.add(new VersionData()
                 .withVersion(new SemanticVersion(1, 1, 0))
                 .withDependencies(dependencies)
                 .withUpdatedAt(1239L)
-                .withReleaseNotes(Arrays.asList(
+                .withReleaseNotes(Collections.singletonList(
                         "Some updates..."
                         )
                 )
         );
         testCloudModule = new CloudModuleData()
                 .withId("test-module")
-                .withAuthors(Arrays.asList("Nikl"))
+                .withAuthors(Collections.singletonList("Nikl"))
                 .withName("Test module")
                 .withLastUpdateAt(1239L)
                 .withDescription("This module is only for test purposes")
@@ -99,7 +97,7 @@ public class TestCloudModuleFromJson {
                 () -> assertEquals(fileModule.getDescription(), testCloudModule.getDescription(),"Not the same description"),
                 () -> assertEquals(fileModule.getVersions().size(), testCloudModule.getVersions().size(),"Not the same number of versions"),
                 () -> assertEquals(fileModule.getLatestVersion(), testCloudModule.getLatestVersion(),"Not the same latest version"),
-                () -> assertEquals(fileModule.getLastUpdateAt(), testCloudModule.getLastUpdateAt(),"Not the same last updated timestamp")
+                () -> assertEquals(fileModule.getUpdatedAt(), testCloudModule.getUpdatedAt(),"Not the same last updated timestamp")
         );
         Iterator<VersionData> itManualModule = testCloudModule.getVersions().iterator();
         Iterator<VersionData> itFileModule = fileModule.getVersions().iterator();
@@ -111,6 +109,7 @@ public class TestCloudModuleFromJson {
             assertIterableEquals(version1.getReleaseNotes(), version2.getReleaseNotes(), "Versions: Not the same release notes");
             assertEquals(version1.getUpdatedAt(), version2.getUpdatedAt(), "Versions: Not the same updatedAt timestamp");
             assertEquals(version1.getDependencies().size(), version2.getDependencies().size(),"Versions: Not the same number of dependencies");
+            assertEquals(version1.getDownloadUrl(), version2.getDownloadUrl(),"Versions: Not the same downloadUrl");
 
             Iterator<DependencyData> itManualDependency = version1.getDependencies().iterator();
             Iterator<DependencyData> itFileDependency = version2.getDependencies().iterator();

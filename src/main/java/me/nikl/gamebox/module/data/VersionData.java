@@ -31,19 +31,23 @@ import java.util.List;
 public class VersionData implements Serializable, VersionedModuleData {
     @SerializedName("version")
     @Expose
-    private SemanticVersion version;
+    protected SemanticVersion version;
 
     @SerializedName("updatedAt")
     @Expose
-    private Long updatedAt;
+    protected Long updatedAt;
+
+    @SerializedName("downloadUrl")
+    @Expose
+    protected String downloadUrl;
 
     @SerializedName("dependencies")
     @Expose
-    private List<DependencyData> dependencies = null;
+    protected List<DependencyData> dependencies = null;
 
     @SerializedName("releaseNotes")
     @Expose
-    private List<String> releaseNotes = null;
+    protected List<String> releaseNotes = null;
 
     private final static long serialVersionUID = -2433806999627043447L;
 
@@ -99,6 +103,19 @@ public class VersionData implements Serializable, VersionedModuleData {
 
     public VersionData withVersion(SemanticVersion version) {
         this.version = version;
+        return this;
+    }
+
+    public String getDownloadUrl() {
+        return downloadUrl;
+    }
+
+    public void setDownloadUrl(String downloadUrl) {
+        this.downloadUrl = downloadUrl;
+    }
+
+    public VersionData withDownloadUrl(String downloadUrl) {
+        this.downloadUrl = downloadUrl;
         return this;
     }
 }

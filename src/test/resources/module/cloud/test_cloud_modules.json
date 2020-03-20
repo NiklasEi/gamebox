@@ -8,7 +8,7 @@
     "description": "This module is only for test purposes",
     "sourceUrl": "https://github.com/hygames-team/api-hygames-co",
     "latestVersion": "1.2.0",
-    "lastUpdateAt": 1240,
+    "updatedAt": 1240,
     "versions": [
       {
         "version": "1.0.0",
@@ -62,7 +62,7 @@
     "description": "This module is only for test purposes",
     "sourceUrl": "https://github.com/hygames-team/api-hygames-co",
     "latestVersion": "1.1.0",
-    "lastUpdateAt": 1239,
+    "updatedAt": 1239,
     "versions": [
       {
         "version": "1.0.0",
