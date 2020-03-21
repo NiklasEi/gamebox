@@ -13,7 +13,7 @@ import java.util.List;
  * Other modules like games and addons have their own Langauge classes
  */
 public class GameBoxLanguage extends Language {
-  public String CMD_NO_PERM, CMD_ONLY_PLAYER, CMD_RELOADED, CMD_DISABLED_WORLD, CMD_TOKEN_INFO, CMD_TOOK_TOKEN, CMD_NOT_ENOUGH_TOKEN, CMD_GAVE_TOKEN, CMD_SET_TOKEN, RELOAD_SUCCESS, RELOAD_FAIL, CMD_OWN_TOKEN_INFO;
+  public String CMD_NO_PERM, CMD_ONLY_PLAYER, CMD_RELOADED, CMD_DISABLED_WORLD, CMD_TOKEN_INFO, CMD_TOOK_TOKEN, CMD_NOT_ENOUGH_TOKEN, CMD_GAVE_TOKEN, CMD_SET_TOKEN, RELOAD_SUCCESS, RELOAD_FAIL, CMD_OWN_TOKEN_INFO, CMD_MODULES_INVALID_SEM_VERSION, CMD_MODULES_VERSION_NOT_FOUND, CMD_CANNOT_CONNECT_TO_MODULES_CLOUD;
   public List<String> CMD_HELP, CMD_WRONG_USAGE, CMD_INFO_HEADER, CMD_INFO_PER_GAME, CMD_INFO_FOOTER;
 
   public String CMD_SETTINGS_GAME_ENABLE_SUCCESS, CMD_SETTINGS_GAME_ENABLE_FAIL, CMD_SETTINGS_GAME_DISABLE_SUCCESS, CMD_SETTINGS_GAME_DISABLE_FAIL, CMD_SETTINGS_GAME_INVALID_SETTING;
@@ -160,6 +160,9 @@ public class GameBoxLanguage extends Language {
     this.CMD_INFO_HEADER = getStringList("commandMessages.info.header");
     this.CMD_INFO_PER_GAME = getStringList("commandMessages.info.perGame");
     this.CMD_INFO_FOOTER = getStringList("commandMessages.info.footer");
+    this.CMD_MODULES_INVALID_SEM_VERSION = getString("commandMessages.modules.invalidSemVersion");
+    this.CMD_MODULES_VERSION_NOT_FOUND = getString("commandMessages.modules.versionNotFound");
+    this.CMD_CANNOT_CONNECT_TO_MODULES_CLOUD = getString("commandMessages.cannotConnectToModulesCloud");
     getSettingsCommandMessages();
   }
 
@@ -188,12 +191,7 @@ public class GameBoxLanguage extends Language {
   @Override
   public List<String> findMissingStringMessages() {
     List<String> toReturn = super.findMissingStringMessages();
-    Iterator<String> iterator = toReturn.listIterator();
-    while (iterator.hasNext()) {
-      String next = iterator.next();
-      if (next.contains("highNumberNames.") || next.contains("highNumberShortNames."))
-        iterator.remove();
-    }
+    toReturn.removeIf(next -> next.contains("highNumberNames.") || next.contains("highNumberShortNames."));
     return toReturn;
   }
 }

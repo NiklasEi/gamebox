@@ -22,12 +22,9 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.data.database.DataBase;
 import me.nikl.gamebox.exceptions.module.GameBoxCloudException;
 import me.nikl.gamebox.exceptions.module.InvalidModuleException;
-import me.nikl.gamebox.exceptions.module.ModuleVersionException;
 import me.nikl.gamebox.module.cloud.CloudFacade;
-import me.nikl.gamebox.module.cloud.CloudManager;
-import me.nikl.gamebox.module.data.CloudModuleData;
-import me.nikl.gamebox.module.data.ModuleBasicData;
-import me.nikl.gamebox.module.data.VersionData;
+import me.nikl.gamebox.module.cloud.CloudService;
+import me.nikl.gamebox.module.data.VersionedCloudModule;
 import me.nikl.gamebox.module.local.LocalModule;
 import me.nikl.gamebox.module.settings.ModulesSettings;
 import me.nikl.gamebox.utility.FileUtility;
@@ -45,7 +42,7 @@ import java.util.*;
  */
 public class ModulesManager {
     private GameBox gameBox;
-    private CloudManager cloudManager;
+    private CloudService cloudService;
     private File modulesDir;
     private File modulesFile;
     private ModulesSettings modulesSettings;
@@ -117,9 +114,9 @@ public class ModulesManager {
     }
 
     private void connectToCloud() {
-        this.cloudManager = new CloudManager(gameBox, new CloudFacade());
+        this.cloudService = new CloudService(gameBox, new CloudFacade());
         try {
-            cloudManager.updateCloudContent();
+            cloudService.updateCloudContent();
         } catch (GameBoxCloudException e) {
             gameBox.getLogger().severe("Error while attempting to load cloud content");
             e.printStackTrace();
@@ -161,7 +158,7 @@ public class ModulesManager {
     private void collectLocalModuleUpdates() {
         hasUpdateAvailable.clear();
         for (String moduleId : localModules.keySet()) {
-            if (cloudManager.hasUpdate(localModules.get(moduleId))) {
+            if (cloudService.hasUpdate(localModules.get(moduleId))) {
                 hasUpdateAvailable.add(moduleId);
             }
         }
@@ -177,48 +174,12 @@ public class ModulesManager {
         return this.modulesDir;
     }
 
-    public void installModule(String moduleId) {
-        gameBox.getLogger().fine("Install module '" + moduleId +"'...");
-        try {
-            CloudModuleData cloudModule = cloudManager.getModuleData(moduleId);
-            if (localModules.containsKey(moduleId) && localModules.get(moduleId).getVersionData().getVersion().equals(cloudModule.getLatestVersion())) {
-                // module already installed!
-                gameBox.getLogger().fine("Attempted to install already installed module '" + moduleId +"' @" + cloudModule.getLatestVersion());
-                return;
-            }
-            installModule(cloudModule, cloudModule.getLatestVersion());
-        } catch (ModuleVersionException | GameBoxCloudException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void installModule(String moduleId, SemanticVersion version) throws ModuleVersionException {
-        try {
-            installModule(cloudManager.getModuleData(moduleId), version);
-        } catch (GameBoxCloudException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void installModule(CloudModuleData cloudModule, SemanticVersion version) throws ModuleVersionException {
-        VersionData matchingVersion = null;
-        for (VersionData versionData : cloudModule.getVersions()) {
-            if (versionData.getVersion().equals(version)) {
-                matchingVersion = versionData;
-                break;
-            }
-        }
-        if (matchingVersion == null) {
-            throw new ModuleVersionException("Version '" + version.toString() + "' of the module '" + cloudModule.getId() + "' cannot be found");
-        }
-        cloudManager.downloadModule(cloudModule, version, new DataBase.Callback<ModuleBasicData>() {
+    public void installModule(VersionedCloudModule module) {
+        GameBox.debug("Install module '" + module.getName() +"@" + module.getVersion().toString() + "'");
+        cloudService.downloadModule(module, new DataBase.Callback<LocalModule>() {
             @Override
-            public void onSuccess(ModuleBasicData result) {
-                if(!(result instanceof LocalModule)) {
-                    throw new IllegalArgumentException("A successfully downloaded Module should result in a LocalModule instance");
-                }
-                LocalModule module = (LocalModule) result;
-                gameBox.getLogger().info("Download complete. Loading the module...");
+            public void onSuccess(LocalModule module) {
+                GameBox.debug("Download complete. Loading the module...");
                 localModules.put(module.getId(), module);
                 addModuleToSettings(module.getId());
                 // ToDo: should be careful here with dependencies... check for any and if a reload is needed do it automatically, or ask the source of the installation for an OK
@@ -226,11 +187,20 @@ public class ModulesManager {
             }
 
             @Override
-            public void onFailure(Throwable exception, ModuleBasicData defaultResult) {
-                gameBox.getLogger().severe("Error while downloading module '" + defaultResult.getName() + "' version " + version);
+            public void onFailure(Throwable exception, LocalModule defaultResult) {
+                gameBox.getLogger().severe("Error while downloading module");
                 if (exception != null) exception.printStackTrace();
             }
         });
+    }
+
+    public void installModule(String moduleId, SemanticVersion version) throws GameBoxCloudException {
+        try {
+            installModule(cloudService.getVersionedCloudModule(moduleId, version));
+        } catch (GameBoxCloudException e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     private void loadModule(LocalModule localModule) {
@@ -310,5 +280,9 @@ public class ModulesManager {
      */
     public GameBoxModule getModuleInstance(String moduleID) {
         return loadedModules.get(moduleID);
+    }
+
+    public CloudService getCloudService() {
+        return this.cloudService;
     }
 }

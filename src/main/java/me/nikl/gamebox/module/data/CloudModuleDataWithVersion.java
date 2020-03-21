@@ -18,9 +18,9 @@
 
 package me.nikl.gamebox.module.data;
 
+import me.nikl.gamebox.utility.versioning.SemanticVersion;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import me.nikl.gamebox.utility.versioning.SemanticVersion;
 
 import java.io.Serializable;
 import java.util.List;
@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * @author Niklas Eicker
  */
-public class CloudModuleData implements ModuleBasicData, Serializable {
+public class CloudModuleDataWithVersion implements ModuleBasicData, Serializable {
     @SerializedName("id")
     @Expose
     private String id;
@@ -57,9 +57,13 @@ public class CloudModuleData implements ModuleBasicData, Serializable {
     @Expose
     private Long updatedAt;
 
-    private final static long serialVersionUID = 4719087577846667965L;
+    @SerializedName("versions")
+    @Expose
+    private List<VersionData> versions = null;
 
-    public CloudModuleData() {
+    private final static long serialVersionUID = 4719087577866667965L;
+
+    public CloudModuleDataWithVersion() {
     }
 
     public String getId() {
@@ -70,7 +74,7 @@ public class CloudModuleData implements ModuleBasicData, Serializable {
         this.id = id;
     }
 
-    public CloudModuleData withId(String id) {
+    public CloudModuleDataWithVersion withId(String id) {
         this.id = id;
         return this;
     }
@@ -83,7 +87,7 @@ public class CloudModuleData implements ModuleBasicData, Serializable {
         this.authors = authors;
     }
 
-    public CloudModuleData withAuthors(List<String> authors) {
+    public CloudModuleDataWithVersion withAuthors(List<String> authors) {
         this.authors = authors;
         return this;
     }
@@ -96,7 +100,7 @@ public class CloudModuleData implements ModuleBasicData, Serializable {
         this.name = name;
     }
 
-    public CloudModuleData withName(String name) {
+    public CloudModuleDataWithVersion withName(String name) {
         this.name = name;
         return this;
     }
@@ -109,7 +113,7 @@ public class CloudModuleData implements ModuleBasicData, Serializable {
         this.description = description;
     }
 
-    public CloudModuleData withDescription(String description) {
+    public CloudModuleDataWithVersion withDescription(String description) {
         this.description = description;
         return this;
     }
@@ -122,7 +126,7 @@ public class CloudModuleData implements ModuleBasicData, Serializable {
         this.sourceUrl = sourceUrl;
     }
 
-    public CloudModuleData withSourceUrl(String sourceUrl) {
+    public CloudModuleDataWithVersion withSourceUrl(String sourceUrl) {
         this.sourceUrl = sourceUrl;
         return this;
     }
@@ -135,8 +139,21 @@ public class CloudModuleData implements ModuleBasicData, Serializable {
         this.updatedAt = updatedAt;
     }
 
-    public CloudModuleData withLastUpdateAt(Long lastUpdateAt) {
+    public CloudModuleDataWithVersion withLastUpdateAt(Long lastUpdateAt) {
         this.updatedAt = lastUpdateAt;
+        return this;
+    }
+
+    public List<VersionData> getVersions() {
+        return versions;
+    }
+
+    public void setVersions(List<VersionData> versions) {
+        this.versions = versions;
+    }
+
+    public CloudModuleDataWithVersion withVersions(List<VersionData> versions) {
+        this.versions = versions;
         return this;
     }
 
@@ -148,7 +165,7 @@ public class CloudModuleData implements ModuleBasicData, Serializable {
         this.latestVersion = latestVersion;
     }
 
-    public CloudModuleData withLatestVersion(SemanticVersion latestVersion) {
+    public CloudModuleDataWithVersion withLatestVersion(SemanticVersion latestVersion) {
         this.latestVersion = latestVersion;
         return this;
     }

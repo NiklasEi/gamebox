@@ -13,6 +13,7 @@ import me.nikl.gamebox.commands.admin.SettingsCommand;
 import me.nikl.gamebox.commands.admin.TestCommands;
 import me.nikl.gamebox.commands.admin.ToggleDebug;
 import me.nikl.gamebox.commands.admin.TokenCommands;
+import me.nikl.gamebox.commands.admin.modules.Install;
 import me.nikl.gamebox.commands.general.HelpCommand;
 import me.nikl.gamebox.commands.general.InfoCommand;
 import me.nikl.gamebox.commands.player.GetTokenCount;
@@ -70,6 +71,7 @@ public class GameBoxCommands extends BukkitCommandManager {
     registerCommand(new ToggleDebug(gameBox));
     registerCommand(new TokenCommands(gameBox));
     registerCommand(new SettingsCommand(gameBox));
+    registerCommand(new Install(gameBox));
     if (GameBox.debug) registerCommand(new TestCommands(gameBox));
   }
 

@@ -55,6 +55,7 @@ commandMessages:
   tookToken: ' &2Took %token% token from %player%.'
   notEnoughToken: ' &4Failed! %player% only has %token% token.'
   setToken: ' &2%player% now has %token% token.'
+  cannotConnectToModulesCloud: " &4Failed to connect to the modules cloud!"
   reload:
     fail: " &4Reloading of the plugin and all games failed!"
     success: " &aGameBox and all games have been reloaded!"
@@ -64,6 +65,9 @@ commandMessages:
     gameEnableSuccess: " &aYou have enabled %gameID%."
     gameEnableFail: " &4This game is not disabled at the moment!"
     gameInvalidSetting: " &4Invalid game setting!"
+  modules:
+    invalidSemVersion: " &4The version needs to be semantic! See https://semver.org/"
+    versionNotFound: " &4The requested version was not found :("
 
 
 mainButtons:

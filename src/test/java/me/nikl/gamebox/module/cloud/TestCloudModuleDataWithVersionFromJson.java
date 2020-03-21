@@ -18,7 +18,7 @@
 
 package me.nikl.gamebox.module.cloud;
 
-import me.nikl.gamebox.module.data.CloudModuleData;
+import me.nikl.gamebox.module.data.CloudModuleDataWithVersion;
 import me.nikl.gamebox.module.data.DependencyData;
 import me.nikl.gamebox.module.data.VersionData;
 import me.nikl.gamebox.utility.GameBoxGsonBuilder;
@@ -38,13 +38,13 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author Niklas Eicker
  */
-public class TestCloudModuleFromJson {
+public class TestCloudModuleDataWithVersionFromJson {
     private static File testCloudModuleFile;
-    private static CloudModuleData testCloudModule;
+    private static CloudModuleDataWithVersion testCloudModule;
 
     @BeforeAll
     public static void prepare() {
-        testCloudModuleFile = new File("src/test/resources/module/cloud/test_cloud_module.json");
+        testCloudModuleFile = new File("src/test/resources/module/cloud/test_cloud_module_data_with_version.json");
         manuallyBuildTestModule();
     }
 
@@ -73,8 +73,9 @@ public class TestCloudModuleFromJson {
                         "Some updates..."
                         )
                 )
+                .withDownloadUrl("http://example.com/download/test-module@1.1.0.jar")
         );
-        testCloudModule = new CloudModuleData()
+        testCloudModule = new CloudModuleDataWithVersion()
                 .withId("test-module")
                 .withAuthors(Collections.singletonList("Nikl"))
                 .withName("Test module")
@@ -86,10 +87,10 @@ public class TestCloudModuleFromJson {
     }
 
     @Test
-    @DisplayName("correctly parse CloudModuleData from a json file")
+    @DisplayName("correctly parse CloudModuleDataWithVersion from a json file")
     public void parseTestCloudModule() throws FileNotFoundException {
         Gson gson = GameBoxGsonBuilder.build();
-        CloudModuleData fileModule = gson.fromJson(new FileReader(testCloudModuleFile), CloudModuleData.class);
+        CloudModuleDataWithVersion fileModule = gson.fromJson(new FileReader(testCloudModuleFile), CloudModuleDataWithVersion.class);
         assertAll(
                 () -> assertEquals(fileModule.getId(), testCloudModule.getId(),"Not the same id"),
                 () -> assertArrayEquals(fileModule.getAuthors().toArray(), testCloudModule.getAuthors().toArray(),"Not the same authors"),
