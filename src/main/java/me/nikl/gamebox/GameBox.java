@@ -35,6 +35,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -46,9 +47,6 @@ import java.util.logging.Level;
  */
 public class GameBox extends JavaPlugin {
   public static final String MODULE_GAMEBOX = "gamebox";
-  public static final String MODULE_CONNECTFOUR = "connectfour";
-  public static final String MODULE_COOKIECLICKER = "cookieclicker";
-  public static final String MODULE_MATCHIT = "matchit";
   public static boolean debug = false;
   // toggle to stop inventory contents from being restored when a new gui is opened
   public static boolean openingNewGUI = false;
@@ -310,8 +308,8 @@ public class GameBox extends JavaPlugin {
       this.saveResource("config.yml", false);
     }
     try {
-      this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(con), "UTF-8"));
-    } catch (UnsupportedEncodingException | FileNotFoundException e) {
+      this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(con), StandardCharsets.UTF_8));
+    } catch (FileNotFoundException e) {
       e.printStackTrace();
       return false;
     }
@@ -337,8 +335,8 @@ public class GameBox extends JavaPlugin {
     if (Bukkit.getPluginManager().isPluginEnabled("CalendarEvents")) {
       try {
         String[] version = Bukkit.getPluginManager().getPlugin("CalendarEvents").getDescription().getVersion().split("\\.");
-        int minorVersion = Integer.valueOf(version[1]);
-        int majorVersion = Integer.valueOf(version[0]);
+        int minorVersion = Integer.parseInt(version[1]);
+        int majorVersion = Integer.parseInt(version[0]);
         if (minorVersion < 4 && majorVersion == 1) {
           getLogger().warning(" CalendarEvents has to be version 1.4.0 or above!");
           return;
