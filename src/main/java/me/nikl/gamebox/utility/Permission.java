@@ -30,6 +30,7 @@ public enum Permission {
   ADMIN_RELOAD("admin.reload"),
   ADMIN_TOKEN("admin.token"),
   ADMIN_MODULES_INSTALL("admin.modules.install"),
+  ADMIN_MODULES_UPDATE("admin.modules.update"),
   ADMIN_DATABASE("admin.database");
 
   private static ArrayList<String> moduleIDs = new ArrayList<>();

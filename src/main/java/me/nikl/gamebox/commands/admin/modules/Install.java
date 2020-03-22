@@ -4,8 +4,9 @@ import co.aikar.commands.annotation.*;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.commands.GameBoxBaseCommand;
 import me.nikl.gamebox.exceptions.module.GameBoxCloudException;
-import me.nikl.gamebox.exceptions.module.ModuleVersionException;
+import me.nikl.gamebox.module.GameBoxModule;
 import me.nikl.gamebox.module.ModulesManager;
+import me.nikl.gamebox.module.data.CloudModuleData;
 import me.nikl.gamebox.utility.Permission;
 import me.nikl.gamebox.utility.versioning.SemanticVersion;
 import org.bukkit.command.CommandSender;
@@ -36,19 +37,31 @@ public class Install extends GameBoxBaseCommand {
         if (version != null) {
             try {
                 semVersion = new SemanticVersion(version);
-                modulesManager.installModule(moduleID, semVersion);
             } catch (ParseException e) {
                 sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_MODULES_INVALID_SEM_VERSION);
                 return;
+            }
+        } else {
+            try {
+                CloudModuleData cloudModuleData = modulesManager.getCloudService().getModuleData(moduleID);
+                semVersion = cloudModuleData.getLatestVersion();
+                sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_MODULES_INSTALLING_LATEST_VERSION
+                        .replaceAll("%version%", semVersion.toString())
+                        .replaceAll("%name%", cloudModuleData.getName()));
             } catch (GameBoxCloudException e) {
                 sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_CANNOT_CONNECT_TO_MODULES_CLOUD);
                 return;
             }
         }
         try {
-            SemanticVersion latestVersion = modulesManager.getCloudService().getModuleData(moduleID).getLatestVersion();
-            sender.sendMessage(gameBox.lang.PREFIX + " attempting to install latest version (" + latestVersion.toString() + ")");
-            modulesManager.installModule(moduleID, latestVersion);
+            GameBoxModule installedInstance = modulesManager.getModuleInstance(moduleID);
+            if (installedInstance != null) {
+                sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_MODULES_ALREADY_INSTALLED
+                        .replaceAll("%name%", installedInstance.getModuleData().getName())
+                        .replaceAll("%id%", moduleID));
+                return;
+            }
+            modulesManager.installModule(moduleID, semVersion);
         } catch (GameBoxCloudException e) {
             sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_CANNOT_CONNECT_TO_MODULES_CLOUD);
         }

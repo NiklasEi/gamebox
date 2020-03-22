@@ -68,6 +68,8 @@ commandMessages:
   modules:
     invalidSemVersion: " &4The version needs to be semantic! See https://semver.org/"
     versionNotFound: " &4The requested version was not found :("
+    moduleAlreadyInstalled: " &4%name% is already installed!&r To update please use &2/gba u %id%"
+    installingLatestVersion: " &2Installing latest version of %name% (%version%)"
 
 
 mainButtons:
