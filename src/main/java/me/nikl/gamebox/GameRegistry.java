@@ -13,9 +13,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -31,15 +31,14 @@ import java.util.logging.Level;
  */
 public class GameRegistry {
   private final Set<String> forbiddenIDs =
-          new HashSet<>(Arrays.asList("all, game, games, info, token, t"));
+          new HashSet<>(Arrays.asList("all", "game", "games", "info", "token", "t"));
   private final Set<String> forbiddenSubCommands =
-          new HashSet<>(Arrays.asList("all, game, games, info, token, t"));
+          new HashSet<>(Arrays.asList("all", "game", "games", "info", "token", "t"));
   private final Set<String> disabledModules = new HashSet<>();
   private GameBox gameBox;
   private Map<String, GameBoxGame> modules = new HashMap<>();
   private Map<String, GameBoxGame> declinedModules = new HashMap<>();
   private Map<String, GameBoxGame> subCommands = new HashMap<>();
-  private Map<String, Integer> preferredMainMenuSlots = new HashMap<>();
   private Map<GameBoxGame, Set<String>> bundledSubCommands = new HashMap<>();
   private boolean enableNewGamesByDefault;
   private FileConfiguration gamesConfiguration;
@@ -68,8 +67,8 @@ public class GameRegistry {
       gameBox.saveResource("games.yml", false);
     }
     try {
-      gamesConfiguration = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(gamesFile), "UTF-8"));
-    } catch (UnsupportedEncodingException | FileNotFoundException e) {
+      gamesConfiguration = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(gamesFile), StandardCharsets.UTF_8));
+    } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
   }
@@ -109,14 +108,12 @@ public class GameRegistry {
     String moduleID = module.getModuleID();
     if (!gamesConfiguration.isSet("games." + moduleID)) {
       setDefaultModuleSettings(module);
-      return;
     } else {
       // overwrite default sub commands
       if (module.isGame() && gamesConfiguration.isList("games." + moduleID + ".subCommands")) {
         List<String> subCommands = gamesConfiguration.getStringList("games." + moduleID + ".subCommands");
         if (subCommands != null && !subCommands.isEmpty()) module.setSubCommands(subCommands);
       }
-      preferredMainMenuSlots.put(moduleID, gamesConfiguration.getInt("games." + moduleID + ".preferredSlot", -1));
     }
   }
 
@@ -124,7 +121,6 @@ public class GameRegistry {
     String moduleID = module.getModuleID();
     gamesConfiguration.set("games." + moduleID + ".enabled", enableNewGamesByDefault);
     gamesConfiguration.set("games." + moduleID + ".subCommands", module.getSubCommands());
-    gamesConfiguration.set("games." + moduleID + ".preferredSlot", -1);
     saveGameSettings();
   }
 
@@ -173,7 +169,6 @@ public class GameRegistry {
       List<String> subCommands = gamesConfiguration.getStringList("games." + moduleID + ".subCommands");
       if (subCommands != null && !subCommands.isEmpty()) module.setSubCommands(subCommands);
     }
-    preferredMainMenuSlots.put(moduleID, gamesConfiguration.getInt("games." + moduleID + ".preferredSlot", -1));
     registerSubCommands(module);
   }
 
@@ -228,13 +223,13 @@ public class GameRegistry {
       subCommands.set(i, subCommands.get(i).toLowerCase());
     }
     // ensure that sub commands are unique and valid
-    for (int i = 0; i < subCommands.size(); i++) {
-      if (forbiddenSubCommands.contains(subCommands.get(i)))
-        throw new IllegalArgumentException("Forbidden sub command: " + subCommands.get(i));
-      if (this.subCommands.keySet().contains(subCommands.get(i)))
+    for (String subCommand : subCommands) {
+      if (forbiddenSubCommands.contains(subCommand))
+        throw new IllegalArgumentException("Forbidden sub command: " + subCommand);
+      if (this.subCommands.containsKey(subCommand))
         continue;
-      this.subCommands.put(subCommands.get(i), module);
-      addSubCommandToBundle(module, subCommands.get(i));
+      this.subCommands.put(subCommand, module);
+      addSubCommandToBundle(module, subCommand);
     }
   }
 
@@ -279,10 +274,6 @@ public class GameRegistry {
     } catch (IOException e) {
       e.printStackTrace();
     }
-  }
-
-  public int getPreferredMainMenuSlot(String moduleID) {
-    return preferredMainMenuSlots.getOrDefault(moduleID, -1);
   }
 
   public boolean isDisabledModule(String moduleID) {

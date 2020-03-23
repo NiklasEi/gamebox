@@ -51,15 +51,11 @@ public class GUIManager {
 
   public boolean isInGUI(UUID uuid) {
     if (isInMainGUI(uuid)) return true;
-    if (isInGameGUI(uuid)) return true;
-    return false;
+    return isInGameGUI(uuid);
   }
 
   public boolean isInMainGUI(UUID uuid) {
-    if (mainGui.isInGui(uuid)) {
-      return true;
-    }
-    return false;
+    return mainGui.isInGui(uuid);
   }
 
   public boolean isInGameGUI(UUID uuid) {
@@ -191,7 +187,7 @@ public class GUIManager {
     gameButton.setItemMeta(button.getItemMeta());
     gameButton.setAction(ClickAction.OPEN_GAME_GUI);
     gameButton.setArgs(args[0], args[1]);
-    mainGui.registerGameButton(gameButton, plugin.getGameRegistry().getPreferredMainMenuSlot(args[0]));
+    mainGui.registerGameButton(gameButton, gui.getGameId());
   }
 
   public AGui getCurrentGui(UUID uuid) {
