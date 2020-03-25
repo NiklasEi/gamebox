@@ -12,6 +12,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,29 +73,24 @@ public abstract class Language {
    * @param config configuration of the module
    */
   protected void getLangFile(FileConfiguration config) {
-    String moduleID = module.getModuleID();
+    String moduleID = module.getGameId();
     // load default language
-    try {
-      String defaultLangName = moduleID.equals(GameBox.MODULE_GAMEBOX) ? "language/lang_en.yml" : "language/" + module.getModuleID() + "/lang_en.yml";
-      defaultLanguage = YamlConfiguration.loadConfiguration(
-              new InputStreamReader(module.getJarFile() == null
-                      ? plugin.getResource(defaultLangName)
-                      : FileUtility.getResource(module.getJarFile(), defaultLangName)
-                      , "UTF-8"));
-    } catch (UnsupportedEncodingException e2) {
-      plugin.getLogger().warning("Failed to load default language file for namespace: " + module.getModuleID());
-      e2.printStackTrace();
-    }
+    String defaultLangName = moduleID.equals(GameBox.MODULE_GAMEBOX) ? "language/lang_en.yml" : "language/" + module.getGameId() + "/lang_en.yml";
+    defaultLanguage = YamlConfiguration.loadConfiguration(
+            new InputStreamReader(module.getJarFile() == null
+                    ? plugin.getResource(defaultLangName)
+                    : FileUtility.getResource(module.getJarFile(), defaultLangName)
+                    , StandardCharsets.UTF_8));
     String fileName = config.getString("langFile");
     if (fileName != null && (fileName.equalsIgnoreCase("default") || fileName.equalsIgnoreCase("default.yml"))) {
       language = defaultLanguage;
       return;
     }
+    String configPath = moduleID.equals(GameBox.MODULE_GAMEBOX) ? "'config.yml'" : "'games" + "/" + moduleID + "/config.yml'";
     if (fileName == null || !fileName.endsWith(".yml")) {
-      String path = moduleID.equals(GameBox.MODULE_GAMEBOX) ? "'config.yml'" : "'games" + "/" + moduleID + "/config.yml'";
       plugin.getLogger().warning("Language file for " + moduleID + " is not specified or not valid.");
       plugin.getLogger().warning("Did you forget to give the file ending '.yml'?");
-      plugin.getLogger().warning("Should be set in " + path + " as value of 'langFile'");
+      plugin.getLogger().warning("Should be set in " + configPath + " as value of 'langFile'");
       plugin.getLogger().warning("Falling back to the default file...");
       language = defaultLanguage;
       return;
@@ -106,9 +102,7 @@ public abstract class Language {
             new File(plugin.getDataFolder().toString() + File.separatorChar + "language" + File.separatorChar
                     + moduleID + File.separatorChar + fileName);
     if (!languageFile.exists()) {
-      String path = moduleID.equals(GameBox.MODULE_GAMEBOX) ? "'config.yml'"
-              : "'games" + "/" + moduleID + "/config.yml'";
-      plugin.getLogger().warning("The in " + path + " as 'langFile' configured file '" + fileName + "' does not exist!");
+      plugin.getLogger().warning("The in " + configPath + " as 'langFile' configured file '" + fileName + "' does not exist!");
       plugin.getLogger().warning("Falling back to the default file...");
       language = defaultLanguage;
       return;
@@ -117,12 +111,11 @@ public abstract class Language {
     try {
       language = YamlConfiguration
               .loadConfiguration(new InputStreamReader(new FileInputStream(languageFile)
-                      , "UTF-8"));
-    } catch (UnsupportedEncodingException | FileNotFoundException e) {
+                      , StandardCharsets.UTF_8));
+    } catch (FileNotFoundException e) {
       e.printStackTrace();
       language = defaultLanguage;
     }
-    return;
   }
 
 
@@ -190,8 +183,6 @@ public abstract class Language {
     // load from default file if path is not valid
     if (!language.isList(path)) {
       toReturn = defaultLanguage.getStringList(path);
-      if (toReturn == null)
-        throw new IllegalArgumentException("The language key '" + path + "' is not a valid list!");
       if (color) {
         for (int i = 0; i < toReturn.size(); i++) {
           toReturn.set(i, ChatColor.translateAlternateColorCodes('&', toReturn.get(i)));
@@ -201,7 +192,7 @@ public abstract class Language {
     }
     // load from language file
     toReturn = language.getStringList(path);
-    if (color && toReturn != null) {
+    if (color) {
       for (int i = 0; i < toReturn.size(); i++) {
         toReturn.set(i, ChatColor.translateAlternateColorCodes('&', toReturn.get(i)));
       }

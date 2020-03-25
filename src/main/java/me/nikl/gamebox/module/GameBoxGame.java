@@ -12,37 +12,30 @@ import java.util.List;
  * @author Niklas Eicker
  */
 public class GameBoxGame {
-  private String moduleID;
+  private String gameId;
   private Class<Game> gameClass;
-  private boolean isGame = false;
   private File jarFile;
   private List<String> subCommands;
 
-  public GameBoxGame(GameBox gameBox, String moduleID, Class<Game> gameClass, File jarFile, String... subCommands) {
-    Validate.isTrue(moduleID != null && !moduleID.isEmpty()
+  public GameBoxGame(GameBox gameBox, String gameId, Class<Game> gameClass, File jarFile, String... subCommands) {
+    Validate.isTrue(gameId != null && !gameId.isEmpty()
             , " moduleID cannot be null or empty!");
-    if (gameClass != null) {
-      this.isGame = true;
-    }
+    Validate.isTrue(gameClass != null, " gameClass cannot be null!");
     if (subCommands != null && !(subCommands.length < 1)) {
       this.subCommands = Arrays.asList(subCommands);
     }
     this.gameClass = gameClass;
-    this.moduleID = moduleID.toLowerCase();
+    this.gameId = gameId.toLowerCase();
     this.jarFile = jarFile;
     gameBox.getGameRegistry().registerModule(this);
   }
 
-  public String getModuleID() {
-    return moduleID;
+  public String getGameId() {
+    return gameId;
   }
 
   public Class<Game> getGameClass() {
     return gameClass;
-  }
-
-  public boolean isGame() {
-    return isGame;
   }
 
   @Override
@@ -50,12 +43,12 @@ public class GameBoxGame {
     if (!(module instanceof GameBoxGame)) {
       return false;
     }
-    return moduleID.equalsIgnoreCase(((GameBoxGame) module).moduleID);
+    return gameId.equalsIgnoreCase(((GameBoxGame) module).gameId);
   }
 
   @Override
   public int hashCode() {
-    return moduleID.hashCode();
+    return gameId.hashCode();
   }
 
   public List<String> getSubCommands() {

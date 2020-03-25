@@ -42,7 +42,7 @@ public class OpenGameBox extends PlayerBaseCommand {
         return;
       }
       String[] arguments = new String[2];
-      arguments[0] = module.getModuleID();
+      arguments[0] = module.getGameId();
       arguments[1] = GUIManager.MAIN_GAME_GUI;
       guiManager.openGameGui(player, arguments);
       return;

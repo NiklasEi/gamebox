@@ -22,7 +22,7 @@ public class Update extends GameBoxBaseCommand {
     @PreCommand
     public boolean preCommand(CommandSender sender) {
         GameBox.debug("in Update pre command");
-        if (!Permission.ADMIN_MODULES_UPDATE.hasPermission(sender)) {
+        if (!Permission.ADMIN_MODULES.hasPermission(sender)) {
             sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_NO_PERM);
             return true;
         }

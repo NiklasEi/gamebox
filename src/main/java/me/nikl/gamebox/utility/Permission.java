@@ -29,8 +29,7 @@ public enum Permission {
   ADMIN_LANGUAGE("admin.language"),
   ADMIN_RELOAD("admin.reload"),
   ADMIN_TOKEN("admin.token"),
-  ADMIN_MODULES_INSTALL("admin.modules.install"),
-  ADMIN_MODULES_UPDATE("admin.modules.update"),
+  ADMIN_MODULES("admin.modules"),
   ADMIN_DATABASE("admin.database");
 
   private static ArrayList<String> moduleIDs = new ArrayList<>();
@@ -79,7 +78,7 @@ public enum Permission {
   }
 
   public boolean hasPermission(CommandSender sender, GameBoxGame module) {
-    return hasPermission(sender, module.getModuleID());
+    return hasPermission(sender, module.getGameId());
   }
 
   public boolean hasPermission(CommandSender sender) {

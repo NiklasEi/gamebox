@@ -40,6 +40,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -75,7 +76,7 @@ public abstract class Game {
   public abstract void onDisable();
 
   public void onEnable() throws GameLoadException {
-    GameBox.debug(" enabling the game: " + module.getModuleID());
+    GameBox.debug(" enabling the game: " + module.getGameId());
     loadConfig();
     loadSettings();
     loadLanguage();
@@ -130,13 +131,13 @@ public abstract class Game {
   public abstract void loadGameManager();
 
   public void loadConfig() throws GameLoadException {
-    GameBox.debug(" load config... (" + module.getModuleID() + ")");
+    GameBox.debug(" load config... (" + module.getGameId() + ")");
     configFile = new File(gameBox.getDataFolder()
             + File.separator + "games"
             + File.separator + getGameID()
             + File.separator + "config.yml");
     if (!configFile.exists()) {
-      GameBox.debug(" default config missing in GB folder (" + module.getModuleID() + ")");
+      GameBox.debug(" default config missing in GB folder (" + module.getGameId() + ")");
       configFile.getParentFile().mkdirs();
       if (module.getJarFile() != null) {
         FileUtility.copyExternalResources(gameBox, module);
@@ -151,8 +152,8 @@ public abstract class Game {
             + File.separator + getGameID()
             + File.separator);
     try {
-      this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(configFile), "UTF-8"));
-    } catch (UnsupportedEncodingException | FileNotFoundException e) {
+      this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(configFile), StandardCharsets.UTF_8));
+    } catch (FileNotFoundException e) {
       e.printStackTrace();
       throw new GameLoadException("Failed to load the configuration", e);
     }
@@ -258,7 +259,7 @@ public abstract class Game {
       List<String> lore;
       for (String buttonID : topListButtons.getKeys(false)) {
         buttonSec = topListButtons.getConfigurationSection(buttonID);
-        if (!gameRules.keySet().contains(buttonID)) {
+        if (!gameRules.containsKey(buttonID)) {
           warn(" the top list button 'gameBox.topListButtons." + buttonID + "' does not have a corresponding game button");
           continue;
         }
@@ -326,7 +327,7 @@ public abstract class Game {
   }
 
   public String getGameID() {
-    return module.getModuleID();
+    return module.getGameId();
   }
 
   public GameSettings getSettings() {

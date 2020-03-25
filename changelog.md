@@ -9,8 +9,6 @@
 
 
 
-
-
 ### v 2.2.6
 - cookieclicker -> 2.2.3
   - Fix NPE on game startup

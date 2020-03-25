@@ -81,7 +81,7 @@ public class GUIManager {
       return false;
     }
 
-    if (!plugin.getPluginManager().hasSavedContents(whoClicked.getUniqueId())) {
+    if (plugin.getPluginManager().doesNotHaveSavedContents(whoClicked.getUniqueId())) {
       if (!plugin.getPluginManager().enterGameBox(whoClicked, args[0], args[1])) return false;
     }
 
@@ -126,7 +126,7 @@ public class GUIManager {
       return false;
     }
 
-    if (!plugin.getPluginManager().hasSavedContents(whoClicked.getUniqueId())) {
+    if (plugin.getPluginManager().doesNotHaveSavedContents(whoClicked.getUniqueId())) {
       EnterGameBoxEvent enterEvent = new EnterGameBoxEvent(whoClicked, "main");
       if (!enterEvent.isCancelled()) {
         plugin.getPluginManager().saveInventory(whoClicked);

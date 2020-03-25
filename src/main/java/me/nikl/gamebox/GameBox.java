@@ -29,6 +29,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -61,7 +62,6 @@ public class GameBox extends JavaPlugin {
   private LeftGameBoxListener leftGameBoxListener;
   private EnterGameBoxListener enterGameBoxListener;
   private GameBoxCommands commands;
-  private GameBoxGame gameBoxModule;
   private CalendarEventsHook calendarEventsHook;
   private BukkitBridge bukkitBridge;
   private ModulesManager modulesManager;
@@ -80,7 +80,6 @@ public class GameBox extends JavaPlugin {
     }
 
     this.gameRegistry = new GameRegistry(this);
-    gameBoxModule = new GameBoxGame(this, MODULE_GAMEBOX, null, null);
 
     if (!reload()) {
       getLogger().severe(" Problem while loading the plugin! Plugin was disabled!");
@@ -250,7 +249,7 @@ public class GameBox extends JavaPlugin {
     }
     FileUtility.copyDefaultLanguageFiles();
     this.lang = new GameBoxLanguage(this);
-    ConfigManager.registerModuleLanguage(gameBoxModule, lang);
+    ConfigManager.registerModuleLanguage(MODULE_GAMEBOX, lang);
     this.api = new GameBoxAPI(this);
     GameBoxSettings.loadSettings(this);
     return true;
@@ -283,7 +282,7 @@ public class GameBox extends JavaPlugin {
       return false;
     }
     econ = rsp.getProvider();
-    return econ != null;
+    return true;
   }
 
   @Override
@@ -293,6 +292,7 @@ public class GameBox extends JavaPlugin {
   }
 
   @Override
+  @NotNull
   public FileConfiguration getConfig() {
     return config;
   }
@@ -312,7 +312,7 @@ public class GameBox extends JavaPlugin {
       e.printStackTrace();
       return false;
     }
-    ConfigManager.registerModuleConfiguration(gameBoxModule, config);
+    ConfigManager.registerModuleConfiguration(MODULE_GAMEBOX, config);
     return true;
   }
 

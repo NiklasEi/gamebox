@@ -33,6 +33,7 @@ permissions:
       gamebox.admin.language: true
       gamebox.admin.reload: true
       gamebox.admin.token: true
+      gamebox.admin.modules: true
   gamebox.admin.game.*:
     description: Gives permission to use game specific admin commands
     default: false
@@ -50,6 +51,9 @@ permissions:
     default: false
   gamebox.admin.token:
     description: Player can manipulate token balances via commands
+    default: false
+  gamebox.admin.modules:
+    description: Player can use the admin panel and can install/update modules via commands
     default: false
   gamebox.use:
     description: Allows the player to use /gamebox and the hub item
