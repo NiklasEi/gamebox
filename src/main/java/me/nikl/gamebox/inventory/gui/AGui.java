@@ -391,9 +391,7 @@ public abstract class AGui implements GameBoxHolder {
     GameBox.debug("did not start a game");
   }
 
-  @Override
-  public void onInventoryClick(InventoryClickEvent event) {
-    if (event.getCurrentItem() == null) return;
+  public void handleInventoryClick(InventoryClickEvent event, AButton[] grid) {
     AButton button = grid[event.getRawSlot()];
     boolean perInvitation = false;
     StartMultiplayerGamePage mpGui = null;
@@ -438,6 +436,12 @@ public abstract class AGui implements GameBoxHolder {
         ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), unsuccessfulClick, volume, pitch);
       }
     }
+  }
+
+  @Override
+  public void onInventoryClick(InventoryClickEvent event) {
+    if (event.getCurrentItem() == null) return;
+    this.handleInventoryClick(event, grid);
   }
 
   @Override

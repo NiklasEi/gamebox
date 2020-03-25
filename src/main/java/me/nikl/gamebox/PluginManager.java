@@ -362,7 +362,7 @@ public class PluginManager implements Listener {
       restoreInventory(player);
     }
     // remove the player and all the personal GUIs. This also saves the GB options of that player.
-    if (gbPlayers.keySet().contains(player.getUniqueId())) {
+    if (gbPlayers.containsKey(player.getUniqueId())) {
       removePlayer(event.getPlayer().getUniqueId());
     }
   }
