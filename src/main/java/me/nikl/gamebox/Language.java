@@ -1,9 +1,9 @@
 package me.nikl.gamebox;
 
-import me.nikl.gamebox.module.GameBoxGame;
 import me.nikl.gamebox.utility.ConfigManager;
 import me.nikl.gamebox.utility.FileUtility;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -11,10 +11,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by nikl on 24.10.17.
@@ -25,21 +25,23 @@ import java.util.List;
  * Provides methods to load messages from the files.
  */
 public abstract class Language {
-  public String PREFIX = "[" + ChatColor.DARK_AQUA + "GameBox" + ChatColor.RESET + "]";
-  public String NAME = ChatColor.DARK_AQUA + "GameBox" + ChatColor.RESET;
-  public String PLAIN_PREFIX = ChatColor.stripColor(PREFIX);
-  public String PLAIN_NAME = ChatColor.stripColor(NAME);
+  public String PREFIX;
+  public String NAME;
+  public String PLAIN_PREFIX;
+  public String PLAIN_NAME;
   public String DEFAULT_NAME, DEFAULT_PLAIN_NAME;
   protected GameBox plugin;
-  protected GameBoxGame module;
+  protected String gameId;
+  protected File jarFile;
   protected File languageFile;
   protected FileConfiguration defaultLanguage;
   protected FileConfiguration language;
 
-  public Language(GameBox plugin, GameBoxGame module) {
+  public Language(GameBox plugin, String gameId, File jarFile) {
     this.plugin = plugin;
-    this.module = module;
-    getLangFile(ConfigManager.getConfig(module));
+    this.jarFile = jarFile;
+    this.gameId = gameId;
+    getLangFile(ConfigManager.getConfig(gameId));
 
     PREFIX = getString("prefix");
     NAME = getString("name");
@@ -52,8 +54,8 @@ public abstract class Language {
     loadMessages();
   }
 
-  public Language(GameBox plugin, String moduleID) {
-    this(plugin, plugin.getGameRegistry().getModule(moduleID));
+  public Language(GameBox plugin, String gameId) {
+    this(plugin, gameId, null);
   }
 
   /**
@@ -73,34 +75,33 @@ public abstract class Language {
    * @param config configuration of the module
    */
   protected void getLangFile(FileConfiguration config) {
-    String moduleID = module.getGameId();
     // load default language
-    String defaultLangName = moduleID.equals(GameBox.MODULE_GAMEBOX) ? "language/lang_en.yml" : "language/" + module.getGameId() + "/lang_en.yml";
+    String defaultLangName = gameId.equals(GameBox.MODULE_GAMEBOX) ? "language/lang_en.yml" : "language/" + gameId + "/lang_en.yml";
     defaultLanguage = YamlConfiguration.loadConfiguration(
-            new InputStreamReader(module.getJarFile() == null
+            new InputStreamReader(this.jarFile == null
                     ? plugin.getResource(defaultLangName)
-                    : FileUtility.getResource(module.getJarFile(), defaultLangName)
+                    : FileUtility.getResource(this.jarFile, defaultLangName)
                     , StandardCharsets.UTF_8));
     String fileName = config.getString("langFile");
     if (fileName != null && (fileName.equalsIgnoreCase("default") || fileName.equalsIgnoreCase("default.yml"))) {
       language = defaultLanguage;
       return;
     }
-    String configPath = moduleID.equals(GameBox.MODULE_GAMEBOX) ? "'config.yml'" : "'games" + "/" + moduleID + "/config.yml'";
+    String configPath = gameId.equals(GameBox.MODULE_GAMEBOX) ? "'config.yml'" : "'games" + "/" + gameId + "/config.yml'";
     if (fileName == null || !fileName.endsWith(".yml")) {
-      plugin.getLogger().warning("Language file for " + moduleID + " is not specified or not valid.");
+      plugin.getLogger().warning("Language file for " + gameId + " is not specified or not valid.");
       plugin.getLogger().warning("Did you forget to give the file ending '.yml'?");
       plugin.getLogger().warning("Should be set in " + configPath + " as value of 'langFile'");
       plugin.getLogger().warning("Falling back to the default file...");
       language = defaultLanguage;
       return;
     }
-    languageFile = moduleID.equals(GameBox.MODULE_GAMEBOX) ?
+    languageFile = gameId.equals(GameBox.MODULE_GAMEBOX) ?
             new File(plugin.getDataFolder().toString() + File.separatorChar + "language" + File.separatorChar
                     + fileName)
             :
             new File(plugin.getDataFolder().toString() + File.separatorChar + "language" + File.separatorChar
-                    + moduleID + File.separatorChar + fileName);
+                    + gameId + File.separatorChar + fileName);
     if (!languageFile.exists()) {
       plugin.getLogger().warning("The in " + configPath + " as 'langFile' configured file '" + fileName + "' does not exist!");
       plugin.getLogger().warning("Falling back to the default file...");
@@ -234,5 +235,12 @@ public abstract class Language {
 
   protected String getString(String path) {
     return getString(path, true);
+  }
+
+  public void sendMessage(CommandSender sender, String message, Map<String, String> context) {
+    for (Map.Entry<String, String> entry : context.entrySet()) {
+      message = message.replaceAll("%" + entry.getKey() + "%", entry.getValue());
+    }
+    sender.sendMessage(PREFIX + message);
   }
 }

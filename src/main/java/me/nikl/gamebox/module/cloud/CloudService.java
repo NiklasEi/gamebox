@@ -33,8 +33,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Niklas Eicker
@@ -129,5 +132,9 @@ public class CloudService {
             throw new GameBoxCloudException(response.getError());
         }
         return response.getData();
+    }
+
+    public List<CloudModuleData> getCloudContent() {
+        return new ArrayList<>(this.cloudContent.values());
     }
 }

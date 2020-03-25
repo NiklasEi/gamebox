@@ -149,8 +149,7 @@ public class GameBox extends JavaPlugin {
     if (PluginManager.gamesRegistered == 0) {
       info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
       info(ChatColor.RED + " There are no registered games!");
-      info(ChatColor.RED + " You should visit Spigot and get a few ;)");
-      info(ChatColor.RED + "   https://www.spigotmc.org/resources/37273/");
+      info(ChatColor.RED + " Run '/gba module list' to see available games ;)");
       info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
     } else {
       info(ChatColor.GREEN + " " + PluginManager.gamesRegistered + " games were registered. Have fun :)");

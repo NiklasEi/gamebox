@@ -48,7 +48,7 @@ public class MainGui extends AGui implements TokenListener {
     Button help = new Button(NmsFactory.getNmsUtility().addGlow(ItemStackUtility.createBookWithText(plugin.lang.BUTTON_MAIN_MENU_INFO)));
     help.setAction(ClickAction.NOTHING);
     setButton(help, 53);
-    ToggleButton soundToggle = ButtonFactory.createToggleButton(plugin.lang);
+    ToggleButton soundToggle = ButtonFactory.createSoundToggleButton(plugin.lang);
     setButton(soundToggle, soundToggleSlot);
     if (GameBoxSettings.tokensEnabled) {
       GBPlayer.addTokenListener(this);
@@ -114,11 +114,10 @@ public class MainGui extends AGui implements TokenListener {
     String title = this.title.replace("%player%", player.getName());
     Inventory inventory = InventoryUtility.createInventory(this, this.inventory.getSize(), title);
     ItemStack[] contents = this.inventory.getContents().clone();
-    for (int slot=0; slot<45; slot++) {
-      contents[slot] = playerGrid[slot]; // overwrite game buttons
-    }
+    // overwrite game buttons
+    System.arraycopy(playerGrid, 0, contents, 0, 45);
     inventory.setContents(contents);
-    ToggleButton soundToggle = ButtonFactory.createToggleButton(gameBox.lang);
+    ToggleButton soundToggle = ButtonFactory.createSoundToggleButton(gameBox.lang);
     soundToggle = gbPlayer.isPlaySounds() ? soundToggle : soundToggle.toggle();
     soundButtons.put(gbPlayer.getUuid(), soundToggle);
     inventory.setItem(soundToggleSlot, soundToggle);
@@ -137,9 +136,7 @@ public class MainGui extends AGui implements TokenListener {
       cleanedGrid[slot] = null; // remove all game buttons from grid
     }
     List<String> buttonGameIds = new ArrayList<>(gameButtons.keySet());
-    buttonGameIds = buttonGameIds.stream().filter((id) -> {
-      return Permission.PLAY_GAME.hasPermission(player, id);
-    }).collect(Collectors.toList());
+    buttonGameIds = buttonGameIds.stream().filter((id) -> Permission.PLAY_GAME.hasPermission(player, id)).collect(Collectors.toList());
     Collections.sort(buttonGameIds);
     for (int slot = 0; slot < buttonGameIds.size(); slot++) {
       cleanedGrid[slot] = gameButtons.get(buttonGameIds.get(slot));

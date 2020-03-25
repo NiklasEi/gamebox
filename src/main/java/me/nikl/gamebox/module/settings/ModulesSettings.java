@@ -24,18 +24,14 @@ import java.util.Map;
 
 public class ModulesSettings implements Serializable  {
     private final static long serialVersionUID = 8241484990220433533L;
-    public Map<String, ModuleSettings> modules = new HashMap<>();
+    public Map<String, ModuleSettings> modules;
 
     public Map<String, ModuleSettings> getModules() {
-        return modules;
+        return modules == null ? new HashMap<>() : modules;
     }
 
     public void setModules(Map<String, ModuleSettings> modules) {
-        if (modules == null) {
-            this.modules = new HashMap<>();
-        } else {
-            this.modules = modules;
-        }
+        this.modules = modules;
     }
 
     public static class ModuleSettings implements Serializable {
