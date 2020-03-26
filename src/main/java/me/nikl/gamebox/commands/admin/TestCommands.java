@@ -39,7 +39,7 @@ public class TestCommands extends ConsoleBaseCommand {
     for (int i = 0; i < 100; i++) {
       UUID uuid = UUID.randomUUID();
       dataBase.savePlayer(new GBPlayer(gameBox, uuid, 0, true, true), true);
-      dataBase.addStatistics(uuid, GameBox.MODULE_COOKIECLICKER, "weekly", random.nextInt(5000), SaveType.HIGH_NUMBER_SCORE);
+      dataBase.addStatistics(uuid, "cookieclicker", "weekly", random.nextInt(5000), SaveType.HIGH_NUMBER_SCORE);
     }
   }
 

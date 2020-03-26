@@ -3,9 +3,11 @@ package me.nikl.gamebox.inventory.button;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -14,7 +16,7 @@ import java.util.List;
 public class ToggleButton extends Button {
   private ItemStack toggle;
   private String toggleDisplayName = "missing name";
-  private List<String> toggleLore = new ArrayList<>(Arrays.asList("missing lore"));
+  private List<String> toggleLore = new ArrayList<>(Collections.singletonList("missing lore"));
 
 
   public ToggleButton(ItemStack item, ItemStack toggle) {
@@ -28,12 +30,12 @@ public class ToggleButton extends Button {
     String displayName = toggleDisplayName;
     ArrayList<String> lore = new ArrayList<>(toggleLore);
 
-    this.toggle.setData(getData());
+    this.toggle.setAmount(getAmount());
     this.toggle.setType(getData().getItemType());
     toggleDisplayName = meta.getDisplayName();
     toggleLore = new ArrayList<>(meta.getLore());
 
-    setData(newData.getData());
+    setAmount(newData.getAmount());
     setType(newData.getType());
     meta.setDisplayName(displayName);
     meta.setLore(lore);

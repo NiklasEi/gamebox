@@ -1,5 +1,14 @@
 # Changelog
 
+## v3.0.0
+- GameBox 3 supports MC 1.14+
+- games can now be installed from inside GameBox. 
+  - They are not separate plugins anymore, but can be automatically downloaded and installed.
+- players only see games in the menu that they have the `gamebox.play` permission for
+
+
+
+
 ### v 2.2.6
 - cookieclicker -> 2.2.3
   - Fix NPE on game startup

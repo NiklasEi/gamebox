@@ -1,0 +1,11 @@
+# This file contains module settings.
+# Further documentation can be found at https://gamebox.nikl.me/
+# You can modify most of these settings per commands!
+# New modules are automatically added to this file when they are installed
+# Exemplary module entry (some of these parameters can be optional):
+# ------
+#  module-id:
+#    enabled: true                          If this is false the module will not be loaded even if it is in the modules directory
+#    autoUpdate: false                      If an update is found, it is automatically installed
+#
+modules:

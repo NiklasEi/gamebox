@@ -1,10 +1,13 @@
-name: GameBox
+name: ${project.name}
 author: Nikl
 main: me.nikl.gamebox.GameBox
-version: 3.0.0-alpha
-api-version: 1.14
+version: ${project.version}
+api-version: "1.14"
 website: nikl.me
 softdepend: [Vault, PlaceholderAPI, CalendarEvents]
+gameBoxSource: https://github.com/NiklasEi/gamebox
+updatedAt: "${timestamp}"
+updatedAtFormat: "${maven.build.timestamp.format}"
 
 # you can configure the commands in the config.yml file
 
@@ -30,6 +33,7 @@ permissions:
       gamebox.admin.language: true
       gamebox.admin.reload: true
       gamebox.admin.token: true
+      gamebox.admin.modules: true
   gamebox.admin.game.*:
     description: Gives permission to use game specific admin commands
     default: false
@@ -47,6 +51,9 @@ permissions:
     default: false
   gamebox.admin.token:
     description: Player can manipulate token balances via commands
+    default: false
+  gamebox.admin.modules:
+    description: Player can use the admin panel and can install/update modules via commands
     default: false
   gamebox.use:
     description: Allows the player to use /gamebox and the hub item

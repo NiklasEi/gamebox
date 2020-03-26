@@ -102,7 +102,7 @@ public class ShopManager {
   public boolean openShopPage(Player whoClicked, String[] args) {
     boolean saved = false;
 
-    if (!gameBox.getPluginManager().hasSavedContents(whoClicked.getUniqueId())) {
+    if (gameBox.getPluginManager().doesNotHaveSavedContents(whoClicked.getUniqueId())) {
       EnterGameBoxEvent enterEvent = new EnterGameBoxEvent(whoClicked, args[0], args[1]);
       if (!enterEvent.isCancelled()) {
         gameBox.getPluginManager().saveInventory(whoClicked);

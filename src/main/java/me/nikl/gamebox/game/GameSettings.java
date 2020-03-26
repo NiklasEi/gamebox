@@ -11,7 +11,6 @@ public class GameSettings {
   private boolean econEnabled;
   private GameType gameType;
   private int gameGuiSize;
-  private String gameBoxMinimumVersion;
 
   public GameSettings() {
     // set default values
@@ -19,7 +18,6 @@ public class GameSettings {
     this.gameType = GameType.SINGLE_PLAYER;
     this.gameGuiSize = 54;
     this.playSounds = GameBoxSettings.playSounds;
-    this.gameBoxMinimumVersion = "2.0.0";
     setEconEnabled(GameBoxSettings.econEnabled);
   }
 
@@ -61,14 +59,6 @@ public class GameSettings {
 
   public void setEconEnabled(boolean econEnabled) {
     this.econEnabled = econEnabled;
-  }
-
-  public String getGameBoxMinimumVersion() {
-    return gameBoxMinimumVersion;
-  }
-
-  public void setGameBoxMinimumVersion(String gameBoxMinimumVersion) {
-    this.gameBoxMinimumVersion = gameBoxMinimumVersion;
   }
 
   public enum GameType {

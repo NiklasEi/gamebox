@@ -14,6 +14,8 @@ import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.InventoryTitleMessenger;
 import me.nikl.gamebox.listeners.EnterGameBoxListener;
 import me.nikl.gamebox.listeners.LeftGameBoxListener;
+import me.nikl.gamebox.module.GameBoxGame;
+import me.nikl.gamebox.module.ModulesManager;
 import me.nikl.gamebox.utility.ConfigManager;
 import me.nikl.gamebox.utility.FileUtility;
 import me.nikl.nmsutilities.NmsFactory;
@@ -27,12 +29,13 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -44,9 +47,6 @@ import java.util.logging.Level;
  */
 public class GameBox extends JavaPlugin {
   public static final String MODULE_GAMEBOX = "gamebox";
-  public static final String MODULE_CONNECTFOUR = "connectfour";
-  public static final String MODULE_COOKIECLICKER = "cookieclicker";
-  public static final String MODULE_MATCHIT = "matchit";
   public static boolean debug = false;
   // toggle to stop inventory contents from being restored when a new gui is opened
   public static boolean openingNewGUI = false;
@@ -62,9 +62,9 @@ public class GameBox extends JavaPlugin {
   private LeftGameBoxListener leftGameBoxListener;
   private EnterGameBoxListener enterGameBoxListener;
   private GameBoxCommands commands;
-  private Module gameBoxModule;
   private CalendarEventsHook calendarEventsHook;
   private BukkitBridge bukkitBridge;
+  private ModulesManager modulesManager;
 
   public static void debug(String message) {
     if (debug) Bukkit.getConsoleSender().sendMessage(message);
@@ -72,6 +72,7 @@ public class GameBox extends JavaPlugin {
 
   @Override
   public void onEnable() {
+    GameBoxSettings.defineGameBoxData(this);
     if ((NmsFactory.getNmsUtility()) == null) {
       sendVersionError();
       Bukkit.getPluginManager().disablePlugin(this);
@@ -79,15 +80,12 @@ public class GameBox extends JavaPlugin {
     }
 
     this.gameRegistry = new GameRegistry(this);
-    gameBoxModule = new Module(this, MODULE_GAMEBOX, null, null);
 
     if (!reload()) {
       getLogger().severe(" Problem while loading the plugin! Plugin was disabled!");
       Bukkit.getPluginManager().disablePlugin(this);
       return;
     }
-    // At this point all managers are set up and games can be registered
-    registerGames();
     establishHooksAndMetric();
   }
 
@@ -151,25 +149,11 @@ public class GameBox extends JavaPlugin {
     if (PluginManager.gamesRegistered == 0) {
       info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
       info(ChatColor.RED + " There are no registered games!");
-      info(ChatColor.RED + " You should visit Spigot and get a few ;)");
-      info(ChatColor.RED + "   https://www.spigotmc.org/resources/37273/");
+      info(ChatColor.RED + " Run '/gba module list' to see available games ;)");
       info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
     } else {
       info(ChatColor.GREEN + " " + PluginManager.gamesRegistered + " games were registered. Have fun :)");
     }
-  }
-
-  private void registerGames() {
-    // Default games:
-    new Module(this, MODULE_CONNECTFOUR
-            , "me.nikl.gamebox.games.connectfour.ConnectFour", null
-            , GameBox.MODULE_CONNECTFOUR, "connect4", "c4");
-    new Module(this, MODULE_COOKIECLICKER
-            , "me.nikl.gamebox.games.cookieclicker.CookieClicker", null
-            , GameBox.MODULE_COOKIECLICKER, "cookies", "cc");
-    new Module(this, MODULE_MATCHIT
-            , "me.nikl.gamebox.games.matchit.MatchIt", null
-            , GameBox.MODULE_MATCHIT, "mi");
   }
 
   /**
@@ -223,6 +207,7 @@ public class GameBox extends JavaPlugin {
         runLateChecks();
       }
     }.runTask(this);
+    this.modulesManager = new ModulesManager(this);
     return true;
   }
 
@@ -263,7 +248,7 @@ public class GameBox extends JavaPlugin {
     }
     FileUtility.copyDefaultLanguageFiles();
     this.lang = new GameBoxLanguage(this);
-    ConfigManager.registerModuleLanguage(gameBoxModule, lang);
+    ConfigManager.registerModuleLanguage(MODULE_GAMEBOX, lang);
     this.api = new GameBoxAPI(this);
     GameBoxSettings.loadSettings(this);
     return true;
@@ -296,7 +281,7 @@ public class GameBox extends JavaPlugin {
       return false;
     }
     econ = rsp.getProvider();
-    return econ != null;
+    return true;
   }
 
   @Override
@@ -306,6 +291,7 @@ public class GameBox extends JavaPlugin {
   }
 
   @Override
+  @NotNull
   public FileConfiguration getConfig() {
     return config;
   }
@@ -320,12 +306,12 @@ public class GameBox extends JavaPlugin {
       this.saveResource("config.yml", false);
     }
     try {
-      this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(con), "UTF-8"));
-    } catch (UnsupportedEncodingException | FileNotFoundException e) {
+      this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(con), StandardCharsets.UTF_8));
+    } catch (FileNotFoundException e) {
       e.printStackTrace();
       return false;
     }
-    ConfigManager.registerModuleConfiguration(gameBoxModule, config);
+    ConfigManager.registerModuleConfiguration(MODULE_GAMEBOX, config);
     return true;
   }
 
@@ -347,8 +333,8 @@ public class GameBox extends JavaPlugin {
     if (Bukkit.getPluginManager().isPluginEnabled("CalendarEvents")) {
       try {
         String[] version = Bukkit.getPluginManager().getPlugin("CalendarEvents").getDescription().getVersion().split("\\.");
-        int minorVersion = Integer.valueOf(version[1]);
-        int majorVersion = Integer.valueOf(version[0]);
+        int minorVersion = Integer.parseInt(version[1]);
+        int majorVersion = Integer.parseInt(version[0]);
         if (minorVersion < 4 && majorVersion == 1) {
           getLogger().warning(" CalendarEvents has to be version 1.4.0 or above!");
           return;
@@ -412,5 +398,9 @@ public class GameBox extends JavaPlugin {
 
   public GameBoxCommands getCommands() {
     return commands;
+  }
+
+  public ModulesManager getModulesManager() {
+    return modulesManager;
   }
 }

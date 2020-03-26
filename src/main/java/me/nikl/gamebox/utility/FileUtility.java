@@ -1,24 +1,19 @@
 package me.nikl.gamebox.utility;
 
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.Module;
+import me.nikl.gamebox.module.GameBoxGame;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.JarURLConnection;
-import java.net.URL;
-import java.net.URLDecoder;
+import java.io.*;
+import java.net.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.jar.JarInputStream;
 import java.util.logging.Level;
 
 /**
@@ -41,8 +36,8 @@ public class FileUtility {
       JarURLConnection connection = (JarURLConnection) main.openConnection();
       JarFile jar = new JarFile(URLDecoder.decode(connection.getJarFileURL().getFile(), "UTF-8"));
       Plugin gameBox = Bukkit.getPluginManager().getPlugin("GameBox");
-      for (Enumeration list = jar.entries(); list.hasMoreElements(); ) {
-        JarEntry entry = (JarEntry) list.nextElement();
+      for (Enumeration<JarEntry> list = jar.entries(); list.hasMoreElements(); ) {
+        JarEntry entry = list.nextElement();
         if (entry.getName().split("/")[0].equals("language")) {
           String[] pathParts = entry.getName().split("/");
           if (pathParts.length < 2 || !entry.getName().endsWith(".yml")) {
@@ -62,15 +57,13 @@ public class FileUtility {
   }
 
 
-  public static boolean copyExternalResources(GameBox gameBox, Module module) {
-    JavaPlugin external = module.getExternalPlugin();
-    if (external == null) return false;
+  public static boolean copyExternalResources(GameBox gameBox, GameBoxGame module) {
     try {
-      JarFile jar = new JarFile(URLDecoder.decode(external.getClass().getProtectionDomain().getCodeSource().getLocation().getFile(), "UTF-8"));
+      JarFile jar = new JarFile(module.getJarFile());
       boolean foundDefaultLang = false;
       boolean foundConfig = false;
-      for (Enumeration list = jar.entries(); list.hasMoreElements(); ) {
-        JarEntry entry = (JarEntry) list.nextElement();
+      for (Enumeration<JarEntry> list = jar.entries(); list.hasMoreElements(); ) {
+        JarEntry entry = list.nextElement();
         String[] pathParts = entry.getName().split("/");
         String folderName = pathParts[0];
         if (folderName.equals("language")) {
@@ -78,18 +71,18 @@ public class FileUtility {
             continue;
           }
           // subfolder in language folder
-          if (!pathParts[1].equalsIgnoreCase(module.getModuleID())) continue;
+          if (!pathParts[1].equalsIgnoreCase(module.getGameId())) continue;
           String fileName = pathParts[pathParts.length - 1];
           if (fileName.equals("lang_en.yml")) {
             foundDefaultLang = true;
           }
           String gbPath = gameBox.getDataFolder().toString() + File.separatorChar
                   + "language" + File.separatorChar
-                  + module.getModuleID() + File.separatorChar + fileName;
+                  + module.getGameId() + File.separatorChar + fileName;
           File file = new File(gbPath);
           if (!file.exists()) {
             file.getParentFile().mkdirs();
-            saveResourceToGBFolder(entry.getName(), gbPath, external);
+            saveResourceToGBFolder(jar.getInputStream(entry), gbPath);
           }
         } else if (folderName.equalsIgnoreCase("games")) {
           if (entry.isDirectory()) continue;
@@ -98,7 +91,7 @@ public class FileUtility {
             continue;
           }
           // check module folder
-          if (!pathParts[1].equalsIgnoreCase(module.getModuleID())) {
+          if (!pathParts[1].equalsIgnoreCase(module.getGameId())) {
             // resource of other module
             continue;
           }
@@ -115,22 +108,22 @@ public class FileUtility {
           }
           String gbPath = gameBox.getDataFolder().toString() + File.separatorChar
                   + "games" + File.separatorChar
-                  + module.getModuleID() + File.separatorChar + fileName;
+                  + module.getGameId() + File.separatorChar + fileName;
           File file = new File(gbPath);
           if (!file.exists()) {
             file.getParentFile().mkdirs();
-            saveResourceToGBFolder(entry.getName(), gbPath, external);
+            saveResourceToGBFolder(jar.getInputStream(entry), gbPath);
           }
         }
       }
       jar.close();
       if (!foundDefaultLang) {
-        gameBox.warning(" Failed to locate default language file for the module '" + module.getModuleID() + "'");
-        gameBox.warning(" " + jar.getName() + " is missing the file 'language/" + module.getModuleID() + "/lang_en.yml'");
+        gameBox.warning(" Failed to locate default language file for the module '" + module.getGameId() + "'");
+        gameBox.warning(" " + jar.getName() + " is missing the file 'language/" + module.getGameId() + "/lang_en.yml'");
       }
       if (!foundConfig) {
-        gameBox.warning(" Failed to locate the configuration of the module '" + module.getModuleID() + "'");
-        gameBox.warning(" " + jar.getName() + " is missing the file 'games/" + module.getModuleID() + "/config.yml'");
+        gameBox.warning(" Failed to locate the configuration of the module '" + module.getGameId() + "'");
+        gameBox.warning(" " + jar.getName() + " is missing the file 'games/" + module.getGameId() + "/config.yml'");
       }
       if (!foundConfig || !foundDefaultLang) {
         return false;
@@ -142,26 +135,27 @@ public class FileUtility {
     return true;
   }
 
+  static public InputStream getResource(File jarFile, String entry) {
+    try {
+      JarFile jar = new JarFile(jarFile);
+      return jar.getInputStream(jar.getEntry(entry));
+    } catch (IOException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
   /**
    * Slightly adapted method from Bukkit...
    *
-   * @param resourcePath path to the resource in the external plugin
+   * @param resource     the stream that is supposed to be saved
    * @param gbPath       wanted path for the resource in gameBox
-   * @param plugin       external plugin
    */
-  static private void saveResourceToGBFolder(String resourcePath, String gbPath, JavaPlugin plugin) {
-    if (resourcePath == null || resourcePath.isEmpty()) {
-      throw new IllegalArgumentException("ResourcePath cannot be null or empty");
-    }
+  static private void saveResourceToGBFolder(InputStream resource, String gbPath) {
     Plugin gameBox = Bukkit.getPluginManager().getPlugin("GameBox");
-    resourcePath = resourcePath.replace('\\', '/');
-    InputStream in = plugin.getResource(resourcePath);
-    if (in == null) {
-      throw new IllegalArgumentException("The embedded resource '" + resourcePath + "' cannot be found in " + plugin.getName());
-    }
     File outFile = new File(gbPath);
-    int lastIndex = resourcePath.lastIndexOf(47);
-    File outDir = new File(gameBox.getDataFolder(), resourcePath.substring(0, lastIndex >= 0 ? lastIndex : 0));
+    int lastIndex = gbPath.lastIndexOf(47);
+    File outDir = new File(gameBox.getDataFolder(), gbPath.substring(0, Math.max(lastIndex, 0)));
     if (!outDir.exists()) {
       outDir.mkdirs();
     }
@@ -170,11 +164,11 @@ public class FileUtility {
       OutputStream out = new FileOutputStream(outFile);
       byte[] buf = new byte[1024];
       int len;
-      while ((len = in.read(buf)) > 0) {
+      while ((len = resource.read(buf)) > 0) {
         out.write(buf, 0, len);
       }
       out.close();
-      in.close();
+      resource.close();
     } catch (IOException var10) {
       gameBox.getLogger().log(Level.SEVERE, "Could not save " + outFile.getName() + " to " + outFile, var10);
     }
@@ -209,8 +203,6 @@ public class FileUtility {
           return lineSeparator;
         }
       }
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
     } catch (IOException e) {
       e.printStackTrace();
     } finally {
@@ -223,5 +215,121 @@ public class FileUtility {
       }
     }
     return null;
+  }
+
+  /**
+   * Collect all classes of the given type in the provided subfolder of the GameBox folder
+   *
+   * @param folder to check for classes
+   * @param type classes checked for
+   * @return list of found classes
+   */
+  public static List<Class<?>> getClasses(File folder, Class<?> type) {
+    return getClasses(folder, null, type);
+  }
+
+  /**
+   * Collect all classes of type `type` in the jar file with the provided name
+   * in the given subfolder of the GameBox folder
+   *
+   * @param folder to check for classes
+   * @param fileName look for jar with specific name
+   * @param type classes checked for
+   * @return list of found classes
+   */
+  public static List<Class<?>> getClasses(File folder, String fileName, Class<?> type) {
+    List<Class<?>> list = new ArrayList<>();
+    try {
+      if (!folder.exists()) {
+        return list;
+      }
+      FilenameFilter fileNameFilter = (dir, name) -> {
+        if (fileName != null) {
+          return name.endsWith(".jar") && name.replace(".jar", "")
+                  .equalsIgnoreCase(fileName.replace(".jar", ""));
+        }
+        return name.endsWith(".jar");
+      };
+      File[] jars = folder.listFiles(fileNameFilter);
+      if (jars == null) {
+        return list;
+      }
+      for (File jar : jars) {
+        list = gather(jar.toURI().toURL(), list, type);
+      }
+      return list;
+    } catch (MalformedURLException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  private static List<Class<?>> gather(URL jar, List<Class<?>> list, Class<?> clazz) {
+    if (list == null) {
+      list = new ArrayList<>();
+    }
+    try (
+            URLClassLoader classLoader = new URLClassLoader(new URL[]{jar}, clazz.getClassLoader());
+            JarInputStream jarInputStream = new JarInputStream(jar.openStream())
+    ) {
+      while (true) {
+        JarEntry jarEntry = jarInputStream.getNextJarEntry();
+        if (jarEntry == null) {
+          break;
+        }
+        String name = jarEntry.getName();
+        if (name == null || name.isEmpty()) {
+          continue;
+        }
+        if (name.endsWith(".class")) {
+          name = name.replace("/", ".");
+          String className = name.substring(0, name.lastIndexOf(".class"));
+          Class<?> jarEntryClass = classLoader.loadClass(className);
+          if (clazz.isAssignableFrom(jarEntryClass)) {
+            list.add(jarEntryClass);
+          }
+        }
+      }
+    } catch (ClassNotFoundException | IOException e) {
+      e.printStackTrace();
+    }
+    return list;
+  }
+
+  public static List<Class<?>> getClassesFromJar(File jar, Class<?> clazz) {
+    URL url = null;
+    try {
+      url = jar.toURI().toURL();
+    } catch (MalformedURLException e) {
+      e.printStackTrace();
+    }
+    return gather(url, null, clazz);
+  }
+
+  private static void streamToFile(InputStream initialStream, File targetFile) throws IOException {
+    byte[] buffer = new byte[initialStream.available()];
+    initialStream.read(buffer);
+    OutputStream outStream = new FileOutputStream(targetFile);
+    outStream.write(buffer);
+  }
+
+  public static List<File> getAllJars(File folder) {
+    if (!folder.exists()) {
+      return new ArrayList<>();
+    }
+    FilenameFilter fileNameFilter = (dir, name) -> name.endsWith(".jar");
+    return Arrays.asList(folder.listFiles(fileNameFilter));
+  }
+
+  public static InputStream getResource(String filename) throws IOException {
+    if (filename == null || filename.isEmpty()) throw new IllegalArgumentException("Filename cannot be null or empty");
+    URL url = GameBox.class.getClassLoader().getResource(filename);
+    if (url == null) throw new IOException("Resource '" + filename + "' not found");
+    URLConnection connection = url.openConnection();
+    return connection.getInputStream();
+  }
+
+  public static void copyResource(String resourceName, File targetFile) throws IOException {
+    streamToFile(getResource(resourceName), targetFile);
   }
 }

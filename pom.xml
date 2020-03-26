@@ -6,9 +6,9 @@
 
     <groupId>me.nikl</groupId>
     <artifactId>gamebox</artifactId>
-    <name>gamebox</name>
+    <name>GameBox</name>
     <packaging>jar</packaging>
-    <version>3.0.0-beta</version>
+    <version>3.0.0-beta.2</version>
     <description>Collection of inventory games</description>
     <url>https://gamebox.nikl.me</url>
 
@@ -24,10 +24,20 @@
         <connection>git@github.com:NiklasEi/gamebox.git</connection>
     </scm>
 
+    <developers>
+        <developer>
+            <id>Nikl</id>
+            <name>Niklas Eicker</name>
+            <email>hello@nikl.me</email>
+            <url>https://www.nikl.me</url>
+        </developer>
+    </developers>
+
     <build>
         <defaultGoal>clean package</defaultGoal>
         <sourceDirectory>src/main/java</sourceDirectory>
         <directory>target</directory>
+        <finalName>${project.name}</finalName>
         <resources>
             <resource>
                 <targetPath>.</targetPath>
@@ -158,6 +168,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <junit-jupiter.version>5.6.0</junit-jupiter.version>
+        <timestamp>${maven.build.timestamp}</timestamp>
+        <maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss:SSS Z</maven.build.timestamp.format>
     </properties>
 
     <dependencies>
@@ -218,7 +230,7 @@
         <dependency>
             <groupId>me.nikl.nmsutilities</groupId>
             <artifactId>nmsutilities</artifactId>
-            <version>1.3.1</version>
+            <version>1.3.2</version>
         </dependency>
         <!-- other stuff -->
         <dependency>
@@ -231,6 +243,12 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>${junit-jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

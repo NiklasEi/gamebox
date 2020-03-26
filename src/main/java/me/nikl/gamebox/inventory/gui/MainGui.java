@@ -13,19 +13,23 @@ import me.nikl.gamebox.inventory.button.DisplayButton;
 import me.nikl.gamebox.inventory.button.ToggleButton;
 import me.nikl.gamebox.utility.InventoryUtility;
 import me.nikl.gamebox.utility.ItemStackUtility;
+import me.nikl.gamebox.utility.Permission;
 import me.nikl.nmsutilities.NmsFactory;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * @author Niklas Eicker
@@ -33,7 +37,8 @@ import java.util.UUID;
 public class MainGui extends AGui implements TokenListener {
   private Map<UUID, ToggleButton> soundButtons = new HashMap<>();
   private Map<UUID, DisplayButton> tokenButtons = new HashMap<>();
-  private Map<AButton, Integer> preferredSlotsOfGameButtons = new HashMap<>();
+  private Map<String, AButton> gameButtons = new HashMap<>();
+  private Map<UUID, AButton[]> playerGrids = new HashMap<>();
   private int soundToggleSlot = 52;
   private int tokenButtonSlot = 45;
   private int shopSlot = 46;
@@ -43,7 +48,7 @@ public class MainGui extends AGui implements TokenListener {
     Button help = new Button(NmsFactory.getNmsUtility().addGlow(ItemStackUtility.createBookWithText(plugin.lang.BUTTON_MAIN_MENU_INFO)));
     help.setAction(ClickAction.NOTHING);
     setButton(help, 53);
-    ToggleButton soundToggle = ButtonFactory.createToggleButton(plugin.lang);
+    ToggleButton soundToggle = ButtonFactory.createSoundToggleButton(plugin.lang);
     setButton(soundToggle, soundToggleSlot);
     if (GameBoxSettings.tokensEnabled) {
       GBPlayer.addTokenListener(this);
@@ -74,13 +79,20 @@ public class MainGui extends AGui implements TokenListener {
   }
 
   @Override
+  public void onInventoryClick(InventoryClickEvent event) {
+    if (event.getCurrentItem() == null) return;
+    AButton[] playerGrid = this.playerGrids.get(event.getWhoClicked().getUniqueId());
+    this.handleInventoryClick(event, playerGrid);
+  }
+
+  @Override
   public boolean open(Player player) {
     if (!openInventories.containsKey(player.getUniqueId())) {
       if (!loadMainGui(player)) return false;
     }
     if (super.open(player)) {
       if (pluginManager.getGames().isEmpty()) {
-        NmsFactory.getNmsUtility().updateInventoryTitle(player, ChatColor.translateAlternateColorCodes('&', "&c&l %player% you should get some games on Spigot ;)".replace("%player%", player.getName())));
+        NmsFactory.getNmsUtility().updateInventoryTitle(player, ChatColor.translateAlternateColorCodes('&', "&1No games &4:(&1 You should install some"));
       }
       return true;
     }
@@ -92,6 +104,8 @@ public class MainGui extends AGui implements TokenListener {
   }
 
   public boolean loadMainGui(Player player) {
+    AButton[] playerGrid = loadPlayerGrid(player);
+    this.playerGrids.put(player.getUniqueId(), playerGrid);
     GBPlayer gbPlayer = pluginManager.getPlayer(player.getUniqueId());
     if (gbPlayer == null) {
       pluginManager.loadPlayer(player.getUniqueId());
@@ -99,8 +113,11 @@ public class MainGui extends AGui implements TokenListener {
     }
     String title = this.title.replace("%player%", player.getName());
     Inventory inventory = InventoryUtility.createInventory(this, this.inventory.getSize(), title);
-    inventory.setContents(this.inventory.getContents().clone());
-    ToggleButton soundToggle = ButtonFactory.createToggleButton(gameBox.lang);
+    ItemStack[] contents = this.inventory.getContents().clone();
+    // overwrite game buttons
+    System.arraycopy(playerGrid, 0, contents, 0, 45);
+    inventory.setContents(contents);
+    ToggleButton soundToggle = ButtonFactory.createSoundToggleButton(gameBox.lang);
     soundToggle = gbPlayer.isPlaySounds() ? soundToggle : soundToggle.toggle();
     soundButtons.put(gbPlayer.getUuid(), soundToggle);
     inventory.setItem(soundToggleSlot, soundToggle);
@@ -109,8 +126,22 @@ public class MainGui extends AGui implements TokenListener {
       tokenButtons.put(gbPlayer.getUuid(), tokens);
       inventory.setItem(tokenButtonSlot, tokens);
     }
-    openInventories.putIfAbsent(gbPlayer.getUuid(), inventory);
+    openInventories.put(gbPlayer.getUuid(), inventory);
     return true;
+  }
+
+  private AButton[] loadPlayerGrid(Player player) {
+    AButton[] cleanedGrid = grid.clone();
+    for (int slot=0; slot<45; slot++) {
+      cleanedGrid[slot] = null; // remove all game buttons from grid
+    }
+    List<String> buttonGameIds = new ArrayList<>(gameButtons.keySet());
+    buttonGameIds = buttonGameIds.stream().filter((id) -> Permission.PLAY_GAME.hasPermission(player, id)).collect(Collectors.toList());
+    Collections.sort(buttonGameIds);
+    for (int slot = 0; slot < buttonGameIds.size(); slot++) {
+      cleanedGrid[slot] = gameButtons.get(buttonGameIds.get(slot));
+    }
+    return cleanedGrid;
   }
 
   @Override
@@ -126,6 +157,7 @@ public class MainGui extends AGui implements TokenListener {
   public void removePlayer(UUID uuid) {
     soundButtons.remove(uuid);
     tokenButtons.remove(uuid);
+    playerGrids.remove(uuid);
     super.removePlayer(uuid);
   }
 
@@ -143,51 +175,20 @@ public class MainGui extends AGui implements TokenListener {
     }
   }
 
-  public void registerGameButton(Button gameButton, int preferredMainMenuSlot) {
-    preferredSlotsOfGameButtons.put(gameButton, preferredMainMenuSlot);
+  public void registerGameButton(Button gameButton, String gameId) {
+    gameButtons.put(gameId, gameButton);
   }
 
   private void placeGameButtons() {
-    boolean complications = false;
-    List<AButton> noPreferredSlotButtons = new ArrayList<>();
-    Map<Integer, AButton> preferredSlots = new HashMap<>();
-    for (Map.Entry<AButton, Integer> entry : preferredSlotsOfGameButtons.entrySet()) {
-      int preferredSlot = entry.getValue();
-      if (preferredSlot < 0) {
-        noPreferredSlotButtons.add(entry.getKey());
-        continue;
-      }
-      if (preferredSlots.keySet().contains(entry.getValue())) {
-        gameBox.warning("The preferred slot for " + entry.getKey().getArgs()[0] + " is already taken!");
-        complications = true;
-        noPreferredSlotButtons.add(entry.getKey());
-        continue;
-      }
-      if (entry.getValue() > 44) {
-        gameBox.warning("The preferred slot for " + entry.getKey().getArgs()[0] + " is > 44!");
-        complications = true;
-        noPreferredSlotButtons.add(entry.getKey());
-        continue;
-      }
-      preferredSlots.put(entry.getValue(), entry.getKey());
+    List<String> buttonGameIds = new ArrayList<>(gameButtons.keySet());
+    Collections.sort(buttonGameIds);
+    if (buttonGameIds.size() > 45) {
+      gameBox.warning("The number of installed game buttons is bigger than 45!");
+      gameBox.warning("This is currently not supported");
+      buttonGameIds = buttonGameIds.subList(0, 45);
     }
-    if (complications) {
-      gameBox.warning("Please fix the problem(s) above in 'games.yml'");
-      gameBox.warning("Until then these preferred slots are ignored.");
-    }
-    placeGameButtonsInPreferredSlots(preferredSlots);
-    placeGameButtons(noPreferredSlotButtons);
-  }
-
-  private void placeGameButtons(List<AButton> noPreferredSlotButtons) {
-    for (AButton button : noPreferredSlotButtons) {
-      setButton(button);
-    }
-  }
-
-  private void placeGameButtonsInPreferredSlots(Map<Integer, AButton> preferredSlots) {
-    for (Map.Entry<Integer, AButton> entry : preferredSlots.entrySet()) {
-      setButton(entry.getValue(), entry.getKey());
+    for (int slot = 0; slot < buttonGameIds.size(); slot++) {
+      setButton(gameButtons.get(buttonGameIds.get(slot)), slot);
     }
   }
 }

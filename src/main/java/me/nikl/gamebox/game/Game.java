@@ -3,7 +3,7 @@ package me.nikl.gamebox.game;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.GameBoxSettings;
-import me.nikl.gamebox.Module;
+import me.nikl.gamebox.module.GameBoxGame;
 import me.nikl.gamebox.data.toplist.SaveType;
 import me.nikl.gamebox.game.exceptions.GameLoadException;
 import me.nikl.gamebox.game.manager.GameManager;
@@ -40,6 +40,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -54,7 +55,7 @@ import java.util.logging.Level;
 public abstract class Game {
   protected GameBox gameBox;
   protected FileConfiguration config;
-  protected Module module;
+  protected GameBoxGame module;
   protected GameManager gameManager;
   protected GameSettings gameSettings;
   protected GameLanguage gameLang;
@@ -75,12 +76,11 @@ public abstract class Game {
   public abstract void onDisable();
 
   public void onEnable() throws GameLoadException {
-    GameBox.debug(" enabling the game: " + module.getModuleID());
+    GameBox.debug(" enabling the game: " + module.getGameId());
     loadConfig();
     loadSettings();
     loadLanguage();
     ConfigManager.registerModuleLanguage(module, gameLang);
-    checkRequirements();
     // at this point the game can load any game specific stuff (e.g. from config)
     init();
     loadGameManager();
@@ -96,44 +96,6 @@ public abstract class Game {
    */
   protected void finish() {
     // to be Overridden
-  }
-
-  private void checkRequirements() throws GameLoadException {
-    checkGameBoxVersion();
-  }
-
-  private void checkGameBoxVersion() throws GameLoadException {
-    String[] versionString = gameBox.getDescription().getVersion().replaceAll("[^0-9.]", "").split("\\.");
-    String[] minVersionString = gameSettings.getGameBoxMinimumVersion().split("\\.");
-    Integer[] version = new Integer[versionString.length];
-    Integer[] minVersion = new Integer[minVersionString.length];
-    for (int i = 0; i < minVersionString.length; i++) {
-      try {
-        minVersion[i] = Integer.valueOf(minVersionString[i]);
-        version[i] = Integer.valueOf(versionString[i]);
-      } catch (NumberFormatException exception) {
-        warn(" Failed to check required GameBox version!");
-        warn("     Lets hope it works...");
-        return;
-      }
-    }
-    if (minVersion.length != version.length) {
-      warn(" Failed to check required GameBox version!");
-      warn("     Lets hope it works...");
-      return;
-    }
-    for (int i = 0; i < minVersion.length; i++) {
-      if (minVersion[i] > version[i]) {
-        warn(" Your GameBox is outdated!");
-        warn(" Get the latest version on Spigot.");
-        warn(" https://www.spigotmc.org/resources/37273/");
-        warn(" You need at least version " + gameSettings.getGameBoxMinimumVersion());
-        warn(" for this game to work.");
-        throw new GameLoadException("GameBox version is not compatible!");
-      }
-      if (minVersion[i] == version[i]) continue;
-      return;
-    }
   }
 
   /**
@@ -169,15 +131,15 @@ public abstract class Game {
   public abstract void loadGameManager();
 
   public void loadConfig() throws GameLoadException {
-    GameBox.debug(" load config... (" + module.getModuleID() + ")");
+    GameBox.debug(" load config... (" + module.getGameId() + ")");
     configFile = new File(gameBox.getDataFolder()
             + File.separator + "games"
             + File.separator + getGameID()
             + File.separator + "config.yml");
     if (!configFile.exists()) {
-      GameBox.debug(" default config missing in GB folder (" + module.getModuleID() + ")");
+      GameBox.debug(" default config missing in GB folder (" + module.getGameId() + ")");
       configFile.getParentFile().mkdirs();
-      if (module.getExternalPlugin() != null) {
+      if (module.getJarFile() != null) {
         FileUtility.copyExternalResources(gameBox, module);
       } else {
         gameBox.saveResource("games"
@@ -190,8 +152,8 @@ public abstract class Game {
             + File.separator + getGameID()
             + File.separator);
     try {
-      this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(configFile), "UTF-8"));
-    } catch (UnsupportedEncodingException | FileNotFoundException e) {
+      this.config = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(configFile), StandardCharsets.UTF_8));
+    } catch (FileNotFoundException e) {
       e.printStackTrace();
       throw new GameLoadException("Failed to load the configuration", e);
     }
@@ -297,7 +259,7 @@ public abstract class Game {
       List<String> lore;
       for (String buttonID : topListButtons.getKeys(false)) {
         buttonSec = topListButtons.getConfigurationSection(buttonID);
-        if (!gameRules.keySet().contains(buttonID)) {
+        if (!gameRules.containsKey(buttonID)) {
           warn(" the top list button 'gameBox.topListButtons." + buttonID + "' does not have a corresponding game button");
           continue;
         }
@@ -360,12 +322,12 @@ public abstract class Game {
     return config;
   }
 
-  public Module getModule() {
+  public GameBoxGame getModule() {
     return module;
   }
 
   public String getGameID() {
-    return module.getModuleID();
+    return module.getGameId();
   }
 
   public GameSettings getSettings() {

@@ -51,15 +51,11 @@ public class GUIManager {
 
   public boolean isInGUI(UUID uuid) {
     if (isInMainGUI(uuid)) return true;
-    if (isInGameGUI(uuid)) return true;
-    return false;
+    return isInGameGUI(uuid);
   }
 
   public boolean isInMainGUI(UUID uuid) {
-    if (mainGui.isInGui(uuid)) {
-      return true;
-    }
-    return false;
+    return mainGui.isInGui(uuid);
   }
 
   public boolean isInGameGUI(UUID uuid) {
@@ -85,7 +81,7 @@ public class GUIManager {
       return false;
     }
 
-    if (!plugin.getPluginManager().hasSavedContents(whoClicked.getUniqueId())) {
+    if (plugin.getPluginManager().doesNotHaveSavedContents(whoClicked.getUniqueId())) {
       if (!plugin.getPluginManager().enterGameBox(whoClicked, args[0], args[1])) return false;
     }
 
@@ -130,7 +126,7 @@ public class GUIManager {
       return false;
     }
 
-    if (!plugin.getPluginManager().hasSavedContents(whoClicked.getUniqueId())) {
+    if (plugin.getPluginManager().doesNotHaveSavedContents(whoClicked.getUniqueId())) {
       EnterGameBoxEvent enterEvent = new EnterGameBoxEvent(whoClicked, "main");
       if (!enterEvent.isCancelled()) {
         plugin.getPluginManager().saveInventory(whoClicked);
@@ -191,7 +187,7 @@ public class GUIManager {
     gameButton.setItemMeta(button.getItemMeta());
     gameButton.setAction(ClickAction.OPEN_GAME_GUI);
     gameButton.setArgs(args[0], args[1]);
-    mainGui.registerGameButton(gameButton, plugin.getGameRegistry().getPreferredMainMenuSlot(args[0]));
+    mainGui.registerGameButton(gameButton, gui.getGameId());
   }
 
   public AGui getCurrentGui(UUID uuid) {

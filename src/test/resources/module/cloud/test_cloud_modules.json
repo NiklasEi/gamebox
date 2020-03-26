@@ -1,0 +1,24 @@
+[
+  {
+    "id": "test-module",
+    "authors": [
+      "Nikl"
+    ],
+    "name": "Test module",
+    "description": "This module is only for test purposes",
+    "sourceUrl": "https://github.com/hygames-team/api-hygames-co",
+    "latestVersion": "1.2.0",
+    "updatedAt": 1240
+  },
+  {
+    "id": "test-module2",
+    "authors": [
+      "Nikl"
+    ],
+    "name": "Test module",
+    "description": "This module is only for test purposes",
+    "sourceUrl": "https://github.com/hygames-team/api-hygames-co",
+    "latestVersion": "1.1.0",
+    "updatedAt": 1239
+  }
+]

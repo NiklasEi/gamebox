@@ -25,7 +25,7 @@ public class ButtonFactory {
     return tokenButton.update("%tokens%", token);
   }
 
-  public static ToggleButton createToggleButton(GameBoxLanguage language) {
+  public static ToggleButton createSoundToggleButton(GameBoxLanguage language) {
     ItemStack toggle = new ItemStack(ItemStackUtility.MUSIC_DISC_GREEN, 1);
     ToggleButton soundToggle = new ToggleButton(toggle, new ItemStack(ItemStackUtility.MUSIC_DISC_RED, 1));
     ItemMeta meta = soundToggle.getItemMeta();

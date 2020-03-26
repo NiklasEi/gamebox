@@ -10,6 +10,7 @@ import me.nikl.gamebox.input.InviteInputHandler;
 import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.GameBoxHolder;
 import me.nikl.gamebox.inventory.gui.AGui;
+import me.nikl.gamebox.module.GameBoxGame;
 import me.nikl.gamebox.utility.ItemStackUtility;
 import me.nikl.gamebox.utility.Permission;
 import me.nikl.gamebox.utility.Sound;
@@ -45,6 +46,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -183,7 +185,6 @@ public class PluginManager implements Listener {
     setOnWorldJoin = hubSec.getBoolean("giveItemOnWorldJoin", false);
   }
 
-  @SuppressWarnings("deprecation")
   public void saveInventory(Player player) {
     GameBox.debug("saving inventory contents...");
     hotBarSlot.putIfAbsent(player.getUniqueId(), player.getInventory().getHeldItemSlot());
@@ -215,13 +216,13 @@ public class PluginManager implements Listener {
     hotBarSlot.remove(player.getUniqueId());
   }
 
-  public boolean hasSavedContents(UUID uuid) {
-    return savedContents.containsKey(uuid);
+  public boolean doesNotHaveSavedContents(UUID uuid) {
+    return !savedContents.containsKey(uuid);
   }
 
   @EventHandler
   public void onInvClick(InventoryClickEvent event) {
-    if (event.getSlot() < 0 || event.getInventory() == null || event.getInventory().getHolder() == null || event.getWhoClicked() == null) {
+    if (event.getSlot() < 0 || event.getInventory().getHolder() == null) {
       return;
     }
     if (!(event.getWhoClicked() instanceof Player)) {
@@ -361,7 +362,7 @@ public class PluginManager implements Listener {
       restoreInventory(player);
     }
     // remove the player and all the personal GUIs. This also saves the GB options of that player.
-    if (gbPlayers.keySet().contains(player.getUniqueId())) {
+    if (gbPlayers.containsKey(player.getUniqueId())) {
       removePlayer(event.getPlayer().getUniqueId());
     }
   }
@@ -472,8 +473,8 @@ public class PluginManager implements Listener {
       }
       FileConfiguration log;
       try {
-        log = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(logFile), "UTF-8"));
-      } catch (UnsupportedEncodingException | FileNotFoundException e) {
+        log = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(logFile), StandardCharsets.UTF_8));
+      } catch (FileNotFoundException e) {
         e.printStackTrace();
         break logging;
       }
@@ -544,8 +545,8 @@ public class PluginManager implements Listener {
     return game == null ? null : game.getGameManager();
   }
 
-  public GameManager getGameManager(Module module) {
-    return getGameManager(module.getModuleID());
+  public GameManager getGameManager(GameBoxGame module) {
+    return getGameManager(module.getGameId());
   }
 
   public GUIManager getGuiManager() {
@@ -606,7 +607,7 @@ public class PluginManager implements Listener {
    * @return item successfully given
    */
   public boolean addItem(UUID uuid, ItemStack itemStack) {
-    if (!savedContents.keySet().contains(uuid) || itemStack == null) return false;
+    if (!savedContents.containsKey(uuid) || itemStack == null) return false;
 
     // map for the possibilities to fill already existing stacks up
     List<Integer> fillUpPossibilities = new ArrayList<>();
@@ -631,7 +632,6 @@ public class PluginManager implements Listener {
           int rest = itemStack.getAmount() - (itemStack.getMaxStackSize() - savedStacks[i].getAmount());
           fillUpPossibilities.add(i);
           itemStack.setAmount(rest);
-          continue;
         }
       }
     }
@@ -666,8 +666,8 @@ public class PluginManager implements Listener {
     return this.games;
   }
 
-  public Game getGame(Module module) {
-    return getGame(module.getModuleID());
+  public Game getGame(GameBoxGame module) {
+    return getGame(module.getGameId());
   }
 
   public Game getGame(String gameID) {

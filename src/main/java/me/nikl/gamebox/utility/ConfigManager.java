@@ -2,7 +2,7 @@ package me.nikl.gamebox.utility;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.Language;
-import me.nikl.gamebox.Module;
+import me.nikl.gamebox.module.GameBoxGame;
 import me.nikl.gamebox.game.GameLanguage;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -21,35 +21,43 @@ public class ConfigManager {
   private static final Map<String, Language> moduleLanguages = new HashMap<>();
   private static HashMap<String, HashMap<String, List<String>>> missingLanguageKeys;
 
-  public static void registerModuleConfiguration(Module module, FileConfiguration configuration) {
-    moduleFileConfigurations.put(module.getModuleID(), configuration);
+  public static void registerModuleConfiguration(GameBoxGame module, FileConfiguration configuration) {
+    registerModuleConfiguration(module.getGameId(), configuration);
   }
 
-  public static <T extends Language> void registerModuleLanguage(Module module, T language) {
-    moduleLanguages.put(module.getModuleID(), language);
+  public static void registerModuleConfiguration(String moduleId, FileConfiguration configuration) {
+    moduleFileConfigurations.put(moduleId, configuration);
   }
 
-  public static Language getLanguage(Module module) {
-    return getLanguage(module.getModuleID());
+  public static <T extends Language> void registerModuleLanguage(GameBoxGame module, T language) {
+    registerModuleLanguage(module.getGameId(), language);
+  }
+
+  public static <T extends Language> void registerModuleLanguage(String moduleId, T language) {
+    moduleLanguages.put(moduleId, language);
+  }
+
+  public static Language getLanguage(GameBoxGame module) {
+    return getLanguage(module.getGameId());
   }
 
   public static Language getLanguage(String moduleID) {
     return moduleLanguages.get(moduleID);
   }
 
-  public static GameLanguage getGameLanguage(Module module) {
-    return getGameLanguage(module.getModuleID());
+  public static GameLanguage getGameLanguage(GameBoxGame module) {
+    return getGameLanguage(module.getGameId());
   }
 
   public static GameLanguage getGameLanguage(String moduleID) {
     Language language = moduleLanguages.get(moduleID);
-    if (language == null || !(language instanceof GameLanguage))
+    if (!(language instanceof GameLanguage))
       throw new IllegalArgumentException("Requested game language for '" + moduleID + "' cannot be found");
     return (GameLanguage) language;
   }
 
-  public static FileConfiguration getConfig(Module module) {
-    return getConfig(module.getModuleID());
+  public static FileConfiguration getConfig(GameBoxGame module) {
+    return getConfig(module.getGameId());
   }
 
   public static FileConfiguration getConfig(String moduleID) {
@@ -116,7 +124,7 @@ public class ConfigManager {
     List<String> keys;
     gameBox.info(" Missing from " + ChatColor.BLUE + ConfigManager.getLanguage(moduleID).DEFAULT_PLAIN_NAME
             + ChatColor.RESET + " language file:");
-    if (currentKeys.keySet().contains("string")) {
+    if (currentKeys.containsKey("string")) {
       gameBox.info(" ");
       gameBox.info(ChatColor.BOLD + "   Strings:");
       keys = currentKeys.get("string");
@@ -124,7 +132,7 @@ public class ConfigManager {
         gameBox.info(ChatColor.RED + "   -> " + ChatColor.RESET + key);
       }
     }
-    if (currentKeys.keySet().contains("list")) {
+    if (currentKeys.containsKey("list")) {
       gameBox.info(" ");
       gameBox.info(ChatColor.BOLD + "   Lists:");
       keys = currentKeys.get("list");

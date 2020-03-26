@@ -1,12 +1,19 @@
 package me.nikl.gamebox;
 
+import me.nikl.gamebox.module.local.LocalModule;
+import me.nikl.gamebox.module.local.LocalModuleData;
+import me.nikl.gamebox.module.local.VersionedModule;
 import me.nikl.gamebox.utility.Sound;
+import me.nikl.gamebox.utility.versioning.SemanticVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.PluginDescriptionFile;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author Niklas Eicker
@@ -44,6 +51,7 @@ public class GameBoxSettings {
   public static String adminCommand;
 
   private static FileConfiguration configuration;
+  private static VersionedModule gameBoxData;
 
   public static void loadSettings(GameBox plugin) {
     configuration = plugin.getConfig();
@@ -165,5 +173,32 @@ public class GameBoxSettings {
         it.remove();
       if (slot < 0 || slot > 8) it.remove();
     }
+  }
+
+  static void defineGameBoxData(GameBox instance) {
+    PluginDescriptionFile description = instance.getDescription();
+    YamlConfiguration pluginFile = YamlConfiguration.loadConfiguration(new InputStreamReader(instance.getClass().getResourceAsStream("/plugin.yml")));
+    try {
+      String updatedAt = pluginFile.getString("updatedAt");
+      String updatedAtFormat = pluginFile.getString("updatedAtFormat");
+      if (updatedAt == null || updatedAtFormat == null) {
+        throw new Error("Was expecting build timestamp and format in plugin.yml file");
+      }
+      LocalModuleData data = new LocalModuleData()
+              .withAuthors(description.getAuthors())
+              .withDependencies(new ArrayList<>())
+              .withDescription(description.getDescription())
+              .withId(description.getName().toLowerCase())
+              .withName(description.getName())
+              .withSourceUrl(pluginFile.getString("gameBoxSource"))
+              .withVersion(new SemanticVersion(description.getVersion())).withUpdatedAt(new SimpleDateFormat(updatedAtFormat).parse(updatedAt).getTime());
+      gameBoxData = new LocalModule(data);
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public static VersionedModule getGameBoxData() {
+    return gameBoxData;
   }
 }
