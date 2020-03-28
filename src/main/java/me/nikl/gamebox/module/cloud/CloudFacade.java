@@ -27,41 +27,45 @@ import me.nikl.gamebox.utility.GameBoxGsonBuilder;
 import me.nikl.gamebox.utility.versioning.SemanticVersion;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.UnknownHostException;
 
 public class CloudFacade {
     private static final String API_BASE_URL = "https://api.gamebox.nikl.me/";
-    //private static final String API_BASE_URL = "http://127.0.0.1:8080/";
     private static final Gson GSON = GameBoxGsonBuilder.build();
 
     public ApiResponse<CloudModuleData[]> getCloudModuleData() {
-        try {
-            CloudModuleData[] modulesData = GSON.fromJson(new InputStreamReader(new URL(API_BASE_URL + "modules").openStream()), CloudModuleData[].class);
-            return new ApiResponse<>(modulesData, null);
-        } catch (UnknownHostException e) {
-            return new ApiResponse<>(null, new GameBoxCloudException("Connection problem to the cloud. Please make sure that you are connected to the internet.", e));
-        } catch (IOException e) {
-            return new ApiResponse<>(null, new GameBoxCloudException(e));
+        ApiResponse<InputStream> stream = this.openStream("modules");
+        if (stream.getError() != null) {
+            return new ApiResponse<>(null, stream.getError());
         }
+        CloudModuleData[] modulesData = GSON.fromJson(new InputStreamReader(stream.getData()), CloudModuleData[].class);
+        return new ApiResponse<>(modulesData, null);
     }
 
     public ApiResponse<CloudModuleDataWithVersion[]> getCloudModuleDataWithVersion(String moduleId) {
-        try {
-            CloudModuleDataWithVersion[] modulesData = GSON.fromJson(new InputStreamReader(new URL(API_BASE_URL + String.format("module/%s", moduleId)).openStream()), CloudModuleDataWithVersion[].class);
-            return new ApiResponse<>(modulesData, null);
-        } catch (UnknownHostException e) {
-            return new ApiResponse<>(null, new GameBoxCloudException("Connection problem to the cloud. Please make sure that you are connected to the internet.", e));
-        } catch (IOException e) {
-            return new ApiResponse<>(null, new GameBoxCloudException(e));
+        ApiResponse<InputStream> stream = this.openStream(String.format("module/%s", moduleId));
+        if (stream.getError() != null) {
+            return new ApiResponse<>(null, stream.getError());
         }
+        CloudModuleDataWithVersion[] modulesData = GSON.fromJson(new InputStreamReader(stream.getData()), CloudModuleDataWithVersion[].class);
+        return new ApiResponse<>(modulesData, null);
     }
 
     public ApiResponse<VersionedCloudModule> getVersionedCloudModuleData(String moduleId, SemanticVersion version) {
+        ApiResponse<InputStream> stream = this.openStream(String.format("module/%s/%s", moduleId, version.toString()));
+        if (stream.getError() != null) {
+            return new ApiResponse<>(null, stream.getError());
+        }
+        VersionedCloudModule modulesData = GSON.fromJson(new InputStreamReader(stream.getData()), VersionedCloudModule.class);
+        return new ApiResponse<>(modulesData, null);
+    }
+
+    private ApiResponse<InputStream> openStream(String path) {
         try {
-            VersionedCloudModule modulesData = GSON.fromJson(new InputStreamReader(new URL(API_BASE_URL + String.format("module/%s/%s", moduleId, version.toString())).openStream()), VersionedCloudModule.class);
-            return new ApiResponse<>(modulesData, null);
+            return new ApiResponse<>(new URL(API_BASE_URL + path).openStream(), null);
         } catch (UnknownHostException e) {
             return new ApiResponse<>(null, new GameBoxCloudException("Connection problem to the cloud. Please make sure that you are connected to the internet.", e));
         } catch (IOException e) {
@@ -69,4 +73,3 @@ public class CloudFacade {
         }
     }
 }
-
