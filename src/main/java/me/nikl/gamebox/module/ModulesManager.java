@@ -220,9 +220,10 @@ public class ModulesManager {
         loadedModules.put(localModule.getId(), gameBoxModule);
         try {
             gameBoxModule.onEnable();
-        } catch (Exception e) { // catch all and skip module if there is an exception in onEnable
-            gameBox.getLogger().severe("Exception while enabling " + localModule.getName() + " @" + localModule.getVersionData().getVersion().toString() + ":");
+        } catch (Throwable e) { // catch all and skip module if there is an exception in onEnable
+            gameBox.getLogger().severe("Exception while enabling " + localModule.getName() + " @" + localModule.getVersionData().getVersion().toString());
             e.printStackTrace();
+            gameBox.getLogger().severe("Skipping...");
             unloadModule(localModule);
         }
     }
