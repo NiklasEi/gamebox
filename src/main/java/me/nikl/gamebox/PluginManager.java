@@ -706,17 +706,7 @@ public class PluginManager implements Listener {
   public void leaveGameBox(Player player) {
     restoreInventory(player);
     plugin.getInventoryTitleMessenger().removeTitleMessage(player.getUniqueId());
-    // in 1.8 there is a short delay necessary to display the restored inventory contents.
-    if (GameBoxSettings.version1_8) {
-      new BukkitRunnable() {
-        @Override
-        public void run() {
-          player.updateInventory();
-        }
-      }.runTaskLater(plugin, 1);
-    } else {
-      player.updateInventory();
-    }
+    player.updateInventory();
     new LeftGameBoxEvent(player);
   }
 

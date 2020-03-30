@@ -14,7 +14,6 @@ import me.nikl.gamebox.inventory.GUIManager;
 import me.nikl.gamebox.inventory.InventoryTitleMessenger;
 import me.nikl.gamebox.listeners.EnterGameBoxListener;
 import me.nikl.gamebox.listeners.LeftGameBoxListener;
-import me.nikl.gamebox.module.GameBoxGame;
 import me.nikl.gamebox.module.ModulesManager;
 import me.nikl.gamebox.utility.ConfigManager;
 import me.nikl.gamebox.utility.FileUtility;

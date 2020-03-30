@@ -10,24 +10,26 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginDescriptionFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Niklas Eicker
- * <p>
+ *
  * class to store global settings
  */
 public class GameBoxSettings {
   public static boolean exceptInvitesWithoutPlayPermission = false;
   public static boolean playSounds = true; //toggle for playing sounds
   public static Sound successfulClick, unsuccessfulClick;
-  public static boolean checkInventoryLength = false;
   public static boolean useMysql = false;
   public static boolean bungeeMode = false;
-  public static boolean version1_8 = false;
   public static int inviteInputDuration = 30; // time in seconds for inputs
   public static int inviteValidDuration = 60; // time in seconds for invitations
   public static boolean econEnabled = false;
@@ -55,7 +57,6 @@ public class GameBoxSettings {
 
   public static void loadSettings(GameBox plugin) {
     configuration = plugin.getConfig();
-    loadSpecialVersionSettings();
     loadCommands();
     loadDatabaseSettings();
     hubModeEnabled = configuration.getBoolean("hubMode.enabled", false);
@@ -68,19 +69,6 @@ public class GameBoxSettings {
   private static void loadDatabaseSettings() {
     useMysql = configuration.getBoolean("mysql.enabled", false);
     bungeeMode = useMysql && configuration.getBoolean("mysql.bungeeMode", false);
-  }
-
-  private static void loadSpecialVersionSettings() {
-    String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
-    switch (version) {
-      case "v1_8_R1":
-      case "v1_8_R2":
-      case "v1_8_R3":
-        version1_8 = true;
-        return;
-      default:
-        return;
-    }
   }
 
   private static void loadCommands() {
@@ -163,7 +151,9 @@ public class GameBoxSettings {
             && configuration.isList("guiSettings.keepItemsSlots")) {
       slotsToKeep = configuration.getIntegerList("guiSettings.keepItemsSlots");
     }
-    if (slotsToKeep == null) slotsToKeep = new ArrayList<>();
+    if (slotsToKeep == null) {
+      slotsToKeep = new ArrayList<>();
+    }
     Iterator<Integer> it = slotsToKeep.iterator();
     while (it.hasNext()) {
       int slot = it.next();
@@ -177,8 +167,11 @@ public class GameBoxSettings {
 
   static void defineGameBoxData(GameBox instance) {
     PluginDescriptionFile description = instance.getDescription();
-    YamlConfiguration pluginFile = YamlConfiguration.loadConfiguration(new InputStreamReader(instance.getClass().getResourceAsStream("/plugin.yml")));
-    try {
+    try (InputStream pluginFileStream = GameBox.getProvidingPlugin(GameBox.class).getResource("plugin.yml")){
+      if (pluginFileStream == null) {
+        throw new IOException("Cannot load plugin.yml as input stream");
+      }
+      YamlConfiguration pluginFile = YamlConfiguration.loadConfiguration(new InputStreamReader(pluginFileStream));
       String updatedAt = pluginFile.getString("updatedAt");
       String updatedAtFormat = pluginFile.getString("updatedAtFormat");
       if (updatedAt == null || updatedAtFormat == null) {
@@ -193,7 +186,7 @@ public class GameBoxSettings {
               .withSourceUrl(pluginFile.getString("gameBoxSource"))
               .withVersion(new SemanticVersion(description.getVersion())).withUpdatedAt(new SimpleDateFormat(updatedAtFormat).parse(updatedAt).getTime());
       gameBoxData = new LocalModule(data);
-    } catch (ParseException e) {
+    } catch (ParseException | IOException e) {
       e.printStackTrace();
     }
   }
