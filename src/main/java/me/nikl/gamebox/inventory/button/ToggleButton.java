@@ -31,7 +31,7 @@ public class ToggleButton extends Button {
     ArrayList<String> lore = new ArrayList<>(toggleLore);
 
     this.toggle.setAmount(getAmount());
-    this.toggle.setType(getData().getItemType());
+    this.toggle.setType(getType());
     toggleDisplayName = meta.getDisplayName();
     toggleLore = new ArrayList<>(meta.getLore());
 
