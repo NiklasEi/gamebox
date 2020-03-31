@@ -19,6 +19,8 @@
 package me.nikl.gamebox.module.cloud;
 
 import me.nikl.gamebox.GameBox;
+import me.nikl.gamebox.exceptions.module.CloudModuleNotFoundException;
+import me.nikl.gamebox.exceptions.module.CloudModuleVersionNotFoundException;
 import me.nikl.gamebox.exceptions.module.GameBoxCloudException;
 import me.nikl.gamebox.module.data.CloudModuleData;
 import me.nikl.gamebox.module.data.CloudModuleDataWithVersion;
@@ -93,7 +95,11 @@ public class CloudFacade {
     public ApiResponse<VersionedCloudModule> getVersionedCloudModuleData(String moduleId, SemanticVersion version) {
         ApiResponse<InputStream> stream = this.openStream(String.format("module/%s/%s", moduleId, version.toString()));
         if (stream.getError() != null) {
-            return new ApiResponse<>(null, stream.getError());
+            if(stream.getError() instanceof CloudModuleNotFoundException) {
+                return new ApiResponse<>(null, new CloudModuleVersionNotFoundException(stream.getError()));
+            } else {
+                return new ApiResponse<>(null, stream.getError());
+            }
         }
         VersionedCloudModule modulesData = GSON.fromJson(new InputStreamReader(stream.getData()), VersionedCloudModule.class);
         return new ApiResponse<>(modulesData, null);
@@ -105,6 +111,10 @@ public class CloudFacade {
             HttpsURLConnection urlConnection =
                     (HttpsURLConnection) url.openConnection();
             urlConnection.setSSLSocketFactory(factoryTrustingLetsEncrypt);
+            int code = urlConnection.getResponseCode();
+            if (code == 404) {
+                return new ApiResponse<>(null, new CloudModuleNotFoundException());
+            }
             InputStream in = urlConnection.getInputStream();
             return new ApiResponse<>(in, null);
         } catch (UnknownHostException e) {

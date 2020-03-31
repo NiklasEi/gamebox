@@ -3,6 +3,8 @@ package me.nikl.gamebox.commands.admin.modules;
 import co.aikar.commands.annotation.*;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.commands.GameBoxBaseCommand;
+import me.nikl.gamebox.exceptions.module.CloudModuleNotFoundException;
+import me.nikl.gamebox.exceptions.module.CloudModuleVersionNotFoundException;
 import me.nikl.gamebox.exceptions.module.GameBoxCloudException;
 import me.nikl.gamebox.module.GameBoxModule;
 import me.nikl.gamebox.module.ModulesManager;
@@ -36,8 +38,8 @@ public class Install extends GameBoxBaseCommand {
         BukkitRunnable install = new BukkitRunnable() {
             @Override
             public void run() {
+                SemanticVersion semVersion = null;
                 try {
-                    SemanticVersion semVersion;
                     ModulesManager modulesManager = gameBox.getModulesManager();
                     CloudModuleData cloudModuleData = modulesManager.getCloudService().getModuleData(moduleID);
                     if (version != null) {
@@ -62,6 +64,14 @@ public class Install extends GameBoxBaseCommand {
                     }
                     modulesManager.installModule(moduleID, semVersion);
                     sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_MODULES_INSTALL_SUCCESS.replaceAll("%name%", cloudModuleData.getName()));
+                } catch (CloudModuleVersionNotFoundException e) {
+                    String message = gameBox.lang.CMD_MODULES_VERSION_NOT_FOUND.replaceAll("%id%", moduleID);
+                    if (semVersion != null) {
+                        message = message.replaceAll("%version%", semVersion.toString());
+                    }
+                    sender.sendMessage(gameBox.lang.PREFIX + message);
+                } catch (CloudModuleNotFoundException e) {
+                    sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_CLOUD_MODULE_NOT_FOUND.replaceAll("%id%", moduleID));
                 } catch (GameBoxCloudException e) {
                     sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_CANNOT_CONNECT_TO_MODULES_CLOUD);
                 }

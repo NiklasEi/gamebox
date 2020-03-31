@@ -67,10 +67,11 @@ commandMessages:
     gameInvalidSetting: " &4Invalid game setting!"
   modules:
     invalidSemVersion: " &4The version needs to be semantic! See https://semver.org/"
-    versionNotFound: " &4The requested version was not found :("
+    versionNotFound: " &4The module '%id%' @ version %version% was not found :("
     moduleInstalled: " &2%name% was installed. Have fun :)"
     moduleAlreadyInstalled: " &4%name% is already installed!&r To update please use &2/gba update %id%"
     installingLatestVersion: " &2Installing latest version of %name% (%version%)"
+    notFoundInCloud: " &4Could not find the module '%id%' in the GameBox cloud :("
     list:
       header: " &2Found &1%amount% &2modules in the cloud&r"
       header2: "   &2&n[moduleId] Name (latest version)&r"

@@ -20,6 +20,7 @@ package me.nikl.gamebox.module.cloud;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.data.database.DataBase;
+import me.nikl.gamebox.exceptions.module.CloudModuleNotFoundException;
 import me.nikl.gamebox.exceptions.module.GameBoxCloudException;
 import me.nikl.gamebox.exceptions.module.InvalidModuleException;
 import me.nikl.gamebox.module.data.CloudModuleData;
@@ -68,7 +69,7 @@ public class CloudService {
 
     public CloudModuleData getModuleData(String moduleID) throws GameBoxCloudException {
         CloudModuleData cloudModuleData = cloudContent.get(moduleID);
-        if (cloudModuleData == null) throw new GameBoxCloudException("No moduledata found for ID '" + moduleID + "'");
+        if (cloudModuleData == null) throw new CloudModuleNotFoundException("No moduledata found for ID '" + moduleID + "'");
         return cloudModuleData;
     }
 
@@ -129,7 +130,7 @@ public class CloudService {
     public VersionedCloudModule getVersionedCloudModule(String moduleId, SemanticVersion version) throws GameBoxCloudException {
         ApiResponse<VersionedCloudModule> response = this.facade.getVersionedCloudModuleData(moduleId, version);
         if (response.getError() != null) {
-            throw new GameBoxCloudException(response.getError());
+            throw response.getError();
         }
         return response.getData();
     }

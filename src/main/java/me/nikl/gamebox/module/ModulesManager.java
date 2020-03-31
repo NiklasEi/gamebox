@@ -20,6 +20,7 @@ package me.nikl.gamebox.module;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.data.database.DataBase;
+import me.nikl.gamebox.exceptions.module.CloudModuleVersionNotFoundException;
 import me.nikl.gamebox.exceptions.module.GameBoxCloudException;
 import me.nikl.gamebox.exceptions.module.InvalidModuleException;
 import me.nikl.gamebox.module.cloud.CloudFacade;
@@ -197,6 +198,8 @@ public class ModulesManager {
     public void installModule(String moduleId, SemanticVersion version) throws GameBoxCloudException {
         try {
             installModule(cloudService.getVersionedCloudModule(moduleId, version));
+        } catch (CloudModuleVersionNotFoundException e) {
+            throw e;
         } catch (GameBoxCloudException e) {
             e.printStackTrace();
             throw e;
