@@ -33,7 +33,7 @@ public class OpenGameBox extends PlayerBaseCommand {
       guiManager.openMainGui(player);
       return;
     }
-    GameBoxGame module = gameBox.getGameRegistry().getModuleBySubCommand(subCommand);
+    GameBoxGame module = gameBox.getGameRegistry().getGameBySubCommand(subCommand);
     if (module != null) {
       // this will be checked again when opening the gui but checking it here
       //   removes the necessity to save and later restore the inventory of the player

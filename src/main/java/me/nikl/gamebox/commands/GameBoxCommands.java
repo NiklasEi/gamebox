@@ -52,10 +52,10 @@ public class GameBoxCommands extends BukkitCommandManager {
             Arrays.asList(Arrays.stream(SaveType.values()).map(Object::toString).toArray(String[]::new))
     );
     getCommandCompletions().registerCompletion("moduleIDs", c ->
-            gameBox.getGameRegistry().getModuleIDs()
+            gameBox.getGameRegistry().getGameIds()
     );
     getCommandCompletions().registerCompletion("SubCommands", c ->
-            gameBox.getGameRegistry().getSubcommands()
+            gameBox.getGameRegistry().getSubCommands()
     );
   }
 

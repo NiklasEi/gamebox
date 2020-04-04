@@ -38,7 +38,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author Niklas Eicker
@@ -46,6 +45,7 @@ import java.util.stream.Collectors;
 public class CloudService {
     private GameBox gameBox;
     private CloudFacade facade;
+    private long lastCloudContentUpdate = 0L;
     private Map<String, CloudModuleData> cloudContent = new HashMap<>();
     private Map<String, Thread> downloadingModules = new HashMap<>();
 
@@ -55,15 +55,15 @@ public class CloudService {
     }
 
     public void updateCloudContent() throws GameBoxCloudException {
-
         ApiResponse<CloudModuleData[]> response = this.facade.getCloudModuleData();
         if (response.getError() != null) {
             throw response.getError();
         }
+        lastCloudContentUpdate = System.currentTimeMillis();
         cloudContent.clear();
         for (CloudModuleData moduleData : response.getData()) {
             cloudContent.put(moduleData.getId(), moduleData);
-            gameBox.getLogger().info("got moduledata for id:'" + moduleData.getId() + "'");
+            GameBox.debug("got module data for id:'" + moduleData.getId() + "'");
         }
     }
 
@@ -80,8 +80,8 @@ public class CloudService {
             return false;
         }
         SemanticVersion localVersion = localModule.getVersionData().getVersion();
-        SemanticVersion newestCloudVersion = cloudModule.getLatestVersion();
-        return newestCloudVersion.isUpdateFor(localVersion);
+        SemanticVersion latestCloudVersion = cloudModule.getLatestVersion();
+        return latestCloudVersion.isUpdateFor(localVersion);
     }
 
     public void downloadModule(VersionedCloudModule module, DataBase.Callback<LocalModule> callback) {
@@ -137,5 +137,9 @@ public class CloudService {
 
     public List<CloudModuleData> getCloudContent() {
         return new ArrayList<>(this.cloudContent.values());
+    }
+
+    public long secondsSinceLastCloudContentUpdate() {
+        return Math.round((System.currentTimeMillis() - lastCloudContentUpdate)/1000.);
     }
 }

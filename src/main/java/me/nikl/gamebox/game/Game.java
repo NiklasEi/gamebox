@@ -39,7 +39,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,7 +64,7 @@ public abstract class Game {
   private File configFile;
 
   protected Game(GameBox gameBox, String gameID) {
-    this.module = gameBox.getGameRegistry().getModule(gameID);
+    this.module = gameBox.getGameRegistry().getGame(gameID);
     Validate.notNull(module, " You cannot initialize a game without registering it's module first!");
     this.gameBox = gameBox;
     this.gbLang = gameBox.lang;

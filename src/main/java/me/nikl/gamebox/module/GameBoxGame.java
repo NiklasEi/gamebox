@@ -27,7 +27,7 @@ public class GameBoxGame {
     this.gameClass = gameClass;
     this.gameId = gameId.toLowerCase();
     this.jarFile = jarFile;
-    gameBox.getGameRegistry().registerModule(this);
+    gameBox.getGameRegistry().registerGame(this);
   }
 
   public String getGameId() {

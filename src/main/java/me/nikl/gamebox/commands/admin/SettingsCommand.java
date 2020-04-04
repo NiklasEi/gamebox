@@ -72,7 +72,7 @@ public class SettingsCommand extends GameBoxBaseCommand {
   }
 
   private void disableGame(CommandSender sender, String gameID) {
-    GameBoxGame module = gameBox.getGameRegistry().getModule(gameID);
+    GameBoxGame module = gameBox.getGameRegistry().getGame(gameID);
     if (module == null) {
       sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_SETTINGS_GAME_DISABLE_FAIL);
       return;
@@ -89,7 +89,7 @@ public class SettingsCommand extends GameBoxBaseCommand {
   }
 
   private void enableGame(CommandSender sender, String gameID) {
-    if (!gameBox.getGameRegistry().isDisabledModule(gameID)) {
+    if (!gameBox.getGameRegistry().isDisabledGame(gameID)) {
       sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_SETTINGS_GAME_ENABLE_FAIL);
       return;
     }

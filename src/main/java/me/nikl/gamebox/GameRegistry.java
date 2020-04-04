@@ -34,7 +34,7 @@ public class GameRegistry {
           new HashSet<>(Arrays.asList("all", "game", "games", "info", "token", "t"));
   private final Set<String> forbiddenSubCommands =
           new HashSet<>(Arrays.asList("all", "game", "games", "info", "token", "t"));
-  private final Set<String> disabledModules = new HashSet<>();
+  private final Set<String> disabledGames = new HashSet<>();
   private GameBox gameBox;
   private Map<String, GameBoxGame> games = new HashMap<>();
   private Map<String, GameBoxGame> declinedGames = new HashMap<>();
@@ -48,15 +48,15 @@ public class GameRegistry {
     this.gameBox = plugin;
   }
 
-  private void loadDisabledModules() {
-    disabledModules.clear();
+  private void loadDisabledGames() {
+    disabledGames.clear();
     enableNewGamesByDefault = gamesConfiguration.getBoolean("enableNewGamesByDefault", true);
     ConfigurationSection gamesSection = gamesConfiguration.getConfigurationSection("games");
     if (gamesSection == null) return;
-    for (String moduleID : gamesSection.getKeys(false)) {
-      if (!gamesSection.getBoolean(moduleID + ".enabled", true)) {
-        GameBox.debug("Set " + moduleID + " as disabled");
-        disabledModules.add(moduleID);
+    for (String gameId : gamesSection.getKeys(false)) {
+      if (!gamesSection.getBoolean(gameId + ".enabled", true)) {
+        GameBox.debug("Set " + gameId + " as disabled");
+        disabledGames.add(gameId);
       }
     }
   }
@@ -73,7 +73,7 @@ public class GameRegistry {
     }
   }
 
-  public boolean registerModule(GameBoxGame game) {
+  public boolean registerGame(GameBoxGame game) {
     if (isRegistered(game.getGameId())) {
       gameBox.getLogger().log(Level.WARNING, "A Module tried registering with an already in use ID!");
       return false;
@@ -82,13 +82,13 @@ public class GameRegistry {
       gameBox.getLogger().log(Level.WARNING, "A Module tried registering with a forbidden ID (" + game.getGameId() + ")");
       return false;
     }
-    if (disabledModules.contains(game.getGameId())) {
+    if (disabledGames.contains(game.getGameId())) {
       declinedGames.put(game.getGameId(), game);
       gameBox.warning("The game " + game.getGameId() + " is disabled in 'games.yml'");
       return false;
     }
     if (!game.getGameId().equals(GameBox.MODULE_GAMEBOX))
-      handleModuleSettings(game);
+      handleGameSettings(game);
       games.put(game.getGameId(), game);
     if (game.getJarFile() != null) {
       if (!FileUtility.copyExternalResources(gameBox, game)) {
@@ -102,20 +102,20 @@ public class GameRegistry {
     return true;
   }
 
-  private void handleModuleSettings(GameBoxGame game) {
-    String moduleID = game.getGameId();
-    if (!gamesConfiguration.isSet("games." + moduleID)) {
-      setDefaultModuleSettings(game);
+  private void handleGameSettings(GameBoxGame game) {
+    String gameId = game.getGameId();
+    if (!gamesConfiguration.isSet("games." + gameId)) {
+      setDefaultGameSettings(game);
     } else {
       // overwrite default sub commands
-      if (gamesConfiguration.isList("games." + moduleID + ".subCommands")) {
-        List<String> subCommands = gamesConfiguration.getStringList("games." + moduleID + ".subCommands");
+      if (gamesConfiguration.isList("games." + gameId + ".subCommands")) {
+        List<String> subCommands = gamesConfiguration.getStringList("games." + gameId + ".subCommands");
         if (!subCommands.isEmpty()) game.setSubCommands(subCommands);
       }
     }
   }
 
-  private void setDefaultModuleSettings(GameBoxGame game) {
+  private void setDefaultGameSettings(GameBoxGame game) {
     String gameId = game.getGameId();
     gamesConfiguration.set("games." + gameId + ".enabled", enableNewGamesByDefault);
     gamesConfiguration.set("games." + gameId + ".subCommands", game.getSubCommands());
@@ -130,7 +130,7 @@ public class GameRegistry {
     return games.containsKey(gameId.toLowerCase());
   }
 
-  public GameBoxGame getModule(String gameId) {
+  public GameBoxGame getGame(String gameId) {
     return games.get(gameId);
   }
 
@@ -140,7 +140,7 @@ public class GameRegistry {
    */
   public void reload() {
     reloadGamesConfiguration();
-    loadDisabledModules();
+    loadDisabledGames();
     games.putAll(declinedGames);
     declinedGames.clear();
     subCommands.clear();
@@ -148,7 +148,7 @@ public class GameRegistry {
     Iterator<GameBoxGame> iterator = games.values().iterator();
     while (iterator.hasNext()) {
       GameBoxGame module = iterator.next();
-      if (disabledModules.contains(module.getGameId())) {
+      if (disabledGames.contains(module.getGameId())) {
         iterator.remove();
         declinedGames.put(module.getGameId(), module);
         gameBox.warning("The game " + module.getGameId() + " is disabled in 'games.yml'");
@@ -197,7 +197,7 @@ public class GameRegistry {
     }
   }
 
-  public Set<String> getModuleIDs() {
+  public Set<String> getGameIds() {
     return Collections.unmodifiableSet(games.keySet());
   }
 
@@ -205,16 +205,16 @@ public class GameRegistry {
     return Collections.unmodifiableSet(new HashSet<>(games.values()));
   }
 
-  public Set<String> getModuleSubCommands(GameBoxGame game) {
+  public Set<String> getGameSubCommands(GameBoxGame game) {
     return Collections.unmodifiableSet(bundledSubCommands.get(game.getGameId()));
   }
 
-  private void registerSubCommands(GameBoxGame module) {
-    if (module.getSubCommands() == null || module.getSubCommands().isEmpty()) {
-      bundledSubCommands.put(module.getGameId(), new HashSet<>());
+  private void registerSubCommands(GameBoxGame game) {
+    if (game.getSubCommands() == null || game.getSubCommands().isEmpty()) {
+      bundledSubCommands.put(game.getGameId(), new HashSet<>());
       return;
     }
-    List<String> subCommands = module.getSubCommands();
+    List<String> subCommands = game.getSubCommands();
     for (int i = 0; i < subCommands.size(); i++) {
       subCommands.set(i, subCommands.get(i).toLowerCase());
     }
@@ -224,42 +224,42 @@ public class GameRegistry {
         throw new IllegalArgumentException("Forbidden sub command: " + subCommand);
       if (this.subCommands.containsKey(subCommand))
         continue;
-      this.subCommands.put(subCommand, module);
-      addSubCommandToBundle(module, subCommand);
+      this.subCommands.put(subCommand, game);
+      addSubCommandToBundle(game, subCommand);
     }
   }
 
-  private void addSubCommandToBundle(GameBoxGame module, String subCommand) {
-    bundledSubCommands.putIfAbsent(module.getGameId(), new HashSet<>());
-    bundledSubCommands.get(module.getGameId()).add(subCommand);
+  private void addSubCommandToBundle(GameBoxGame game, String subCommand) {
+    bundledSubCommands.putIfAbsent(game.getGameId(), new HashSet<>());
+    bundledSubCommands.get(game.getGameId()).add(subCommand);
   }
 
-  public GameBoxGame getModuleBySubCommand(String subCommand) {
-    GameBox.debug("grab module of " + subCommand);
+  public GameBoxGame getGameBySubCommand(String subCommand) {
+    GameBox.debug("grab game for sub command " + subCommand);
     return subCommands.get(subCommand);
   }
 
-  public void unregisterGame(String gameID) {
-    GameBoxGame game = games.get(gameID);
+  public void unregisterGame(String gameId) {
+    GameBoxGame game = games.get(gameId);
     if (game == null) return;
     Set<String> subCommands = bundledSubCommands.get(game.getGameId());
-    games.remove(gameID);
+    games.remove(gameId);
     if (subCommands == null || subCommands.isEmpty()) return;
     for (String subCommand : subCommands) {
       GameBox.debug("   remove " + subCommand);
       this.subCommands.remove(subCommand);
     }
-    bundledSubCommands.remove(gameID);
+    bundledSubCommands.remove(gameId);
   }
 
   public void disableGame(String gameID) {
-    disabledModules.add(gameID);
+    disabledGames.add(gameID);
     gamesConfiguration.set("games." + gameID + ".enabled", false);
     saveGameSettings();
   }
 
   public void enableGame(String gameID) {
-    disabledModules.remove(gameID);
+    disabledGames.remove(gameID);
     gamesConfiguration.set("games." + gameID + ".enabled", true);
     saveGameSettings();
   }
@@ -272,11 +272,11 @@ public class GameRegistry {
     }
   }
 
-  public boolean isDisabledModule(String moduleID) {
-    return disabledModules.contains(moduleID);
+  public boolean isDisabledGame(String gameId) {
+    return disabledGames.contains(gameId);
   }
 
-  public Set<String> getSubcommands() {
+  public Set<String> getSubCommands() {
     return Collections.unmodifiableSet(subCommands.keySet());
   }
 }

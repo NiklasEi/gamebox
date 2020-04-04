@@ -30,12 +30,12 @@ public class InfoCommand extends GeneralBaseCommand {
     }
     String allSubCommands;
     Game game;
-    for (String gameID : gameBox.getGameRegistry().getModuleIDs()) {
+    for (String gameID : gameBox.getGameRegistry().getGameIds()) {
       game = gameBox.getPluginManager().getGame(gameID);
       if (game == null) continue;
 
       // get subcommands
-      Set<String> subCmds = gameBox.getGameRegistry().getModuleSubCommands(game.getModule());
+      Set<String> subCmds = gameBox.getGameRegistry().getGameSubCommands(game.getModule());
       if (subCmds != null && !subCmds.isEmpty()) {
         allSubCommands = String.join(":", subCmds);
       } else {
