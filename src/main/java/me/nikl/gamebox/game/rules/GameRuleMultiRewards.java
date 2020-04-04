@@ -2,8 +2,7 @@ package me.nikl.gamebox.game.rules;
 
 import me.nikl.gamebox.data.toplist.SaveType;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by nikl on 25.02.18.
@@ -26,7 +25,9 @@ public class GameRuleMultiRewards extends GameRule {
 
   public int getTokenToWin(double score) {
     double tokenKey = saveType.isHigherScore() ? 0 : Double.MAX_VALUE;
-    for (double key : tokenToWin.keySet()) {
+    List<Double> sortedScoreKeys = new ArrayList<>(tokenToWin.keySet());
+    Collections.sort(sortedScoreKeys);
+    for (double key : sortedScoreKeys) {
       if (scoreIsBetterThen(key, score)) continue;
       if (scoreIsBetterThen(tokenKey, score)) continue;
       tokenKey = key;
@@ -38,7 +39,9 @@ public class GameRuleMultiRewards extends GameRule {
 
   public double getMoneyToWin(double score) {
     double moneyKey = saveType.isHigherScore() ? 0 : Double.MAX_VALUE;
-    for (double key : moneyToWin.keySet()) {
+    List<Double> sortedScoreKeys = new ArrayList<>(moneyToWin.keySet());
+    Collections.sort(sortedScoreKeys);
+    for (double key : sortedScoreKeys) {
       if (scoreIsBetterThen(key, score)) continue;
       if (scoreIsBetterThen(moneyKey, score)) continue;
       moneyKey = key;
