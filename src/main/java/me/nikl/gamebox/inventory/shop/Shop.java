@@ -5,7 +5,7 @@ import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.data.TokenListener;
 import me.nikl.gamebox.inventory.ClickAction;
-import me.nikl.gamebox.inventory.GUIManager;
+import me.nikl.gamebox.inventory.GuiManager;
 import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.button.ButtonFactory;
 import me.nikl.gamebox.inventory.button.DisplayButton;
@@ -33,7 +33,7 @@ public class Shop extends AGui implements TokenListener {
   FileConfiguration shop;
   ShopManager shopManager;
 
-  public Shop(GameBox plugin, GUIManager guiManager, int slots, ShopManager shopManager, String[] args, String title) {
+  public Shop(GameBox plugin, GuiManager guiManager, int slots, ShopManager shopManager, String[] args, String title) {
     super(plugin, guiManager, slots, args, title);
     this.shopManager = shopManager;
     this.shop = shopManager.getShop();

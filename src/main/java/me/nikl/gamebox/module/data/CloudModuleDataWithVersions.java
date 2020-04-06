@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * @author Niklas Eicker
  */
-public class CloudModuleDataWithVersion implements ModuleBasicData, Serializable {
+public class CloudModuleDataWithVersions implements ModuleBasicData, Serializable {
     @SerializedName("id")
     @Expose
     private String id;
@@ -63,7 +63,7 @@ public class CloudModuleDataWithVersion implements ModuleBasicData, Serializable
 
     private final static long serialVersionUID = 4719087577866667965L;
 
-    public CloudModuleDataWithVersion() {
+    public CloudModuleDataWithVersions() {
     }
 
     public String getId() {
@@ -74,7 +74,7 @@ public class CloudModuleDataWithVersion implements ModuleBasicData, Serializable
         this.id = id;
     }
 
-    public CloudModuleDataWithVersion withId(String id) {
+    public CloudModuleDataWithVersions withId(String id) {
         this.id = id;
         return this;
     }
@@ -87,7 +87,7 @@ public class CloudModuleDataWithVersion implements ModuleBasicData, Serializable
         this.authors = authors;
     }
 
-    public CloudModuleDataWithVersion withAuthors(List<String> authors) {
+    public CloudModuleDataWithVersions withAuthors(List<String> authors) {
         this.authors = authors;
         return this;
     }
@@ -100,7 +100,7 @@ public class CloudModuleDataWithVersion implements ModuleBasicData, Serializable
         this.name = name;
     }
 
-    public CloudModuleDataWithVersion withName(String name) {
+    public CloudModuleDataWithVersions withName(String name) {
         this.name = name;
         return this;
     }
@@ -113,7 +113,7 @@ public class CloudModuleDataWithVersion implements ModuleBasicData, Serializable
         this.description = description;
     }
 
-    public CloudModuleDataWithVersion withDescription(String description) {
+    public CloudModuleDataWithVersions withDescription(String description) {
         this.description = description;
         return this;
     }
@@ -126,7 +126,7 @@ public class CloudModuleDataWithVersion implements ModuleBasicData, Serializable
         this.sourceUrl = sourceUrl;
     }
 
-    public CloudModuleDataWithVersion withSourceUrl(String sourceUrl) {
+    public CloudModuleDataWithVersions withSourceUrl(String sourceUrl) {
         this.sourceUrl = sourceUrl;
         return this;
     }
@@ -139,7 +139,7 @@ public class CloudModuleDataWithVersion implements ModuleBasicData, Serializable
         this.updatedAt = updatedAt;
     }
 
-    public CloudModuleDataWithVersion withLastUpdateAt(Long lastUpdateAt) {
+    public CloudModuleDataWithVersions withLastUpdateAt(Long lastUpdateAt) {
         this.updatedAt = lastUpdateAt;
         return this;
     }
@@ -152,7 +152,7 @@ public class CloudModuleDataWithVersion implements ModuleBasicData, Serializable
         this.versions = versions;
     }
 
-    public CloudModuleDataWithVersion withVersions(List<VersionData> versions) {
+    public CloudModuleDataWithVersions withVersions(List<VersionData> versions) {
         this.versions = versions;
         return this;
     }
@@ -165,7 +165,7 @@ public class CloudModuleDataWithVersion implements ModuleBasicData, Serializable
         this.latestVersion = latestVersion;
     }
 
-    public CloudModuleDataWithVersion withLatestVersion(SemanticVersion latestVersion) {
+    public CloudModuleDataWithVersions withLatestVersion(SemanticVersion latestVersion) {
         this.latestVersion = latestVersion;
         return this;
     }

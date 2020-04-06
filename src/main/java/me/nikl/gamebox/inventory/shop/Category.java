@@ -3,7 +3,7 @@ package me.nikl.gamebox.inventory.shop;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.inventory.ClickAction;
-import me.nikl.gamebox.inventory.GUIManager;
+import me.nikl.gamebox.inventory.GuiManager;
 import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.button.ButtonFactory;
 import me.nikl.gamebox.inventory.gui.AGui;
@@ -33,13 +33,16 @@ public class Category {
   private Map<Integer, Page> pages;
   private String key;
   private ShopManager shopManager;
-  private GUIManager guiManager;
+  private GuiManager guiManager;
   private GameBox plugin;
   private FileConfiguration shop;
   private Map<String, ShopItem> shopItems = new HashMap<>();
-  private int slots = 27, itemsPerPage = 18, backSlot = 21, forSlot = 23;
+  private int slots = 27;
+  private int itemsPerPage = 18;
+  private int backSlot = 21;
+  private int forSlot = 23;
 
-  public Category(GameBox plugin, ShopManager shopManager, GUIManager guiManager, String key) {
+  public Category(GameBox plugin, ShopManager shopManager, GuiManager guiManager, String key) {
     this.key = key;
     this.shopManager = shopManager;
     this.guiManager = guiManager;
@@ -56,7 +59,10 @@ public class Category {
     ItemStack itemStack;
     ItemMeta meta;
     List<String> lore = new ArrayList<>();
-    int counter = 0, token = 0, money = 0, amount = 0;
+    int counter = 0;
+    int token;
+    int money;
+    int amount;
     for (String itemKey : pageSection.getKeys(false)) {
       // if null no item will be given
       itemStack = ItemStackUtility.getItemStack(pageSection.getString(itemKey + ".materialData"));
@@ -78,11 +84,7 @@ public class Category {
       if (itemStack != null) {
         if (pageSection.isSet(itemKey + ".count") && pageSection.isInt(itemKey + ".count")) {
           amount = pageSection.getInt(itemKey + ".count");
-          if (amount > itemStack.getMaxStackSize()) {
-            itemStack.setAmount(itemStack.getMaxStackSize());
-          } else {
-            itemStack.setAmount(amount);
-          }
+          itemStack.setAmount(Math.min(amount, itemStack.getMaxStackSize()));
         }
         if (pageSection.getBoolean(itemKey + ".glow", false)) {
           itemStack = NmsFactory.getNmsUtility().addGlow(itemStack);
@@ -138,7 +140,9 @@ public class Category {
       if (money != 0) {
         lore.add(this.plugin.lang.SHOP_MONEY.replace("%money%", String.valueOf(money)));
       }
-      if (meta.hasLore()) lore.addAll(meta.getLore());
+      if (meta.hasLore()) {
+        lore.addAll(meta.getLore());
+      }
       meta.setLore(lore);
       button.setItemMeta(meta);
       button.setArgs(key, String.valueOf(counter), String.valueOf(token), String.valueOf(money));

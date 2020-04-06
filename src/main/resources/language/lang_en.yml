@@ -126,6 +126,9 @@ inventoryTitles:
   otherPlayerNotEnoughMoney: '&4Other player not enough money'
   otherPlayerInBlockedWorld: '&4Other player in blocked world!'
   alreadyInAnotherGame: '     &4Already in another game'
+  modulesPage: '        &2Modules page %page%&r'
+  moduleDetailsPage: '&2%moduleName%&r - Page %page%'
+  moduleDetailsPageLoading: '&2%moduleName%&r - Loading data'
 
 
 shop:

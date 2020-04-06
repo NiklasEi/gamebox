@@ -5,7 +5,7 @@ import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.data.TokenListener;
 import me.nikl.gamebox.inventory.ClickAction;
-import me.nikl.gamebox.inventory.GUIManager;
+import me.nikl.gamebox.inventory.GuiManager;
 import me.nikl.gamebox.inventory.button.AButton;
 import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.button.ButtonFactory;
@@ -41,9 +41,10 @@ public class MainGui extends AGui implements TokenListener {
   private Map<UUID, AButton[]> playerGrids = new HashMap<>();
   private int soundToggleSlot = 52;
   private int tokenButtonSlot = 45;
+  private int modulesGuiSlot = 49;
   private int shopSlot = 46;
 
-  public MainGui(GameBox plugin, GUIManager guiManager) {
+  public MainGui(GameBox plugin, GuiManager guiManager) {
     super(plugin, guiManager, 54, new String[]{}, plugin.lang.TITLE_MAIN_GUI);
     Button help = new Button(NmsFactory.getNmsUtility().addGlow(ItemStackUtility.createBookWithText(plugin.lang.BUTTON_MAIN_MENU_INFO)));
     help.setAction(ClickAction.NOTHING);
@@ -116,6 +117,10 @@ public class MainGui extends AGui implements TokenListener {
     ItemStack[] contents = this.inventory.getContents().clone();
     // overwrite game buttons
     System.arraycopy(playerGrid, 0, contents, 0, 45);
+    if (Permission.ADMIN_MODULES.hasPermission(player)) {
+      playerGrid[modulesGuiSlot] = guiManager.getModulesGuiManager().getMainButton();
+      contents[modulesGuiSlot] = guiManager.getModulesGuiManager().getMainButton();
+    }
     inventory.setContents(contents);
     ToggleButton soundToggle = ButtonFactory.createSoundToggleButton(gameBox.lang);
     soundToggle = gbPlayer.isPlaySounds() ? soundToggle : soundToggle.toggle();

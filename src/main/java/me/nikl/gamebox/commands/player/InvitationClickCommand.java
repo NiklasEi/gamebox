@@ -4,7 +4,7 @@ import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Private;
 import co.aikar.commands.annotation.Subcommand;
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.inventory.GUIManager;
+import me.nikl.gamebox.inventory.GuiManager;
 import org.bukkit.entity.Player;
 
 /**
@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
  */
 @CommandAlias("%mainCommand")
 public class InvitationClickCommand extends PlayerBaseCommand {
-  private GUIManager guiManager;
+  private GuiManager guiManager;
 
   public InvitationClickCommand(GameBox gameBox) {
     super(gameBox);

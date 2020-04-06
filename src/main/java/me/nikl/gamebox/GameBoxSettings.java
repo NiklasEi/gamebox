@@ -25,6 +25,7 @@ import java.util.List;
  * class to store global settings
  */
 public class GameBoxSettings {
+  public static String GAMEBOX_CLOUD_BASE_URL = "https://api.gamebox.nikl.me/";
   public static boolean exceptInvitesWithoutPlayPermission = false;
   public static boolean playSounds = true; //toggle for playing sounds
   public static Sound successfulClick, unsuccessfulClick;

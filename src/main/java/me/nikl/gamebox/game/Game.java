@@ -11,7 +11,7 @@ import me.nikl.gamebox.game.rules.GameRule;
 import me.nikl.gamebox.game.rules.GameRuleMultiRewards;
 import me.nikl.gamebox.game.rules.GameRuleRewards;
 import me.nikl.gamebox.inventory.ClickAction;
-import me.nikl.gamebox.inventory.GUIManager;
+import me.nikl.gamebox.inventory.GuiManager;
 import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.gui.game.GameGui;
 import me.nikl.gamebox.inventory.gui.game.StartMultiplayerGamePage;
@@ -160,7 +160,7 @@ public abstract class Game {
   }
 
   private void hook() throws GameLoadException {
-    GUIManager guiManager = gameBox.getPluginManager().getGuiManager();
+    GuiManager guiManager = gameBox.getPluginManager().getGuiManager();
     int gameGuiSlots = gameSettings.getGameGuiSize();
     GameGui gameGui = new GameGui(gameBox, this, gameGuiSlots);
     gameGui.setHelpButton(gameLang.GAME_HELP);
@@ -289,7 +289,7 @@ public abstract class Game {
         }
         button.setItemMeta(meta);
         button.setAction(ClickAction.SHOW_TOP_LIST);
-        button.setArgs(getGameID(), buttonID + GUIManager.TOP_LIST_KEY_ADDON);
+        button.setArgs(getGameID(), buttonID + GuiManager.TOP_LIST_KEY_ADDON);
 
         setTheButton:
         if (buttonSec.isInt("slot")) {
@@ -310,7 +310,7 @@ public abstract class Game {
           lore = new ArrayList<>(Arrays.asList("", "No lore specified in the config!"));
         }
         SaveType saveType = gameRules.get(buttonID).getSaveType();
-        TopListPage topListPage = new TopListPage(gameBox, guiManager, getGameID(), buttonID + GUIManager.TOP_LIST_KEY_ADDON,
+        TopListPage topListPage = new TopListPage(gameBox, guiManager, getGameID(), buttonID + GuiManager.TOP_LIST_KEY_ADDON,
                 StringUtility.color(buttonSec.getString("inventoryTitle", "Title missing in config")), saveType, lore);
         guiManager.registerGameGUI(topListPage);
       }

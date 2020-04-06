@@ -23,7 +23,7 @@ import me.nikl.gamebox.exceptions.module.CloudModuleNotFoundException;
 import me.nikl.gamebox.exceptions.module.CloudModuleVersionNotFoundException;
 import me.nikl.gamebox.exceptions.module.GameBoxCloudException;
 import me.nikl.gamebox.module.data.CloudModuleData;
-import me.nikl.gamebox.module.data.CloudModuleDataWithVersion;
+import me.nikl.gamebox.module.data.CloudModuleDataWithVersions;
 import com.google.gson.Gson;
 import me.nikl.gamebox.module.data.VersionedCloudModule;
 import me.nikl.gamebox.utility.GameBoxGsonBuilder;
@@ -45,13 +45,15 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
+
+import static me.nikl.gamebox.GameBoxSettings.GAMEBOX_CLOUD_BASE_URL;
 
 public class CloudFacade {
-    private static final String API_BASE_URL = "https://api.gamebox.nikl.me/";
+    private static final String API_BASE_URL = GAMEBOX_CLOUD_BASE_URL;
     private static final Gson GSON = GameBoxGsonBuilder.build();
     private static SSLSocketFactory factoryTrustingLetsEncrypt;
 
+    // Since older Java versions do not trust Let's encrypt certificates (and I am a big fan)
     static {
         try (InputStream caInput = GameBox.getProvidingPlugin(GameBox.class).getResource("dst-root-ca-x3.pem")) {
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
@@ -83,12 +85,12 @@ public class CloudFacade {
         return new ApiResponse<>(modulesData, null);
     }
 
-    public ApiResponse<CloudModuleDataWithVersion[]> getCloudModuleDataWithVersion(String moduleId) {
+    public ApiResponse<CloudModuleDataWithVersions> getCloudModuleDataWithVersions(String moduleId) {
         ApiResponse<InputStream> stream = this.openStream(String.format("module/%s", moduleId));
         if (stream.getError() != null) {
             return new ApiResponse<>(null, stream.getError());
         }
-        CloudModuleDataWithVersion[] modulesData = GSON.fromJson(new InputStreamReader(stream.getData()), CloudModuleDataWithVersion[].class);
+        CloudModuleDataWithVersions modulesData = GSON.fromJson(new InputStreamReader(stream.getData()), CloudModuleDataWithVersions.class);
         return new ApiResponse<>(modulesData, null);
     }
 

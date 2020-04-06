@@ -7,7 +7,7 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.module.GameBoxGame;
 import me.nikl.gamebox.PluginManager;
-import me.nikl.gamebox.inventory.GUIManager;
+import me.nikl.gamebox.inventory.GuiManager;
 import me.nikl.gamebox.utility.Permission;
 import org.bukkit.entity.Player;
 
@@ -16,7 +16,7 @@ import org.bukkit.entity.Player;
  */
 public class OpenGameBox extends PlayerBaseCommand {
   private PluginManager pManager;
-  private GUIManager guiManager;
+  private GuiManager guiManager;
   private GameBoxLanguage lang;
 
   public OpenGameBox(GameBox gameBox) {
@@ -43,7 +43,7 @@ public class OpenGameBox extends PlayerBaseCommand {
       }
       String[] arguments = new String[2];
       arguments[0] = module.getGameId();
-      arguments[1] = GUIManager.MAIN_GAME_GUI;
+      arguments[1] = GuiManager.MAIN_GAME_GUI;
       guiManager.openGameGui(player, arguments);
       return;
     }

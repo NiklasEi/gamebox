@@ -6,7 +6,7 @@ import me.nikl.gamebox.PluginManager;
 import me.nikl.gamebox.game.exceptions.GameStartException;
 import me.nikl.gamebox.game.manager.GameManager;
 import me.nikl.gamebox.inventory.ClickAction;
-import me.nikl.gamebox.inventory.GUIManager;
+import me.nikl.gamebox.inventory.GuiManager;
 import me.nikl.gamebox.inventory.GameBoxHolder;
 import me.nikl.gamebox.inventory.button.AButton;
 import me.nikl.gamebox.inventory.button.Button;
@@ -41,7 +41,7 @@ public abstract class AGui implements GameBoxHolder {
   protected Inventory inventory;
   protected Map<UUID, Inventory> openInventories = new HashMap<>();
   protected Set<UUID> inGui;
-  protected GUIManager guiManager;
+  protected GuiManager guiManager;
   protected GameBox gameBox;
   protected PluginManager pluginManager;
   protected float volume = 0.5f, pitch = 10f;
@@ -52,7 +52,7 @@ public abstract class AGui implements GameBoxHolder {
   private Sound successfulClick, unsuccessfulClick;
   private int titleMessageSeconds;
 
-  public AGui(GameBox gameBox, GUIManager guiManager, int slots, String[] args, String title) {
+  public AGui(GameBox gameBox, GuiManager guiManager, int slots, String[] args, String title) {
     this.gameBox = gameBox;
     this.args = args;
     this.guiManager = guiManager;
@@ -76,7 +76,7 @@ public abstract class AGui implements GameBoxHolder {
   public boolean open(Player player) {
     GameBox.debug("opening gui (method open in AGui)");
     // permissions are checked in the GUIManager
-    if (openInventories.keySet().contains(player.getUniqueId())) {
+    if (openInventories.containsKey(player.getUniqueId())) {
       GameBox.debug("found and now opening own inventory");
       player.openInventory(openInventories.get(player.getUniqueId()));
     } else {
@@ -256,8 +256,41 @@ public abstract class AGui implements GameBoxHolder {
           inGui.remove(event.getWhoClicked().getUniqueId());
           return true;
         }
-
         return false;
+
+      case OPEN_MODULES_PAGE:
+        if (args.length != 1) {
+          Bukkit.getLogger().log(Level.WARNING, "OPEN_MODULES_PAGE has the wrong number of arguments: " + args.length);
+          return false;
+        }
+        if (guiManager.openModulesPage((Player) event.getWhoClicked(), args)) {
+          inGui.remove(event.getWhoClicked().getUniqueId());
+          return true;
+        }
+        return false;
+
+      case OPEN_MODULE_DETAILS:
+        if (args.length != 2) {
+          Bukkit.getLogger().log(Level.WARNING, "OPEN_MODULE_DETAILS has the wrong number of arguments: " + args.length);
+          return false;
+        }
+        if (guiManager.openModuleDetails((Player) event.getWhoClicked(), args)) {
+          inGui.remove(event.getWhoClicked().getUniqueId());
+          return true;
+        }
+        return false;
+
+      case DISPATCH_PLAYER_COMMAND:
+        if (args.length != 1) {
+          Bukkit.getLogger().log(Level.WARNING, "DISPATCH_PLAYER_COMMAND has the wrong number of arguments: " + args.length);
+          return false;
+        }
+        if (!(event.getWhoClicked() instanceof Player)) {
+          return false;
+        }
+        Player commandSender = (Player) event.getWhoClicked();
+        commandSender.chat(args[0]);
+        return true;
 
       case BUY:
         if (guiManager.getShopManager().isClosed()) {

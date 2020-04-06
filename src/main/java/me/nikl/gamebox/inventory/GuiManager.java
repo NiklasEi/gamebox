@@ -8,6 +8,7 @@ import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.gui.AGui;
 import me.nikl.gamebox.inventory.gui.MainGui;
 import me.nikl.gamebox.inventory.gui.game.GameGui;
+import me.nikl.gamebox.inventory.modules.ModulesGuiManager;
 import me.nikl.gamebox.inventory.shop.ShopManager;
 import me.nikl.gamebox.utility.Permission;
 import me.nikl.nmsutilities.NmsFactory;
@@ -28,7 +29,7 @@ import java.util.UUID;
  * listen for events called in the game's guis and pages
  * (not mainGUI and not game)
  */
-public class GUIManager {
+public class GuiManager {
   public static final String TOP_LIST_KEY_ADDON = "topList";
   public static final String MAIN_GAME_GUI = "main";
   private GameBox plugin;
@@ -38,14 +39,16 @@ public class GUIManager {
   private MainGui mainGui;
   private int titleMessageSeconds = 3;
   private ShopManager shopManager;
+  private ModulesGuiManager modulesGuiManager;
 
-  public GUIManager(GameBox plugin) {
+  public GuiManager(GameBox plugin) {
     this.plugin = plugin;
     this.nms = NmsFactory.getNmsUtility();
     this.lang = plugin.lang;
     this.gameGuis = new HashMap<>();
     this.mainGui = new MainGui(plugin, this);
     shopManager = new ShopManager(plugin, this);
+    this.modulesGuiManager = new ModulesGuiManager(plugin, this);
     if (GameBoxSettings.tokensEnabled) mainGui.registerShop();
   }
 
@@ -237,5 +240,17 @@ public class GUIManager {
   public void unregisterGame(String gameID) {
     gameGuis.remove(gameID);
     mainGui.unregisterGame(gameID);
+  }
+
+  public ModulesGuiManager getModulesGuiManager() {
+    return modulesGuiManager;
+  }
+
+  public boolean openModulesPage(Player whoClicked, String[] args) {
+    return modulesGuiManager.openModulesPage(whoClicked, args);
+  }
+
+  public boolean openModuleDetails(Player whoClicked, String[] args) {
+    return modulesGuiManager.openModuleDetails(whoClicked, args);
   }
 }

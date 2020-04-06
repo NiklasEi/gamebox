@@ -7,7 +7,7 @@ import me.nikl.gamebox.game.Game;
 import me.nikl.gamebox.game.manager.GameManager;
 import me.nikl.gamebox.input.InvitationHandler;
 import me.nikl.gamebox.input.InviteInputHandler;
-import me.nikl.gamebox.inventory.GUIManager;
+import me.nikl.gamebox.inventory.GuiManager;
 import me.nikl.gamebox.inventory.GameBoxHolder;
 import me.nikl.gamebox.inventory.gui.AGui;
 import me.nikl.gamebox.module.GameBoxGame;
@@ -38,14 +38,12 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -70,7 +68,7 @@ public class PluginManager implements Listener {
   private GameBox plugin;
   private GameBoxLanguage lang;
   private FileConfiguration config;
-  private GUIManager guiManager;
+  private GuiManager guiManager;
   private InviteInputHandler inviteInputHandler;
   private InvitationHandler invitationHandler;
   private Map<String, Game> games = new HashMap<>();
@@ -249,7 +247,7 @@ public class PluginManager implements Listener {
           }
           if (event.getSlot() == GameBoxSettings.toGameButtonSlot) {
             gameManager.removeFromGame(event.getWhoClicked().getUniqueId());
-            guiManager.openGameGui((Player) event.getWhoClicked(), game.getGameID(), GUIManager.MAIN_GAME_GUI);
+            guiManager.openGameGui((Player) event.getWhoClicked(), game.getGameID(), GuiManager.MAIN_GAME_GUI);
             if (GameBoxSettings.playSounds && getPlayer(event.getWhoClicked().getUniqueId()).isPlaySounds()) {
               ((Player) event.getWhoClicked()).playSound(event.getWhoClicked().getLocation(), Sound.CLICK.bukkitSound(), volume, pitch);
             }
@@ -549,11 +547,11 @@ public class PluginManager implements Listener {
     return getGameManager(module.getGameId());
   }
 
-  public GUIManager getGuiManager() {
+  public GuiManager getGuiManager() {
     return this.guiManager;
   }
 
-  public void setGuiManager(GUIManager guiManager) {
+  public void setGuiManager(GuiManager guiManager) {
     this.guiManager = guiManager;
   }
 

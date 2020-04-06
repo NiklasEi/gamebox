@@ -31,6 +31,7 @@ import me.nikl.gamebox.module.settings.ModulesSettings;
 import me.nikl.gamebox.utility.FileUtility;
 import me.nikl.gamebox.utility.ModuleUtility;
 import me.nikl.gamebox.utility.versioning.SemanticVersion;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.CustomClassLoaderConstructor;
 import org.yaml.snakeyaml.representer.Representer;
@@ -116,12 +117,24 @@ public class ModulesManager {
 
     private void connectToCloud() {
         this.cloudService = new CloudService(gameBox, new CloudFacade());
-        try {
-            cloudService.updateCloudContent();
-        } catch (GameBoxCloudException e) {
-            gameBox.getLogger().severe("Error while attempting to load cloud content");
-            e.printStackTrace();
-        }
+        BukkitRunnable loadModulesGui = new BukkitRunnable() {
+            @Override
+            public void run() {
+                gameBox.getPluginManager().getGuiManager().getModulesGuiManager().loadGui();
+            }
+        };
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                try {
+                    cloudService.updateCloudContent();
+                    loadModulesGui.runTask(gameBox);
+                } catch (GameBoxCloudException e) {
+                    gameBox.getLogger().severe("Error while attempting to load cloud content");
+                    e.printStackTrace();
+                }
+            }
+        }.runTaskAsynchronously(gameBox);
     }
 
     private void prepareFiles() {

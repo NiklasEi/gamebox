@@ -4,7 +4,7 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.game.Game;
 import me.nikl.gamebox.inventory.ClickAction;
-import me.nikl.gamebox.inventory.GUIManager;
+import me.nikl.gamebox.inventory.GuiManager;
 import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.gui.AGui;
 import me.nikl.gamebox.utility.ItemStackUtility;
@@ -33,7 +33,7 @@ public class GameGui extends AGui {
    * @param key        GUI key
    * @param title      proposed title of the GUI
    */
-  public GameGui(GameBox plugin, GUIManager guiManager, int slots, String gameID, String key, String title) {
+  public GameGui(GameBox plugin, GuiManager guiManager, int slots, String gameID, String key, String title) {
     super(plugin, guiManager, slots, new String[]{gameID, key}, title);
     this.gameId = gameID;
 
@@ -71,7 +71,7 @@ public class GameGui extends AGui {
    * @param slots  slots of the GUI
    */
   public GameGui(GameBox plugin, Game game, int slots) {
-    this(plugin, plugin.getPluginManager().getGuiManager(), slots, game.getGameID(), GUIManager.MAIN_GAME_GUI, plugin.lang.TITLE_GAME_GUI);
+    this(plugin, plugin.getPluginManager().getGuiManager(), slots, game.getGameID(), GuiManager.MAIN_GAME_GUI, plugin.lang.TITLE_GAME_GUI);
   }
 
   /**

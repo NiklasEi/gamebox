@@ -18,7 +18,7 @@
 
 package me.nikl.gamebox.module.cloud;
 
-import me.nikl.gamebox.module.data.CloudModuleDataWithVersion;
+import me.nikl.gamebox.module.data.CloudModuleDataWithVersions;
 import me.nikl.gamebox.module.data.DependencyData;
 import me.nikl.gamebox.module.data.VersionData;
 import me.nikl.gamebox.utility.GameBoxGsonBuilder;
@@ -38,9 +38,9 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author Niklas Eicker
  */
-public class TestCloudModuleDataWithVersionFromJson {
+public class TestCloudModuleDataWithVersionsFromJson {
     private static File testCloudModuleFile;
-    private static CloudModuleDataWithVersion testCloudModule;
+    private static CloudModuleDataWithVersions testCloudModule;
 
     @BeforeAll
     public static void prepare() {
@@ -75,7 +75,7 @@ public class TestCloudModuleDataWithVersionFromJson {
                 )
                 .withDownloadUrl("http://example.com/download/test-module@1.1.0.jar")
         );
-        testCloudModule = new CloudModuleDataWithVersion()
+        testCloudModule = new CloudModuleDataWithVersions()
                 .withId("test-module")
                 .withAuthors(Collections.singletonList("Nikl"))
                 .withName("Test module")
@@ -90,7 +90,7 @@ public class TestCloudModuleDataWithVersionFromJson {
     @DisplayName("correctly parse CloudModuleDataWithVersion from a json file")
     public void parseTestCloudModule() throws FileNotFoundException {
         Gson gson = GameBoxGsonBuilder.build();
-        CloudModuleDataWithVersion fileModule = gson.fromJson(new FileReader(testCloudModuleFile), CloudModuleDataWithVersion.class);
+        CloudModuleDataWithVersions fileModule = gson.fromJson(new FileReader(testCloudModuleFile), CloudModuleDataWithVersions.class);
         assertAll(
                 () -> assertEquals(fileModule.getId(), testCloudModule.getId(),"Not the same id"),
                 () -> assertArrayEquals(fileModule.getAuthors().toArray(), testCloudModule.getAuthors().toArray(),"Not the same authors"),

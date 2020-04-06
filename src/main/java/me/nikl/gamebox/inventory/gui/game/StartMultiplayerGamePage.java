@@ -2,7 +2,7 @@ package me.nikl.gamebox.inventory.gui.game;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.inventory.ClickAction;
-import me.nikl.gamebox.inventory.GUIManager;
+import me.nikl.gamebox.inventory.GuiManager;
 import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.utility.InventoryUtility;
 import me.nikl.gamebox.utility.ItemStackUtility;
@@ -29,7 +29,7 @@ public class StartMultiplayerGamePage extends GameGuiPage {
   private Map<UUID, ArrayList<UUID>> invitations = new HashMap<>();
   private Map<UUID, Button[]> invitationButtons = new HashMap<>();
 
-  public StartMultiplayerGamePage(GameBox plugin, GUIManager guiManager, int slots, String gameID, String key, String title) {
+  public StartMultiplayerGamePage(GameBox plugin, GuiManager guiManager, int slots, String gameID, String key, String title) {
     super(plugin, guiManager, slots, gameID, key, title);
 
 
@@ -69,10 +69,10 @@ public class StartMultiplayerGamePage extends GameGuiPage {
 
   public void addInvite(UUID uuid1, UUID uuid2) {
     // set maximal 53 invites in the inventory
-    if (!invitations.keySet().contains(uuid2)) {
+    if (!invitations.containsKey(uuid2)) {
       invitations.put(uuid2, new ArrayList<>());
     }
-    if (!invitationButtons.keySet().contains(uuid2)) {
+    if (!invitationButtons.containsKey(uuid2)) {
       invitationButtons.put(uuid2, new Button[inventory.getSize()]);
     }
     invitations.get(uuid2).add(uuid1);
@@ -111,7 +111,7 @@ public class StartMultiplayerGamePage extends GameGuiPage {
   }
 
   public void removeInvite(UUID uuid1, UUID uuid2) {
-    if (!invitations.keySet().contains(uuid2)) {
+    if (!invitations.containsKey(uuid2)) {
       return;
     }
     invitations.get(uuid2).remove(uuid1);

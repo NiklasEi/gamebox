@@ -15,8 +15,8 @@ import java.util.ArrayList;
  * @author Niklas Eicker
  */
 public class ButtonFactory {
-  private static ItemStack forwardShopPageButton;
-  private static ItemStack backShopPageButton;
+  private static ItemStack nextPageButton;
+  private static ItemStack previousPageButton;
 
   public static DisplayButton createTokenButton(GameBoxLanguage language, int token) {
     ItemStack tokensItem = new ItemStack(Material.GOLD_NUGGET, 1);
@@ -41,22 +41,62 @@ public class ButtonFactory {
   }
 
   public static AButton createShopPageForwardButton(GameBoxLanguage language, String argOne, String argTwo) {
-    if (forwardShopPageButton == null) {
-      forwardShopPageButton = new ItemStack(Material.ARROW, 1);
-      ItemMeta meta = forwardShopPageButton.getItemMeta();
+    if (nextPageButton == null) {
+      nextPageButton = new ItemStack(Material.ARROW, 1);
+      ItemMeta meta = nextPageButton.getItemMeta();
       meta.setDisplayName(language.BUTTON_FORWARD);
-      forwardShopPageButton.setItemMeta(meta);
+      nextPageButton.setItemMeta(meta);
     }
-    return new Button(forwardShopPageButton).setActionAndArgs(ClickAction.OPEN_SHOP_PAGE, argOne, argTwo);
+    return new Button(nextPageButton).setActionAndArgs(ClickAction.OPEN_SHOP_PAGE, argOne, argTwo);
+  }
+
+  public static AButton createModulesPageForwardButton(GameBoxLanguage language, String argOne) {
+    if (nextPageButton == null) {
+      nextPageButton = new ItemStack(Material.ARROW, 1);
+      ItemMeta meta = nextPageButton.getItemMeta();
+      meta.setDisplayName(language.BUTTON_FORWARD);
+      nextPageButton.setItemMeta(meta);
+    }
+    return new Button(nextPageButton).setActionAndArgs(ClickAction.OPEN_MODULES_PAGE, argOne);
+  }
+
+  public static AButton createModuleDetailsPageForwardButton(GameBoxLanguage lang, String moduleId, String page) {
+    if (nextPageButton == null) {
+      nextPageButton = new ItemStack(Material.ARROW, 1);
+      ItemMeta meta = nextPageButton.getItemMeta();
+      meta.setDisplayName(lang.BUTTON_FORWARD);
+      nextPageButton.setItemMeta(meta);
+    }
+    return new Button(nextPageButton).setActionAndArgs(ClickAction.OPEN_MODULE_DETAILS, moduleId, page);
   }
 
   public static AButton createShopPageBackButton(GameBoxLanguage language, String argOne, String argTwo) {
-    if (backShopPageButton == null) {
-      backShopPageButton = new ItemStack(Material.ARROW, 1);
-      ItemMeta meta = backShopPageButton.getItemMeta();
+    if (previousPageButton == null) {
+      previousPageButton = new ItemStack(Material.ARROW, 1);
+      ItemMeta meta = previousPageButton.getItemMeta();
       meta.setDisplayName(language.BUTTON_BACK);
-      backShopPageButton.setItemMeta(meta);
+      previousPageButton.setItemMeta(meta);
     }
-    return new Button(backShopPageButton).setActionAndArgs(ClickAction.OPEN_SHOP_PAGE, argOne, argTwo);
+    return new Button(previousPageButton).setActionAndArgs(ClickAction.OPEN_SHOP_PAGE, argOne, argTwo);
+  }
+
+  public static AButton createModulesPageBackButton(GameBoxLanguage language, String argOne) {
+    if (previousPageButton == null) {
+      previousPageButton = new ItemStack(Material.ARROW, 1);
+      ItemMeta meta = previousPageButton.getItemMeta();
+      meta.setDisplayName(language.BUTTON_BACK);
+      previousPageButton.setItemMeta(meta);
+    }
+    return new Button(previousPageButton).setActionAndArgs(ClickAction.OPEN_MODULES_PAGE, argOne);
+  }
+
+  public static AButton createModuleDetailsPageBackButton(GameBoxLanguage lang, String moduleId, String page) {
+    if (nextPageButton == null) {
+      nextPageButton = new ItemStack(Material.ARROW, 1);
+      ItemMeta meta = nextPageButton.getItemMeta();
+      meta.setDisplayName(lang.BUTTON_BACK);
+      nextPageButton.setItemMeta(meta);
+    }
+    return new Button(nextPageButton).setActionAndArgs(ClickAction.OPEN_MODULE_DETAILS, moduleId, page);
   }
 }

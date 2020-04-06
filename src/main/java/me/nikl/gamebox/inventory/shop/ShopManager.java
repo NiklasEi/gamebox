@@ -5,7 +5,7 @@ import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.events.EnterGameBoxEvent;
 import me.nikl.gamebox.inventory.ClickAction;
-import me.nikl.gamebox.inventory.GUIManager;
+import me.nikl.gamebox.inventory.GuiManager;
 import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.gui.AGui;
 import me.nikl.gamebox.utility.ItemStackUtility;
@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +38,7 @@ public class ShopManager {
   public static final String MAIN = "MainShop_" + UUID.randomUUID().toString();
   protected Map<String, Category> categories;
   protected MainShop mainShop;
-  protected GUIManager guiManager;
+  protected GuiManager guiManager;
   FileConfiguration shop;
   private File shopFile;
   private Button mainButton;
@@ -46,7 +47,7 @@ public class ShopManager {
   private GameBoxLanguage lang;
   private int mainSlots = 27, titleMessageSeconds = 3;
 
-  public ShopManager(GameBox gameBox, GUIManager guiManager) {
+  public ShopManager(GameBox gameBox, GuiManager guiManager) {
     this.gameBox = gameBox;
     this.lang = gameBox.lang;
     this.guiManager = guiManager;
@@ -89,8 +90,8 @@ public class ShopManager {
       gameBox.saveResource("tokenShop.yml", false);
     }
     try {
-      this.shop = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(shopFile), "UTF-8"));
-    } catch (UnsupportedEncodingException | FileNotFoundException e2) {
+      this.shop = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(shopFile), StandardCharsets.UTF_8));
+    } catch (FileNotFoundException e2) {
       e2.printStackTrace();
     }
   }
@@ -108,42 +109,12 @@ public class ShopManager {
         gameBox.getPluginManager().saveInventory(whoClicked);
         saved = true;
       } else {
-        whoClicked.sendMessage(lang.PREFIX + " A game was canceled with the reason: " + enterEvent.getCancelMessage());
+        whoClicked.sendMessage(lang.PREFIX + " Opening the GUI was canceled with the reason: " + enterEvent.getCancelMessage());
         return false;
       }
     }
 
-    if (Permission.OPEN_SHOP.hasPermission(whoClicked)) {
-      if (args[0].equals(ShopManager.MAIN) && args[1].equals("0")) {
-        GameBox.openingNewGUI = true;
-        mainShop.open(whoClicked);
-        GameBox.openingNewGUI = false;
-
-        if (closed) {
-          NmsFactory.getNmsUtility().updateInventoryTitle(whoClicked, gameBox.lang.SHOP_IS_CLOSED);
-        } else {
-          NmsFactory.getNmsUtility().updateInventoryTitle(whoClicked, gameBox.lang.SHOP_TITLE_MAIN_SHOP.replace("%player%", whoClicked.getDisplayName()));
-        }
-        return true;
-      } else if (categories.containsKey(args[0])) {
-        int page;
-        try {
-          page = Integer.parseInt(args[1]);
-        } catch (NumberFormatException exception) {
-          Bukkit.getLogger().log(Level.SEVERE, "failed to open shop page due to corrupted args!");
-          return false;
-        }
-        GameBox.openingNewGUI = true;
-        boolean open = categories.get(args[0]).openPage(whoClicked, page);
-        GameBox.openingNewGUI = false;
-        if (open) {
-          NmsFactory.getNmsUtility().updateInventoryTitle(whoClicked, gameBox.lang.SHOP_TITLE_PAGE_SHOP.replace("%page%", String.valueOf(page + 1)));
-          return true;
-        } else {
-          return false;
-        }
-      }
-    } else {
+    if (!Permission.OPEN_SHOP.hasPermission(whoClicked)) {
       if (saved) gameBox.getPluginManager().leaveGameBox(whoClicked);
       whoClicked.sendMessage(lang.PREFIX + lang.CMD_NO_PERM);
 
@@ -153,6 +124,36 @@ public class ShopManager {
       }
 
       return false;
+    }
+
+    if (args[0].equals(ShopManager.MAIN) && args[1].equals("0")) {
+      GameBox.openingNewGUI = true;
+      mainShop.open(whoClicked);
+      GameBox.openingNewGUI = false;
+
+      if (closed) {
+        NmsFactory.getNmsUtility().updateInventoryTitle(whoClicked, gameBox.lang.SHOP_IS_CLOSED);
+      } else {
+        NmsFactory.getNmsUtility().updateInventoryTitle(whoClicked, gameBox.lang.SHOP_TITLE_MAIN_SHOP.replace("%player%", whoClicked.getDisplayName()));
+      }
+      return true;
+    } else if (categories.containsKey(args[0])) {
+      int page;
+      try {
+        page = Integer.parseInt(args[1]);
+      } catch (NumberFormatException exception) {
+        Bukkit.getLogger().log(Level.SEVERE, "failed to open shop page due to corrupted args!");
+        return false;
+      }
+      GameBox.openingNewGUI = true;
+      boolean open = categories.get(args[0]).openPage(whoClicked, page);
+      GameBox.openingNewGUI = false;
+      if (open) {
+        NmsFactory.getNmsUtility().updateInventoryTitle(whoClicked, gameBox.lang.SHOP_TITLE_PAGE_SHOP.replace("%page%", String.valueOf(page + 1)));
+        return true;
+      } else {
+        return false;
+      }
     }
     if (saved) gameBox.getPluginManager().leaveGameBox(whoClicked);
     Bukkit.getLogger().log(Level.SEVERE, "trying to open a shop page failed");

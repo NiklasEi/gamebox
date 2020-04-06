@@ -2,7 +2,7 @@ package me.nikl.gamebox.inventory.shop;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.inventory.ClickAction;
-import me.nikl.gamebox.inventory.GUIManager;
+import me.nikl.gamebox.inventory.GuiManager;
 import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.utility.ItemStackUtility;
 import me.nikl.gamebox.utility.StringUtility;
@@ -22,7 +22,7 @@ import java.util.logging.Level;
  * GUI containing all shop categories
  */
 class MainShop extends Shop {
-  MainShop(GameBox plugin, GUIManager guiManager, int slots, ShopManager shopManager, String[] args) {
+  MainShop(GameBox plugin, GuiManager guiManager, int slots, ShopManager shopManager, String[] args) {
     super(plugin, guiManager, slots, shopManager, args, plugin.lang.SHOP_TITLE_MAIN_SHOP);
     loadCategories();
   }

@@ -22,7 +22,7 @@ public class GameBoxLanguage extends Language {
   public List<String> BUTTON_MAIN_MENU_INFO, BUTTON_SOUND_ON_LORE, BUTTON_SOUND_OFF_LORE, BUTTON_INVITE_BUTTON_LORE, BUTTON_INVITE_SKULL_LORE;
 
   public String TITLE_MAIN_GUI, TITLE_GAME_GUI, TITLE_NO_PERM, TITLE_NOT_ENOUGH_MONEY, TITLE_OTHER_PLAYER_NOT_ENOUGH_MONEY, TITLE_ALREADY_IN_ANOTHER_GAME, TITLE_ERROR = ChatColor.RED + "              Error", TITLE_NOT_ENOUGH_TOKEN,
-          TITLE_OTHER_PLAYER_IN_BLOCKED_WORLD;
+          TITLE_OTHER_PLAYER_IN_BLOCKED_WORLD, TITLE_MODULES_PAGE, TITLE_MODULE_DETAILS_PAGE, TITLE_MODULE_DETAILS_PAGE_LOADING;
 
   public String SHOP_TITLE_BOUGHT_SUCCESSFULLY, SHOP_TITLE_INVENTORY_FULL, SHOP_TITLE_MAIN_SHOP, SHOP_TITLE_PAGE_SHOP, SHOP_TITLE_NOT_ENOUGH_TOKEN, SHOP_TITLE_NOT_ENOUGH_MONEY, SHOP_FREE, SHOP_MONEY, SHOP_TOKEN, SHOP_IS_CLOSED, SHOP_TITLE_REQUIREMENT_NOT_FULFILLED;
 
@@ -140,6 +140,9 @@ public class GameBoxLanguage extends Language {
     this.TITLE_ALREADY_IN_ANOTHER_GAME = getString("inventoryTitles.alreadyInAnotherGame");
     this.TITLE_OTHER_PLAYER_NOT_ENOUGH_MONEY = getString("inventoryTitles.otherPlayerNotEnoughMoney");
     this.TITLE_OTHER_PLAYER_IN_BLOCKED_WORLD = getString("inventoryTitles.otherPlayerInBlockedWorld");
+    this.TITLE_MODULES_PAGE = getString("inventoryTitles.modulesPage");
+    this.TITLE_MODULE_DETAILS_PAGE = getString("inventoryTitles.moduleDetailsPage");
+    this.TITLE_MODULE_DETAILS_PAGE_LOADING = getString("inventoryTitles.moduleDetailsPageLoading");
   }
 
   private void getCommandMessages() {

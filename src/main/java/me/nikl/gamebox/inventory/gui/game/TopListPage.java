@@ -5,7 +5,7 @@ import me.nikl.gamebox.data.toplist.PlayerScore;
 import me.nikl.gamebox.data.toplist.SaveType;
 import me.nikl.gamebox.data.toplist.TopList;
 import me.nikl.gamebox.data.toplist.TopListUser;
-import me.nikl.gamebox.inventory.GUIManager;
+import me.nikl.gamebox.inventory.GuiManager;
 import me.nikl.gamebox.utility.ItemStackUtility;
 import me.nikl.gamebox.utility.NumberUtility;
 import me.nikl.gamebox.utility.StringUtility;
@@ -27,11 +27,11 @@ public class TopListPage extends GameGuiPage implements TopListUser {
   private List<String> skullLore;
   private TopList topList;
 
-  public TopListPage(GameBox plugin, GUIManager guiManager, String gameID, String key, String title, SaveType saveType, List<String> skullLore) {
+  public TopListPage(GameBox plugin, GuiManager guiManager, String gameID, String key, String title, SaveType saveType, List<String> skullLore) {
     super(plugin, guiManager, 54, gameID, key, title);
     this.saveType = saveType;
     this.skullLore = skullLore;
-    this.topList = plugin.getDataBase().getTopList(args[0], args[1].replace(GUIManager.TOP_LIST_KEY_ADDON, ""), saveType);
+    this.topList = plugin.getDataBase().getTopList(args[0], args[1].replace(GuiManager.TOP_LIST_KEY_ADDON, ""), saveType);
     this.topList.registerTopListUser(this);
     update();
   }

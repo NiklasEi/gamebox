@@ -24,6 +24,7 @@ import me.nikl.gamebox.exceptions.module.CloudModuleNotFoundException;
 import me.nikl.gamebox.exceptions.module.GameBoxCloudException;
 import me.nikl.gamebox.exceptions.module.InvalidModuleException;
 import me.nikl.gamebox.module.data.CloudModuleData;
+import me.nikl.gamebox.module.data.CloudModuleDataWithVersions;
 import me.nikl.gamebox.module.data.VersionedCloudModule;
 import me.nikl.gamebox.module.local.LocalModule;
 import me.nikl.gamebox.utility.versioning.SemanticVersion;
@@ -71,6 +72,14 @@ public class CloudService {
         CloudModuleData cloudModuleData = cloudContent.get(moduleID);
         if (cloudModuleData == null) throw new CloudModuleNotFoundException("No moduledata found for ID '" + moduleID + "'");
         return cloudModuleData;
+    }
+
+    public CloudModuleDataWithVersions getCloudModuleDataWithVersions(String moduleId) throws GameBoxCloudException {
+        ApiResponse<CloudModuleDataWithVersions> response = this.facade.getCloudModuleDataWithVersions(moduleId);
+        if (response.getError() != null) {
+            throw response.getError();
+        }
+        return response.getData();
     }
 
     public boolean hasUpdate(LocalModule localModule) {
