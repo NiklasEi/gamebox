@@ -4,7 +4,10 @@ main: me.nikl.gamebox.GameBox
 version: ${project.version}
 api-version: "1.14"
 website: nikl.me
-softdepend: [Vault, PlaceholderAPI, CalendarEvents]
+softdepend:
+  - Vault
+  - PlaceholderAPI
+  - CalendarEvents
 gameBoxSource: https://github.com/NiklasEi/gamebox
 updatedAt: "${timestamp}"
 updatedAtFormat: "${maven.build.timestamp.format}"

@@ -5,7 +5,6 @@ import me.nikl.gamebox.module.local.LocalModuleData;
 import me.nikl.gamebox.module.local.VersionedModule;
 import me.nikl.gamebox.utility.Sound;
 import me.nikl.gamebox.utility.versioning.SemanticVersion;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -168,7 +167,7 @@ public class GameBoxSettings {
 
   static void defineGameBoxData(GameBox instance) {
     PluginDescriptionFile description = instance.getDescription();
-    try (InputStream pluginFileStream = GameBox.getProvidingPlugin(GameBox.class).getResource("plugin.yml")){
+    try (InputStream pluginFileStream = instance.getResource("games.yml")){
       if (pluginFileStream == null) {
         throw new IOException("Cannot load plugin.yml as input stream");
       }
