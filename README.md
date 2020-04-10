@@ -85,9 +85,9 @@ Please refer to the plugins page for a detailed list of commands and permissions
 The permissions allow for different players having access to different games. By default all players can play all games! To change that one has to take the permission `gamebox.play.*` from all players. Then add the game specific play permissions `gamebox.play.<gameID>`. The unique ids of all games can be found [on the project page][gamebox-ids].
 
 [Spigot]: https://www.spigotmc.org/resources/37273/
-[gamebox-ids]: https://www.nikl.me/projects/gamebox/#ids
-[GameBox-games]: https://www.nikl.me/projects/gamebox/#games
-[GameBox-cmds]: https://www.nikl.me/projects/gamebox/#commands
-[GameBox-perms]: https://www.nikl.me/projects/gamebox/#permissions
-[example-project]: https://github.com/NiklasEi/GameBox_Template
+[gamebox-ids]: https://www.nikl.me/projects/minecraft/gamebox/#ids
+[GameBox-games]: https://www.nikl.me/projects/minecraft/gamebox/#games
+[GameBox-cmds]: https://www.nikl.me/projects/minecraft/gamebox/#commands
+[GameBox-perms]: https://www.nikl.me/projects/minecraft/gamebox/#permissions
+[example-project]: https://github.com/NiklasEi/template-module-for-gamebox
 [artifactory]: https://repo.nikl.me
