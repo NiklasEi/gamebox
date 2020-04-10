@@ -5,8 +5,8 @@
 - games can now be installed from inside GameBox. 
   - They are not separate plugins anymore, but can be automatically downloaded and installed.
 - players only see games in the menu that they have the `gamebox.play` permission for
-
-
+- renamed language files to standard locales (new default file is en_GB)
+- Loading database async ([#67](https://github.com/NiklasEi/gamebox/issues/67))
 
 
 ### v 2.2.6

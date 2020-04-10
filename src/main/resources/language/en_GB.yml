@@ -140,7 +140,7 @@ shop:
   inventoryIsFull: '        &4&lFull inventory'
   requirementNotFulfilled: '       &4&lFailed requirements'
   boughtSuccessful: '        &9&lBought successfully'
-  shopIsClosed: '        &4&lShop is closed atm'
+  shopIsClosed: '        &4&lShop is closed'
   # use %player% for the player name
   mainShop: '   &9Happy shopping, &1%player%'
   # use %page% for the page number
