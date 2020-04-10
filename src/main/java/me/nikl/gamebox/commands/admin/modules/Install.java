@@ -33,7 +33,8 @@ public class Install extends GameBoxBaseCommand {
         return false;
     }
 
-    @Subcommand("module install|i")
+    @Subcommand("module|m install|i")
+    @CommandCompletion("@cloudModuleIds")
     public void onModuleInstall(CommandSender sender, @Single String moduleID, @Optional @Single String version) {
         BukkitRunnable install = new BukkitRunnable() {
             @Override
@@ -63,7 +64,9 @@ public class Install extends GameBoxBaseCommand {
                         return;
                     }
                     modulesManager.installModule(moduleID, semVersion);
-                    sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_MODULES_INSTALL_SUCCESS.replaceAll("%name%", cloudModuleData.getName()));
+                    sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_MODULES_INSTALL_SUCCESS
+                            .replaceAll("%version%", semVersion.toString())
+                            .replaceAll("%name%", cloudModuleData.getName()));
                 } catch (CloudModuleVersionNotFoundException e) {
                     String message = gameBox.lang.CMD_MODULES_VERSION_NOT_FOUND.replaceAll("%id%", moduleID);
                     if (semVersion != null) {

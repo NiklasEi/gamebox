@@ -68,8 +68,11 @@ commandMessages:
   modules:
     invalidSemVersion: " &4The version needs to be semantic! See https://semver.org/"
     versionNotFound: " &4The module '%id%' @ version %version% was not found :("
-    moduleInstalled: " &2%name% was installed. Have fun :)"
-    moduleAlreadyInstalled: " &4%name% is already installed!&r To update please use &2/gba update %id%"
+    moduleInstalled: " &2%name% version %version% was installed. Have fun :)"
+    moduleRemoved: " &2%name% version %version% was removed."
+    moduleAlreadyInstalled: " &4%name% is already installed!&r To update please run &2/gba module update %id%"
+    moduleNotInstalled: " &4A Module with id '%id%' is not installed!"
+    noUpdateAvailable: " &4No update for %name% found :("
     installingLatestVersion: " &2Installing latest version of %name% (%version%)"
     notFoundInCloud: " &4Could not find the module '%id%' in the GameBox cloud :("
     list:

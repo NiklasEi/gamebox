@@ -20,11 +20,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 /**
  * @author Niklas Eicker
@@ -90,7 +90,7 @@ public class GameRegistry {
       games.put(game.getGameId(), game);
     if (game.getJarFile() != null) {
       if (!FileUtility.copyExternalResources(gameBox, game)) {
-        gameBox.info(" Failed to register the external module '" + game.getGameId() + "'");
+        gameBox.info(" Failed to register the game '" + game.getGameId() + "'");
         games.remove(game.getGameId());
         return false;
       }
@@ -137,6 +137,7 @@ public class GameRegistry {
    */
   public void reload() {
     reloadGamesConfiguration();
+    loadDisabledGames();
     games.clear();
     disabledGames.clear();
     subCommands.clear();
@@ -174,6 +175,10 @@ public class GameRegistry {
 
   public Set<String> getGameIds() {
     return Collections.unmodifiableSet(games.keySet());
+  }
+
+  public Set<String> getDisabledGameIds() {
+    return Collections.unmodifiableSet(disabledGames);
   }
 
   public Set<GameBoxGame> getGames() {
@@ -253,5 +258,14 @@ public class GameRegistry {
 
   public Set<String> getSubCommands() {
     return Collections.unmodifiableSet(subCommands.keySet());
+  }
+
+  public List<String> getLoadedGameIdsForModuleId(String moduleId) {
+    return this.games.values().stream().filter(game -> game.getModuleId().equals(moduleId)).map(GameBoxGame::getGameId).collect(Collectors.toList());
+  }
+
+  public void unregisterGamesForModuleId(String moduleId) {
+    List<String> gameIds = this.getLoadedGameIdsForModuleId(moduleId);
+    gameIds.forEach(gameId -> gameBox.getPluginManager().unregisterGame(gameId));
   }
 }

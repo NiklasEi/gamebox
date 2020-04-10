@@ -49,8 +49,8 @@ public abstract class GameBoxModule {
         return this.moduleData.getId();
     }
 
-    protected void registerGame(String moduleID, Class<? extends Game> gameClass, String... subCommands) {
-        new GameBoxGame(this.gameBox, moduleID, (Class<Game>) gameClass, this.moduleData.getModuleJar(), subCommands);
+    protected void registerGame(String gameId, Class<? extends Game> gameClass, String... subCommands) {
+        new GameBoxGame(this.gameBox, gameId, (Class<Game>) gameClass, this.moduleData, subCommands);
     }
 
     void setGameBox(GameBox gameBox) throws UnsupportedOperationException {

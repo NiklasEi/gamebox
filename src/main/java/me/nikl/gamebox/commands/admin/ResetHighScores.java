@@ -14,6 +14,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * @author Niklas Eicker
@@ -38,7 +39,7 @@ public class ResetHighScores extends GameBoxBaseCommand {
   }
 
   @Subcommand("resetstats")
-  @CommandCompletion("@gameIDs check_your_game_config @SaveTypes")
+  @CommandCompletion("@allGameIds check_your_game_config @SaveTypes")
   public void resetHighScores(CommandSender sender, String gameID, String gameTypeID, @Single String saveTypeStr) {
     DataBase dataBase = gameBox.getDataBase();
     try {
@@ -47,7 +48,7 @@ public class ResetHighScores extends GameBoxBaseCommand {
       sender.sendMessage(" High score reset successful");
       gameBox.reload(sender);
     } catch (IllegalArgumentException exception) {
-      sender.sendMessage("Valid saveTypes: " + Arrays.toString(SaveType.values()));
+      sender.sendMessage("Valid saveTypes: " + Arrays.stream(SaveType.values()).map(Enum::toString).collect(Collectors.joining(", ")));
     }
   }
 

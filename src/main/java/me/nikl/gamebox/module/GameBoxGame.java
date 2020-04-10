@@ -2,6 +2,7 @@ package me.nikl.gamebox.module;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.game.Game;
+import me.nikl.gamebox.module.local.LocalModule;
 import org.apache.commons.lang.Validate;
 
 import java.io.File;
@@ -16,8 +17,9 @@ public class GameBoxGame {
   private Class<Game> gameClass;
   private File jarFile;
   private List<String> subCommands;
+  private String moduleId;
 
-  public GameBoxGame(GameBox gameBox, String gameId, Class<Game> gameClass, File jarFile, String... subCommands) {
+  public GameBoxGame(GameBox gameBox, String gameId, Class<Game> gameClass, LocalModule module, String... subCommands) {
     Validate.isTrue(gameId != null && !gameId.isEmpty()
             , " moduleID cannot be null or empty!");
     Validate.isTrue(gameClass != null, " gameClass cannot be null!");
@@ -26,7 +28,8 @@ public class GameBoxGame {
     }
     this.gameClass = gameClass;
     this.gameId = gameId.toLowerCase();
-    this.jarFile = jarFile;
+    this.moduleId = module.getId();
+    this.jarFile = module.getModuleJar();
     gameBox.getGameRegistry().registerGame(this);
   }
 
@@ -61,5 +64,9 @@ public class GameBoxGame {
 
   public File getJarFile() {
     return jarFile;
+  }
+
+  public String getModuleId() {
+    return moduleId;
   }
 }

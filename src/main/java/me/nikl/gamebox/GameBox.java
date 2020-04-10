@@ -267,7 +267,7 @@ public class GameBox extends JavaPlugin {
     }
     FileUtility.copyDefaultLanguageFiles();
     this.lang = new GameBoxLanguage(this);
-    ConfigManager.registerModuleLanguage(MODULE_GAMEBOX, lang);
+    ConfigManager.registerGameLanguage(MODULE_GAMEBOX, lang);
     this.api = new GameBoxAPI(this);
     GameBoxSettings.loadSettings(this);
     return true;
@@ -330,7 +330,7 @@ public class GameBox extends JavaPlugin {
       e.printStackTrace();
       return false;
     }
-    ConfigManager.registerModuleConfiguration(MODULE_GAMEBOX, config);
+    ConfigManager.registerGameConfiguration(MODULE_GAMEBOX, config);
     return true;
   }
 

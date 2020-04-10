@@ -31,9 +31,8 @@ public class List extends GameBoxBaseCommand {
         return false;
     }
 
-    @Subcommand("module|modules list|l")
-    @CommandCompletion("@moduleIDs")
-    public void onModuleUpdate(CommandSender sender) {
+    @Subcommand("module|modules|m list|l")
+    public void onModuleList(CommandSender sender) {
         CloudService cloudService = gameBox.getModulesManager().getCloudService();
         java.util.List<CloudModuleData> cloudModuleData = cloudService.getCloudContent();
         HashMap<String, String> context = new HashMap<>();

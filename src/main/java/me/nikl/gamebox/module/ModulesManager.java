@@ -27,6 +27,7 @@ import me.nikl.gamebox.module.cloud.CloudFacade;
 import me.nikl.gamebox.module.cloud.CloudService;
 import me.nikl.gamebox.module.data.VersionedCloudModule;
 import me.nikl.gamebox.module.local.LocalModule;
+import me.nikl.gamebox.module.local.VersionedModule;
 import me.nikl.gamebox.module.settings.ModulesSettings;
 import me.nikl.gamebox.utility.FileUtility;
 import me.nikl.gamebox.utility.ModuleUtility;
@@ -37,7 +38,9 @@ import org.yaml.snakeyaml.constructor.CustomClassLoaderConstructor;
 import org.yaml.snakeyaml.representer.Representer;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Niklas Eicker
@@ -63,7 +66,7 @@ public class ModulesManager {
         prepareFiles();
         loadModuleSettings();
         collectLocalModules();
-        checkDependencies();
+        checkLocalModulesDependencies();
         loadLocalModules();
     }
 
@@ -79,17 +82,21 @@ public class ModulesManager {
         }
     }
 
-    private void checkDependencies() {
-        ModuleUtility.DependencyReport report = ModuleUtility.checkDependencies(this.localModules);
-        if (!report.isOk()) {
+    private void checkLocalModulesDependencies() {
+        ModuleUtility.DependencyReport report = ModuleUtility.checkDependencies(new HashMap<>(this.localModules));
+        if (report.isNotOk()) {
             this.localModules = report.filter(this.localModules);
             gameBox.getLogger().severe("Dependency issues while loading local modules");
-            report.getLog().forEach(s -> gameBox.getLogger().severe(s));
-            gameBox.getLogger().severe("For more information please see:");
-            gameBox.getLogger().severe("  Semantic versioning: https://semver.org/");
-            gameBox.getLogger().severe("  Version ranges:      https://docs.npmjs.com/misc/semver#ranges");
-            gameBox.getLogger().severe("                       https://thoughtbot.com/blog/rubys-pessimistic-operator");
+            logDependencyReport(report);
         }
+    }
+
+    private void logDependencyReport(ModuleUtility.DependencyReport report) {
+        report.getLog().forEach(s -> gameBox.getLogger().severe(s));
+        gameBox.getLogger().severe("For more information please see:");
+        gameBox.getLogger().severe("  Semantic versioning: https://semver.org/");
+        gameBox.getLogger().severe("  Version ranges:      https://docs.npmjs.com/misc/semver#ranges");
+        gameBox.getLogger().severe("                       https://thoughtbot.com/blog/rubys-pessimistic-operator");
     }
 
     private void loadLocalModules() {
@@ -192,6 +199,9 @@ public class ModulesManager {
     }
 
     public void installModule(VersionedCloudModule module) {
+        if (!checkDependencies(module, true)) {
+            return;
+        }
         GameBox.debug("Install module '" + module.getName() +"@" + module.getVersion().toString() + "'");
         cloudService.downloadModule(module, new DataBase.Callback<LocalModule>() {
             @Override
@@ -211,6 +221,17 @@ public class ModulesManager {
         });
     }
 
+    private boolean checkDependencies(VersionedCloudModule module, boolean log) {
+        ModuleUtility.DependencyReport report = ModuleUtility.checkDependencies(this, module);
+        if (report.isNotOk()) {
+            if (log) {
+                logDependencyReport(report);
+            }
+            return false;
+        }
+        return true;
+    }
+
     public void installModule(String moduleId, SemanticVersion version) throws GameBoxCloudException {
         try {
             installModule(cloudService.getVersionedCloudModule(moduleId, version));
@@ -226,12 +247,12 @@ public class ModulesManager {
         GameBoxModule gameBoxModule;
         try {
             GameBox.debug("    instantiating " + localModule.getName());
-            gameBoxModule = (GameBoxModule) FileUtility.getClassesFromJar(localModule.getModuleJar(), GameBoxModule.class).get(0).newInstance();
+            gameBoxModule = (GameBoxModule) FileUtility.getClassesFromJar(localModule.getModuleJar(), GameBoxModule.class).get(0).getConstructor().newInstance();
             GameBox.debug("    done.");
-        } catch (InstantiationException | IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             gameBox.getLogger().warning("Failed to instantiate module '" + localModule.getName() + "' from the jar '" + localModule.getModuleJar().getName() + "'");
             e.printStackTrace();
-            unloadModule(localModule);
+            removeModule(localModule);
             return;
         }
         gameBoxModule.setGameBox(gameBox);
@@ -243,17 +264,19 @@ public class ModulesManager {
             gameBox.getLogger().severe("Exception while enabling " + localModule.getName() + " @" + localModule.getVersionData().getVersion().toString());
             e.printStackTrace();
             gameBox.getLogger().severe("Skipping...");
-            unloadModule(localModule);
+            removeModule(localModule);
         }
     }
 
-    private void unloadModule(LocalModule localModule) {
+    public void removeModule(LocalModule localModule) {
         // ToDo: unload parent modules first!
         GameBoxModule gameBoxModule = loadedModules.get(localModule.getId());
         if (gameBoxModule != null) {
             try {
                 gameBoxModule.onDisable();
-            } catch (Exception e) {
+                gameBox.getGameRegistry().unregisterGamesForModuleId(localModule.getId());
+                gameBoxModule.getModuleData().getModuleJar().delete();
+            } catch (Throwable e) {
                 gameBox.getLogger().severe("Exception while disabling " + localModule.getName() + " @" + localModule.getVersionData().getVersion().toString() + ":");
                 e.printStackTrace();
             } finally {
@@ -310,5 +333,9 @@ public class ModulesManager {
         this.loadedModules.values().forEach(GameBoxModule::onDisable);
         this.loadedModules.clear();
         this.gameBox = null;
+    }
+
+    public List<VersionedModule> getLoadedVersionedModules() {
+        return this.loadedModules.values().stream().map(GameBoxModule::getModuleData).collect(Collectors.toList());
     }
 }

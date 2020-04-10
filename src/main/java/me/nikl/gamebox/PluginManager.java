@@ -535,7 +535,7 @@ public class PluginManager implements Listener {
     }
     GameBox.debug("unregister in gui manager...");
     guiManager.unregisterGame(gameID);
-    GameBox.debug("unregister module...");
+    GameBox.debug("unregister in GameRegistry...");
     plugin.getGameRegistry().unregisterGame(gameID);
     GameBox.debug("done");
     games.remove(gameID);

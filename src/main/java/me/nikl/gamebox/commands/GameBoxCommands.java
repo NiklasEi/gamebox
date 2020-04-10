@@ -15,6 +15,7 @@ import me.nikl.gamebox.commands.admin.ToggleDebug;
 import me.nikl.gamebox.commands.admin.TokenCommands;
 import me.nikl.gamebox.commands.admin.modules.Install;
 import me.nikl.gamebox.commands.admin.modules.List;
+import me.nikl.gamebox.commands.admin.modules.Remove;
 import me.nikl.gamebox.commands.admin.modules.Update;
 import me.nikl.gamebox.commands.general.HelpCommand;
 import me.nikl.gamebox.commands.general.InfoCommand;
@@ -22,9 +23,13 @@ import me.nikl.gamebox.commands.player.GetTokenCount;
 import me.nikl.gamebox.commands.player.InvitationClickCommand;
 import me.nikl.gamebox.commands.player.OpenGameBox;
 import me.nikl.gamebox.data.toplist.SaveType;
+import me.nikl.gamebox.module.data.CloudModuleData;
+import me.nikl.gamebox.module.data.ModuleBasicData;
 
 import java.util.Arrays;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * @author Niklas Eicker
@@ -45,14 +50,23 @@ public class GameBoxCommands extends BukkitCommandManager {
   }
 
   private void registerCommandCompletions() {
-    getCommandCompletions().registerCompletion("gameIDs", c ->
+    getCommandCompletions().registerCompletion("installedGameIds", c ->
             gameBox.getPluginManager().getGames().keySet()
+    );
+    getCommandCompletions().registerCompletion("loadedModuleIds", c ->
+            gameBox.getModulesManager().getLoadedVersionedModules().stream().map(ModuleBasicData::getId).collect(Collectors.toList())
+    );
+    getCommandCompletions().registerCompletion("cloudModuleIds", c ->
+            gameBox.getModulesManager().getCloudService().getCloudContent().stream().map(CloudModuleData::getId).collect(Collectors.toList())
     );
     getCommandCompletions().registerCompletion("SaveTypes", c ->
             Arrays.asList(Arrays.stream(SaveType.values()).map(Object::toString).toArray(String[]::new))
     );
-    getCommandCompletions().registerCompletion("moduleIDs", c ->
-            gameBox.getGameRegistry().getGameIds()
+    getCommandCompletions().registerCompletion("allGameIds", c -> {
+              Set<String> gameIds = gameBox.getGameRegistry().getGameIds();
+              gameIds.addAll(gameBox.getGameRegistry().getDisabledGameIds());
+              return gameIds;
+            }
     );
     getCommandCompletions().registerCompletion("SubCommands", c ->
             gameBox.getGameRegistry().getSubCommands()
@@ -76,6 +90,7 @@ public class GameBoxCommands extends BukkitCommandManager {
     registerCommand(new Install(gameBox));
     registerCommand(new Update(gameBox));
     registerCommand(new List(gameBox));
+    registerCommand(new Remove(gameBox));
     if (GameBox.debug) registerCommand(new TestCommands(gameBox));
   }
 

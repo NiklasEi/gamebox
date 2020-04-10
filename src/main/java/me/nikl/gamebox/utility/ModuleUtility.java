@@ -20,26 +20,35 @@ package me.nikl.gamebox.utility;
 
 import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.exceptions.module.InvalidModuleException;
+import me.nikl.gamebox.module.ModulesManager;
 import me.nikl.gamebox.module.data.DependencyData;
+import me.nikl.gamebox.module.data.VersionedCloudModule;
 import me.nikl.gamebox.module.local.LocalModule;
 import me.nikl.gamebox.module.local.LocalModuleData;
 import me.nikl.gamebox.module.local.VersionedModule;
 import me.nikl.gamebox.utility.versioning.VersionRangeUtility;
+import org.bukkit.Bukkit;
+import org.jetbrains.annotations.NotNull;
 
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ModuleUtility {
 
     public static void validateLocalModuleData(LocalModuleData localModuleData) throws InvalidModuleException {
-        if (localModuleData.getId() == null || localModuleData.getId().replaceAll("\\s","").isEmpty()) {
+        if (localModuleData.getId() == null || localModuleData.getId().replaceAll("\\s", "").isEmpty()) {
             throw new InvalidModuleException("No valid module id found");
         }
     }
 
     public static void fillDefaults(LocalModuleData localModuleData) {
-        if (localModuleData.getName() == null || localModuleData.getName().replaceAll("\\s","").isEmpty()) {
+        if (localModuleData.getName() == null || localModuleData.getName().replaceAll("\\s", "").isEmpty()) {
             localModuleData.setName(localModuleData.getId());
         }
     }
@@ -69,8 +78,27 @@ public class ModuleUtility {
         return sortedModules;
     }
 
-    public static DependencyReport checkDependencies(Map<String, LocalModule> modules) {
-        Map<String, VersionedModule> versionedModules = new HashMap<>(modules);
+    public static DependencyReport checkDependencies(ModulesManager modulesManager, VersionedCloudModule module) {
+        Map<String, VersionedModule> versionedModules = new HashMap<>();
+        versionedModules.put(module.getId(), new LocalModule(new LocalModuleData()
+                .withId(module.getId())
+                .withAuthors(module.getAuthors())
+                .withDependencies(module.getDependencies())
+                .withDescription(module.getDescription())
+                .withName(module.getName())
+                .withSourceUrl(module.getSourceUrl())
+                .withUpdatedAt(module.getUpdatedAt())
+                .withVersion(module.getVersion())
+                )
+        );
+        modulesManager.getLoadedVersionedModules().forEach(versionedModule -> versionedModules.put(versionedModule.getId(), versionedModule));
+        return checkDependencies(versionedModules);
+    }
+
+    @NotNull
+    public static DependencyReport checkDependencies(Map<String, VersionedModule> versionedModules) {
+        Map<String, VersionedModule> previous = new HashMap<>(versionedModules);
+        Bukkit.getLogger().info("Start: " + String.join(", ", previous.keySet()));
         VersionedModule gameBoxModule = GameBoxSettings.getGameBoxData();
         versionedModules.put(gameBoxModule.getId(), gameBoxModule);
         List<String> log = new ArrayList<>();
@@ -89,12 +117,14 @@ public class ModuleUtility {
                         log.add("The dependency '" + dependencyData.getId()
                                 + "' is missing for the module '" + currentModule.getId() + "'");
                         log.add("   " + currentModule.getId() + " asks for a version in the range '"
-                                + dependencyData.getVersionConstrain() + "'" );
+                                + dependencyData.getVersionConstrain() + "'");
                         foundIssue = true;
                         versionedModule.remove();
                         break;
                     }
-                    if (dependencyData.getVersionConstrain() == null || dependencyData.getVersionConstrain().isEmpty()) continue;
+                    if (dependencyData.getVersionConstrain() == null || dependencyData.getVersionConstrain().isEmpty()) {
+                        continue;
+                    }
                     try {
                         if (!VersionRangeUtility.isInVersionRange(dependency.getVersionData().getVersion(), dependencyData.getVersionConstrain())) {
                             if (dependencyData.isSoftDependency()) {
@@ -103,7 +133,7 @@ public class ModuleUtility {
                             log.add("'" + currentModule.getId() + "' asks for '"
                                     + dependency.getId() + "' with the version constrain '"
                                     + dependencyData.getVersionConstrain() + "'");
-                            log.add("   The installed version is '" + dependency.getVersionData().getVersion().toString() + "'" );
+                            log.add("   The installed version is '" + dependency.getVersionData().getVersion().toString() + "'");
                             foundIssue = true;
                             versionedModule.remove();
                             break;
@@ -114,14 +144,16 @@ public class ModuleUtility {
                 }
             }
         }
-        return new DependencyReport(modules, versionedModules, log);
+        Bukkit.getLogger().info("End: " + String.join(", ", versionedModules.keySet()));
+        Bukkit.getLogger().info("End (previous): " + String.join(", ", previous.keySet()));
+        return new DependencyReport(previous, versionedModules, log);
     }
 
     public static class DependencyReport {
         private List<String> log;
         private List<String> removedModules = new ArrayList<>();
 
-        public DependencyReport(Map<String, LocalModule> previous, Map<String, VersionedModule> afterwards, List<String> log) {
+        public DependencyReport(Map<String, VersionedModule> previous, Map<String, VersionedModule> afterwards, List<String> log) {
             this.log = log;
             for (String id : previous.keySet()) {
                 if (!afterwards.containsKey(id)) {
@@ -138,8 +170,8 @@ public class ModuleUtility {
             return removedModules;
         }
 
-        public boolean isOk() {
-            return removedModules.isEmpty();
+        public boolean isNotOk() {
+            return !removedModules.isEmpty();
         }
 
         public Map<String, LocalModule> filter(Map<String, LocalModule> modules) {

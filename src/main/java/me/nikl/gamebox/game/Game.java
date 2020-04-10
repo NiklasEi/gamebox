@@ -79,7 +79,7 @@ public abstract class Game {
     loadConfig();
     loadSettings();
     loadLanguage();
-    ConfigManager.registerModuleLanguage(module, gameLang);
+    ConfigManager.registerGameLanguage(module, gameLang);
     // at this point the game can load any game specific stuff (e.g. from config)
     init();
     loadGameManager();
@@ -156,7 +156,7 @@ public abstract class Game {
       e.printStackTrace();
       throw new GameLoadException("Failed to load the configuration", e);
     }
-    ConfigManager.registerModuleConfiguration(module, config);
+    ConfigManager.registerGameConfiguration(module, config);
   }
 
   private void hook() throws GameLoadException {

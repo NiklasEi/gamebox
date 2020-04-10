@@ -45,7 +45,7 @@ public class SettingsCommand extends GameBoxBaseCommand {
   }
 
   @Subcommand("settings game")
-  @CommandCompletion("@gameIDs")
+  @CommandCompletion("@allGameIDs")
   public void gameSettings(CommandSender sender, String gameID, String[] args) {
     if (args == null || args.length == 0) {
       sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_SETTINGS_GAME_INVALID_SETTING);

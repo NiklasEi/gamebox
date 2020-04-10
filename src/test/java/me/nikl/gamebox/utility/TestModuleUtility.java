@@ -55,7 +55,7 @@ public class TestModuleUtility {
     @DisplayName("Check dependent modules - no missing dependencies")
     public void checkDependencies() {
         Map<String, LocalModule> modules = getModules();
-        ModuleUtility.DependencyReport report = ModuleUtility.checkDependencies(modules);
+        ModuleUtility.DependencyReport report = ModuleUtility.checkDependencies(new HashMap<>(modules));
         assertEquals(0, report.getRemovedModules().size());
     }
 
@@ -65,7 +65,7 @@ public class TestModuleUtility {
     public void checkSoftDependencies() {
         Map<String, LocalModule> modules = new HashMap<>(getModules());
         modules.remove("soft-lib-test-module");
-        ModuleUtility.DependencyReport report = ModuleUtility.checkDependencies(modules);
+        ModuleUtility.DependencyReport report = ModuleUtility.checkDependencies(new HashMap<>(modules));
         assertEquals(0, report.getRemovedModules().size());
     }
 
@@ -75,7 +75,7 @@ public class TestModuleUtility {
     public void checkMissingDependencies() {
         Map<String, LocalModule> modules = new HashMap<>(getModules());
         modules.remove("lib-test-module");
-        ModuleUtility.DependencyReport report = ModuleUtility.checkDependencies(modules);
+        ModuleUtility.DependencyReport report = ModuleUtility.checkDependencies(new HashMap<>(modules));
         assertEquals(1, report.getRemovedModules().size());
         assertTrue(report.getRemovedModules().contains("test-module"));
     }

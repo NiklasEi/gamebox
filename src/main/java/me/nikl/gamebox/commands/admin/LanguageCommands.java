@@ -49,15 +49,15 @@ public class LanguageCommands extends GameBoxBaseCommand {
   }
 
   @Subcommand("language|lang")
-  @CommandCompletion("@moduleIDs")
-  public void onLanguageCommand(CommandSender sender, @Single String moduleID) {
-    if (!ConfigManager.getModuleIdsWithMissingKeys().contains(moduleID.toLowerCase())) {
-      gameBox.info(" Module '" + moduleID.toLowerCase() + "' does not exist or has no missing keys.");
-      gameBox.info(" Valid options: " + String.join(", ", ConfigManager.getModuleIdsWithMissingKeys()));
+  @CommandCompletion("@installedGameIds")
+  public void onLanguageCommand(CommandSender sender, @Single String gameId) {
+    if (!ConfigManager.getGameIdsWithMissingKeys().contains(gameId.toLowerCase())) {
+      gameBox.info(" Game '" + gameId.toLowerCase() + "' does not exist or has no missing keys.");
+      gameBox.info(" Valid options: " + String.join(", ", ConfigManager.getGameIdsWithMissingKeys()));
       return;
     }
     gameBox.info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - +");
-    ConfigManager.printMissingModuleKeys(gameBox, moduleID.toLowerCase());
+    ConfigManager.printMissingGameKeys(gameBox, gameId.toLowerCase());
     gameBox.info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - +");
   }
 }

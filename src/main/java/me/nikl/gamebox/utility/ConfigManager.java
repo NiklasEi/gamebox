@@ -17,24 +17,24 @@ import java.util.Set;
  * @author Niklas Eicker
  */
 public class ConfigManager {
-  private static final Map<String, FileConfiguration> moduleFileConfigurations = new HashMap<>();
-  private static final Map<String, Language> moduleLanguages = new HashMap<>();
+  private static final Map<String, FileConfiguration> gameFileConfigurations = new HashMap<>();
+  private static final Map<String, Language> gameLanguages = new HashMap<>();
   private static HashMap<String, HashMap<String, List<String>>> missingLanguageKeys;
 
-  public static void registerModuleConfiguration(GameBoxGame module, FileConfiguration configuration) {
-    registerModuleConfiguration(module.getGameId(), configuration);
+  public static void registerGameConfiguration(GameBoxGame game, FileConfiguration configuration) {
+    registerGameConfiguration(game.getGameId(), configuration);
   }
 
-  public static void registerModuleConfiguration(String moduleId, FileConfiguration configuration) {
-    moduleFileConfigurations.put(moduleId, configuration);
+  public static void registerGameConfiguration(String gameId, FileConfiguration configuration) {
+    gameFileConfigurations.put(gameId, configuration);
   }
 
-  public static <T extends Language> void registerModuleLanguage(GameBoxGame module, T language) {
-    registerModuleLanguage(module.getGameId(), language);
+  public static <T extends Language> void registerGameLanguage(GameBoxGame game, T language) {
+    registerGameLanguage(game.getGameId(), language);
   }
 
-  public static <T extends Language> void registerModuleLanguage(String moduleId, T language) {
-    moduleLanguages.put(moduleId, language);
+  public static <T extends Language> void registerGameLanguage(String gameId, T language) {
+    gameLanguages.put(gameId, language);
   }
 
   public static Language getLanguage(GameBoxGame module) {
@@ -42,7 +42,7 @@ public class ConfigManager {
   }
 
   public static Language getLanguage(String moduleID) {
-    return moduleLanguages.get(moduleID);
+    return gameLanguages.get(moduleID);
   }
 
   public static GameLanguage getGameLanguage(GameBoxGame module) {
@@ -50,7 +50,7 @@ public class ConfigManager {
   }
 
   public static GameLanguage getGameLanguage(String moduleID) {
-    Language language = moduleLanguages.get(moduleID);
+    Language language = gameLanguages.get(moduleID);
     if (!(language instanceof GameLanguage))
       throw new IllegalArgumentException("Requested game language for '" + moduleID + "' cannot be found");
     return (GameLanguage) language;
@@ -61,21 +61,21 @@ public class ConfigManager {
   }
 
   public static FileConfiguration getConfig(String moduleID) {
-    if (!moduleFileConfigurations.containsKey(moduleID))
+    if (!gameFileConfigurations.containsKey(moduleID))
       throw new IllegalArgumentException("Configuration for '" + moduleID + "' cannot be found");
-    return moduleFileConfigurations.get(moduleID);
+    return gameFileConfigurations.get(moduleID);
   }
 
   public static void clear() {
-    moduleFileConfigurations.clear();
-    moduleLanguages.clear();
+    gameFileConfigurations.clear();
+    gameLanguages.clear();
     missingLanguageKeys = null;
   }
 
   public static void checkLanguageFiles() {
     missingLanguageKeys = new HashMap<>();
     HashMap<String, List<String>> currentKeys;
-    for (String moduleID : moduleLanguages.keySet()) {
+    for (String moduleID : gameLanguages.keySet()) {
       currentKeys = collectMissingKeys(moduleID);
       if (!currentKeys.isEmpty()) {
         missingLanguageKeys.put(moduleID, currentKeys);
@@ -84,7 +84,7 @@ public class ConfigManager {
   }
 
   private static HashMap<String, List<String>> collectMissingKeys(String moduleID) {
-    Language language = moduleLanguages.get(moduleID);
+    Language language = gameLanguages.get(moduleID);
     HashMap<String, List<String>> toReturn = new HashMap<>();
     if (language == null) return toReturn;
     List<String> missingStringKeys = language.findMissingStringMessages();
@@ -108,7 +108,7 @@ public class ConfigManager {
     String moduleID;
     while (iterator.hasNext()) {
       moduleID = iterator.next();
-      printMissingModuleKeys(gameBox, moduleID);
+      printMissingGameKeys(gameBox, moduleID);
       if (iterator.hasNext()) {
         gameBox.info(" ");
         gameBox.info(" ");
@@ -118,7 +118,7 @@ public class ConfigManager {
     }
   }
 
-  public static void printMissingModuleKeys(GameBox gameBox, String moduleID) {
+  public static void printMissingGameKeys(GameBox gameBox, String moduleID) {
     if (missingLanguageKeys == null) checkLanguageFiles();
     HashMap<String, List<String>> currentKeys = missingLanguageKeys.get(moduleID);
     List<String> keys;
@@ -169,7 +169,7 @@ public class ConfigManager {
     gameBox.info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - +");
   }
 
-  public static Set<String> getModuleIdsWithMissingKeys() {
+  public static Set<String> getGameIdsWithMissingKeys() {
     if (missingLanguageKeys == null) checkLanguageFiles();
     return missingLanguageKeys.keySet();
   }
