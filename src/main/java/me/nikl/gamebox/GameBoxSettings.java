@@ -167,7 +167,7 @@ public class GameBoxSettings {
 
   static void defineGameBoxData(GameBox instance) {
     PluginDescriptionFile description = instance.getDescription();
-    try (InputStream pluginFileStream = instance.getResource("games.yml")){
+    try (InputStream pluginFileStream = instance.getResource("plugin.yml")){
       if (pluginFileStream == null) {
         throw new IOException("Cannot load plugin.yml as input stream");
       }
@@ -175,7 +175,7 @@ public class GameBoxSettings {
       String updatedAt = pluginFile.getString("updatedAt");
       String updatedAtFormat = pluginFile.getString("updatedAtFormat");
       if (updatedAt == null || updatedAtFormat == null) {
-        throw new Error("Was expecting build timestamp and format in plugin.yml file");
+        throw new Error("Was expecting 'updatedAt' and 'updatedAtFormat' in plugin.yml file");
       }
       LocalModuleData data = new LocalModuleData()
               .withAuthors(description.getAuthors())
