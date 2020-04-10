@@ -74,8 +74,8 @@ commandMessages:
     notFoundInCloud: " &4Could not find the module '%id%' in the GameBox cloud :("
     list:
       header: " &2Found &1%amount% &2modules in the cloud&r"
-      header2: "   &2&n[moduleId] Name (latest version)&r"
-      entry: "   &2[%moduleId%] &6%moduleName% (%latestVersion%)"
+      header2: "   &2&n[moduleId] | Name | (latest version)&r"
+      entry: "   &2[%moduleId%] | &6%moduleName% | (%latestVersion%)"
       footer: "&r&2 Install any module with &6/gba module install <moduleId>"
 
 

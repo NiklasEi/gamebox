@@ -13,6 +13,8 @@ import me.nikl.gamebox.utility.Permission;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.Arrays;
+
 /**
  * @author Niklas Eicker
  */
@@ -43,9 +45,9 @@ public class ResetHighScores extends GameBoxBaseCommand {
       SaveType saveType = SaveType.valueOf(saveTypeStr.toUpperCase());
       dataBase.resetHighScores(gameID, gameTypeID, saveType);
       sender.sendMessage(" High score reset successful");
-      gameBox.reload();
+      gameBox.reload(sender);
     } catch (IllegalArgumentException exception) {
-      sender.sendMessage("Valid saveTypes: " + SaveType.values().toString());
+      sender.sendMessage("Valid saveTypes: " + Arrays.toString(SaveType.values()));
     }
   }
 
@@ -66,6 +68,6 @@ public class ResetHighScores extends GameBoxBaseCommand {
       return;
     }
     gameBox.getDataBase().resetHighScores();
-    gameBox.reload();
+    gameBox.reload(sender);
   }
 }

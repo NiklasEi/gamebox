@@ -22,6 +22,7 @@ import net.milkbowl.vault.economy.Economy;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.HandlerList;
@@ -80,11 +81,7 @@ public class GameBox extends JavaPlugin {
 
     this.gameRegistry = new GameRegistry(this);
 
-    if (!reload()) {
-      getLogger().severe(" Problem while loading the plugin! Plugin was disabled!");
-      Bukkit.getPluginManager().disablePlugin(this);
-      return;
-    }
+    reload(null);
     establishHooksAndMetric();
   }
 
@@ -157,60 +154,86 @@ public class GameBox extends JavaPlugin {
 
   /**
    * Reload method called onEnable and on the reload command
-   *
-   * @return success
    */
-  public boolean reload() {
-    if (!prepareForReload()) return false;
+  public void reload(CommandSender sender) {
+    if (!prepareForReload()) return;
     if (pManager != null) {
       pManager.shutDown();
       HandlerList.unregisterAll(pManager);
       pManager = null;
     }
-    if (GameBoxSettings.useMysql) {
-      setUpMySQL();
-    }
-    // if connecting to the database failed, the setting will be set to false
-    // and the plugin falls back to file storage
-    if (!GameBoxSettings.useMysql) {
-      if (!setUpFileDB()) return false;
-    } else if (GameBoxSettings.bungeeMode) {
-      dataBase.registerBukkitBridge(bukkitBridge == null ? (bukkitBridge = new BukkitBridge(this)) : bukkitBridge);
-    }
 
-    if (GameBoxSettings.econEnabled) {
-      if (!setupEconomy()) {
-        getLogger().log(Level.SEVERE, "No economy found!");
-        getLogger().log(Level.SEVERE, "Even though it is enabled in the configuration file...");
-        GameBoxSettings.econEnabled = false;
-        return false;
-      }
-    }
-    reloadListeners();
-    GBPlayer.clearTokenListeners();
-    this.inventoryTitleMessenger = new InventoryTitleMessenger(this);
-    // get a new plugin manager and set the other managers and handlers
-    pManager = new PluginManager(this);
-    pManager.setGuiManager(new GuiManager(this));
-    pManager.setInviteInputHandler(new InviteInputHandler(this));
-    pManager.setInvitationHandler(new InvitationHandler(this));
-
-    this.commands = new GameBoxCommands(this);
-    // load players that are already online (otherwise done on join)
-    pManager.loadPlayers();
-    gameRegistry.reload();
-    new BukkitRunnable() {
+    GameBox instance = this;
+    BukkitRunnable rampUpGameBox = new BukkitRunnable() {
       @Override
       public void run() {
+        if (GameBoxSettings.bungeeMode) {
+          dataBase.registerBukkitBridge(bukkitBridge == null ? (bukkitBridge = new BukkitBridge(instance)) : bukkitBridge);
+        }
+        if (GameBoxSettings.econEnabled) {
+          if (!setupEconomy()) {
+            getLogger().log(Level.SEVERE, "No economy found!");
+            getLogger().log(Level.SEVERE, "Even though it is enabled in the configuration file...");
+            GameBoxSettings.econEnabled = false;
+            Bukkit.getPluginManager().disablePlugin(instance);
+            if (sender != null && lang != null) {
+              sender.sendMessage(lang.PREFIX + lang.RELOAD_FAIL);
+            }
+            return;
+          }
+        }
+        reloadListeners();
+        GBPlayer.clearTokenListeners();
+        inventoryTitleMessenger = new InventoryTitleMessenger(instance);
+        // get a new plugin manager and set the other managers and handlers
+        pManager = new PluginManager(instance);
+        pManager.setGuiManager(new GuiManager(instance));
+        pManager.setInviteInputHandler(new InviteInputHandler(instance));
+        pManager.setInvitationHandler(new InvitationHandler(instance));
+
+        commands = new GameBoxCommands(instance);
+        // load players that are already online (otherwise done on join)
+        pManager.loadPlayers();
+        gameRegistry.reload();
+        if (modulesManager != null) {
+          modulesManager.shutDown();
+        }
+        modulesManager = new ModulesManager(instance);
+        if (sender != null && lang != null) {
+          sender.sendMessage(lang.PREFIX + lang.RELOAD_SUCCESS);
+        }
         debug(" running late checks in GameBox");
         runLateChecks();
       }
-    }.runTask(this);
-    if (this.modulesManager != null) {
-      this.modulesManager.shutDown();
+    };
+
+    new BukkitRunnable() {
+      @Override
+      public void run() {
+        if (loadDatabase()) {
+          rampUpGameBox.runTask(instance);
+        } else {
+          new BukkitRunnable() {
+            @Override
+            public void run() {
+              instance.getLogger().severe("Failed to load the database");
+              if (sender != null && lang != null) {
+                sender.sendMessage(lang.PREFIX + lang.RELOAD_FAIL);
+              }
+              Bukkit.getPluginManager().disablePlugin(instance);
+            }
+          }.runTask(instance);
+        }
+      }
+    }.runTaskAsynchronously(this);
+  }
+
+  private boolean loadDatabase() {
+    if (GameBoxSettings.useMysql) {
+      return setUpMySQL();
+    } else {
+      return setUpFileDB();
     }
-    this.modulesManager = new ModulesManager(this);
-    return true;
   }
 
   private boolean setUpFileDB() {
@@ -219,27 +242,21 @@ public class GameBox extends JavaPlugin {
       dataBase = null;
     }
     this.dataBase = new FileDB(this);
-    info(" Loading database...");
+    info(" Loading database file...");
     info(" If this takes too long, you should switch to MySQL!");
-    if (!dataBase.load(false)) {
-      getLogger().log(Level.SEVERE, " Something went wrong with the data file");
-      return false;
-    }
+    boolean success = dataBase.load();
+    if (!success) return false;
     info(" ...done loading the database.");
     return true;
   }
 
-  private void setUpMySQL() {
+  private boolean setUpMySQL() {
     if (dataBase != null) {
       dataBase.onShutDown();
       dataBase = null;
     }
     this.dataBase = new MysqlDB(this);
-    if (!dataBase.load(false)) {
-      getLogger().log(Level.SEVERE, " Falling back to file storage...");
-      GameBoxSettings.useMysql = false;
-      dataBase = null;
-    }
+    return dataBase.load();
   }
 
   private boolean prepareForReload() {

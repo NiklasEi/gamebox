@@ -25,11 +25,6 @@ public class Reload extends GameBoxBaseCommand {
       return;
     }
     sender.sendMessage(gameBox.lang.PREFIX + ChatColor.GREEN + " Reloading...");
-    if (gameBox.reload()) {
-      sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.RELOAD_SUCCESS);
-    } else {
-      sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.RELOAD_FAIL);
-      Bukkit.getPluginManager().disablePlugin(gameBox);
-    }
+    gameBox.reload(sender);
   }
 }

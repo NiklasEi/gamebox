@@ -17,7 +17,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -39,25 +39,26 @@ public class FileDB extends DataBase {
   }
 
   @Override
-  public boolean load(boolean async) {
+  public boolean load() {
     if (!dataFile.exists()) {
       try {
         dataFile.getParentFile().mkdir();
         dataFile.createNewFile();
       } catch (IOException e) {
+        plugin.getLogger().severe("Failed to create Datafile!");
         e.printStackTrace();
         return false;
       }
     }
     // load stats file
     try {
-      this.data = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(this.dataFile), "UTF-8"));
-    } catch (UnsupportedEncodingException | FileNotFoundException e) {
+      this.data = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(this.dataFile), StandardCharsets.UTF_8));
+    } catch (FileNotFoundException e) {
+      plugin.getLogger().severe("Failed to read Datafile!");
       e.printStackTrace();
       return false;
     }
     return true;
-
   }
 
   @Override
@@ -150,8 +151,7 @@ public class FileDB extends DataBase {
   private UUID getBestScore(Map<UUID, Double> valuesMap, boolean higher) {
     double currentBestScore = higher ? 0. : Double.MAX_VALUE;
     UUID currentBestUuid = null;
-    for (Iterator<Map.Entry<UUID, Double>> entries = valuesMap.entrySet().iterator(); entries.hasNext(); ) {
-      Map.Entry<UUID, Double> entry = entries.next();
+    for (Map.Entry<UUID, Double> entry : valuesMap.entrySet()) {
       if (higher) {
         if (entry.getValue() > currentBestScore) {
           currentBestScore = entry.getValue();
@@ -170,14 +170,13 @@ public class FileDB extends DataBase {
   private Map<UUID, Double> createValuesMap(String topListIdentifier) {
     Map<UUID, Double> valuesMap = new HashMap<>();
     for (String uuid : data.getKeys(false)) {
-      if (!data.isSet(uuid.toString() + "." + GAMES_STATISTICS_NODE + "." + topListIdentifier))
+      if (!data.isSet(uuid + "." + GAMES_STATISTICS_NODE + "." + topListIdentifier))
         continue;
       try {
         UUID uuid1 = UUID.fromString(uuid);
-        valuesMap.put(uuid1, data.getDouble(uuid.toString() + "." + GAMES_STATISTICS_NODE + "." + topListIdentifier));
+        valuesMap.put(uuid1, data.getDouble(uuid + "." + GAMES_STATISTICS_NODE + "." + topListIdentifier));
       } catch (IllegalArgumentException exception) {
         Bukkit.getLogger().log(Level.WARNING, "failed to load a player score due to a malformed UUID (" + topListIdentifier + ")");
-        continue;
       }
     }
     return valuesMap;

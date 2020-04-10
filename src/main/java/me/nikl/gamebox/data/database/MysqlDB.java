@@ -2,7 +2,6 @@ package me.nikl.gamebox.data.database;
 
 import com.zaxxer.hikari.HikariDataSource;
 import me.nikl.gamebox.GameBox;
-import me.nikl.gamebox.GameBoxSettings;
 import me.nikl.gamebox.data.GBPlayer;
 import me.nikl.gamebox.data.toplist.PlayerScore;
 import me.nikl.gamebox.data.toplist.SaveType;
@@ -61,7 +60,7 @@ public class MysqlDB extends DataBase {
   }
 
   @Override
-  public boolean load(boolean async) {
+  public boolean load() {
     hikari = new HikariDataSource();
     hikari.setDataSourceClassName("com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
     hikari.addDataSourceProperty("serverName", host);
@@ -83,8 +82,8 @@ public class MysqlDB extends DataBase {
               PLAYER_UUID + "` varchar(36), " +
               "PRIMARY KEY (`" + PLAYER_UUID + "`))");
     } catch (SQLException e) {
+      plugin.getLogger().severe("Failed to load MySQL database!");
       e.printStackTrace();
-      GameBoxSettings.useMysql = false;
       return false;
     }
     return true;
@@ -181,7 +180,7 @@ public class MysqlDB extends DataBase {
   }
 
   private void createColumnIfNecessary(String columnName) {
-    if (!doesHighScoreColumnExist(columnName)) {
+    if (isHighScoreColumnMissing(columnName)) {
       try (Connection connection = hikari.getConnection();
            Statement statement = connection.createStatement()) {
         GameBox.debug("  Adding the column " + columnName);
@@ -193,10 +192,10 @@ public class MysqlDB extends DataBase {
     }
   }
 
-  private boolean doesHighScoreColumnExist(String columnName) {
+  private boolean isHighScoreColumnMissing(String columnName) {
     if (knownHighScoreColumns.contains(columnName)) {
       GameBox.debug("  Found known high score column: " + columnName);
-      return true;
+      return false;
     }
     // first time this column is used in this server session... better check it exists
     GameBox.debug("  Column name (length = " + columnName.length() + "): " + columnName);
@@ -209,15 +208,15 @@ public class MysqlDB extends DataBase {
                       "AND COLUMN_NAME = '" + columnName + "'");
       if (!resultSet.next()) {
         GameBox.debug("  Column does not exist");
-        return false;
+        return true;
       } else {
         GameBox.debug("  Column already exists");
         knownHighScoreColumns.add(columnName);
-        return true;
+        return false;
       }
     } catch (SQLException e) {
       e.printStackTrace();
-      return false;
+      return true;
     }
   }
 
@@ -481,7 +480,7 @@ public class MysqlDB extends DataBase {
     try (Connection connection = hikari.getConnection();
          Statement statement = connection.createStatement()) {
       String columnName = buildColumnName(gameID, gameTypeID, saveType);
-      if (!doesHighScoreColumnExist(columnName)) return;
+      if (isHighScoreColumnMissing(columnName)) return;
       statement.executeUpdate("ALTER TABLE `" + HIGH_SCORES_TABLE + "` DROP COLUMN `" + columnName + "`");
     } catch (SQLException e) {
       e.printStackTrace();
@@ -497,7 +496,7 @@ public class MysqlDB extends DataBase {
         final String prefix = ConfigManager.getLanguage(GameBox.MODULE_GAMEBOX).PREFIX;
         sender.sendMessage(prefix + " Starting async conversion.");
         sender.sendMessage(prefix + " Additional output in the console!");
-        fromDB.load(false);
+        fromDB.load();
         fromDB.convertToMySQL();
         fromDB.onShutDown();
         sender.sendMessage(prefix + " Conversion is completed.");

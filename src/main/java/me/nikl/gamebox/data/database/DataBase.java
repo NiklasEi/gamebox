@@ -71,7 +71,7 @@ public abstract class DataBase {
     }
   }
 
-  public abstract boolean load(boolean async);
+  public abstract boolean load();
 
   public abstract void save(boolean async);
 

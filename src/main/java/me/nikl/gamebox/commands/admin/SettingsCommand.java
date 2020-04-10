@@ -62,7 +62,6 @@ public class SettingsCommand extends GameBoxBaseCommand {
       default:
         sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_SETTINGS_GAME_INVALID_SETTING);
         sendHelp(sender, gameID);
-        return;
     }
   }
 
@@ -80,12 +79,7 @@ public class SettingsCommand extends GameBoxBaseCommand {
     gameBox.getGameRegistry().disableGame(gameID);
     sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_SETTINGS_GAME_DISABLE_SUCCESS);
     sender.sendMessage(gameBox.lang.PREFIX + ChatColor.GREEN + " Reloading...");
-    if (gameBox.reload()) {
-      sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.RELOAD_SUCCESS);
-    } else {
-      sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.RELOAD_FAIL);
-      Bukkit.getPluginManager().disablePlugin(gameBox);
-    }
+    gameBox.reload(sender);
   }
 
   private void enableGame(CommandSender sender, String gameID) {
@@ -96,11 +90,6 @@ public class SettingsCommand extends GameBoxBaseCommand {
     gameBox.getGameRegistry().enableGame(gameID);
     sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_SETTINGS_GAME_ENABLE_SUCCESS);
     sender.sendMessage(gameBox.lang.PREFIX + ChatColor.GREEN + " Reloading...");
-    if (gameBox.reload()) {
-      sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.RELOAD_SUCCESS);
-    } else {
-      sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.RELOAD_FAIL);
-      Bukkit.getPluginManager().disablePlugin(gameBox);
-    }
+    gameBox.reload(sender);
   }
 }
