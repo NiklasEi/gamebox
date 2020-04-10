@@ -54,13 +54,16 @@ public class ModulesManager {
 
     public ModulesManager(GameBox gameBox) {
         this.gameBox = gameBox;
+        load();
+    }
+
+    private void load() {
         prepareModulesDirectory();
         connectToCloud();
         prepareFiles();
         loadModuleSettings();
         collectLocalModules();
         checkDependencies();
-        //collectLocalModuleUpdates();
         loadLocalModules();
     }
 
@@ -117,10 +120,10 @@ public class ModulesManager {
 
     private void connectToCloud() {
         this.cloudService = new CloudService(gameBox, new CloudFacade());
-        BukkitRunnable loadModulesGui = new BukkitRunnable() {
+        BukkitRunnable hookAfterConnectingToCloud = new BukkitRunnable() {
             @Override
             public void run() {
-                gameBox.getPluginManager().getGuiManager().getModulesGuiManager().loadGui();
+                gameBox.hookAfterConnectingToCloud();
             }
         };
         new BukkitRunnable() {
@@ -128,7 +131,7 @@ public class ModulesManager {
             public void run() {
                 try {
                     cloudService.updateCloudContent();
-                    loadModulesGui.runTask(gameBox);
+                    hookAfterConnectingToCloud.runTask(gameBox);
                 } catch (GameBoxCloudException e) {
                     gameBox.getLogger().severe("Error while attempting to load cloud content");
                     e.printStackTrace();
@@ -169,7 +172,7 @@ public class ModulesManager {
         }
     }
 
-    private void collectLocalModuleUpdates() {
+    public void collectLocalModuleUpdates() {
         hasUpdateAvailable.clear();
         for (String moduleId : localModules.keySet()) {
             if (cloudService.hasUpdate(localModules.get(moduleId))) {
@@ -301,5 +304,11 @@ public class ModulesManager {
 
     public CloudService getCloudService() {
         return this.cloudService;
+    }
+
+    public void shutDown() {
+        this.loadedModules.values().forEach(GameBoxModule::onDisable);
+        this.loadedModules.clear();
+        this.gameBox = null;
     }
 }

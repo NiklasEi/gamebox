@@ -206,6 +206,9 @@ public class GameBox extends JavaPlugin {
         runLateChecks();
       }
     }.runTask(this);
+    if (this.modulesManager != null) {
+      this.modulesManager.shutDown();
+    }
     this.modulesManager = new ModulesManager(this);
     return true;
   }
@@ -401,5 +404,10 @@ public class GameBox extends JavaPlugin {
 
   public ModulesManager getModulesManager() {
     return modulesManager;
+  }
+
+  public void hookAfterConnectingToCloud() {
+    getPluginManager().getGuiManager().getModulesGuiManager().loadGui();
+    getModulesManager().collectLocalModuleUpdates();
   }
 }

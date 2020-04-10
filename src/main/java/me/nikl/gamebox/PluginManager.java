@@ -451,51 +451,54 @@ public class PluginManager implements Listener {
       game.onDisable();
     }
     gamesRegistered = 0;
-    logging:
     if (savedContents.size() > 0) {
-      Bukkit.getLogger().log(Level.SEVERE, "-------------------------------------------------------------------");
-      Bukkit.getLogger().log(Level.SEVERE, "There were left-over inventories after restoring for all players");
-      String fileName = LocalDateTime.now().toString();
-      // get rid of the milliseconds
-      // the name now only includes the date and time
-      fileName = fileName.split("\\.")[0];
-      fileName = fileName.replace(":", "_");
-      fileName += ".txt";
-      Bukkit.getLogger().log(Level.SEVERE, "Saving those contents in a log file in the folder Logs as: " + fileName);
-      File logFile = new File(plugin.getDataFolder().toString() + File.separatorChar + "Logs" + File.separatorChar + fileName);
-      logFile.getParentFile().mkdirs();
-      try {
-        logFile.createNewFile();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-      FileConfiguration log;
-      try {
-        log = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(logFile), StandardCharsets.UTF_8));
-      } catch (FileNotFoundException e) {
-        e.printStackTrace();
-        break logging;
-      }
-      ItemStack[] saves;
-      for (UUID uuid : savedContents.keySet()) {
-        saves = savedContents.get(uuid);
-        log.set(uuid.toString() + ".name", Bukkit.getOfflinePlayer(uuid) == null ? "null" : Bukkit.getOfflinePlayer(uuid).getName());
-        for (int i = 0; i < saves.length; i++) {
-          if (saves[i] != null) log.set(uuid.toString() + ".items." + i, saves[i].toString());
-        }
-      }
-      savedContents.clear();
-      try {
-        log.save(logFile);
-      } catch (IOException e) {
-        Bukkit.getLogger().log(Level.SEVERE, "Could not save Log", e);
-      }
-      Bukkit.getLogger().log(Level.SEVERE, "-------------------------------------------------------------------");
+      handleLeftoverSavedContents();
     }
     for (GBPlayer player : gbPlayers.values()) {
       player.remove();
     }
     gbPlayers.clear();
+  }
+
+  private void handleLeftoverSavedContents() {
+    Bukkit.getLogger().log(Level.SEVERE, "-------------------------------------------------------------------");
+    Bukkit.getLogger().log(Level.SEVERE, "There were left-over inventories after restoring for all players");
+    String fileName = LocalDateTime.now().toString();
+    // get rid of the milliseconds
+    // the name now only includes the date and time
+    fileName = fileName.split("\\.")[0];
+    fileName = fileName.replace(":", "_");
+    fileName += ".txt";
+    Bukkit.getLogger().log(Level.SEVERE, "Saving those contents in a log file in the folder Logs as: " + fileName);
+    File logFile = new File(plugin.getDataFolder().toString() + File.separatorChar + "Logs" + File.separatorChar + fileName);
+    logFile.getParentFile().mkdirs();
+    try {
+      logFile.createNewFile();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    FileConfiguration log;
+    try {
+      log = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(logFile), StandardCharsets.UTF_8));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+      return;
+    }
+    ItemStack[] saves;
+    for (UUID uuid : savedContents.keySet()) {
+      saves = savedContents.get(uuid);
+      log.set(uuid.toString() + ".name", Bukkit.getOfflinePlayer(uuid) == null ? "null" : Bukkit.getOfflinePlayer(uuid).getName());
+      for (int i = 0; i < saves.length; i++) {
+        if (saves[i] != null) log.set(uuid.toString() + ".items." + i, saves[i].toString());
+      }
+    }
+    savedContents.clear();
+    try {
+      log.save(logFile);
+    } catch (IOException e) {
+      Bukkit.getLogger().log(Level.SEVERE, "Could not save Log", e);
+    }
+    Bukkit.getLogger().log(Level.SEVERE, "-------------------------------------------------------------------");
   }
 
   public GameBox getPlugin() {

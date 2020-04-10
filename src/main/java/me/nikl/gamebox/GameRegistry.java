@@ -37,7 +37,6 @@ public class GameRegistry {
   private final Set<String> disabledGames = new HashSet<>();
   private GameBox gameBox;
   private Map<String, GameBoxGame> games = new HashMap<>();
-  private Map<String, GameBoxGame> declinedGames = new HashMap<>();
   private Map<String, GameBoxGame> subCommands = new HashMap<>();
   private Map<String, Set<String>> bundledSubCommands = new HashMap<>();
   private boolean enableNewGamesByDefault;
@@ -50,7 +49,6 @@ public class GameRegistry {
 
   private void loadDisabledGames() {
     disabledGames.clear();
-    enableNewGamesByDefault = gamesConfiguration.getBoolean("enableNewGamesByDefault", true);
     ConfigurationSection gamesSection = gamesConfiguration.getConfigurationSection("games");
     if (gamesSection == null) return;
     for (String gameId : gamesSection.getKeys(false)) {
@@ -68,6 +66,7 @@ public class GameRegistry {
     }
     try {
       gamesConfiguration = YamlConfiguration.loadConfiguration(new InputStreamReader(new FileInputStream(gamesFile), StandardCharsets.UTF_8));
+      enableNewGamesByDefault = gamesConfiguration.getBoolean("enableNewGamesByDefault", true);
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
@@ -83,7 +82,6 @@ public class GameRegistry {
       return false;
     }
     if (disabledGames.contains(game.getGameId())) {
-      declinedGames.put(game.getGameId(), game);
       gameBox.warning("The game " + game.getGameId() + " is disabled in 'games.yml'");
       return false;
     }
@@ -135,37 +133,14 @@ public class GameRegistry {
   }
 
   /**
-   * Reload the settings. Then go through all modules and
-   * try getting game instances through their class paths
+   * Reload game registry
    */
   public void reload() {
     reloadGamesConfiguration();
-    loadDisabledGames();
-    games.putAll(declinedGames);
-    declinedGames.clear();
+    games.clear();
+    disabledGames.clear();
     subCommands.clear();
     bundledSubCommands.clear();
-    Iterator<GameBoxGame> iterator = games.values().iterator();
-    while (iterator.hasNext()) {
-      GameBoxGame module = iterator.next();
-      if (disabledGames.contains(module.getGameId())) {
-        iterator.remove();
-        declinedGames.put(module.getGameId(), module);
-        gameBox.warning("The game " + module.getGameId() + " is disabled in 'games.yml'");
-        continue;
-      }
-      reloadGameData(module);
-      loadGame(module);
-    }
-  }
-
-  private void reloadGameData(GameBoxGame game) {
-    String gameId = game.getGameId();
-    if (gamesConfiguration.isList("games." + gameId + ".subCommands")) {
-      List<String> subCommands = gamesConfiguration.getStringList("games." + gameId + ".subCommands");
-      if (!subCommands.isEmpty()) game.setSubCommands(subCommands);
-    }
-    registerSubCommands(game);
   }
 
   private void loadGame(GameBoxGame game) {
