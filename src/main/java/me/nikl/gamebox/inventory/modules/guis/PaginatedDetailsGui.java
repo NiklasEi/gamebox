@@ -94,6 +94,7 @@ public class PaginatedDetailsGui {
     }
 
     private void updateGui() {
+        clearPages();
         SimpleDateFormat format = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
         for (VersionData version : data.getVersions()) {
             ItemStack book = new ItemStack(Material.BOOK);
@@ -109,6 +110,12 @@ public class PaginatedDetailsGui {
             versionButton.setItemMeta(meta);
             versionButton.setActionAndArgs(ClickAction.DISPATCH_PLAYER_COMMAND, String.format("/gba module i %s %s", data.getId(), version.getVersion().toString()));
             setButton(versionButton);
+        }
+    }
+
+    private void clearPages() {
+        for (ModuleDetailsPage page: pages) {
+            page.clearPage();
         }
     }
 

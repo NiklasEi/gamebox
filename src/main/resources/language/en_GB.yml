@@ -139,6 +139,11 @@ inventoryTitles:
   modulesPage: '        &2Modules page %page%&r'
   moduleDetailsPage: '&2%moduleName%&r - Page %page%'
   moduleDetailsPageLoading: '&2%moduleName%&r - Loading data'
+  moduleGuiTitleMessages:
+    moduleNotInstalled: "&4This module is not installed"
+    moduleRemoved: "&2Running cmd to remove module..."
+    moduleInstalled: "&2Running cmd to install module..."
+    moduleUpdated: "&2Running cmd to update module..."
 
 
 shop:

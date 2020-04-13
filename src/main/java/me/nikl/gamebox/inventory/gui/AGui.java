@@ -12,6 +12,7 @@ import me.nikl.gamebox.inventory.button.AButton;
 import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.gui.game.GameGui;
 import me.nikl.gamebox.inventory.gui.game.StartMultiplayerGamePage;
+import me.nikl.gamebox.inventory.modules.pages.ModulesPage;
 import me.nikl.gamebox.inventory.shop.Shop;
 import me.nikl.gamebox.inventory.shop.ShopItem;
 import me.nikl.gamebox.module.GameBoxModule;
@@ -280,13 +281,27 @@ public abstract class AGui implements GameBoxHolder {
           return true;
         } else if (args.length == 1) {
           GameBoxModule module;
+          Player whoClicked = (Player) event.getWhoClicked();
           switch (event.getAction()) {
             case MOVE_TO_OTHER_INVENTORY:
               module = gameBox.getModulesManager().getModuleInstance(args[0]);
               if (module == null) {
+                gameBox.getInventoryTitleMessenger().sendInventoryTitle(whoClicked, gameBox.lang.TITLE_MODULE_NOT_INSTALLED, this.title, titleMessageSeconds);
                 return false;
               }
-              gameBox.getModulesManager().removeModule(module.getModuleData());
+              whoClicked.chat(String.format("/gba m rm %s", args[0]));
+              gameBox.getInventoryTitleMessenger().sendInventoryTitle(whoClicked, gameBox.lang.TITLE_MODULE_REMOVED, this.title, titleMessageSeconds);
+              return true;
+            case PICKUP_HALF:
+            case PLACE_ONE:
+              module = gameBox.getModulesManager().getModuleInstance(args[0]);
+              if (module == null) {
+                whoClicked.chat(String.format("/gba m i %s", args[0]));
+                gameBox.getInventoryTitleMessenger().sendInventoryTitle(whoClicked, gameBox.lang.TITLE_MODULE_INSTALLED, this.title, titleMessageSeconds);
+                return true;
+              }
+              whoClicked.chat(String.format("/gba m u %s", args[0]));
+              gameBox.getInventoryTitleMessenger().sendInventoryTitle(whoClicked, gameBox.lang.TITLE_MODULE_UPDATED, this.title, titleMessageSeconds);
               return true;
             default:
               String[] newArgs = new String[]{args[0], "0"};

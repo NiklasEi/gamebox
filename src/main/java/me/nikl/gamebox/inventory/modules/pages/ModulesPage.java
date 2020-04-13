@@ -15,13 +15,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.Map;
 
 public class ModulesPage extends AGui {
-    private int pageNum;
+    protected int pageNum;
     private int previousPageSlot = 21;
     private int nextPageSlot = 23;
     private NmsUtility nms;
 
-    public ModulesPage(GameBox plugin, GuiManager guiManager, int slots, String[] args, int pageNum) {
-        super(plugin, guiManager, slots, args, "Page");
+    public ModulesPage(GameBox plugin, GuiManager guiManager, int slots, String[] args, int pageNum, String title) {
+        super(plugin, guiManager, slots, args, title);
         this.pageNum = pageNum;
         if (pageNum > 1) {
             setButton(ButtonFactory.createModulesPageBackButton(gameBox.lang, String.valueOf(pageNum - 2)), previousPageSlot);

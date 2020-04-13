@@ -4,7 +4,6 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.inventory.GuiManager;
 import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.modules.pages.ModulesPage;
-import me.nikl.nmsutilities.NmsFactory;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ public class PaginatedGui {
     public PaginatedGui(GameBox gameBox, GuiManager guiManager) {
         this.gameBox = gameBox;
         this.guiManager = guiManager;
-        this.pages.add(new ModulesPage(gameBox, guiManager, gridSize, new String[]{"0"}, 1));
+        this.pages.add(new ModulesPage(gameBox, guiManager, gridSize, new String[]{"0"}, 1, gameBox.lang.TITLE_MODULES_PAGE.replace("%page%", String.valueOf(1))));
     }
 
     public boolean openPage(Player whoClicked, int pageNumber) {
@@ -29,11 +28,7 @@ public class PaginatedGui {
         GameBox.openingNewGUI = true;
         boolean open = pages.get(pageNumber).open(whoClicked);
         GameBox.openingNewGUI = false;
-        if (open) {
-            NmsFactory.getNmsUtility().updateInventoryTitle(whoClicked, gameBox.lang.TITLE_MODULES_PAGE.replace("%page%", String.valueOf(pageNumber + 1)));
-            return true;
-        }
-        return false;
+        return open;
     }
 
     public boolean isSlotFreeOnLastPage(int slot) {
@@ -44,7 +39,7 @@ public class PaginatedGui {
     public ModulesPage addPage() {
         ModulesPage lastPage = pages.get(pages.size() - 1);
         lastPage.createNextPageNavigation();
-        ModulesPage newPage = new ModulesPage(gameBox, guiManager, gridSize, new String[]{String.valueOf(pages.size())}, pages.size() + 1);
+        ModulesPage newPage = new ModulesPage(gameBox, guiManager, gridSize, new String[]{String.valueOf(pages.size())}, pages.size() + 1, gameBox.lang.TITLE_MODULES_PAGE.replace("%page%", String.valueOf(pages.size() + 1)));
         this.pages.add(newPage);
         return newPage;
     }
