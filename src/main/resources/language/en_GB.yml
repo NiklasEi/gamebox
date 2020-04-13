@@ -115,6 +115,13 @@ mainButtons:
     lore:
       - ""
       - "&bClick to accept the invitation"
+  modulesGui:
+    displayName: "&eGameBox modules"
+    lore:
+      - ""
+      - "&bClick to enter the admin modules GUI"
+      - "&b ↳ install/update/remove modules"
+
 
 
 

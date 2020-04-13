@@ -70,7 +70,7 @@ public class ModulesGuiManager {
             meta.setLore(lore);
             button.setItemMeta(meta);
             button.setAction(ClickAction.OPEN_MODULE_DETAILS);
-            button.setArgs(data.getId(), "0");
+            button.setArgs(data.getId());
             this.moduleDetails.addDetailsForModuleId(data);
             this.modulesListGui.setButton(button);
         }
@@ -119,9 +119,13 @@ public class ModulesGuiManager {
     }
 
     private void loadButton() {
-            mainButton = new Button(new ItemStack(Material.CHEST));
-            mainButton.setAction(ClickAction.OPEN_MODULES_PAGE);
-            mainButton.setArgs("0");
+        mainButton = new Button(new ItemStack(Material.CHEST));
+        ItemMeta meta = mainButton.getItemMeta();
+        meta.setDisplayName(gameBox.lang.BUTTON_MODULES_GUI_NAME);
+        meta.setLore(gameBox.lang.BUTTON_MODULES_GUI_LORE);
+        mainButton.setItemMeta(meta);
+        mainButton.setAction(ClickAction.OPEN_MODULES_PAGE);
+        mainButton.setArgs("0");
     }
 
     public Button getMainButton() {

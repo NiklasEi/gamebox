@@ -14,6 +14,7 @@ import me.nikl.gamebox.inventory.gui.game.GameGui;
 import me.nikl.gamebox.inventory.gui.game.StartMultiplayerGamePage;
 import me.nikl.gamebox.inventory.shop.Shop;
 import me.nikl.gamebox.inventory.shop.ShopItem;
+import me.nikl.gamebox.module.GameBoxModule;
 import me.nikl.gamebox.utility.InventoryUtility;
 import me.nikl.gamebox.utility.Permission;
 import org.bukkit.Bukkit;
@@ -270,13 +271,27 @@ public abstract class AGui implements GameBoxHolder {
         return false;
 
       case OPEN_MODULE_DETAILS:
-        if (args.length != 2) {
+        if (args.length != 1 && args.length != 2) {
           Bukkit.getLogger().log(Level.WARNING, "OPEN_MODULE_DETAILS has the wrong number of arguments: " + args.length);
           return false;
         }
-        if (guiManager.openModuleDetails((Player) event.getWhoClicked(), args)) {
+        if (args.length == 2 && guiManager.openModuleDetails((Player) event.getWhoClicked(), args)) {
           inGui.remove(event.getWhoClicked().getUniqueId());
           return true;
+        } else if (args.length == 1) {
+          GameBoxModule module;
+          switch (event.getAction()) {
+            case MOVE_TO_OTHER_INVENTORY:
+              module = gameBox.getModulesManager().getModuleInstance(args[0]);
+              if (module == null) {
+                return false;
+              }
+              gameBox.getModulesManager().removeModule(module.getModuleData());
+              return true;
+            default:
+              String[] newArgs = new String[]{args[0], "0"};
+              return action(event, action, newArgs);
+          }
         }
         return false;
 

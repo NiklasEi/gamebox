@@ -98,7 +98,6 @@ public class ModuleUtility {
     @NotNull
     public static DependencyReport checkDependencies(Map<String, VersionedModule> versionedModules) {
         Map<String, VersionedModule> previous = new HashMap<>(versionedModules);
-        Bukkit.getLogger().info("Start: " + String.join(", ", previous.keySet()));
         VersionedModule gameBoxModule = GameBoxSettings.getGameBoxData();
         versionedModules.put(gameBoxModule.getId(), gameBoxModule);
         List<String> log = new ArrayList<>();
@@ -144,8 +143,6 @@ public class ModuleUtility {
                 }
             }
         }
-        Bukkit.getLogger().info("End: " + String.join(", ", versionedModules.keySet()));
-        Bukkit.getLogger().info("End (previous): " + String.join(", ", previous.keySet()));
         return new DependencyReport(previous, versionedModules, log);
     }
 
