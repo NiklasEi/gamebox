@@ -80,17 +80,7 @@ public class ModuleUtility {
 
     public static DependencyReport checkDependencies(ModulesManager modulesManager, VersionedCloudModule module) {
         Map<String, VersionedModule> versionedModules = new HashMap<>();
-        versionedModules.put(module.getId(), new LocalModule(new LocalModuleData()
-                .withId(module.getId())
-                .withAuthors(module.getAuthors())
-                .withDependencies(module.getDependencies())
-                .withDescription(module.getDescription())
-                .withName(module.getName())
-                .withSourceUrl(module.getSourceUrl())
-                .withUpdatedAt(module.getUpdatedAt())
-                .withVersion(module.getVersion())
-                )
-        );
+        versionedModules.put(module.getId(), getVersionedModuleFromCloudModule(module));
         modulesManager.getLoadedVersionedModules().forEach(versionedModule -> versionedModules.put(versionedModule.getId(), versionedModule));
         return checkDependencies(versionedModules);
     }
@@ -144,6 +134,19 @@ public class ModuleUtility {
             }
         }
         return new DependencyReport(previous, versionedModules, log);
+    }
+
+    public static VersionedModule getVersionedModuleFromCloudModule(VersionedCloudModule module) {
+        return new LocalModule(new LocalModuleData()
+                .withId(module.getId())
+                .withAuthors(module.getAuthors())
+                .withDependencies(module.getDependencies())
+                .withDescription(module.getDescription())
+                .withName(module.getName())
+                .withSourceUrl(module.getSourceUrl())
+                .withUpdatedAt(module.getUpdatedAt())
+                .withVersion(module.getVersion())
+        );
     }
 
     public static class DependencyReport {

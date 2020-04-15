@@ -3,11 +3,15 @@ package me.nikl.gamebox.inventory.modules;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.events.EnterGameBoxEvent;
+import me.nikl.gamebox.events.modules.ModuleInstallEvent;
+import me.nikl.gamebox.events.modules.ModuleRemoveEvent;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GuiManager;
 import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.modules.guis.PaginatedGui;
 import me.nikl.gamebox.module.data.CloudModuleData;
+import me.nikl.gamebox.module.data.VersionData;
+import me.nikl.gamebox.module.local.VersionedModule;
 import me.nikl.gamebox.utility.Permission;
 import me.nikl.gamebox.utility.versioning.SemanticVersion;
 import me.nikl.nmsutilities.NmsFactory;
@@ -15,15 +19,15 @@ import me.nikl.nmsutilities.NmsUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 
-public class ModulesGuiManager {
+public class ModulesGuiManager implements Listener {
     private NmsUtility nms = NmsFactory.getNmsUtility();
     private GameBox gameBox;
     private Button mainButton;
@@ -32,6 +36,7 @@ public class ModulesGuiManager {
     private GameBoxLanguage lang;
     private ModuleDetails moduleDetails;
     private int titleMessageSeconds = 3;
+    private boolean guiLoaded = false;
 
     public ModulesGuiManager(GameBox gameBox, GuiManager guiManager) {
         this.gameBox = gameBox;
@@ -40,40 +45,54 @@ public class ModulesGuiManager {
         this.modulesListGui = new PaginatedGui(gameBox, guiManager);
         this.moduleDetails = new ModuleDetails(gameBox, guiManager);
         this.loadButton();
+        gameBox.getServer().getPluginManager().registerEvents(this, gameBox);
     }
 
     public void loadGui() {
         List<CloudModuleData> cloudModuleData = gameBox.getModulesManager().getCloudService().getCloudContent();
-        List<String> lore;
         for (CloudModuleData data : cloudModuleData) {
             SemanticVersion installedVersion = null;
             if(gameBox.getModulesManager().getModuleInstance(data.getId()) != null) {
                 installedVersion = gameBox.getModulesManager().getModuleInstance(data.getId()).getModuleData().getVersionData().getVersion();
             }
-            ItemStack icon = new ItemStack(Material.BOOK);
-            if (installedVersion != null) {
-                icon = nms.addGlow(icon);
-            }
-            Button button = new Button(icon);
-            ItemMeta meta = button.getItemMeta();
-            meta.setDisplayName(data.getName());
-            lore = new ArrayList<>();
-            lore.add("");
-            if (installedVersion != null) {
-                lore.add(String.format("Installed version: %s", installedVersion.toString()));
-                lore.add("");
-            }
-            lore.add(data.getDescription());
-            lore.add("");
-            lore.add("By:");
-            lore.addAll(data.getAuthors());
-            meta.setLore(lore);
-            button.setItemMeta(meta);
-            button.setAction(ClickAction.OPEN_MODULE_DETAILS);
-            button.setArgs(data.getId());
             this.moduleDetails.addDetailsForModuleId(data);
-            this.modulesListGui.setButton(button);
+            this.modulesListGui.setButton(buildModuleButton(data, installedVersion));
         }
+        this.guiLoaded = true;
+    }
+
+    private Button buildModuleButton(CloudModuleData data, SemanticVersion installedVersion) {
+        Map<String, String> context = getModuleContext(data);
+        ItemStack icon = new ItemStack(Material.BOOK);
+        if (installedVersion != null) {
+            context.put("moduleInstalledVersion", installedVersion.toString());
+            icon = nms.addGlow(icon);
+        }
+        Button button = new Button(icon);
+        ItemMeta meta = button.getItemMeta();
+        if (installedVersion == null) {
+            meta.setDisplayName(gameBox.lang.replaceContext(gameBox.lang.MODULE_BUTTON_NAME, context));
+            meta.setLore(gameBox.lang.replaceContext(gameBox.lang.MODULE_BUTTON_LORE, context));
+        } else {
+            meta.setDisplayName(gameBox.lang.replaceContext(gameBox.lang.MODULE_INSTALLED_BUTTON_NAME, context));
+            meta.setLore(gameBox.lang.replaceContext(gameBox.lang.MODULE_INSTALLED_BUTTON_LORE, context));
+        }
+        button.setItemMeta(meta);
+        button.setAction(ClickAction.OPEN_MODULE_DETAILS);
+        button.setArgs(data.getId());
+        return button;
+    }
+
+    private Map<String, String> getModuleContext(CloudModuleData data) {
+        Map<String, String> context = new HashMap<>();
+        context.put("moduleName", data.getName());
+        context.put("moduleLastReleaseDate", gameBox.lang.dateFormat.format(new Date(data.getUpdatedAt())));
+        context.put("moduleLastReleaseVersion", data.getLatestVersion().toString());
+        context.put("moduleAuthors", String.join(", ", data.getAuthors()));
+        context.put("moduleDescription", data.getDescription());
+        context.put("moduleId", data.getId());
+        context.put("moduleSourceUrl", data.getSourceUrl());
+        return context;
     }
 
     public boolean openModulesPage(Player whoClicked, String[] args) {
@@ -172,5 +191,17 @@ public class ModulesGuiManager {
             return false;
         }
         return true;
+    }
+
+    @EventHandler
+    public void onModuleInstallEvent(ModuleInstallEvent event) {
+        VersionedModule module = event.getModule();
+        Bukkit.getLogger().info("installing " + event.getModule().getName() + "@" + event.getModule().getVersionData().getVersion().toString());
+    }
+
+    @EventHandler
+    public void onModuleRemoveEvent(ModuleRemoveEvent event) {
+        VersionedModule module = event.getModule();
+        Bukkit.getLogger().info("removing " + event.getModule().getName() + "@" + event.getModule().getVersionData().getVersion().toString());
     }
 }

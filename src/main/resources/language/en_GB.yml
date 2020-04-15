@@ -5,6 +5,8 @@
 prefix: "[&3GameBox&r]"
 name: "&3GameBox&r"
 
+# See: https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
+dateFormat: "EEE, d MMM yyyy HH:mm:ss"
 
 jsonPrefix:
   # colors for JSON have to be named! valid colors:
@@ -145,6 +147,52 @@ inventoryTitles:
     moduleInstalled: "&2Running cmd to install module..."
     moduleUpdated: "&2Running cmd to update module..."
 
+
+moduleGui:
+  moduleButton:
+    # will glow
+    installed:
+      displayName: "&2%moduleName%"
+      lore:
+        - ""
+        - "Installed version: %moduleInstalledVersion%"
+        - ""
+        - "%moduleDescription%"
+        - ""
+        - "By: %moduleAuthors%"
+        - ""
+        - "Right-click to run update command"
+        - "Shift-click to run remove command"
+    notInstalled:
+      displayName: "&e%moduleName%"
+      lore:
+        - ""
+        - "%moduleDescription%"
+        - ""
+        - "By: %moduleAuthors%"
+        - ""
+        - "Right-click to run install command"
+  moduleVersionButton:
+    # will glow
+    installed:
+      displayName: "&2%moduleName%"
+      lore:
+        - ""
+        - "Installed version: %moduleVersion%"
+        - ""
+        - "%moduleDescription%"
+        - ""
+        - "By: %moduleAuthors%"
+        - ""
+        - "Right-click to run update command"
+        - "Shift-click to run remove command"
+    notInstalled:
+      displayName: "&e%moduleVersion%"
+      lore:
+        - ""
+        - "Released: %moduleReleaseDate%"
+        - ""
+        - "Click to run install command"
 
 shop:
   freeItem: "&9Free"

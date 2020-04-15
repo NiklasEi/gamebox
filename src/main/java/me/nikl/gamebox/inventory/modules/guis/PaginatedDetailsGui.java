@@ -19,9 +19,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class PaginatedDetailsGui {
     private GameBox gameBox;
@@ -95,22 +93,25 @@ public class PaginatedDetailsGui {
 
     private void updateGui() {
         clearPages();
-        SimpleDateFormat format = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
         for (VersionData version : data.getVersions()) {
+            Map<String, String> context = getVersionContext(version);
             ItemStack book = new ItemStack(Material.BOOK);
             Button versionButton = new Button(book);
             ItemMeta meta = versionButton.getItemMeta();
-            meta.setDisplayName(version.getVersion().toString());
-            List<String> lore = new ArrayList<>();
-            lore.add("");
-            lore.add("Released: " + format.format(new Date(version.getUpdatedAt())));
-            lore.add("");
-            lore.add("Click to download");
-            meta.setLore(lore);
+            meta.setDisplayName(gameBox.lang.replaceContext(gameBox.lang.MODULE_VERSION_BUTTON_NAME, context));
+            meta.setLore(gameBox.lang.replaceContext(gameBox.lang.MODULE_VERSION_BUTTON_LORE, context));
             versionButton.setItemMeta(meta);
             versionButton.setActionAndArgs(ClickAction.DISPATCH_PLAYER_COMMAND, String.format("/gba module i %s %s", data.getId(), version.getVersion().toString()));
             setButton(versionButton);
         }
+    }
+
+    private Map<String, String> getVersionContext(VersionData version) {
+        Map<String, String> context = new HashMap<>();
+        context.put("moduleName", data.getName());
+        context.put("moduleReleaseDate", gameBox.lang.dateFormat.format(new Date(version.getUpdatedAt())));
+        context.put("moduleVersion", version.getVersion().toString());
+        return context;
     }
 
     private void clearPages() {

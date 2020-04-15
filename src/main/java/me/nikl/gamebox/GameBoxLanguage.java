@@ -3,7 +3,7 @@ package me.nikl.gamebox;
 import me.nikl.gamebox.utility.NumberUtility;
 import org.bukkit.ChatColor;
 
-import java.util.Iterator;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -13,6 +13,8 @@ import java.util.List;
  * Other modules like games and addons have their own Langauge classes
  */
 public class GameBoxLanguage extends Language {
+  public SimpleDateFormat dateFormat;
+
   public String CMD_NO_PERM, CMD_ONLY_PLAYER, CMD_RELOADED, CMD_DISABLED_WORLD, CMD_TOKEN_INFO, CMD_TOOK_TOKEN,
           CMD_NOT_ENOUGH_TOKEN, CMD_GAVE_TOKEN, CMD_SET_TOKEN, RELOAD_SUCCESS, RELOAD_FAIL, CMD_OWN_TOKEN_INFO,
           CMD_MODULES_INVALID_SEM_VERSION, CMD_MODULES_VERSION_NOT_FOUND, CMD_CANNOT_CONNECT_TO_MODULES_CLOUD,
@@ -57,6 +59,8 @@ public class GameBoxLanguage extends Language {
   public String INVITE_ACTIONBAR_MESSAGE;
   public String UNKNOWN_SKULL_NAME, PLAYER_SKULL_NAME;
   public List<String> UNKNOWN_SKULL_LORE;
+  public List<String> MODULE_INSTALLED_BUTTON_LORE, MODULE_BUTTON_LORE, MODULE_VERSION_BUTTON_LORE, MODULE_VERSION_INSTALLED_BUTTON_LORE;
+  public String MODULE_INSTALLED_BUTTON_NAME, MODULE_BUTTON_NAME, MODULE_VERSION_BUTTON_NAME, MODULE_VERSION_INSTALLED_BUTTON_NAME;
 
   GameBoxLanguage(GameBox plugin) {
     super(plugin, GameBox.MODULE_GAMEBOX);
@@ -68,6 +72,8 @@ public class GameBoxLanguage extends Language {
     PLAIN_PREFIX = ChatColor.stripColor(PREFIX);
     NAME = getString("name");
 
+    dateFormat = new SimpleDateFormat(getString("dateFormat", false));
+
     loadJsonRelatedMessages();
     loadClickableInvitationMessages();
     getCommandMessages();
@@ -76,7 +82,19 @@ public class GameBoxLanguage extends Language {
     getOthers();
     getShop();
     getTopList();
+    getModuleButtons();
     loadHighNumberNames();
+  }
+
+  private void getModuleButtons() {
+    this.MODULE_INSTALLED_BUTTON_LORE = getStringList("moduleGui.moduleButton.installed.lore");
+    this.MODULE_BUTTON_LORE = getStringList("moduleGui.moduleButton.notInstalled.lore");
+    this.MODULE_INSTALLED_BUTTON_NAME = getString("moduleGui.moduleButton.installed.displayName");
+    this.MODULE_BUTTON_NAME = getString("moduleGui.moduleButton.notInstalled.displayName");
+    this.MODULE_VERSION_INSTALLED_BUTTON_LORE = getStringList("moduleGui.moduleVersionButton.installed.lore");
+    this.MODULE_VERSION_BUTTON_LORE = getStringList("moduleGui.moduleVersionButton.notInstalled.lore");
+    this.MODULE_VERSION_INSTALLED_BUTTON_NAME = getString("moduleGui.moduleVersionButton.installed.displayName");
+    this.MODULE_VERSION_BUTTON_NAME = getString("moduleGui.moduleVersionButton.notInstalled.displayName");
   }
 
   private void loadHighNumberNames() {

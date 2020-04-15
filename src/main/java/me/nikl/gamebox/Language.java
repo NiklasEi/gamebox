@@ -238,9 +238,23 @@ public abstract class Language {
   }
 
   public void sendMessage(CommandSender sender, String message, Map<String, String> context) {
+    sender.sendMessage(PREFIX + replaceContext(message, context));
+  }
+
+  public String replaceContext(String message, Map<String, String> context) {
     for (Map.Entry<String, String> entry : context.entrySet()) {
       message = message.replaceAll("%" + entry.getKey() + "%", entry.getValue());
     }
-    sender.sendMessage(PREFIX + message);
+    return message;
+  }
+
+  public List<String> replaceContext(List<String> list, Map<String, String> context) {
+    List<String> copy = new ArrayList<>(list);
+    for (int i = 0; i < copy.size(); i++) {
+      for (Map.Entry<String, String> entry : context.entrySet()) {
+        copy.set(i, copy.get(i).replaceAll("%" + entry.getKey() + "%", entry.getValue()));
+      }
+    }
+    return copy;
   }
 }

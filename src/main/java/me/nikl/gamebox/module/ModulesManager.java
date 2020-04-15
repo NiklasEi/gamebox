@@ -20,6 +20,8 @@ package me.nikl.gamebox.module;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.data.database.DataBase;
+import me.nikl.gamebox.events.modules.ModuleInstallEvent;
+import me.nikl.gamebox.events.modules.ModuleRemoveEvent;
 import me.nikl.gamebox.exceptions.module.CloudModuleVersionNotFoundException;
 import me.nikl.gamebox.exceptions.module.GameBoxCloudException;
 import me.nikl.gamebox.exceptions.module.InvalidModuleException;
@@ -202,6 +204,7 @@ public class ModulesManager {
         if (!checkDependencies(module, true)) {
             return;
         }
+        new ModuleInstallEvent(ModuleUtility.getVersionedModuleFromCloudModule(module));
         GameBox.debug("Install module '" + module.getName() +"@" + module.getVersion().toString() + "'");
         cloudService.downloadModule(module, new DataBase.Callback<LocalModule>() {
             @Override
@@ -271,6 +274,7 @@ public class ModulesManager {
     public void removeModule(LocalModule localModule) {
         // ToDo: unload parent modules first!
         GameBoxModule gameBoxModule = loadedModules.get(localModule.getId());
+        new ModuleRemoveEvent(localModule);
         if (gameBoxModule != null) {
             try {
                 gameBoxModule.onDisable();
