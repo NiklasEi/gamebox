@@ -11,13 +11,12 @@ import me.nikl.gamebox.inventory.gui.AGui;
 import me.nikl.nmsutilities.NmsFactory;
 import me.nikl.nmsutilities.NmsUtility;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class ModuleDetailsPage extends AGui {
     private int pageNum;
@@ -52,6 +51,13 @@ public class ModuleDetailsPage extends AGui {
             main.setAction(ClickAction.OPEN_MAIN_GUI);
             setLowerButton(main, GameBoxSettings.toMainButtonSlot);
         }
+
+        Button button = new Button(new ItemStack(Material.CHEST));
+        button.setActionAndArgs(ClickAction.OPEN_MODULES_PAGE, moduleId);
+        ItemMeta meta = button.getItemMeta();
+        meta.setDisplayName(gameBox.lang.BUTTON_MODULES_GUI_NAME);
+        button.setItemMeta(meta);
+        setButton(button, 49);
     }
 
     public void updateTitle(String title) {
@@ -66,10 +72,10 @@ public class ModuleDetailsPage extends AGui {
 
     public boolean setButtonIfSlotLeft(AButton button) {
         int i = 0;
-        while (grid[i] != null) {
+        while (i < grid.length && grid[i] != null) {
             i++;
         }
-        if (i > 45) return false;
+        if (i >= 45) return false;
         setButton(button, i);
         return true;
     }
@@ -79,6 +85,6 @@ public class ModuleDetailsPage extends AGui {
     }
 
     public void clearPage() {
-        Arrays.fill(grid, null);
+        Arrays.fill(grid, 0, 45, null);
     }
 }

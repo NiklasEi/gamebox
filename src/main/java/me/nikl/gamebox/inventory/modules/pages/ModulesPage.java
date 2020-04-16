@@ -64,4 +64,33 @@ public class ModulesPage extends AGui {
     public void createNextPageNavigation() {
         setButton(ButtonFactory.createModulesPageForwardButton(gameBox.lang, String.valueOf(pageNum)), nextPageSlot);
     }
+
+    public boolean updateModule(String id, Button button) {
+        for (int slot = 0; slot < grid.length; slot++) {
+            if (grid[slot] != null && grid[slot].getArgs()[0].equals(id)) {
+                setButton(button, slot);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean removeModule(String id) {
+        for (int slot = 0; slot < grid.length; slot++) {
+            if (grid[slot] != null && grid[slot].getArgs()[0].equals(id)) {
+                setButton(null, slot);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasModule(String moduleId) {
+        for (AButton aButton : grid) {
+            if (aButton != null && aButton.getArgs()[0].equals(moduleId)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

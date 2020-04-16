@@ -22,6 +22,10 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.game.Game;
 import me.nikl.gamebox.module.local.LocalModule;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Module base class
  *
@@ -50,7 +54,9 @@ public abstract class GameBoxModule {
     }
 
     protected void registerGame(String gameId, Class<? extends Game> gameClass, String... subCommands) {
-        new GameBoxGame(this.gameBox, gameId, (Class<Game>) gameClass, this.moduleData, subCommands);
+        List<String> subCommandsWithId = Arrays.asList(subCommands);
+        subCommandsWithId.add(gameId);
+        new GameBoxGame(this.gameBox, gameId, (Class<Game>) gameClass, this.moduleData, subCommandsWithId.toArray(new String[]{}));
     }
 
     void setGameBox(GameBox gameBox) throws UnsupportedOperationException {

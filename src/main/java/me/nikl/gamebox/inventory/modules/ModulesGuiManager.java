@@ -3,14 +3,16 @@ package me.nikl.gamebox.inventory.modules;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.GameBoxLanguage;
 import me.nikl.gamebox.events.EnterGameBoxEvent;
-import me.nikl.gamebox.events.modules.ModuleInstallEvent;
-import me.nikl.gamebox.events.modules.ModuleRemoveEvent;
+import me.nikl.gamebox.events.modules.ModuleInstalledEvent;
+import me.nikl.gamebox.events.modules.ModuleRemovedEvent;
+import me.nikl.gamebox.exceptions.module.GameBoxCloudException;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GuiManager;
 import me.nikl.gamebox.inventory.button.Button;
+import me.nikl.gamebox.inventory.gui.AGui;
 import me.nikl.gamebox.inventory.modules.guis.PaginatedGui;
+import me.nikl.gamebox.inventory.shop.Category;
 import me.nikl.gamebox.module.data.CloudModuleData;
-import me.nikl.gamebox.module.data.VersionData;
 import me.nikl.gamebox.module.local.VersionedModule;
 import me.nikl.gamebox.utility.Permission;
 import me.nikl.gamebox.utility.versioning.SemanticVersion;
@@ -55,14 +57,53 @@ public class ModulesGuiManager implements Listener {
             if(gameBox.getModulesManager().getModuleInstance(data.getId()) != null) {
                 installedVersion = gameBox.getModulesManager().getModuleInstance(data.getId()).getModuleData().getVersionData().getVersion();
             }
-            this.moduleDetails.addDetailsForModuleId(data);
+            this.moduleDetails.addDetailsForModule(data);
             this.modulesListGui.setButton(buildModuleButton(data, installedVersion));
         }
         this.guiLoaded = true;
     }
 
+    private void removeModule(VersionedModule module) {
+        try {
+            CloudModuleData data = gameBox.getModulesManager().getCloudService().getModuleData(module.getId());
+            Button updatedButton = buildModuleButton(data, null);
+            if (this.modulesListGui.updateModule(module.getId(), updatedButton)) {
+                this.moduleDetails.updateGuiForModule(module.getId());
+            }
+        } catch (GameBoxCloudException e) {
+            this.modulesListGui.removeModule(module.getId());
+        }
+    }
+
+    private void installModule(VersionedModule module) {
+        try {
+            CloudModuleData data = gameBox.getModulesManager().getCloudService().getModuleData(module.getId());
+            Button updatedButton = buildModuleButton(data, module.getVersionData().getVersion());
+            if(this.modulesListGui.updateModule(module.getId(), updatedButton)) {
+                this.moduleDetails.updateGuiForModule(module.getId());
+            } else {
+                this.moduleDetails.addDetailsForModule(data);
+                this.modulesListGui.setButton(updatedButton);
+            }
+        } catch (GameBoxCloudException e) {
+            Button updatedButton = buildPrivateModuleButton(module, module.getVersionData().getVersion());
+            if(!this.modulesListGui.updateModule(module.getId(), updatedButton)) {
+                this.modulesListGui.setButton(updatedButton);
+            }
+        }
+    }
+
+    private Button buildPrivateModuleButton(VersionedModule data, SemanticVersion installedVersion) {
+        Map<String, String> context = getModuleContext(data);
+        return buildPrivateModuleButton(context, data.getId(), installedVersion);
+    }
+
     private Button buildModuleButton(CloudModuleData data, SemanticVersion installedVersion) {
         Map<String, String> context = getModuleContext(data);
+        return buildModuleButton(context, data.getId(), installedVersion);
+    }
+
+    private Button buildModuleButton(Map<String, String> context, String id, SemanticVersion installedVersion) {
         ItemStack icon = new ItemStack(Material.BOOK);
         if (installedVersion != null) {
             context.put("moduleInstalledVersion", installedVersion.toString());
@@ -79,8 +120,33 @@ public class ModulesGuiManager implements Listener {
         }
         button.setItemMeta(meta);
         button.setAction(ClickAction.OPEN_MODULE_DETAILS);
-        button.setArgs(data.getId());
+        button.setArgs(id);
         return button;
+    }
+
+    private Button buildPrivateModuleButton(Map<String, String> context, String id, SemanticVersion installedVersion) {
+        ItemStack icon = new ItemStack(Material.BOOK);
+        context.put("moduleInstalledVersion", installedVersion.toString());
+        icon = nms.addGlow(icon);
+        Button button = new Button(icon);
+        ItemMeta meta = button.getItemMeta();
+        meta.setDisplayName(gameBox.lang.replaceContext(gameBox.lang.MODULE_PRIVATE_BUTTON_NAME, context));
+        meta.setLore(gameBox.lang.replaceContext(gameBox.lang.MODULE_PRIVATE_BUTTON_LORE, context));
+        button.setItemMeta(meta);
+        button.setAction(ClickAction.NOTHING);
+        return button;
+    }
+
+    private Map<String, String> getModuleContext(VersionedModule data) {
+        Map<String, String> context = new HashMap<>();
+        context.put("moduleName", data.getName());
+        context.put("moduleLastReleaseDate", gameBox.lang.dateFormat.format(new Date(data.getVersionData().getUpdatedAt())));
+        context.put("moduleLastReleaseVersion", gameBox.lang.MODULE_VERSION_UNKNOWN);
+        context.put("moduleAuthors", String.join(", ", data.getAuthors()));
+        context.put("moduleDescription", data.getDescription());
+        context.put("moduleId", data.getId());
+        context.put("moduleSourceUrl", data.getSourceUrl());
+        return context;
     }
 
     private Map<String, String> getModuleContext(CloudModuleData data) {
@@ -123,8 +189,7 @@ public class ModulesGuiManager implements Listener {
         try {
             pageNumber = Integer.parseInt(args[0]);
         } catch (NumberFormatException exception) {
-            Bukkit.getLogger().log(Level.SEVERE, "failed to open modules page due to corrupted args!");
-            return false;
+            pageNumber = this.modulesListGui.getPageOfModule(args[0]);
         }
 
         if (!modulesListGui.openPage(whoClicked, pageNumber)) {
@@ -194,14 +259,35 @@ public class ModulesGuiManager implements Listener {
     }
 
     @EventHandler
-    public void onModuleInstallEvent(ModuleInstallEvent event) {
+    public void onModuleInstallEvent(ModuleInstalledEvent event) {
         VersionedModule module = event.getModule();
+        if (guiLoaded) {
+            installModule(module);
+        }
         Bukkit.getLogger().info("installing " + event.getModule().getName() + "@" + event.getModule().getVersionData().getVersion().toString());
     }
 
     @EventHandler
-    public void onModuleRemoveEvent(ModuleRemoveEvent event) {
+    public void onModuleRemoveEvent(ModuleRemovedEvent event) {
         VersionedModule module = event.getModule();
+        if (guiLoaded) {
+            removeModule(module);
+        }
         Bukkit.getLogger().info("removing " + event.getModule().getName() + "@" + event.getModule().getVersionData().getVersion().toString());
+    }
+
+    public AGui getModuleGui(UUID uuid) {
+        AGui modulesGui = this.modulesListGui.getModuleGui(uuid);
+        if (modulesGui != null) {
+            return modulesGui;
+        }
+        return this.moduleDetails.getModuleGui(uuid);
+    }
+
+    public boolean isInGui(UUID uuid) {
+        if (this.modulesListGui.isInGui(uuid)) {
+            return true;
+        }
+        return this.moduleDetails.isInGui(uuid);
     }
 }

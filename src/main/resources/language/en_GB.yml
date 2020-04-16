@@ -149,7 +149,9 @@ inventoryTitles:
 
 
 moduleGui:
-  moduleButton:
+  # this can happen for local/private modules which are not on the cloud
+  unknownModuleVersion: "Unknown"
+  moduleButtons:
     # will glow
     installed:
       displayName: "&2%moduleName%"
@@ -172,25 +174,54 @@ moduleGui:
         - "By: %moduleAuthors%"
         - ""
         - "Right-click to run install command"
-  moduleVersionButton:
-    # will glow
-    installed:
+    private:
       displayName: "&2%moduleName%"
       lore:
-        - ""
-        - "Installed version: %moduleVersion%"
         - ""
         - "%moduleDescription%"
         - ""
         - "By: %moduleAuthors%"
         - ""
-        - "Right-click to run update command"
         - "Shift-click to run remove command"
-    notInstalled:
-      displayName: "&e%moduleVersion%"
+        - ""
+        - "This module is not in the GameBox cloud"
+        - "   and can not be installed"
+        - "   automatically after being removed"
+  moduleVersionButtons:
+    # will glow
+    installedVersion:
+      displayName: "&2%version%"
       lore:
         - ""
-        - "Released: %moduleReleaseDate%"
+        - "This is the installed version"
+        - ""
+        - "Released: %versionReleaseDate%"
+        - ""
+        - "Shift-click to run remove command"
+    updateOfInstalledVersion:
+      displayName: "&2%version%"
+      lore:
+        - ""
+        - "Update of your installed version :)"
+        - ""
+        - "Released: %versionReleaseDate%"
+        - ""
+        - "Click to run update command"
+    olderVersionThanInstalled:
+      displayName: "&4%version%"
+      lore:
+        - ""
+        - "This is an older version"
+        - ""
+        - "Released: %versionReleaseDate%"
+        - ""
+        - "Before installing this please remove"
+        - "  the currently installed version"
+    moduleNotInstalled:
+      displayName: "&e%version%"
+      lore:
+        - ""
+        - "Released: %versionReleaseDate%"
         - ""
         - "Click to run install command"
 

@@ -59,8 +59,12 @@ public class GameBoxLanguage extends Language {
   public String INVITE_ACTIONBAR_MESSAGE;
   public String UNKNOWN_SKULL_NAME, PLAYER_SKULL_NAME;
   public List<String> UNKNOWN_SKULL_LORE;
-  public List<String> MODULE_INSTALLED_BUTTON_LORE, MODULE_BUTTON_LORE, MODULE_VERSION_BUTTON_LORE, MODULE_VERSION_INSTALLED_BUTTON_LORE;
-  public String MODULE_INSTALLED_BUTTON_NAME, MODULE_BUTTON_NAME, MODULE_VERSION_BUTTON_NAME, MODULE_VERSION_INSTALLED_BUTTON_NAME;
+  public List<String> MODULE_INSTALLED_BUTTON_LORE, MODULE_BUTTON_LORE, MODULE_VERSION_BUTTON_LORE,
+          MODULE_VERSION_INSTALLED_BUTTON_LORE, MODULE_VERSION_UPDATE_BUTTON_LORE, MODULE_VERSION_OLDER_BUTTON_LORE,
+          MODULE_PRIVATE_BUTTON_LORE;
+  public String MODULE_INSTALLED_BUTTON_NAME, MODULE_BUTTON_NAME, MODULE_VERSION_BUTTON_NAME,
+          MODULE_VERSION_INSTALLED_BUTTON_NAME, MODULE_VERSION_UPDATE_BUTTON_NAME, MODULE_VERSION_OLDER_BUTTON_NAME,
+          MODULE_VERSION_UNKNOWN, MODULE_PRIVATE_BUTTON_NAME;
 
   GameBoxLanguage(GameBox plugin) {
     super(plugin, GameBox.MODULE_GAMEBOX);
@@ -87,14 +91,21 @@ public class GameBoxLanguage extends Language {
   }
 
   private void getModuleButtons() {
-    this.MODULE_INSTALLED_BUTTON_LORE = getStringList("moduleGui.moduleButton.installed.lore");
-    this.MODULE_BUTTON_LORE = getStringList("moduleGui.moduleButton.notInstalled.lore");
-    this.MODULE_INSTALLED_BUTTON_NAME = getString("moduleGui.moduleButton.installed.displayName");
-    this.MODULE_BUTTON_NAME = getString("moduleGui.moduleButton.notInstalled.displayName");
-    this.MODULE_VERSION_INSTALLED_BUTTON_LORE = getStringList("moduleGui.moduleVersionButton.installed.lore");
-    this.MODULE_VERSION_BUTTON_LORE = getStringList("moduleGui.moduleVersionButton.notInstalled.lore");
-    this.MODULE_VERSION_INSTALLED_BUTTON_NAME = getString("moduleGui.moduleVersionButton.installed.displayName");
-    this.MODULE_VERSION_BUTTON_NAME = getString("moduleGui.moduleVersionButton.notInstalled.displayName");
+    this.MODULE_VERSION_UNKNOWN = getString("moduleGui.unknownModuleVersion");
+    this.MODULE_INSTALLED_BUTTON_LORE = getStringList("moduleGui.moduleButtons.installed.lore");
+    this.MODULE_INSTALLED_BUTTON_NAME = getString("moduleGui.moduleButtons.installed.displayName");
+    this.MODULE_PRIVATE_BUTTON_LORE = getStringList("moduleGui.moduleButtons.private.lore");
+    this.MODULE_PRIVATE_BUTTON_NAME = getString("moduleGui.moduleButtons.private.displayName");
+    this.MODULE_BUTTON_LORE = getStringList("moduleGui.moduleButtons.notInstalled.lore");
+    this.MODULE_BUTTON_NAME = getString("moduleGui.moduleButtons.notInstalled.displayName");
+    this.MODULE_VERSION_INSTALLED_BUTTON_LORE = getStringList("moduleGui.moduleVersionButtons.installedVersion.lore");
+    this.MODULE_VERSION_INSTALLED_BUTTON_NAME = getString("moduleGui.moduleVersionButtons.installedVersion.displayName");
+    this.MODULE_VERSION_BUTTON_LORE = getStringList("moduleGui.moduleVersionButtons.moduleNotInstalled.lore");
+    this.MODULE_VERSION_BUTTON_NAME = getString("moduleGui.moduleVersionButtons.moduleNotInstalled.displayName");
+    this.MODULE_VERSION_UPDATE_BUTTON_LORE = getStringList("moduleGui.moduleVersionButtons.updateOfInstalledVersion.lore");
+    this.MODULE_VERSION_UPDATE_BUTTON_NAME = getString("moduleGui.moduleVersionButtons.updateOfInstalledVersion.displayName");
+    this.MODULE_VERSION_OLDER_BUTTON_LORE = getStringList("moduleGui.moduleVersionButtons.olderVersionThanInstalled.lore");
+    this.MODULE_VERSION_OLDER_BUTTON_NAME = getString("moduleGui.moduleVersionButtons.olderVersionThanInstalled.displayName");
   }
 
   private void loadHighNumberNames() {

@@ -455,12 +455,15 @@ public abstract class AGui implements GameBoxHolder {
   }
 
   public void handleInventoryClick(InventoryClickEvent event, AButton[] grid) {
+    GameBox.debug("Click in gui: " + event.getRawSlot());
     AButton button = grid[event.getRawSlot()];
     boolean perInvitation = false;
     StartMultiplayerGamePage mpGui = null;
     if (button == null) {
+      GameBox.debug("No button in grid! Is it StartMultiplayerGamePage?");
       if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR) {
         if (guiManager.getCurrentGui(event.getWhoClicked().getUniqueId()) instanceof StartMultiplayerGamePage) {
+          GameBox.debug("Clicked invite");
           mpGui = (StartMultiplayerGamePage) guiManager.getCurrentGui(event.getWhoClicked().getUniqueId());
           button = mpGui.getButton(event.getWhoClicked().getUniqueId(), event.getSlot());
           if (button == null) return;
@@ -474,7 +477,13 @@ public abstract class AGui implements GameBoxHolder {
     }
     boolean successfulAction;
     try {
-      successfulAction = action(event, button.getAction(), button.getArgs());
+      if (button.getAction(event.getAction()) != null) {
+        GameBox.debug("Trigger conditional action");
+        successfulAction = action(event, button.getAction(event.getAction()), button.getArgs(event.getAction()));
+      } else {
+        GameBox.debug("Trigger default action");
+        successfulAction = action(event, button.getAction(), button.getArgs());
+      }
     } catch (Throwable e) {
       gameBox.getLogger().severe("Caught " + e.getClass().getCanonicalName());
       gameBox.getLogger().severe("  Action: " + button.getAction().toString());

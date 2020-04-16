@@ -54,7 +54,8 @@ public class GuiManager {
 
   public boolean isInGUI(UUID uuid) {
     if (isInMainGUI(uuid)) return true;
-    return isInGameGUI(uuid);
+    if(isInGameGUI(uuid)) return true;
+    return modulesGuiManager.isInGui(uuid);
   }
 
   public boolean isInMainGUI(UUID uuid) {
@@ -204,7 +205,11 @@ public class GuiManager {
         }
       }
     }
-    return shopManager.getShopGui(uuid);
+    AGui shopGui = shopManager.getShopGui(uuid);
+    if(shopGui != null) {
+      return shopGui;
+    }
+    return modulesGuiManager.getModuleGui(uuid);
   }
 
   public MainGui getMainGui() {

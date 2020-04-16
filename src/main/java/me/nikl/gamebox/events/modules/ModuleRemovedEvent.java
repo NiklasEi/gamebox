@@ -6,11 +6,11 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-public class ModuleInstallEvent extends Event {
+public class ModuleRemovedEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
     private VersionedModule module;
 
-    public ModuleInstallEvent(VersionedModule module) {
+    public ModuleRemovedEvent(VersionedModule module) {
         super(true);
         this.module = module;
         Bukkit.getPluginManager().callEvent(this);

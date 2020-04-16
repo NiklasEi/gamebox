@@ -20,11 +20,12 @@ package me.nikl.gamebox.module;
 
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.data.database.DataBase;
-import me.nikl.gamebox.events.modules.ModuleInstallEvent;
-import me.nikl.gamebox.events.modules.ModuleRemoveEvent;
+import me.nikl.gamebox.events.modules.ModuleInstalledEvent;
+import me.nikl.gamebox.events.modules.ModuleRemovedEvent;
 import me.nikl.gamebox.exceptions.module.CloudModuleVersionNotFoundException;
 import me.nikl.gamebox.exceptions.module.GameBoxCloudException;
 import me.nikl.gamebox.exceptions.module.InvalidModuleException;
+import me.nikl.gamebox.inventory.gui.AGui;
 import me.nikl.gamebox.module.cloud.CloudFacade;
 import me.nikl.gamebox.module.cloud.CloudService;
 import me.nikl.gamebox.module.data.VersionedCloudModule;
@@ -204,7 +205,6 @@ public class ModulesManager {
         if (!checkDependencies(module, true)) {
             return;
         }
-        new ModuleInstallEvent(ModuleUtility.getVersionedModuleFromCloudModule(module));
         GameBox.debug("Install module '" + module.getName() +"@" + module.getVersion().toString() + "'");
         cloudService.downloadModule(module, new DataBase.Callback<LocalModule>() {
             @Override
@@ -214,6 +214,7 @@ public class ModulesManager {
                 addModuleToSettings(module.getId());
                 // ToDo: should be careful here with dependencies... check for any and if a reload is needed do it automatically, or ask the source of the installation for an OK
                 loadModule(module);
+                new ModuleInstalledEvent(module);
             }
 
             @Override
@@ -274,17 +275,17 @@ public class ModulesManager {
     public void removeModule(LocalModule localModule) {
         // ToDo: unload parent modules first!
         GameBoxModule gameBoxModule = loadedModules.get(localModule.getId());
-        new ModuleRemoveEvent(localModule);
         if (gameBoxModule != null) {
             try {
                 gameBoxModule.onDisable();
                 gameBox.getGameRegistry().unregisterGamesForModuleId(localModule.getId());
                 gameBoxModule.getModuleData().getModuleJar().delete();
+                loadedModules.remove(localModule.getId());
+                new ModuleRemovedEvent(localModule);
             } catch (Throwable e) {
                 gameBox.getLogger().severe("Exception while disabling " + localModule.getName() + " @" + localModule.getVersionData().getVersion().toString() + ":");
-                e.printStackTrace();
-            } finally {
                 loadedModules.remove(localModule.getId());
+                e.printStackTrace();
             }
         }
     }

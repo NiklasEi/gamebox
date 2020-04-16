@@ -3,11 +3,13 @@ package me.nikl.gamebox.inventory.modules.guis;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.inventory.GuiManager;
 import me.nikl.gamebox.inventory.button.Button;
+import me.nikl.gamebox.inventory.gui.AGui;
 import me.nikl.gamebox.inventory.modules.pages.ModulesPage;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class PaginatedGui {
     private GameBox gameBox;
@@ -54,5 +56,51 @@ public class PaginatedGui {
 
     public int getGridSize() {
         return this.gridSize;
+    }
+
+    public boolean updateModule(String id, Button button) {
+        int page = 0;
+        boolean done = false;
+        while (!done && page < pages.size()) {
+            done = pages.get(page).updateModule(id, button);
+            page++;
+        }
+        return done;
+    }
+
+    public void removeModule(String id) {
+        int page = 0;
+        boolean done = false;
+        while (!done && page < pages.size()) {
+            done = pages.get(page).removeModule(id);
+            page++;
+        }
+    }
+
+    public AGui getModuleGui(UUID uuid) {
+        for (ModulesPage page : this.pages) {
+            if (page.isInGui(uuid)) {
+                return page;
+            }
+        }
+        return null;
+    }
+
+    public boolean isInGui(UUID uuid) {
+        for (ModulesPage page : this.pages) {
+            if (page.isInGui(uuid)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int getPageOfModule(String moduleId) {
+        for (int page = 0; page < pages.size(); page++) {
+            if (pages.get(page).hasModule(moduleId)) {
+                return page;
+            }
+        }
+        return 0;
     }
 }

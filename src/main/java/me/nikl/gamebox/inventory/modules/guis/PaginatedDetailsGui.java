@@ -4,16 +4,22 @@ import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.exceptions.module.GameBoxCloudException;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GuiManager;
+import me.nikl.gamebox.inventory.button.AButton;
 import me.nikl.gamebox.inventory.button.Button;
+import me.nikl.gamebox.inventory.gui.AGui;
 import me.nikl.gamebox.inventory.modules.pages.ModuleDetailsPage;
+import me.nikl.gamebox.module.GameBoxModule;
 import me.nikl.gamebox.module.cloud.CloudService;
 import me.nikl.gamebox.module.data.CloudModuleData;
 import me.nikl.gamebox.module.data.CloudModuleDataWithVersions;
 import me.nikl.gamebox.module.data.VersionData;
+import me.nikl.gamebox.module.local.LocalModule;
+import me.nikl.gamebox.utility.versioning.SemanticVersion;
 import me.nikl.nmsutilities.NmsFactory;
 import me.nikl.nmsutilities.NmsUtility;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -91,17 +97,45 @@ public class PaginatedDetailsGui {
         }.runTaskAsynchronously(gameBox);
     }
 
-    private void updateGui() {
+    public void updateGui() {
+        GameBoxModule installedModule = gameBox.getModulesManager().getModuleInstance(data.getId());
+        SemanticVersion installedVersion = null;
+        if (installedModule != null) {
+            installedVersion = installedModule.getModuleData().getVersionData().getVersion();
+        }
         clearPages();
         for (VersionData version : data.getVersions()) {
             Map<String, String> context = getVersionContext(version);
             ItemStack book = new ItemStack(Material.BOOK);
+            if (version.getVersion().equals(installedVersion)) {
+                book = nms.addGlow(book);
+            }
             Button versionButton = new Button(book);
             ItemMeta meta = versionButton.getItemMeta();
-            meta.setDisplayName(gameBox.lang.replaceContext(gameBox.lang.MODULE_VERSION_BUTTON_NAME, context));
-            meta.setLore(gameBox.lang.replaceContext(gameBox.lang.MODULE_VERSION_BUTTON_LORE, context));
+            if (installedVersion == null) {
+                meta.setDisplayName(gameBox.lang.replaceContext(gameBox.lang.MODULE_VERSION_BUTTON_NAME, context));
+                meta.setLore(gameBox.lang.replaceContext(gameBox.lang.MODULE_VERSION_BUTTON_LORE, context));
+                versionButton.setAction(ClickAction.DISPATCH_PLAYER_COMMAND);
+                versionButton.setArgs(String.format("/gba module i %s %s", data.getId(), version.getVersion().toString()));
+            } else {
+                if (installedVersion.equals(version.getVersion())) {
+                    meta.setDisplayName(gameBox.lang.replaceContext(gameBox.lang.MODULE_VERSION_INSTALLED_BUTTON_NAME, context));
+                    meta.setLore(gameBox.lang.replaceContext(gameBox.lang.MODULE_VERSION_INSTALLED_BUTTON_LORE, context));
+                    AButton.ButtonAction removeAction = new AButton.ButtonAction(ClickAction.DISPATCH_PLAYER_COMMAND, String.format("/gba module rm %s", data.getId()));
+                    versionButton.addConditionalAction(InventoryAction.MOVE_TO_OTHER_INVENTORY, removeAction);
+                    versionButton.setAction(ClickAction.NOTHING);
+                } else if (version.getVersion().isUpdateFor(installedVersion)) {
+                    meta.setDisplayName(gameBox.lang.replaceContext(gameBox.lang.MODULE_VERSION_UPDATE_BUTTON_NAME, context));
+                    meta.setLore(gameBox.lang.replaceContext(gameBox.lang.MODULE_VERSION_UPDATE_BUTTON_LORE, context));
+                    versionButton.setAction(ClickAction.DISPATCH_PLAYER_COMMAND);
+                    versionButton.setArgs(String.format("/gba module u %s %s", data.getId(), version.getVersion().toString()));
+                } else {
+                    meta.setDisplayName(gameBox.lang.replaceContext(gameBox.lang.MODULE_VERSION_OLDER_BUTTON_NAME, context));
+                    meta.setLore(gameBox.lang.replaceContext(gameBox.lang.MODULE_VERSION_OLDER_BUTTON_LORE, context));
+                    versionButton.setAction(ClickAction.NOTHING);
+                }
+            }
             versionButton.setItemMeta(meta);
-            versionButton.setActionAndArgs(ClickAction.DISPATCH_PLAYER_COMMAND, String.format("/gba module i %s %s", data.getId(), version.getVersion().toString()));
             setButton(versionButton);
         }
     }
@@ -109,8 +143,8 @@ public class PaginatedDetailsGui {
     private Map<String, String> getVersionContext(VersionData version) {
         Map<String, String> context = new HashMap<>();
         context.put("moduleName", data.getName());
-        context.put("moduleReleaseDate", gameBox.lang.dateFormat.format(new Date(version.getUpdatedAt())));
-        context.put("moduleVersion", version.getVersion().toString());
+        context.put("versionReleaseDate", gameBox.lang.dateFormat.format(new Date(version.getUpdatedAt())));
+        context.put("version", version.getVersion().toString());
         return context;
     }
 
@@ -140,5 +174,23 @@ public class PaginatedDetailsGui {
             ModuleDetailsPage newPage = this.addPage();
             newPage.setButtonIfSlotLeft(button);
         }
+    }
+
+    public AGui getModulesGui(UUID uuid) {
+        for (ModuleDetailsPage page : this.pages) {
+            if (page.isInGui(uuid)) {
+                return page;
+            }
+        }
+        return null;
+    }
+
+    public boolean isInGui(UUID uuid) {
+        for (ModuleDetailsPage page : this.pages) {
+            if (page.isInGui(uuid)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
