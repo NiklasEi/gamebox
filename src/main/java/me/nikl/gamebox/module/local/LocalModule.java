@@ -20,7 +20,7 @@ package me.nikl.gamebox.module.local;
 
 import me.nikl.gamebox.exceptions.module.InvalidModuleException;
 import me.nikl.gamebox.module.GameBoxModule;
-import me.nikl.gamebox.module.data.*;
+import me.nikl.gamebox.module.data.VersionData;
 import me.nikl.gamebox.utility.FileUtility;
 import me.nikl.gamebox.utility.GameBoxYmlBuilder;
 import me.nikl.gamebox.utility.ModuleUtility;

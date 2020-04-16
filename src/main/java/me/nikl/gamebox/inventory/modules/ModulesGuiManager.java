@@ -8,10 +8,10 @@ import me.nikl.gamebox.events.modules.ModuleRemovedEvent;
 import me.nikl.gamebox.exceptions.module.GameBoxCloudException;
 import me.nikl.gamebox.inventory.ClickAction;
 import me.nikl.gamebox.inventory.GuiManager;
+import me.nikl.gamebox.inventory.button.AButton;
 import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.gui.AGui;
 import me.nikl.gamebox.inventory.modules.guis.PaginatedGui;
-import me.nikl.gamebox.inventory.shop.Category;
 import me.nikl.gamebox.module.data.CloudModuleData;
 import me.nikl.gamebox.module.local.VersionedModule;
 import me.nikl.gamebox.utility.Permission;
@@ -23,10 +23,16 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Level;
 
 public class ModulesGuiManager implements Listener {
@@ -52,6 +58,22 @@ public class ModulesGuiManager implements Listener {
 
     public void loadGui() {
         List<CloudModuleData> cloudModuleData = gameBox.getModulesManager().getCloudService().getCloudContent();
+        addCloudModules(cloudModuleData);
+        addPrivateModules(cloudModuleData);
+        this.guiLoaded = true;
+    }
+
+    private void addPrivateModules(List<CloudModuleData> cloudModuleData) {
+        List<VersionedModule> loadedModules = gameBox.getModulesManager().getLoadedVersionedModules();
+        for (VersionedModule module : loadedModules) {
+            if (cloudModuleData.stream().anyMatch(data -> data.getId().equals(module.getId()))) {
+                continue;
+            }
+            addPrivateModule(module);
+        }
+    }
+
+    private void addCloudModules(List<CloudModuleData> cloudModuleData) {
         for (CloudModuleData data : cloudModuleData) {
             SemanticVersion installedVersion = null;
             if(gameBox.getModulesManager().getModuleInstance(data.getId()) != null) {
@@ -60,7 +82,6 @@ public class ModulesGuiManager implements Listener {
             this.moduleDetails.addDetailsForModule(data);
             this.modulesListGui.setButton(buildModuleButton(data, installedVersion));
         }
-        this.guiLoaded = true;
     }
 
     private void removeModule(VersionedModule module) {
@@ -86,10 +107,14 @@ public class ModulesGuiManager implements Listener {
                 this.modulesListGui.setButton(updatedButton);
             }
         } catch (GameBoxCloudException e) {
-            Button updatedButton = buildPrivateModuleButton(module, module.getVersionData().getVersion());
-            if(!this.modulesListGui.updateModule(module.getId(), updatedButton)) {
-                this.modulesListGui.setButton(updatedButton);
-            }
+            this.addPrivateModule(module);
+        }
+    }
+
+    private void addPrivateModule(VersionedModule module) {
+        Button updatedButton = buildPrivateModuleButton(module, module.getVersionData().getVersion());
+        if(!this.modulesListGui.updateModule(module.getId(), updatedButton)) {
+            this.modulesListGui.setButton(updatedButton);
         }
     }
 
@@ -133,7 +158,9 @@ public class ModulesGuiManager implements Listener {
         meta.setDisplayName(gameBox.lang.replaceContext(gameBox.lang.MODULE_PRIVATE_BUTTON_NAME, context));
         meta.setLore(gameBox.lang.replaceContext(gameBox.lang.MODULE_PRIVATE_BUTTON_LORE, context));
         button.setItemMeta(meta);
-        button.setAction(ClickAction.NOTHING);
+        AButton.ButtonAction removeAction = new AButton.ButtonAction(ClickAction.DISPATCH_PLAYER_COMMAND, String.format("/gba module rm %s", id));
+        button.addConditionalAction(InventoryAction.MOVE_TO_OTHER_INVENTORY, removeAction);
+        button.setActionAndArgs(ClickAction.NOTHING, id);
         return button;
     }
 
@@ -259,21 +286,21 @@ public class ModulesGuiManager implements Listener {
     }
 
     @EventHandler
-    public void onModuleInstallEvent(ModuleInstalledEvent event) {
+    public void onModuleInstalledEvent(ModuleInstalledEvent event) {
         VersionedModule module = event.getModule();
         if (guiLoaded) {
             installModule(module);
         }
-        Bukkit.getLogger().info("installing " + event.getModule().getName() + "@" + event.getModule().getVersionData().getVersion().toString());
+        GameBox.debug("installing " + event.getModule().getName() + "@" + event.getModule().getVersionData().getVersion().toString());
     }
 
     @EventHandler
-    public void onModuleRemoveEvent(ModuleRemovedEvent event) {
+    public void onModuleRemovedEvent(ModuleRemovedEvent event) {
         VersionedModule module = event.getModule();
         if (guiLoaded) {
             removeModule(module);
         }
-        Bukkit.getLogger().info("removing " + event.getModule().getName() + "@" + event.getModule().getVersionData().getVersion().toString());
+        GameBox.debug("removing " + event.getModule().getName() + "@" + event.getModule().getVersionData().getVersion().toString());
     }
 
     public AGui getModuleGui(UUID uuid) {

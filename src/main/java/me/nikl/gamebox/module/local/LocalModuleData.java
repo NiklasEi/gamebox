@@ -18,7 +18,10 @@
 
 package me.nikl.gamebox.module.local;
 
-import me.nikl.gamebox.module.data.*;
+import me.nikl.gamebox.module.data.DependencyData;
+import me.nikl.gamebox.module.data.ModuleBasicData;
+import me.nikl.gamebox.module.data.VersionData;
+import me.nikl.gamebox.module.data.VersionedModuleData;
 import me.nikl.gamebox.utility.versioning.SemanticVersion;
 
 import java.io.Serializable;

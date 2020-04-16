@@ -16,7 +16,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.UUID;
 
 public class ModuleDetailsPage extends AGui {
     private int pageNum;

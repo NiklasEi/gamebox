@@ -13,7 +13,6 @@ import me.nikl.gamebox.module.cloud.CloudService;
 import me.nikl.gamebox.module.data.CloudModuleData;
 import me.nikl.gamebox.module.data.CloudModuleDataWithVersions;
 import me.nikl.gamebox.module.data.VersionData;
-import me.nikl.gamebox.module.local.LocalModule;
 import me.nikl.gamebox.utility.versioning.SemanticVersion;
 import me.nikl.nmsutilities.NmsFactory;
 import me.nikl.nmsutilities.NmsUtility;
@@ -24,8 +23,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class PaginatedDetailsGui {
     private GameBox gameBox;

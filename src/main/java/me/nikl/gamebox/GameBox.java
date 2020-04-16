@@ -425,6 +425,6 @@ public class GameBox extends JavaPlugin {
 
   public void hookAfterConnectingToCloud() {
     getPluginManager().getGuiManager().getModulesGuiManager().loadGui();
-    getModulesManager().collectLocalModuleUpdates();
+    getModulesManager().collectUpdatesForInstalledModules();
   }
 }

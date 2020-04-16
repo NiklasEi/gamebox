@@ -1,6 +1,11 @@
 package me.nikl.gamebox.commands.admin.modules;
 
-import co.aikar.commands.annotation.*;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandCompletion;
+import co.aikar.commands.annotation.Optional;
+import co.aikar.commands.annotation.PreCommand;
+import co.aikar.commands.annotation.Single;
+import co.aikar.commands.annotation.Subcommand;
 import me.nikl.gamebox.GameBox;
 import me.nikl.gamebox.commands.GameBoxBaseCommand;
 import me.nikl.gamebox.exceptions.module.CloudModuleNotFoundException;

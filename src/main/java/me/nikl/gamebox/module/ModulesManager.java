@@ -40,9 +40,19 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.CustomClassLoaderConstructor;
 import org.yaml.snakeyaml.representer.Representer;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -182,7 +192,7 @@ public class ModulesManager {
         }
     }
 
-    public void collectLocalModuleUpdates() {
+    public void collectUpdatesForInstalledModules() {
         hasUpdateAvailable.clear();
         for (String moduleId : localModules.keySet()) {
             if (cloudService.hasUpdate(localModules.get(moduleId))) {
@@ -279,7 +289,10 @@ public class ModulesManager {
             try {
                 gameBoxModule.onDisable();
                 gameBox.getGameRegistry().unregisterGamesForModuleId(localModule.getId());
-                gameBoxModule.getModuleData().getModuleJar().delete();
+                File removed = new File(gameBox.getModulesManager().getModulesDir(), "removed");
+                removed.mkdir();
+                File target = new File(removed, gameBoxModule.getModuleData().getModuleJar().getName());
+                Files.move(gameBoxModule.getModuleData().getModuleJar().toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
                 loadedModules.remove(localModule.getId());
                 new ModuleRemovedEvent(localModule);
             } catch (Throwable e) {

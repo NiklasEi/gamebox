@@ -24,6 +24,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
@@ -440,6 +441,7 @@ public class PluginManager implements Listener {
   }
 
   public void shutDown() {
+    HandlerList.unregisterAll(guiManager.getModulesGuiManager());
     for (Player player : Bukkit.getOnlinePlayers()) {
       if (isInGame(player.getUniqueId()) || guiManager.isInGUI(player.getUniqueId()) || guiManager.getShopManager().inShop(player.getUniqueId())) {
         player.closeInventory();

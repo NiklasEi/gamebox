@@ -24,7 +24,6 @@ import me.nikl.gamebox.module.local.LocalModule;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Module base class
@@ -54,7 +53,7 @@ public abstract class GameBoxModule {
     }
 
     protected void registerGame(String gameId, Class<? extends Game> gameClass, String... subCommands) {
-        List<String> subCommandsWithId = Arrays.asList(subCommands);
+        ArrayList<String> subCommandsWithId = new ArrayList<>(Arrays.asList(subCommands));
         subCommandsWithId.add(gameId);
         new GameBoxGame(this.gameBox, gameId, (Class<Game>) gameClass, this.moduleData, subCommandsWithId.toArray(new String[]{}));
     }
