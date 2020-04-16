@@ -55,14 +55,17 @@ public class CloudFacade {
 
     // Since older Java versions do not trust Let's encrypt certificates (and I am a big fan)
     static {
-        try (InputStream caInput = GameBox.getProvidingPlugin(GameBox.class).getResource("dst-root-ca-x3.pem")) {
+        try (InputStream letsEncryptInput = GameBox.getProvidingPlugin(GameBox.class).getResource("certificates/dst-root-ca-x3.pem");
+             InputStream netlifyInput = GameBox.getProvidingPlugin(GameBox.class).getResource("certificates/netlify-app.pem")) {
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
-            Certificate ca = cf.generateCertificate(caInput);
+            Certificate netlify = cf.generateCertificate(netlifyInput);
+            Certificate letsEncrypt = cf.generateCertificate(letsEncryptInput);
 
             String keyStoreType = KeyStore.getDefaultType();
             KeyStore keyStore = KeyStore.getInstance(keyStoreType);
             keyStore.load(null, null);
-            keyStore.setCertificateEntry("ca", ca);
+            keyStore.setCertificateEntry("netlify", netlify);
+            keyStore.setCertificateEntry("letsEncrypt", letsEncrypt);
 
             String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
             TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);

@@ -45,7 +45,7 @@
                 <directory>src/main/resources</directory>
                 <includes>
                     <include>**/*.yml</include>
-                    <include>dst-root-ca-x3.pem</include>
+                    <include>certificates/*.pem</include>
                 </includes>
             </resource>
         </resources>

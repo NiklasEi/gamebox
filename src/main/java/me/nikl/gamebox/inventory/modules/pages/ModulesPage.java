@@ -16,8 +16,8 @@ import java.util.Map;
 
 public class ModulesPage extends AGui {
     protected int pageNum;
-    private int previousPageSlot = 21;
-    private int nextPageSlot = 23;
+    private int previousPageSlot = 48;
+    private int nextPageSlot = 50;
     private NmsUtility nms;
 
     public ModulesPage(GameBox plugin, GuiManager guiManager, int slots, String[] args, int pageNum, String title) {
@@ -56,7 +56,7 @@ public class ModulesPage extends AGui {
         while (grid[i] != null) {
             i++;
         }
-        if (i > 45) return false;
+        if (i >= 45) return false;
         setButton(button, i);
         return true;
     }

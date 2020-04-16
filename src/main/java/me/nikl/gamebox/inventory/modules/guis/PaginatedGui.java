@@ -95,7 +95,8 @@ public class PaginatedGui {
         return false;
     }
 
-    public int getPageOfModule(String moduleId) {
+    public int getPageOfModule(String paddedModuleId) {
+        String moduleId = paddedModuleId.replaceFirst("moduleId:", "");
         for (int page = 0; page < pages.size(); page++) {
             if (pages.get(page).hasModule(moduleId)) {
                 return page;

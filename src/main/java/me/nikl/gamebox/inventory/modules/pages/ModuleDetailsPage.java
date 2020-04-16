@@ -22,8 +22,8 @@ import java.util.UUID;
 
 public class ModuleDetailsPage extends AGui {
     private int pageNum;
-    private int previousPageSlot = 21;
-    private int nextPageSlot = 23;
+    private int previousPageSlot = 48;
+    private int nextPageSlot = 50;
     private String moduleId;
     private NmsUtility nms = NmsFactory.getNmsUtility();
 
@@ -55,7 +55,7 @@ public class ModuleDetailsPage extends AGui {
         }
 
         Button button = new Button(new ItemStack(Material.CHEST));
-        button.setActionAndArgs(ClickAction.OPEN_MODULES_PAGE, moduleId);
+        button.setActionAndArgs(ClickAction.OPEN_MODULES_PAGE, "moduleId:" + moduleId);
         ItemMeta meta = button.getItemMeta();
         meta.setDisplayName(gameBox.lang.BUTTON_MODULES_GUI_NAME);
         button.setItemMeta(meta);
