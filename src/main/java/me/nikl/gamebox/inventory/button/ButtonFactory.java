@@ -91,12 +91,12 @@ public class ButtonFactory {
   }
 
   public static AButton createModuleDetailsPageBackButton(GameBoxLanguage lang, String moduleId, String page) {
-    if (nextPageButton == null) {
-      nextPageButton = new ItemStack(Material.ARROW, 1);
-      ItemMeta meta = nextPageButton.getItemMeta();
+    if (previousPageButton == null) {
+      previousPageButton = new ItemStack(Material.ARROW, 1);
+      ItemMeta meta = previousPageButton.getItemMeta();
       meta.setDisplayName(lang.BUTTON_BACK);
-      nextPageButton.setItemMeta(meta);
+      previousPageButton.setItemMeta(meta);
     }
-    return new Button(nextPageButton).setActionAndArgs(ClickAction.OPEN_MODULE_DETAILS, moduleId, page);
+    return new Button(previousPageButton).setActionAndArgs(ClickAction.OPEN_MODULE_DETAILS, moduleId, page);
   }
 }

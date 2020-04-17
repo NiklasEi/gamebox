@@ -27,8 +27,8 @@ public class ModuleDetailsPage extends AGui {
     private String moduleId;
     private NmsUtility nms = NmsFactory.getNmsUtility();
 
-    public ModuleDetailsPage(GameBox plugin, GuiManager guiManager, int slots, String[] args, String moduleId, int pageNum) {
-        super(plugin, guiManager, slots, args, "Page");
+    public ModuleDetailsPage(GameBox plugin, GuiManager guiManager, int slots, String[] args, String moduleId, int pageNum, String title) {
+        super(plugin, guiManager, slots, args, title.replaceAll("%page%", String.valueOf(pageNum)));
         this.pageNum = pageNum;
         this.moduleId = moduleId;
         if (pageNum > 1) {

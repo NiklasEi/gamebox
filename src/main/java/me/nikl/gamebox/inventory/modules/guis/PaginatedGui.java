@@ -68,15 +68,6 @@ public class PaginatedGui {
         return done;
     }
 
-    public void removeModule(String id) {
-        int page = 0;
-        boolean done = false;
-        while (!done && page < pages.size()) {
-            done = pages.get(page).removeModule(id);
-            page++;
-        }
-    }
-
     public AGui getModuleGui(UUID uuid) {
         for (ModulesPage page : this.pages) {
             if (page.isInGui(uuid)) {
@@ -103,5 +94,11 @@ public class PaginatedGui {
             }
         }
         return 0;
+    }
+
+    public void clearPages() {
+        for (ModulesPage page : this.pages) {
+            page.clear();
+        }
     }
 }

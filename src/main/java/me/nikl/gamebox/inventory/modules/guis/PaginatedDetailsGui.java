@@ -24,6 +24,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +39,7 @@ public class PaginatedDetailsGui {
     private NmsUtility nms = NmsFactory.getNmsUtility();
     private CloudModuleDataWithVersions data;
     private CloudService cloudService;
+    private long lastApiCall = 0L;
 
     public PaginatedDetailsGui(GameBox gameBox, GuiManager guiManager, CloudModuleData data) {
         this.gameBox = gameBox;
@@ -52,7 +54,8 @@ public class PaginatedDetailsGui {
                 .withVersions(new ArrayList<>())
                 .withAuthors(data.getAuthors());
         this.cloudService = gameBox.getModulesManager().getCloudService();
-        this.pages.add(new ModuleDetailsPage(gameBox, guiManager, gridSize, new String[]{"0"}, data.getId(), 1));
+        this.pages.add(new ModuleDetailsPage(gameBox, guiManager, gridSize, new String[]{"0"}, data.getId(), 1, gameBox.lang.TITLE_MODULE_DETAILS_PAGE
+                .replaceAll("%moduleName%", data.getName())));
     }
 
     public boolean openPage(Player whoClicked, int pageNumber) {
@@ -63,7 +66,12 @@ public class PaginatedDetailsGui {
         boolean open = pages.get(pageNumber).open(whoClicked);
         GameBox.openingNewGUI = false;
         if (open) {
-            this.updateModuleData();
+            long current = System.currentTimeMillis();
+            if (pageNumber == 0 && current - lastApiCall > 300_000) {
+                this.lastApiCall = current;
+                GameBox.debug("Reloading module details for " + data.getId());
+                this.updateModuleData();
+            }
             return true;
         }
         return false;
@@ -107,7 +115,9 @@ public class PaginatedDetailsGui {
             installedVersion = installedModule.getModuleData().getVersionData().getVersion();
         }
         clearPages();
-        for (VersionData version : data.getVersions()) {
+        List<VersionData> sortedByDate = data.getVersions();
+        sortedByDate.sort(Comparator.comparing(VersionData::getUpdatedAt).reversed());
+        for (VersionData version : sortedByDate) {
             Map<String, String> context = getVersionContext(version);
             ItemStack book = new ItemStack(Material.BOOK);
             if (version.getVersion().equals(installedVersion)) {
@@ -166,17 +176,21 @@ public class PaginatedDetailsGui {
     public ModuleDetailsPage addPage() {
         ModuleDetailsPage lastPage = pages.get(pages.size() - 1);
         lastPage.createNextPageNavigation();
-        ModuleDetailsPage newPage = new ModuleDetailsPage(gameBox, guiManager, gridSize, new String[]{String.valueOf(pages.size())}, data.getId(), pages.size() + 1);
+        ModuleDetailsPage newPage = new ModuleDetailsPage(gameBox, guiManager, gridSize, new String[]{String.valueOf(pages.size())}, data.getId(), pages.size() + 1, gameBox.lang.TITLE_MODULE_DETAILS_PAGE
+                .replaceAll("%moduleName%", data.getName()));
         this.pages.add(newPage);
         return newPage;
     }
 
     public void setButton(Button button) {
-        ModuleDetailsPage lastPage = pages.get(pages.size() - 1);
-        if (!lastPage.setButtonIfSlotLeft(button)) {
-            ModuleDetailsPage newPage = this.addPage();
-            newPage.setButtonIfSlotLeft(button);
+        for (ModuleDetailsPage page : this.pages) {
+            if (!page.setButtonIfSlotLeft(button)) {
+                continue;
+            }
+            return;
         }
+        ModuleDetailsPage newPage = this.addPage();
+        newPage.setButtonIfSlotLeft(button);
     }
 
     public AGui getModulesGui(UUID uuid) {

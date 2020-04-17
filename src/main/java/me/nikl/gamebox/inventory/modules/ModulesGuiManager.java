@@ -27,12 +27,7 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 
 public class ModulesGuiManager implements Listener {
@@ -45,6 +40,8 @@ public class ModulesGuiManager implements Listener {
     private ModuleDetails moduleDetails;
     private int titleMessageSeconds = 3;
     private boolean guiLoaded = false;
+    private Map<String, Button> buttons = new HashMap<>();
+    private List<String> namesAndIds = new ArrayList<>();
 
     public ModulesGuiManager(GameBox gameBox, GuiManager guiManager) {
         this.gameBox = gameBox;
@@ -58,30 +55,42 @@ public class ModulesGuiManager implements Listener {
 
     public void loadGui() {
         List<CloudModuleData> cloudModuleData = gameBox.getModulesManager().getCloudService().getCloudContent();
-        addCloudModules(cloudModuleData);
-        addPrivateModules(cloudModuleData);
+        prepareCloudModules(cloudModuleData);
+        preparePrivateModules(cloudModuleData);
+        sortAndRenderGui();
         this.guiLoaded = true;
     }
 
-    private void addPrivateModules(List<CloudModuleData> cloudModuleData) {
+    private void preparePrivateModules(List<CloudModuleData> cloudModuleData) {
         List<VersionedModule> loadedModules = gameBox.getModulesManager().getLoadedVersionedModules();
         for (VersionedModule module : loadedModules) {
             if (cloudModuleData.stream().anyMatch(data -> data.getId().equals(module.getId()))) {
                 continue;
             }
-            addPrivateModule(module);
+            Button updatedButton = buildPrivateModuleButton(module, module.getVersionData().getVersion());
+            if(!this.modulesListGui.updateModule(module.getId(), updatedButton)) {
+                String identifier = buildIdentifier(module.getName(), module.getId());
+                this.namesAndIds.add(identifier);
+                this.buttons.put(identifier, updatedButton);
+            }
         }
     }
 
-    private void addCloudModules(List<CloudModuleData> cloudModuleData) {
+    private void prepareCloudModules(List<CloudModuleData> cloudModuleData) {
         for (CloudModuleData data : cloudModuleData) {
             SemanticVersion installedVersion = null;
             if(gameBox.getModulesManager().getModuleInstance(data.getId()) != null) {
                 installedVersion = gameBox.getModulesManager().getModuleInstance(data.getId()).getModuleData().getVersionData().getVersion();
             }
             this.moduleDetails.addDetailsForModule(data);
-            this.modulesListGui.setButton(buildModuleButton(data, installedVersion));
+            String identifier = buildIdentifier(data.getName(), data.getId());
+            this.namesAndIds.add(identifier);
+            this.buttons.put(identifier, buildModuleButton(data, installedVersion));
         }
+    }
+
+    private String buildIdentifier(String name, String id) {
+        return String.format("%s:%s", name, id);
     }
 
     private void removeModule(VersionedModule module) {
@@ -92,7 +101,9 @@ public class ModulesGuiManager implements Listener {
                 this.moduleDetails.updateGuiForModule(module.getId());
             }
         } catch (GameBoxCloudException e) {
-            this.modulesListGui.removeModule(module.getId());
+            // it's a private module
+            this.namesAndIds.remove(buildIdentifier(module.getName(), module.getId()));
+            this.sortAndRenderGui();
         }
     }
 
@@ -107,14 +118,22 @@ public class ModulesGuiManager implements Listener {
                 this.modulesListGui.setButton(updatedButton);
             }
         } catch (GameBoxCloudException e) {
-            this.addPrivateModule(module);
+            // it's a private module
+            Button updatedButton = buildPrivateModuleButton(module, module.getVersionData().getVersion());
+            if(!this.modulesListGui.updateModule(module.getId(), updatedButton)) {
+                String identifier = buildIdentifier(module.getName(), module.getId());
+                this.namesAndIds.add(identifier);
+                this.buttons.put(identifier, updatedButton);
+                this.sortAndRenderGui();
+            }
         }
     }
 
-    private void addPrivateModule(VersionedModule module) {
-        Button updatedButton = buildPrivateModuleButton(module, module.getVersionData().getVersion());
-        if(!this.modulesListGui.updateModule(module.getId(), updatedButton)) {
-            this.modulesListGui.setButton(updatedButton);
+    private void sortAndRenderGui() {
+        this.modulesListGui.clearPages();
+        this.namesAndIds.sort(Comparator.comparing(String::toLowerCase));
+        for (String nameAndId : namesAndIds) {
+            this.modulesListGui.setButton(buttons.get(nameAndId));
         }
     }
 

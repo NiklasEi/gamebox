@@ -66,7 +66,7 @@ public class ModulesPage extends AGui {
     }
 
     public boolean updateModule(String id, Button button) {
-        for (int slot = 0; slot < grid.length; slot++) {
+        for (int slot = 0; slot < 45; slot++) {
             if (grid[slot] != null && grid[slot].getArgs()[0].equals(id)) {
                 setButton(button, slot);
                 return true;
@@ -76,7 +76,7 @@ public class ModulesPage extends AGui {
     }
 
     public boolean removeModule(String id) {
-        for (int slot = 0; slot < grid.length; slot++) {
+        for (int slot = 0; slot < 45; slot++) {
             if (grid[slot] != null && grid[slot].getArgs()[0].equals(id)) {
                 setButton(null, slot);
                 return true;
@@ -92,5 +92,13 @@ public class ModulesPage extends AGui {
             }
         }
         return false;
+    }
+
+    public void clear() {
+        for (int slot = 0; slot < 45; slot++) {
+            if (grid[slot] != null) {
+                setButton(null, slot);
+            }
+        }
     }
 }

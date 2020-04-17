@@ -4,10 +4,13 @@
 - GameBox 3 supports MC 1.14+
 - games can now be installed from inside GameBox. 
   - They are not separate plugins anymore, but can be automatically downloaded and installed.
+  - Use commands or the module admin GUI to install/update/remove modules
 - players only see games in the menu that they have the `gamebox.play` permission for
+- games now always have the same order in the menu
 - renamed language files to standard locales (new default file is en_GB)
 - Loading database async ([#67](https://github.com/NiklasEi/gamebox/issues/67))
 
+#
 
 ### v 2.2.6
 - cookieclicker -> 2.2.3
