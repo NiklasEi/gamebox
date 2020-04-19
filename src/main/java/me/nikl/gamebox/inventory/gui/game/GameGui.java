@@ -9,11 +9,15 @@ import me.nikl.gamebox.inventory.button.Button;
 import me.nikl.gamebox.inventory.gui.AGui;
 import me.nikl.gamebox.utility.ItemStackUtility;
 import me.nikl.nmsutilities.NmsFactory;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author Niklas Eicker
@@ -89,5 +93,20 @@ public class GameGui extends AGui {
 
   public String getGameId() {
     return this.gameId;
+  }
+
+  public void close() {
+    for (UUID uuid : inGui) {
+      Player player = Bukkit.getPlayer(uuid);
+      if (player == null) {
+        continue;
+      }
+      new BukkitRunnable() {
+        @Override
+        public void run() {
+          player.closeInventory();
+        }
+      }.runTask(gameBox);
+    }
   }
 }

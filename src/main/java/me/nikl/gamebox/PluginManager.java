@@ -39,6 +39,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -66,7 +67,7 @@ public class PluginManager implements Listener {
 
   // count the number of registered games
   public static int gamesRegistered = 0;
-  private GameBox plugin;
+  private GameBox gamebox;
   private GameBoxLanguage lang;
   private FileConfiguration config;
   private GuiManager guiManager;
@@ -84,16 +85,16 @@ public class PluginManager implements Listener {
   private int hubItemSlot;
   private float volume = 0.5f, pitch = 10f;
 
-  public PluginManager(GameBox plugin) {
-    this.plugin = plugin;
-    this.lang = plugin.lang;
-    this.config = plugin.getConfig();
+  public PluginManager(GameBox gamebox) {
+    this.gamebox = gamebox;
+    this.lang = gamebox.lang;
+    this.config = gamebox.getConfig();
     if (config.isList("settings.blockedWorlds")) {
       blockedWorlds = new ArrayList<>(config.getStringList("settings.blockedWorlds"));
     }
     setHotBar();
     if (GameBoxSettings.hubModeEnabled) getHub();
-    plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    gamebox.getServer().getPluginManager().registerEvents(this, gamebox);
   }
 
 
@@ -108,7 +109,7 @@ public class PluginManager implements Listener {
 
   public void loadPlayer(UUID uniqueId) {
     GameBox.debug("loading gb player: " + uniqueId);
-    gbPlayers.putIfAbsent(uniqueId, new GBPlayer(plugin, uniqueId));
+    gbPlayers.putIfAbsent(uniqueId, new GBPlayer(gamebox, uniqueId));
   }
 
   private void setHotBar() {
@@ -117,17 +118,17 @@ public class PluginManager implements Listener {
     if (toMainItem == null) {
       toMainItem = new ItemStack(ItemStackUtility.DARK_OAK_DOOR);
       if (config.isString("guiSettings.hotBarNavigation.mainMenuMaterial"))
-        plugin.getLogger().log(Level.WARNING, " guiSettings.hotBarNavigation.mainMenuMaterial is not a valid material");
+        gamebox.getLogger().log(Level.WARNING, " guiSettings.hotBarNavigation.mainMenuMaterial is not a valid material");
     }
     if (toGameItem == null) {
       toGameItem = new ItemStack(ItemStackUtility.BIRCH_DOOR);
       if (config.isString("guiSettings.hotBarNavigation.gameMenuMaterial"))
-        plugin.getLogger().log(Level.WARNING, " guiSettings.hotBarNavigation.gameMenuMaterial is not a valid material");
+        gamebox.getLogger().log(Level.WARNING, " guiSettings.hotBarNavigation.gameMenuMaterial is not a valid material");
     }
     if (exitItem == null) {
       exitItem = new ItemStack(ItemStackUtility.BARRIER);
       if (config.isString("guiSettings.hotBarNavigation.exitMaterial"))
-        plugin.getLogger().log(Level.WARNING, " guiSettings.hotBarNavigation.exitMaterial is not a valid material");
+        gamebox.getLogger().log(Level.WARNING, " guiSettings.hotBarNavigation.exitMaterial is not a valid material");
     }
 
     // set count
@@ -288,7 +289,7 @@ public class PluginManager implements Listener {
   @EventHandler
   public void onInvClose(InventoryCloseEvent event) {
     if (!(event.getPlayer() instanceof Player)) return;
-    plugin.getInventoryTitleMessenger().removeTitleMessage(event.getPlayer().getUniqueId());
+    gamebox.getInventoryTitleMessenger().removeTitleMessage(event.getPlayer().getUniqueId());
     if (GameBox.openingNewGUI) {
       GameBox.debug("ignoring close because of flag: GameBox.openingNewGUI");
       return;
@@ -394,7 +395,7 @@ public class PluginManager implements Listener {
   @EventHandler(priority = EventPriority.LOWEST)
   public void onPlayerDeath(PlayerDeathEvent event) {
     if (isInGame(event.getEntity().getUniqueId()) || guiManager.isInGUI(event.getEntity().getUniqueId()) || guiManager.getShopManager().inShop(event.getEntity().getUniqueId())) {
-      plugin.getLogger().log(Level.SEVERE, " Player in-game in death event!");
+      gamebox.getLogger().log(Level.SEVERE, " Player in-game in death event!");
     }
   }
 
@@ -402,7 +403,7 @@ public class PluginManager implements Listener {
   public void onPlayerDeath(EntityDamageEvent event) {
     if (!(event.getEntity() instanceof Player)) return;
     if (guiManager == null) {
-      plugin.getLogger().warning("The plugin did not start correctly. Please check for previous errors!");
+      gamebox.getLogger().warning("The plugin did not start correctly. Please check for previous errors!");
       return;
     }
     // if player is in gui or in game close the inventory
@@ -472,7 +473,7 @@ public class PluginManager implements Listener {
     fileName = fileName.replace(":", "_");
     fileName += ".txt";
     Bukkit.getLogger().log(Level.SEVERE, "Saving those contents in a log file in the folder Logs as: " + fileName);
-    File logFile = new File(plugin.getDataFolder().toString() + File.separatorChar + "Logs" + File.separatorChar + fileName);
+    File logFile = new File(gamebox.getDataFolder().toString() + File.separatorChar + "Logs" + File.separatorChar + fileName);
     logFile.getParentFile().mkdirs();
     try {
       logFile.createNewFile();
@@ -503,8 +504,8 @@ public class PluginManager implements Listener {
     Bukkit.getLogger().log(Level.SEVERE, "-------------------------------------------------------------------");
   }
 
-  public GameBox getPlugin() {
-    return this.plugin;
+  public GameBox getGamebox() {
+    return this.gamebox;
   }
 
   /**
@@ -530,15 +531,20 @@ public class PluginManager implements Listener {
       GameManager gameManager = game.getGameManager();
       for (Player player : Bukkit.getOnlinePlayers()) {
         if (gameManager.isInGame(player.getUniqueId())) {
-          player.closeInventory();
-          leaveGameBox(player);
+          new BukkitRunnable() {
+            @Override
+            public void run() {
+              player.closeInventory();
+              leaveGameBox(player);
+            }
+          }.runTask(gamebox);
         }
       }
     }
     GameBox.debug("unregister in gui manager...");
     guiManager.unregisterGame(gameID);
     GameBox.debug("unregister in GameRegistry...");
-    plugin.getGameRegistry().unregisterGame(gameID);
+    gamebox.getGameRegistry().unregisterGame(gameID);
     GameBox.debug("done");
     games.remove(gameID);
   }
@@ -708,7 +714,7 @@ public class PluginManager implements Listener {
   @SuppressWarnings("deprecation")
   public void leaveGameBox(Player player) {
     restoreInventory(player);
-    plugin.getInventoryTitleMessenger().removeTitleMessage(player.getUniqueId());
+    gamebox.getInventoryTitleMessenger().removeTitleMessage(player.getUniqueId());
     player.updateInventory();
     new LeftGameBoxEvent(player);
   }

@@ -362,6 +362,8 @@ public class ModulesManager implements Listener {
         ModulesSettings.ModuleSettings updatedSettings = modulesSettings.getModuleSettings(event.getModule().getId());
         updatedSettings.setEnabled(true);
         updateModuleSettings(event.getModule().getId(), updatedSettings);
+        // add game buttons to players main guis
+        gameBox.getPluginManager().getGuiManager().getMainGui().updateMainGuis();
     }
 
     @EventHandler

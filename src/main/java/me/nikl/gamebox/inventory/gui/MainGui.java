@@ -15,6 +15,7 @@ import me.nikl.gamebox.utility.InventoryUtility;
 import me.nikl.gamebox.utility.ItemStackUtility;
 import me.nikl.gamebox.utility.Permission;
 import me.nikl.nmsutilities.NmsFactory;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -26,6 +27,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -79,6 +81,19 @@ public class MainGui extends AGui implements TokenListener {
     setButton(guiManager.getShopManager().getMainButton(), shopSlot);
   }
 
+  public void updateMainGuis() {
+    Iterator<Map.Entry<UUID, Inventory>> iterator = openInventories.entrySet().iterator();
+    while (iterator.hasNext()) {
+      Map.Entry<UUID, Inventory> entry = iterator.next();
+      Player player = Bukkit.getPlayer(entry.getKey());
+      if (inGui.contains(entry.getKey())) {
+        loadMainGui(player, entry.getValue());
+      } else {
+        iterator.remove();
+      }
+    }
+  }
+
   @Override
   public void onInventoryClick(InventoryClickEvent event) {
     if (event.getCurrentItem() == null) return;
@@ -89,7 +104,7 @@ public class MainGui extends AGui implements TokenListener {
   @Override
   public boolean open(Player player) {
     if (!openInventories.containsKey(player.getUniqueId())) {
-      if (!loadMainGui(player)) return false;
+      if (!loadMainGui(player, null)) return false;
     }
     if (super.open(player)) {
       if (pluginManager.getGames().isEmpty()) {
@@ -104,7 +119,7 @@ public class MainGui extends AGui implements TokenListener {
     return soundButtons.get(uuid);
   }
 
-  public boolean loadMainGui(Player player) {
+  public boolean loadMainGui(Player player, Inventory inventory) {
     AButton[] playerGrid = loadPlayerGrid(player);
     this.playerGrids.put(player.getUniqueId(), playerGrid);
     GBPlayer gbPlayer = pluginManager.getPlayer(player.getUniqueId());
@@ -113,7 +128,9 @@ public class MainGui extends AGui implements TokenListener {
       return false;
     }
     String title = this.title.replace("%player%", player.getName());
-    Inventory inventory = InventoryUtility.createInventory(this, this.inventory.getSize(), title);
+    if (inventory == null) {
+      inventory = InventoryUtility.createInventory(this, this.inventory.getSize(), title);
+    }
     ItemStack[] contents = this.inventory.getContents().clone();
     // overwrite game buttons
     System.arraycopy(playerGrid, 0, contents, 0, 45);
@@ -167,17 +184,16 @@ public class MainGui extends AGui implements TokenListener {
   }
 
   public void unregisterGame(String gameID) {
+    gameButtons.remove(gameID);
     AButton button;
     for (int i = 0; i < grid.length; i++) {
       button = grid[i];
       if (button != null && button.getAction() == ClickAction.OPEN_GAME_GUI && button.getArgs()[0].equals(gameID)) {
         grid[i] = null;
         inventory.setItem(i, null);
-        for (Inventory inventory : openInventories.values()) {
-          inventory.setItem(i, null);
-        }
       }
     }
+    updateMainGuis();
   }
 
   public void registerGameButton(Button gameButton, String gameId) {
