@@ -25,7 +25,6 @@ import me.nikl.gamebox.events.modules.ModuleRemovedEvent;
 import me.nikl.gamebox.exceptions.module.CloudModuleVersionNotFoundException;
 import me.nikl.gamebox.exceptions.module.GameBoxCloudException;
 import me.nikl.gamebox.exceptions.module.InvalidModuleException;
-import me.nikl.gamebox.inventory.gui.AGui;
 import me.nikl.gamebox.module.cloud.CloudFacade;
 import me.nikl.gamebox.module.cloud.CloudService;
 import me.nikl.gamebox.module.data.VersionedCloudModule;
@@ -35,6 +34,9 @@ import me.nikl.gamebox.module.settings.ModulesSettings;
 import me.nikl.gamebox.utility.FileUtility;
 import me.nikl.gamebox.utility.ModuleUtility;
 import me.nikl.gamebox.utility.versioning.SemanticVersion;
+import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.CustomClassLoaderConstructor;
@@ -58,7 +60,7 @@ import java.util.stream.Collectors;
 /**
  * @author Niklas Eicker
  */
-public class ModulesManager {
+public class ModulesManager implements Listener {
     private GameBox gameBox;
     private CloudService cloudService;
     private File modulesDir;
@@ -70,6 +72,7 @@ public class ModulesManager {
 
     public ModulesManager(GameBox gameBox) {
         this.gameBox = gameBox;
+        Bukkit.getPluginManager().registerEvents(this, gameBox);
         load();
     }
 
@@ -355,5 +358,57 @@ public class ModulesManager {
 
     public List<VersionedModule> getLoadedVersionedModules() {
         return this.loadedModules.values().stream().map(GameBoxModule::getModuleData).collect(Collectors.toList());
+    }
+
+    @EventHandler
+    public void onModuleInstalled(ModuleInstalledEvent event) {
+        ModulesSettings.ModuleSettings updatedSettings = modulesSettings.getModuleSettings(event.getModule().getId());
+        updatedSettings.setEnabled(true);
+        updateModuleSettings(event.getModule().getId(), updatedSettings);
+    }
+
+    @EventHandler
+    public void onModuleRemoved(ModuleRemovedEvent event) {
+        ModulesSettings.ModuleSettings updatedSettings = modulesSettings.getModuleSettings(event.getModule().getId());
+        updatedSettings.setEnabled(false);
+        updateModuleSettings(event.getModule().getId(), updatedSettings);
+    }
+
+    public void updateModulesAndPrintInfo() {
+        autoUpdateModules();
+    }
+
+    private void autoUpdateModules() {
+        List<String> autoUpdateEnabled = hasUpdateAvailable
+                .stream()
+                .filter(id -> modulesSettings.getModuleSettings(id).isAutoUpdate())
+                .collect(Collectors.toList());
+        if (autoUpdateEnabled.size() == 0) {
+            return;
+        }
+        Map<String, String> context = new HashMap<>();
+        context.put("amount", String.valueOf(autoUpdateEnabled.size()));
+        gameBox.lang.sendMessage(Bukkit.getConsoleSender(), gameBox.lang.MODULES_AUTO_UPDATING_INFO, context);
+        int skippCount = 0;
+        for (String id : autoUpdateEnabled) {
+            GameBoxModule module = loadedModules.get(id);
+            Map<String, String> moduleContext = new HashMap<>();
+            moduleContext.put("name", module.getModuleData().getName());
+            moduleContext.put("id", id);
+            moduleContext.put("installedVersion", module.getModuleData().getVersionData().getVersion().toString());
+            try {
+                SemanticVersion latestVersion = cloudService.getModuleData(id).getLatestVersion();
+                moduleContext.put("availableVersion", latestVersion.toString());
+                gameBox.lang.sendMessage(Bukkit.getConsoleSender(), gameBox.lang.MODULE_AUTO_UPDATE, moduleContext);
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), String.format("gba m u %s %s", id, latestVersion.toString()));
+            } catch (GameBoxCloudException e) {
+                skippCount ++;
+                gameBox.lang.sendMessage(Bukkit.getConsoleSender(), gameBox.lang.MODULE_AUTO_UPDATE_NOT_IN_CLOUD, moduleContext);
+                continue;
+            }
+        }
+        context.put("amount", String.valueOf(autoUpdateEnabled.size() - skippCount));
+        context.put("skipped", String.valueOf(skippCount));
+        gameBox.lang.sendMessage(Bukkit.getConsoleSender(), gameBox.lang.MODULE_AUTO_UPDATE_FOOTER, context);
     }
 }

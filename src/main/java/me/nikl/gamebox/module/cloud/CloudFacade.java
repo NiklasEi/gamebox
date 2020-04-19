@@ -46,10 +46,10 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 
-import static me.nikl.gamebox.GameBoxSettings.GAMEBOX_CLOUD_BASE_URL;
+import static me.nikl.gamebox.GameBoxSettings.gameBoxCloudBaseUrl;
 
 public class CloudFacade {
-    private static final String API_BASE_URL = GAMEBOX_CLOUD_BASE_URL;
+    private static final String API_BASE_URL = gameBoxCloudBaseUrl;
     private static final Gson GSON = GameBoxGsonBuilder.build();
     private static SSLSocketFactory factoryTrustingLetsEncrypt;
 

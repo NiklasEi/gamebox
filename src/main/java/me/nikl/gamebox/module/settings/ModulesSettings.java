@@ -18,6 +18,8 @@
 
 package me.nikl.gamebox.module.settings;
 
+import me.nikl.gamebox.GameBoxSettings;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +32,10 @@ public class ModulesSettings implements Serializable  {
         return modules == null ? new HashMap<>() : modules;
     }
 
+    public ModuleSettings getModuleSettings(String moduleId) {
+        return this.modules.getOrDefault(moduleId, new ModuleSettings());
+    }
+
     public void setModules(Map<String, ModuleSettings> modules) {
         this.modules = modules;
     }
@@ -37,7 +43,7 @@ public class ModulesSettings implements Serializable  {
     public static class ModuleSettings implements Serializable {
         private final static long serialVersionUID = 8241484590220433533L;
         private boolean enabled = true;
-        private boolean autoUpdate = true;
+        private boolean autoUpdate = GameBoxSettings.enableUpdateForNewModules;
 
         public boolean isEnabled() {
             return enabled;

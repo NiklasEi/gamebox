@@ -64,7 +64,8 @@ public class GameBoxLanguage extends Language {
           MODULE_PRIVATE_BUTTON_LORE;
   public String MODULE_INSTALLED_BUTTON_NAME, MODULE_BUTTON_NAME, MODULE_VERSION_BUTTON_NAME,
           MODULE_VERSION_INSTALLED_BUTTON_NAME, MODULE_VERSION_UPDATE_BUTTON_NAME, MODULE_VERSION_OLDER_BUTTON_NAME,
-          MODULE_VERSION_UNKNOWN, MODULE_PRIVATE_BUTTON_NAME;
+          MODULE_VERSION_UNKNOWN, MODULE_PRIVATE_BUTTON_NAME, MODULES_AUTO_UPDATING_INFO, MODULE_AUTO_UPDATE,
+          MODULE_AUTO_UPDATE_NOT_IN_CLOUD, MODULE_AUTO_UPDATE_FOOTER;
 
   GameBoxLanguage(GameBox plugin) {
     super(plugin, GameBox.MODULE_GAMEBOX);
@@ -106,6 +107,11 @@ public class GameBoxLanguage extends Language {
     this.MODULE_VERSION_UPDATE_BUTTON_NAME = getString("moduleGui.moduleVersionButtons.updateOfInstalledVersion.displayName");
     this.MODULE_VERSION_OLDER_BUTTON_LORE = getStringList("moduleGui.moduleVersionButtons.olderVersionThanInstalled.lore");
     this.MODULE_VERSION_OLDER_BUTTON_NAME = getString("moduleGui.moduleVersionButtons.olderVersionThanInstalled.displayName");
+
+    this.MODULES_AUTO_UPDATING_INFO = getString("modules.autoUpdating.info");
+    this.MODULE_AUTO_UPDATE = getString("modules.autoUpdating.updatingModule");
+    this.MODULE_AUTO_UPDATE_NOT_IN_CLOUD = getString("modules.autoUpdating.notInCloud");
+    this.MODULE_AUTO_UPDATE_FOOTER = getString("modules.autoUpdating.footer");
   }
 
   private void loadHighNumberNames() {

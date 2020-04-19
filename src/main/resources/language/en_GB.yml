@@ -187,6 +187,8 @@ moduleGui:
         - "This module is not in the GameBox cloud"
         - "   and can not be installed"
         - "   automatically after being removed"
+  # special behaviour here for the %releaseNotes% placeholder: the line
+  #    in which the placeholder is used will be used for each release note!
   moduleVersionButtons:
     # will glow
     installedVersion:
@@ -197,6 +199,9 @@ moduleGui:
         - ""
         - "Released: %versionReleaseDate%"
         - ""
+        - "Release notes:"
+        - "  %releaseNotes%"
+        - ""
         - "Shift-click to run remove command"
     updateOfInstalledVersion:
       displayName: "&2%version%"
@@ -205,6 +210,9 @@ moduleGui:
         - "Update of your installed version :)"
         - ""
         - "Released: %versionReleaseDate%"
+        - ""
+        - "Release notes:"
+        - "  %releaseNotes%"
         - ""
         - "Click to run update command"
     olderVersionThanInstalled:
@@ -215,6 +223,9 @@ moduleGui:
         - ""
         - "Released: %versionReleaseDate%"
         - ""
+        - "Release notes:"
+        - "  %releaseNotes%"
+        - ""
         - "Before installing this please remove"
         - "  the currently installed version"
     moduleNotInstalled:
@@ -222,6 +233,9 @@ moduleGui:
       lore:
         - ""
         - "Released: %versionReleaseDate%"
+        - ""
+        - "Release notes:"
+        - "  %releaseNotes%"
         - ""
         - "Click to run install command"
 
@@ -240,6 +254,12 @@ shop:
   # use %page% for the page number
   pageShop: '             &9Page Nr. &l%page%'
 
+modules:
+  autoUpdating:
+    info: " &2Attempting to update %amount% modules"
+    updatingModule: " ↳ %name% - %installedVersion% -> %availableVersion%"
+    notInCloud: " ↳ %name% - Not found in GameBox cloud - skipping"
+    footer: " &2P.s.: Make sure to keep GameBox up to date :)"
 
 others:
   wonToken: " You won %tokens% Token in &3%game%"
