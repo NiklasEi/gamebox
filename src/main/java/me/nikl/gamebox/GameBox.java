@@ -16,6 +16,8 @@ import me.nikl.gamebox.listeners.EnterGameBoxListener;
 import me.nikl.gamebox.listeners.LeftGameBoxListener;
 import me.nikl.gamebox.module.GameBoxModule;
 import me.nikl.gamebox.module.ModulesManager;
+import me.nikl.gamebox.module.cloud.CloudService;
+import me.nikl.gamebox.module.data.CloudModuleData;
 import me.nikl.gamebox.module.local.VersionedModule;
 import me.nikl.gamebox.utility.ConfigManager;
 import me.nikl.gamebox.utility.FileUtility;
@@ -44,7 +46,7 @@ import java.util.logging.Level;
 
 /**
  * @author Niklas Eicker
- * <p>
+ *
  * Main class of the plugin GameBox
  */
 public class GameBox extends JavaPlugin {
@@ -441,5 +443,11 @@ public class GameBox extends JavaPlugin {
     getPluginManager().getGuiManager().getModulesGuiManager().loadGui();
     getModulesManager().collectUpdatesForInstalledModules();
     getModulesManager().updateModulesAndPrintInfo();
+
+    CloudService cloudService = getModulesManager().getCloudService();
+    java.util.List<CloudModuleData> cloudModuleData = cloudService.getCloudContent();
+    HashMap<String, String> context = new HashMap<>();
+    context.put("amount", String.valueOf(cloudModuleData.size()));
+    Bukkit.getConsoleSender().sendMessage(lang.PREFIX + lang.replaceContext(lang.CMD_MODULES_LIST_HEADER, context));
   }
 }

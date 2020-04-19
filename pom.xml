@@ -8,7 +8,7 @@
     <artifactId>gamebox</artifactId>
     <name>GameBox</name>
     <packaging>jar</packaging>
-    <version>3.0.0-beta.3</version>
+    <version>3.0.1</version>
     <description>Collection of inventory games</description>
     <url>https://gamebox.nikl.me</url>
 
@@ -128,6 +128,19 @@
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <version>1.4</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>create-timestamp</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

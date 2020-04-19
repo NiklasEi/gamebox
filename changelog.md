@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.0.1
+- Circumvent bug in Bukkit 1.14 (see: [TabooLib/TabooLib#41](https://github.com/TabooLib/TabooLib/issues/41))
+
 ## v3.0.0
 - GameBox 3 supports MC 1.14+
 - games can now be installed from inside GameBox. 

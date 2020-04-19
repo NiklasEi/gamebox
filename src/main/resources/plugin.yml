@@ -9,8 +9,7 @@ softdepend:
   - PlaceholderAPI
   - CalendarEvents
 gameBoxSource: https://github.com/NiklasEi/gamebox
-updatedAt: "${timestamp}"
-updatedAtFormat: "${maven.build.timestamp.format}"
+updatedAt: ${timestamp}
 
 # you can configure the commands in the config.yml file
 

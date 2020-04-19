@@ -179,11 +179,7 @@ public class GameBoxSettings {
         throw new IOException("Cannot load plugin.yml as input stream");
       }
       YamlConfiguration pluginFile = YamlConfiguration.loadConfiguration(new InputStreamReader(pluginFileStream));
-      String updatedAt = pluginFile.getString("updatedAt");
-      String updatedAtFormat = pluginFile.getString("updatedAtFormat");
-      if (updatedAt == null || updatedAtFormat == null) {
-        throw new Error("Was expecting 'updatedAt' and 'updatedAtFormat' in plugin.yml file");
-      }
+      long updatedAt = pluginFile.getLong("updatedAt", 0L);
       LocalModuleData data = new LocalModuleData()
               .withAuthors(description.getAuthors())
               .withDependencies(new ArrayList<>())
@@ -191,7 +187,8 @@ public class GameBoxSettings {
               .withId(description.getName().toLowerCase())
               .withName(description.getName())
               .withSourceUrl(pluginFile.getString("gameBoxSource"))
-              .withVersion(new SemanticVersion(description.getVersion())).withUpdatedAt(new SimpleDateFormat(updatedAtFormat).parse(updatedAt).getTime());
+              .withVersion(new SemanticVersion(description.getVersion()))
+              .withUpdatedAt(updatedAt);
       gameBoxData = new LocalModule(data);
     } catch (ParseException | IOException e) {
       e.printStackTrace();
