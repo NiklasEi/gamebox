@@ -75,6 +75,7 @@ commandMessages:
     moduleAlreadyInstalled: " &4%name% is already installed!&r To update please run &2/gba module update %id%"
     moduleNotInstalled: " &4A Module with id '%id%' is not installed!"
     noUpdateAvailable: " &4No update for %name% found :("
+    dependencyNotFulfilled: " &4The dependencies for %name% version %version% are not fulfilled:"
     installingLatestVersion: " &2Installing latest version of %name% (%version%)"
     notFoundInCloud: " &4Could not find the module '%id%' in the GameBox cloud :("
     list:
@@ -260,6 +261,10 @@ modules:
     updatingModule: " ↳ %name% - %installedVersion% -> %availableVersion%"
     notInCloud: " ↳ %name% - Not found in GameBox cloud - skipping"
     footer: " &2P.s.: Make sure to keep GameBox up to date :)"
+    updateIsMajor:
+      - " &4 %name% version %availableVersion% is a major update."
+      - " &4   Please inform yourself and update via command or modules GUI."
+      - " &4   There might be not backward compatible changes."
 
 others:
   wonToken: " You won %tokens% Token in &3%game%"

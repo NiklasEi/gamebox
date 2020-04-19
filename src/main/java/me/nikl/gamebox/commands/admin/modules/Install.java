@@ -14,6 +14,8 @@ import me.nikl.gamebox.exceptions.module.GameBoxCloudException;
 import me.nikl.gamebox.module.GameBoxModule;
 import me.nikl.gamebox.module.ModulesManager;
 import me.nikl.gamebox.module.data.CloudModuleData;
+import me.nikl.gamebox.module.data.VersionedCloudModule;
+import me.nikl.gamebox.utility.ModuleUtility;
 import me.nikl.gamebox.utility.Permission;
 import me.nikl.gamebox.utility.versioning.SemanticVersion;
 import org.bukkit.command.CommandSender;
@@ -68,7 +70,16 @@ public class Install extends GameBoxBaseCommand {
                                 .replaceAll("%id%", moduleID));
                         return;
                     }
-                    modulesManager.installModule(moduleID, semVersion);
+                    VersionedCloudModule versionToInstall = modulesManager.getVersionedCloudModule(moduleID, semVersion);
+                    ModuleUtility.DependencyReport report = modulesManager.checkDependencies(versionToInstall, false);
+                    if (report.isNotOk()) {
+                        sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_MODULES_DEPENDENCY_NOT_FULFILLED
+                                .replaceAll("%version%", semVersion.toString())
+                                .replaceAll("%name%", cloudModuleData.getName()));
+                        report.getLog().forEach(s -> sender.sendMessage(gameBox.lang.PREFIX + s));
+                        return;
+                    }
+                    modulesManager.installModule(versionToInstall);
                     sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_MODULES_INSTALL_SUCCESS
                             .replaceAll("%version%", semVersion.toString())
                             .replaceAll("%name%", cloudModuleData.getName()));

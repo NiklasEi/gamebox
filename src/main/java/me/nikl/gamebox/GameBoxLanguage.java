@@ -22,7 +22,8 @@ public class GameBoxLanguage extends Language {
           CMD_MODULES_NOT_INSTALLED, CMD_MODULES_INSTALLING_LATEST_VERSION, CMD_MODULES_LIST_HEADER,
           CMD_MODULES_LIST_HEADER_SECOND, CMD_MODULES_LIST_ENTRY, CMD_MODULES_LIST_FOOTER, CMD_MODULES_REMOVE_SUCCESS,
           CMD_MODULES_INSTALL_SUCCESS, CMD_SETTINGS_GAME_ENABLE_SUCCESS, CMD_SETTINGS_GAME_ENABLE_FAIL,
-          CMD_SETTINGS_GAME_DISABLE_SUCCESS, CMD_SETTINGS_GAME_DISABLE_FAIL, CMD_SETTINGS_GAME_INVALID_SETTING;
+          CMD_SETTINGS_GAME_DISABLE_SUCCESS, CMD_SETTINGS_GAME_DISABLE_FAIL, CMD_SETTINGS_GAME_INVALID_SETTING,
+          CMD_MODULES_DEPENDENCY_NOT_FULFILLED;
   public List<String> CMD_HELP, CMD_WRONG_USAGE, CMD_INFO_HEADER, CMD_INFO_PER_GAME, CMD_INFO_FOOTER;
 
   public String BUTTON_EXIT, BUTTON_TO_MAIN_MENU, BUTTON_TO_GAME_MENU, BUTTON_TOKENS, BUTTON_FORWARD, BUTTON_BACK,
@@ -61,7 +62,7 @@ public class GameBoxLanguage extends Language {
   public List<String> UNKNOWN_SKULL_LORE;
   public List<String> MODULE_INSTALLED_BUTTON_LORE, MODULE_BUTTON_LORE, MODULE_VERSION_BUTTON_LORE,
           MODULE_VERSION_INSTALLED_BUTTON_LORE, MODULE_VERSION_UPDATE_BUTTON_LORE, MODULE_VERSION_OLDER_BUTTON_LORE,
-          MODULE_PRIVATE_BUTTON_LORE;
+          MODULE_PRIVATE_BUTTON_LORE, MODULE_UPDATE_IS_MAJOR;
   public String MODULE_INSTALLED_BUTTON_NAME, MODULE_BUTTON_NAME, MODULE_VERSION_BUTTON_NAME,
           MODULE_VERSION_INSTALLED_BUTTON_NAME, MODULE_VERSION_UPDATE_BUTTON_NAME, MODULE_VERSION_OLDER_BUTTON_NAME,
           MODULE_VERSION_UNKNOWN, MODULE_PRIVATE_BUTTON_NAME, MODULES_AUTO_UPDATING_INFO, MODULE_AUTO_UPDATE,
@@ -112,6 +113,7 @@ public class GameBoxLanguage extends Language {
     this.MODULE_AUTO_UPDATE = getString("modules.autoUpdating.updatingModule");
     this.MODULE_AUTO_UPDATE_NOT_IN_CLOUD = getString("modules.autoUpdating.notInCloud");
     this.MODULE_AUTO_UPDATE_FOOTER = getString("modules.autoUpdating.footer");
+    this.MODULE_UPDATE_IS_MAJOR = getStringList("modules.autoUpdating.updateIsMajor");
   }
 
   private void loadHighNumberNames() {
@@ -237,6 +239,7 @@ public class GameBoxLanguage extends Language {
     this.CMD_MODULES_LIST_ENTRY = getString("commandMessages.modules.list.entry");
     this.CMD_MODULES_LIST_FOOTER = getString("commandMessages.modules.list.footer");
     this.CMD_MODULES_INSTALL_SUCCESS = getString("commandMessages.modules.moduleInstalled");
+    this.CMD_MODULES_DEPENDENCY_NOT_FULFILLED =  getString("commandMessages.modules.dependencyNotFulfilled");
     this.CMD_MODULES_REMOVE_SUCCESS = getString("commandMessages.modules.moduleRemoved");
     this.CMD_CANNOT_CONNECT_TO_MODULES_CLOUD = getString("commandMessages.cannotConnectToModulesCloud");
     this.CMD_CLOUD_MODULE_NOT_FOUND = getString("commandMessages.modules.notFoundInCloud");

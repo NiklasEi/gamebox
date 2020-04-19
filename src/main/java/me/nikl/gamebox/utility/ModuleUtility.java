@@ -80,8 +80,8 @@ public class ModuleUtility {
 
     public static DependencyReport checkDependencies(ModulesManager modulesManager, VersionedCloudModule module) {
         Map<String, VersionedModule> versionedModules = new HashMap<>();
-        versionedModules.put(module.getId(), getVersionedModuleFromCloudModule(module));
         modulesManager.getLoadedVersionedModules().forEach(versionedModule -> versionedModules.put(versionedModule.getId(), versionedModule));
+        versionedModules.put(module.getId(), getVersionedModuleFromCloudModule(module)); // this might overwrite a currently installed version of the same module
         return checkDependencies(versionedModules);
     }
 

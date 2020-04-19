@@ -215,7 +215,7 @@ public class ModulesManager implements Listener {
     }
 
     public void installModule(VersionedCloudModule module) {
-        if (!checkDependencies(module, true)) {
+        if (checkDependencies(module, true).isNotOk()) {
             return;
         }
         GameBox.debug("Install module '" + module.getName() +"@" + module.getVersion().toString() + "'");
@@ -238,20 +238,17 @@ public class ModulesManager implements Listener {
         });
     }
 
-    private boolean checkDependencies(VersionedCloudModule module, boolean log) {
+    public ModuleUtility.DependencyReport checkDependencies(VersionedCloudModule module, boolean log) {
         ModuleUtility.DependencyReport report = ModuleUtility.checkDependencies(this, module);
-        if (report.isNotOk()) {
-            if (log) {
-                logDependencyReport(report);
-            }
-            return false;
+        if (report.isNotOk() && log) {
+            logDependencyReport(report);
         }
-        return true;
+        return report;
     }
 
-    public void installModule(String moduleId, SemanticVersion version) throws GameBoxCloudException {
+    public VersionedCloudModule getVersionedCloudModule(String moduleId, SemanticVersion version) throws GameBoxCloudException {
         try {
-            installModule(cloudService.getVersionedCloudModule(moduleId, version));
+            return cloudService.getVersionedCloudModule(moduleId, version);
         } catch (CloudModuleVersionNotFoundException e) {
             throw e;
         } catch (GameBoxCloudException e) {
@@ -379,9 +376,10 @@ public class ModulesManager implements Listener {
     }
 
     private void autoUpdateModules() {
-        List<String> autoUpdateEnabled = hasUpdateAvailable
+        List<GameBoxModule> autoUpdateEnabled = hasUpdateAvailable
                 .stream()
                 .filter(id -> modulesSettings.getModuleSettings(id).isAutoUpdate())
+                .map(id -> loadedModules.get(id))
                 .collect(Collectors.toList());
         if (autoUpdateEnabled.size() == 0) {
             return;
@@ -390,21 +388,25 @@ public class ModulesManager implements Listener {
         context.put("amount", String.valueOf(autoUpdateEnabled.size()));
         gameBox.lang.sendMessage(Bukkit.getConsoleSender(), gameBox.lang.MODULES_AUTO_UPDATING_INFO, context);
         int skippCount = 0;
-        for (String id : autoUpdateEnabled) {
-            GameBoxModule module = loadedModules.get(id);
+        for (GameBoxModule module : autoUpdateEnabled) {
             Map<String, String> moduleContext = new HashMap<>();
             moduleContext.put("name", module.getModuleData().getName());
-            moduleContext.put("id", id);
+            moduleContext.put("id", module.getIdentifier());
             moduleContext.put("installedVersion", module.getModuleData().getVersionData().getVersion().toString());
             try {
-                SemanticVersion latestVersion = cloudService.getModuleData(id).getLatestVersion();
+                SemanticVersion latestVersion = cloudService.getModuleData(module.getIdentifier()).getLatestVersion();
                 moduleContext.put("availableVersion", latestVersion.toString());
+                if (!latestVersion.isCompatibleUpdateFor(module.getModuleData().getVersionData().getVersion())) {
+                    skippCount ++;
+                    List<String> messages = gameBox.lang.replaceContext(gameBox.lang.MODULE_UPDATE_IS_MAJOR, moduleContext);
+                    messages.forEach(msg -> Bukkit.getConsoleSender().sendMessage(msg));
+                    continue;
+                }
                 gameBox.lang.sendMessage(Bukkit.getConsoleSender(), gameBox.lang.MODULE_AUTO_UPDATE, moduleContext);
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), String.format("gba m u %s %s", id, latestVersion.toString()));
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), String.format("gba m u %s %s", module.getIdentifier(), latestVersion.toString()));
             } catch (GameBoxCloudException e) {
                 skippCount ++;
                 gameBox.lang.sendMessage(Bukkit.getConsoleSender(), gameBox.lang.MODULE_AUTO_UPDATE_NOT_IN_CLOUD, moduleContext);
-                continue;
             }
         }
         context.put("amount", String.valueOf(autoUpdateEnabled.size() - skippCount));

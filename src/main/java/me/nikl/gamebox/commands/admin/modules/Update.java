@@ -14,8 +14,11 @@ import me.nikl.gamebox.exceptions.module.GameBoxCloudException;
 import me.nikl.gamebox.module.GameBoxModule;
 import me.nikl.gamebox.module.ModulesManager;
 import me.nikl.gamebox.module.data.CloudModuleData;
+import me.nikl.gamebox.module.data.VersionedCloudModule;
+import me.nikl.gamebox.utility.ModuleUtility;
 import me.nikl.gamebox.utility.Permission;
 import me.nikl.gamebox.utility.versioning.SemanticVersion;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -73,11 +76,20 @@ public class Update extends GameBoxBaseCommand {
                                 .replaceAll("%id%", moduleID));
                         return;
                     }
+                    VersionedCloudModule versionToInstall = modulesManager.getVersionedCloudModule(moduleID, semVersion);
+                    ModuleUtility.DependencyReport report = modulesManager.checkDependencies(versionToInstall, false);
+                    if (report.isNotOk()) {
+                        sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_MODULES_DEPENDENCY_NOT_FULFILLED
+                                .replaceAll("%version%", semVersion.toString())
+                                .replaceAll("%name%", cloudModuleData.getName()));
+                        report.getLog().forEach(s -> sender.sendMessage(gameBox.lang.PREFIX + s));
+                        return;
+                    }
                     modulesManager.removeModule(installedInstance.getModuleData());
                     sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_MODULES_REMOVE_SUCCESS
                             .replaceAll("%name%", installedInstance.getModuleData().getName())
                             .replaceAll("%version%", installedInstance.getModuleData().getVersionData().getVersion().toString()));
-                    modulesManager.installModule(moduleID, semVersion);
+                    modulesManager.installModule(versionToInstall);
                     sender.sendMessage(gameBox.lang.PREFIX + gameBox.lang.CMD_MODULES_INSTALL_SUCCESS
                             .replaceAll("%name%", cloudModuleData.getName())
                             .replaceAll("%version%", semVersion.toString()));
