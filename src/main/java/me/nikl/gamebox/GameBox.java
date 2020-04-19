@@ -14,7 +14,9 @@ import me.nikl.gamebox.inventory.GuiManager;
 import me.nikl.gamebox.inventory.InventoryTitleMessenger;
 import me.nikl.gamebox.listeners.EnterGameBoxListener;
 import me.nikl.gamebox.listeners.LeftGameBoxListener;
+import me.nikl.gamebox.module.GameBoxModule;
 import me.nikl.gamebox.module.ModulesManager;
+import me.nikl.gamebox.module.local.VersionedModule;
 import me.nikl.gamebox.utility.ConfigManager;
 import me.nikl.gamebox.utility.FileUtility;
 import me.nikl.nmsutilities.NmsFactory;
@@ -97,6 +99,17 @@ public class GameBox extends JavaPlugin {
       return valueMap;
     }));
 
+    // Drill down pie with modules and further breakdown of their installed version
+    metrics.addCustomChart(new Metrics.DrilldownPie("installed_modules_pie", () -> {
+      Map<String, Map<String, Integer>> map = new HashMap<>();
+      for (VersionedModule module : getModulesManager().getLoadedVersionedModules()) {
+        Map<String, Integer> entry = new HashMap<>();
+        entry.put(module.getVersionData().getVersion().toString(), 1);
+        map.put(module.getId(), entry);
+      }
+      return map;
+    }));
+
     // Drill down pie with number of games and further breakdown of proportions of the games
     metrics.addCustomChart(new Metrics.DrilldownPie("games_drill_down", () -> {
       Map<String, Map<String, Integer>> map = new HashMap<>();
@@ -130,7 +143,6 @@ public class GameBox extends JavaPlugin {
       if (GameBoxSettings.useMysql) {
         return "MySQL";
       }
-
       return "File (yml)";
     }));
 
@@ -197,6 +209,7 @@ public class GameBox extends JavaPlugin {
         gameRegistry.reload();
         if (modulesManager != null) {
           modulesManager.shutDown();
+          HandlerList.unregisterAll(modulesManager);
         }
         modulesManager = new ModulesManager(instance);
         if (sender != null && lang != null) {
@@ -426,5 +439,6 @@ public class GameBox extends JavaPlugin {
   public void hookAfterConnectingToCloud() {
     getPluginManager().getGuiManager().getModulesGuiManager().loadGui();
     getModulesManager().collectUpdatesForInstalledModules();
+    getModulesManager().updateModulesAndPrintInfo();
   }
 }
