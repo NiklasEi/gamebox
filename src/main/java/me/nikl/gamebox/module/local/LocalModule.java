@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 
 /**
  * @author Niklas Eicker
@@ -101,6 +102,7 @@ public class LocalModule extends VersionedModule {
             localModule.setModuleJar(jar);
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
         return localModule;
     }

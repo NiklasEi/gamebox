@@ -35,6 +35,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -102,8 +104,12 @@ public class CloudService {
                 gameBox.getLogger().info("   skipping download of '" + fileName + "'");
                 try {
                     LocalModule localModule = LocalModule.fromJar(outputFile);
+                    if (localModule == null) {
+                        gameBox.getModulesManager().softDeleteJarFile(outputFile);
+                        throw new InvalidModuleException("Failed to load local module from jar file");
+                    }
                     callback.onSuccess(localModule);
-                } catch (InvalidModuleException e) {
+                } catch (InvalidModuleException | IOException e) {
                     callback.onFailure(e, null);
                 }
                 return;
@@ -120,12 +126,18 @@ public class CloudService {
         downloadingModules.put(fileName, new Thread(() -> {
             try (BufferedInputStream in = new BufferedInputStream(fileUrl.openStream());
                  FileOutputStream fileOutputStream = new FileOutputStream(outputFile)) {
-                byte[] dataBuffer = new byte[1024];
+                byte[] dataBuffer = new byte[8 * 1024];
                 int bytesRead;
-                while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+                while ((bytesRead = in.read(dataBuffer)) != -1) {
                     fileOutputStream.write(dataBuffer, 0, bytesRead);
                 }
                 LocalModule localModule = LocalModule.fromJar(outputFile);
+                if (localModule == null) {
+                    if (outputFile.exists()) {
+                        Files.delete(outputFile.toPath());
+                    }
+                    throw new InvalidModuleException("Failed to load LocalModule from jar file");
+                }
                 callback.onSuccess(localModule);
             } catch (IOException | InvalidModuleException exception) {
                 callback.onFailure(exception, null);

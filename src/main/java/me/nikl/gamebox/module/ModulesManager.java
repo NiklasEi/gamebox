@@ -186,13 +186,24 @@ public class ModulesManager implements Listener {
         for (File jar : jars) {
             try {
                 LocalModule localModule = LocalModule.fromJar(jar);
+                if (localModule == null) {
+                    softDeleteJarFile(jar);
+                    throw new InvalidModuleException("Failed to load local module from jar file");
+                }
                 localModules.put(localModule.getId(), localModule);
-            } catch (InvalidModuleException e) {
+            } catch (InvalidModuleException | IOException e) {
                 gameBox.getLogger().severe("Error while loading module from the jar '" + jar.getName() + "'");
                 e.printStackTrace();
                 gameBox.getLogger().severe("Skipping this module...");
             }
         }
+    }
+
+    public void softDeleteJarFile(File jar) throws IOException {
+        File removed = new File(gameBox.getModulesManager().getModulesDir(), "removed");
+        removed.mkdir();
+        File target = new File(removed, jar.getName());
+        Files.move(jar.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
     }
 
     public void collectUpdatesForInstalledModules() {
@@ -289,10 +300,7 @@ public class ModulesManager implements Listener {
             try {
                 gameBoxModule.onDisable();
                 gameBox.getGameRegistry().unregisterGamesForModuleId(localModule.getId());
-                File removed = new File(gameBox.getModulesManager().getModulesDir(), "removed");
-                removed.mkdir();
-                File target = new File(removed, gameBoxModule.getModuleData().getModuleJar().getName());
-                Files.move(gameBoxModule.getModuleData().getModuleJar().toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                softDeleteJarFile(gameBoxModule.getModuleData().getModuleJar());
                 loadedModules.remove(localModule.getId());
                 new ModuleRemovedEvent(localModule);
             } catch (Throwable e) {
