@@ -1,5 +1,8 @@
 # Changelog
 
+- Print info messages when custom language files fail to load
+- Improve error handling when loading modules from jar files
+
 ## 3.0.1
 - Circumvent bug in Bukkit 1.14 (see: [TabooLib/TabooLib#41](https://github.com/TabooLib/TabooLib/issues/41))
 

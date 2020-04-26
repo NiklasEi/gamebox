@@ -4,12 +4,13 @@ import me.nikl.gamebox.utility.ConfigManager;
 import me.nikl.gamebox.utility.FileUtility;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public abstract class Language {
   protected File languageFile;
   protected FileConfiguration defaultLanguage;
   protected FileConfiguration language;
+  private boolean issueLoadingCustomLanguageFile = false;
 
   public Language(GameBox plugin, String gameId, File jarFile) {
     this.plugin = plugin;
@@ -110,11 +112,15 @@ public abstract class Language {
     }
     // File exists
     try {
-      language = YamlConfiguration
-              .loadConfiguration(new InputStreamReader(new FileInputStream(languageFile)
+      language = new YamlConfiguration();
+      language.load(new InputStreamReader(new FileInputStream(languageFile)
                       , StandardCharsets.UTF_8));
-    } catch (FileNotFoundException e) {
+    } catch (InvalidConfigurationException | IOException e) {
+      plugin.getLogger().warning("Your language file '" + fileName + "' cannot be loaded.");
+      plugin.getLogger().warning("Most probably there are syntax issues");
+      plugin.getLogger().warning("Please check the error messages below:");
       e.printStackTrace();
+      issueLoadingCustomLanguageFile = true;
       language = defaultLanguage;
     }
   }
@@ -256,5 +262,13 @@ public abstract class Language {
       }
     }
     return copy;
+  }
+
+  public String getGameId() {
+    return this.gameId;
+  }
+
+  public boolean hadIssueLoadingCustomLanguageFile() {
+    return issueLoadingCustomLanguageFile;
   }
 }

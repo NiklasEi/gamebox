@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import java.util.Set;
 public class ConfigManager {
   private static final Map<String, FileConfiguration> gameFileConfigurations = new HashMap<>();
   private static final Map<String, Language> gameLanguages = new HashMap<>();
+  private static final Set<String> failedToLoadCustomLanguageFiles = new HashSet<>();
   private static HashMap<String, HashMap<String, List<String>>> missingLanguageKeys;
 
   public static void registerGameConfiguration(GameBoxGame game, FileConfiguration configuration) {
@@ -41,18 +43,18 @@ public class ConfigManager {
     return getLanguage(module.getGameId());
   }
 
-  public static Language getLanguage(String moduleID) {
-    return gameLanguages.get(moduleID);
+  public static Language getLanguage(String moduleId) {
+    return gameLanguages.get(moduleId);
   }
 
   public static GameLanguage getGameLanguage(GameBoxGame module) {
     return getGameLanguage(module.getGameId());
   }
 
-  public static GameLanguage getGameLanguage(String moduleID) {
-    Language language = gameLanguages.get(moduleID);
+  public static GameLanguage getGameLanguage(String moduleId) {
+    Language language = gameLanguages.get(moduleId);
     if (!(language instanceof GameLanguage))
-      throw new IllegalArgumentException("Requested game language for '" + moduleID + "' cannot be found");
+      throw new IllegalArgumentException("Requested game language for '" + moduleId + "' cannot be found");
     return (GameLanguage) language;
   }
 
@@ -60,10 +62,10 @@ public class ConfigManager {
     return getConfig(module.getGameId());
   }
 
-  public static FileConfiguration getConfig(String moduleID) {
-    if (!gameFileConfigurations.containsKey(moduleID))
-      throw new IllegalArgumentException("Configuration for '" + moduleID + "' cannot be found");
-    return gameFileConfigurations.get(moduleID);
+  public static FileConfiguration getConfig(String moduleId) {
+    if (!gameFileConfigurations.containsKey(moduleId))
+      throw new IllegalArgumentException("Configuration for '" + moduleId + "' cannot be found");
+    return gameFileConfigurations.get(moduleId);
   }
 
   public static void clear() {
@@ -75,16 +77,16 @@ public class ConfigManager {
   public static void checkLanguageFiles() {
     missingLanguageKeys = new HashMap<>();
     HashMap<String, List<String>> currentKeys;
-    for (String moduleID : gameLanguages.keySet()) {
-      currentKeys = collectMissingKeys(moduleID);
+    for (String moduleId : gameLanguages.keySet()) {
+      currentKeys = collectMissingKeys(moduleId);
       if (!currentKeys.isEmpty()) {
-        missingLanguageKeys.put(moduleID, currentKeys);
+        missingLanguageKeys.put(moduleId, currentKeys);
       }
     }
   }
 
-  private static HashMap<String, List<String>> collectMissingKeys(String moduleID) {
-    Language language = gameLanguages.get(moduleID);
+  private static HashMap<String, List<String>> collectMissingKeys(String moduleId) {
+    Language language = gameLanguages.get(moduleId);
     HashMap<String, List<String>> toReturn = new HashMap<>();
     if (language == null) return toReturn;
     List<String> missingStringKeys = language.findMissingStringMessages();
@@ -98,6 +100,25 @@ public class ConfigManager {
     return toReturn;
   }
 
+  public static void printIssuesWhileLoadingLanguageFiles(GameBox gameBox) {
+    failedToLoadCustomLanguageFiles.clear();
+    gameLanguages.forEach((key, value) -> {
+      if (value.hadIssueLoadingCustomLanguageFile()) {
+        failedToLoadCustomLanguageFiles.add(key);
+      }
+    });
+    if (failedToLoadCustomLanguageFiles.size() < 1) {
+      return;
+    }
+    gameBox.info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
+    for (String moduleId : failedToLoadCustomLanguageFiles) {
+      gameBox.info(String.format("[%s] failed to load your custom language file", moduleId));
+    }
+    gameBox.info(" ");
+    gameBox.info(ChatColor.RED + "Please check the logs above for an error message");
+    gameBox.info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
+  }
+
   public static void printMissingKeys(GameBox gameBox) {
     if (missingLanguageKeys == null) checkLanguageFiles();
     if (missingLanguageKeys.isEmpty()) return;
@@ -105,10 +126,10 @@ public class ConfigManager {
     gameBox.info(ChatColor.BOLD + "For the following keys GameBox is using default messages:");
     gameBox.info("");
     Iterator<String> iterator = missingLanguageKeys.keySet().iterator();
-    String moduleID;
+    String moduleId;
     while (iterator.hasNext()) {
-      moduleID = iterator.next();
-      printMissingGameKeys(gameBox, moduleID);
+      moduleId = iterator.next();
+      printMissingGameKeys(gameBox, moduleId);
       if (iterator.hasNext()) {
         gameBox.info(" ");
         gameBox.info(" ");
@@ -118,11 +139,11 @@ public class ConfigManager {
     }
   }
 
-  public static void printMissingGameKeys(GameBox gameBox, String moduleID) {
+  public static void printMissingGameKeys(GameBox gameBox, String moduleId) {
     if (missingLanguageKeys == null) checkLanguageFiles();
-    HashMap<String, List<String>> currentKeys = missingLanguageKeys.get(moduleID);
+    HashMap<String, List<String>> currentKeys = missingLanguageKeys.get(moduleId);
     List<String> keys;
-    gameBox.info(" Missing from " + ChatColor.BLUE + ConfigManager.getLanguage(moduleID).DEFAULT_PLAIN_NAME
+    gameBox.info(" Missing from " + ChatColor.BLUE + ConfigManager.getLanguage(moduleId).DEFAULT_PLAIN_NAME
             + ChatColor.RESET + " language file:");
     if (currentKeys.containsKey("string")) {
       gameBox.info(" ");
@@ -152,12 +173,12 @@ public class ConfigManager {
     gameBox.info("");
     gameBox.info("      Name                module ID");
     Iterator<String> iterator = missingLanguageKeys.keySet().iterator();
-    String moduleID;
+    String moduleId;
     String twentySpaces = "                    ";
     while (iterator.hasNext()) {
-      moduleID = iterator.next();
-      String defaultName = ConfigManager.getLanguage(moduleID).DEFAULT_PLAIN_NAME;
-      gameBox.info(ChatColor.RED + "   -> " + ChatColor.RESET + defaultName + twentySpaces.substring(defaultName.length()) + "(" + moduleID + ")");
+      moduleId = iterator.next();
+      String defaultName = ConfigManager.getLanguage(moduleId).DEFAULT_PLAIN_NAME;
+      gameBox.info(ChatColor.RED + "   -> " + ChatColor.RESET + defaultName + twentySpaces.substring(defaultName.length()) + "(" + moduleId + ")");
     }
     gameBox.info("");
     gameBox.info(ChatColor.BOLD + " GameBox uses default messages for missing messages.");

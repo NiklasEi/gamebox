@@ -154,6 +154,7 @@ public class GameBox extends JavaPlugin {
   }
 
   private void runLateChecks() {
+    ConfigManager.printIssuesWhileLoadingLanguageFiles(this);
     if (GameBoxSettings.runLanguageChecksAutomatically)
       ConfigManager.printIncompleteLangFilesInfo(this);
     if (PluginManager.gamesRegistered == 0) {
