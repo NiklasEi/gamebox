@@ -14,7 +14,6 @@ import me.nikl.gamebox.inventory.GuiManager;
 import me.nikl.gamebox.inventory.InventoryTitleMessenger;
 import me.nikl.gamebox.listeners.EnterGameBoxListener;
 import me.nikl.gamebox.listeners.LeftGameBoxListener;
-import me.nikl.gamebox.module.GameBoxModule;
 import me.nikl.gamebox.module.ModulesManager;
 import me.nikl.gamebox.module.cloud.CloudService;
 import me.nikl.gamebox.module.data.CloudModuleData;
@@ -33,7 +32,6 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -327,7 +325,6 @@ public class GameBox extends JavaPlugin {
   }
 
   @Override
-  @NotNull
   public FileConfiguration getConfig() {
     return config;
   }

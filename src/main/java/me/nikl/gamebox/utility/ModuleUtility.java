@@ -27,8 +27,6 @@ import me.nikl.gamebox.module.local.LocalModule;
 import me.nikl.gamebox.module.local.LocalModuleData;
 import me.nikl.gamebox.module.local.VersionedModule;
 import me.nikl.gamebox.utility.versioning.VersionRangeUtility;
-import org.bukkit.Bukkit;
-import org.jetbrains.annotations.NotNull;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -85,7 +83,6 @@ public class ModuleUtility {
         return checkDependencies(versionedModules);
     }
 
-    @NotNull
     public static DependencyReport checkDependencies(Map<String, VersionedModule> versionedModules) {
         Map<String, VersionedModule> previous = new HashMap<>(versionedModules);
         VersionedModule gameBoxModule = GameBoxSettings.getGameBoxData();

@@ -93,6 +93,10 @@ public abstract class DataBase {
 
   public abstract void resetHighScores();
 
+  public abstract void resetHighScores(UUID uuid);
+
+  public abstract void resetHighScores(UUID uuid, String gameId, String gameTypeId, SaveType saveType);
+
   public abstract void resetHighScores(String gameID, String gameTypeID, SaveType saveType);
 
   public abstract void getTopNPlayerScores(int n, String gameID, String gameTypeID, SaveType saveType, Callback<List<PlayerScore>> callback);

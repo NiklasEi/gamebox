@@ -40,6 +40,8 @@ public class MysqlDB extends DataBase {
   private static final String COLLECT_TOP_SCORES = "SELECT e1.* FROM (SELECT DISTINCT `%column%` FROM `" + HIGH_SCORES_TABLE + "` ORDER BY `%column%` %order% LIMIT %n%) s1 JOIN `" + HIGH_SCORES_TABLE + "` e1 ON e1.`%column%` = s1.`%column%` ORDER BY e1.`%column%` %order%";
   private static final String COLLECT_COLUMNS_STARTING_WITH = "SELECT column_name FROM INFORMATION_SCHEMA.columns WHERE table_schema = ? AND table_name = `" + HIGH_SCORES_TABLE + "` AND LEFT(column_name, %length%) =?";
   private static final String SELECT_HIGH_SCORE = "SELECT `%column%` FROM `" + HIGH_SCORES_TABLE + "` WHERE " + PLAYER_UUID + "=?";
+  private static final String DELETE_PLAYER_HIGH_SCORES = "DELETE FROM `" + HIGH_SCORES_TABLE + "` WHERE " + PLAYER_UUID + "=?";
+  private static final String DELETE_PLAYER_HIGH_SCORE = "DELETE `%column%` FROM `" + HIGH_SCORES_TABLE + "` WHERE " + PLAYER_UUID + "=?";
 
   private String host;
   private String database;
@@ -473,6 +475,33 @@ public class MysqlDB extends DataBase {
     } catch (SQLException e) {
       e.printStackTrace();
     }
+  }
+
+  @Override
+  public void resetHighScores(UUID uuid) {
+    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+      try (Connection connection = hikari.getConnection();
+           PreparedStatement statement = connection.prepareStatement(DELETE_PLAYER_HIGH_SCORES)) {
+        statement.setString(1, uuid.toString());
+        statement.execute();
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    });
+  }
+
+  @Override
+  public void resetHighScores(UUID uuid, String gameId, String gameTypeId, SaveType saveType) {
+    String columnName = buildColumnName(gameId, gameTypeId, saveType);
+    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+      try (Connection connection = hikari.getConnection();
+           PreparedStatement statement = connection.prepareStatement(DELETE_PLAYER_HIGH_SCORE.replace("%column%", columnName))) {
+        statement.setString(1, uuid.toString());
+        statement.execute();
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    });
   }
 
   @Override

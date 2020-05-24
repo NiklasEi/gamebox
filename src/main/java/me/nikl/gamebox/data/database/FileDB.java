@@ -218,6 +218,21 @@ public class FileDB extends DataBase {
   }
 
   @Override
+  public void resetHighScores(UUID uuid) {
+    if (!data.isConfigurationSection(uuid + "." + DataBase.GAMES_STATISTICS_NODE)) return;
+    data.set(uuid + "." + DataBase.GAMES_STATISTICS_NODE, null);
+  }
+
+  @Override
+  public void resetHighScores(UUID uuid, String gameId, String gameTypeId, SaveType saveType) {
+    String topListIdentifier = buildTopListIdentifier(gameId, gameTypeId, saveType);
+    if (!data.isSet(uuid + "." + DataBase.GAMES_STATISTICS_NODE + "." + topListIdentifier)) {
+      return;
+    }
+    data.set(uuid + "." + DataBase.GAMES_STATISTICS_NODE + "." + topListIdentifier, null);
+  }
+
+  @Override
   public void resetHighScores(String gameID, String gameTypeID, SaveType saveType) {
     for (String uuid : data.getKeys(false)) {
       if (!data.isConfigurationSection(uuid + "." + DataBase.GAMES_STATISTICS_NODE)) continue;

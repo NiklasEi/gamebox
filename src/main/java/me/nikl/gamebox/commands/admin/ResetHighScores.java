@@ -10,6 +10,8 @@ import me.nikl.gamebox.commands.GameBoxBaseCommand;
 import me.nikl.gamebox.data.database.DataBase;
 import me.nikl.gamebox.data.toplist.SaveType;
 import me.nikl.gamebox.utility.Permission;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -38,7 +40,7 @@ public class ResetHighScores extends GameBoxBaseCommand {
     return false;
   }
 
-  @Subcommand("resetstats")
+  @Subcommand("resetscores")
   @CommandCompletion("@allGameIds check_your_game_config @SaveTypes")
   public void resetHighScores(CommandSender sender, String gameID, String gameTypeID, @Single String saveTypeStr) {
     DataBase dataBase = gameBox.getDataBase();
@@ -52,7 +54,7 @@ public class ResetHighScores extends GameBoxBaseCommand {
     }
   }
 
-  @Subcommand("resetstats")
+  @Subcommand("resetscores")
   public void resetHighScores(CommandSender sender) {
     if (!hasAttemptedToResetHighScoresBefore) {
       hasAttemptedToResetHighScoresBefore = true;
@@ -69,6 +71,43 @@ public class ResetHighScores extends GameBoxBaseCommand {
       return;
     }
     gameBox.getDataBase().resetHighScores();
+    gameBox.reload(sender);
+  }
+
+  @Subcommand("resetscores")
+  @CommandCompletion("@players")
+  public void resetHighScores(CommandSender sender, @Single String playerName) {
+    OfflinePlayer player = Bukkit.getOfflinePlayer(playerName);
+    if (player == null || !player.hasPlayedBefore()) {
+      sender.sendMessage(gameBox.lang.PREFIX + " cannot find player '" + playerName + "'");
+      return;
+    }
+    gameBox.getDataBase().resetHighScores(player.getUniqueId());
+    sender.sendMessage(gameBox.lang.PREFIX + " deleted scores of player '" + playerName + "'");
+    sender.sendMessage(gameBox.lang.PREFIX + " If you also want to delete the players game saves, run '/gba removesaves " + playerName);
+    sender.sendMessage(gameBox.lang.PREFIX + " reloading GameBox...");
+    gameBox.reload(sender);
+  }
+
+  @Subcommand("resetscores")
+  @CommandCompletion("@players @allGameIds check_your_game_config @SaveTypes")
+  public void resetHighScores(CommandSender sender, String playerName, String gameId, String gameTypeID, @Single String saveTypeStr) {
+    OfflinePlayer player = Bukkit.getOfflinePlayer(playerName);
+    if (player == null || !player.hasPlayedBefore()) {
+      sender.sendMessage(gameBox.lang.PREFIX + " cannot find player '" + playerName + "'");
+      return;
+    }
+    SaveType saveType;
+    try {
+      saveType = SaveType.valueOf(saveTypeStr.toUpperCase());
+    } catch (IllegalArgumentException exception) {
+      sender.sendMessage("Valid saveTypes: " + Arrays.stream(SaveType.values()).map(Enum::toString).collect(Collectors.joining(", ")));
+      return;
+    }
+    gameBox.getDataBase().resetHighScores(player.getUniqueId(), gameId, gameTypeID, saveType);
+    sender.sendMessage(gameBox.lang.PREFIX + " deleted scores of player '" + playerName + "' in game '" + gameId + "'");
+    sender.sendMessage(gameBox.lang.PREFIX + " If you also want to delete the players game saves, run '/gba removesaves " + playerName);
+    sender.sendMessage(gameBox.lang.PREFIX + " reloading GameBox...");
     gameBox.reload(sender);
   }
 }

@@ -4,7 +4,6 @@ import me.nikl.gamebox.module.local.VersionedModule;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.jetbrains.annotations.NotNull;
 
 public class ModuleRemovedEvent extends Event {
     private static final HandlerList handlers = new HandlerList();
@@ -21,7 +20,6 @@ public class ModuleRemovedEvent extends Event {
         return handlers;
     }
 
-    @NotNull
     @Override
     public HandlerList getHandlers() {
         return handlers;
