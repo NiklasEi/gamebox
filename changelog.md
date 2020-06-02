@@ -1,5 +1,11 @@
 # Changelog
 
+
+## 3.1.0
+- Add `/gba removesaves` commands
+- Improve `/gba resetstats` commands
+- fix spanish language file
+- add new messages to spanish language file ([#84](https://github.com/NiklasEi/gamebox/pull/84))
 - Print info messages when custom language files fail to load
 - Improve error handling when loading modules from jar files
 
