@@ -2,10 +2,11 @@
 #   platzhater werden vor der jeweiligen nachricht aufgelistet
 
 
-
 prefix: "[&3GameBox&r]"
 name: "&3GameBox&r"
 
+# See: https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
+dateFormat: "EEE, d MMM yyyy HH:mm:ss"
 
 jsonPrefix:
   # colors for JSON have to be named! valid colors:
@@ -17,6 +18,7 @@ jsonPrefix:
   color: "dark_aqua"
   afterText: "]"
   afterColor: "white"
+
 
 
 # command messages
@@ -54,9 +56,32 @@ commandMessages:
   tookToken: ' &2%token% Token wurden von %player% genommen.'
   notEnoughToken: ' &4Fehler! %player% hat nur %token% Token.'
   setToken: ' &2%player% hat jetzt %token% Token.'
+  cannotConnectToModulesCloud: " &4Fehler beim Verbinden mit der GameBox cloud!"
   reload:
     fail: " &4Fehler beim Neustart von GameBox!"
     success: " &aGameBox und alle Spiele wurden neu geladen!"
+  settingsCommand:
+    gameDisableSuccess: " &a%gameID% wurde deaktiviert."
+    gameDisableFail: " &4Das Spiel ist im Moment nicht aktiv!"
+    gameEnableSuccess: " &aDu hast %gameID% aktiviert."
+    gameEnableFail: " &4Das Spiel ist nicht deaktiviert!"
+    gameInvalidSetting: " &4Ungültige Einstellung!"
+  modules:
+    invalidSemVersion: " &4Die Version muss semantisch sein! Siehe https://semver.org/"
+    versionNotFound: " &4Das Modul '%id%' @ version %version% wurde nicht gefunden :("
+    moduleInstalled: " &2%name% version %version% wurde installiert. Viel Spass :)"
+    moduleRemoved: " &2%name% version %version% wurde entfernt."
+    moduleAlreadyInstalled: " &4%name% is bereits installiert!&r Bitte verwende &2/gba module update %id% &4zum updaten"
+    moduleNotInstalled: " &4Es ist kein Modul mit der id '%id%' installiert!"
+    noUpdateAvailable: " &4Es konnte kein Update für %name% gefunden werden :("
+    dependencyNotFulfilled: " &4Es fehlen Abhängigkeiten für %name% @ %version%:"
+    installingLatestVersion: " &2Neuste Version von %name% wird installiert (%version%)"
+    notFoundInCloud: " &4Es konnte kein Modul mit der ID '%id%' in der GameBox cloud gefunden werden :("
+    list:
+      header: " &2Es sind &1%amount% &2Module in der cloud&r"
+      header2: "   &2&n[moduleId] | Name | (neuste Version)&r"
+      entry: "   &2[%moduleId%] | &6%moduleName% | (%latestVersion%)"
+      footer: "&r&2 Installiere Module mit &6/gba module install <moduleId>"
 
 
 mainButtons:
@@ -92,6 +117,13 @@ mainButtons:
     lore:
       - ""
       - "&1Klicke um die Einladung zu akzeptieren"
+  modulesGui:
+    displayName: "&eGameBox Module"
+    lore:
+      - ""
+      - "&bHier geht's zum Admin Menü"
+      - "&b ↳ installieren/updaten/entfernen von Modulen"
+
 
 inventoryTitles:
   # use %player% for the player name
@@ -104,6 +136,107 @@ inventoryTitles:
   otherPlayerNotEnoughMoney: '&4Anderer Spieler: nicht genug Geld'
   otherPlayerInBlockedWorld: '&4Anderer Spieler: geblockte Welt'
   alreadyInAnotherGame: '     &4Bereits in einem anderen Spiel'
+  modulesPage: '        &2Module | Seite %page%&r'
+  moduleDetailsPage: '&2%moduleName%&r - Seite %page%'
+  moduleDetailsPageLoading: '&2%moduleName%&r - lade Daten...'
+  moduleGuiTitleMessages:
+    moduleNotInstalled: "&4Dieses Modul ist nicht installiert"
+    moduleRemoved: "&2Befehl zum Entfernen wurde abgesetzt..."
+    moduleInstalled: "&2Befehl zum Installieren wurde abgesetzt..."
+    moduleUpdated: "&2Befehl zum Updaten wurde abgesetzt..."
+
+
+moduleGui:
+  # this can happen for local/private modules which are not on the cloud
+  unknownModuleVersion: "Unbekannt"
+  moduleButtons:
+    # will glow
+    installed:
+      displayName: "&2%moduleName%"
+      lore:
+        - ""
+        - "Installierte Version: %moduleInstalledVersion%"
+        - ""
+        - "%moduleDescription%"
+        - ""
+        - "Von: %moduleAuthors%"
+        - ""
+        - "Rechts-Klick um 'update' Befehl zu schicken"
+        - "Shift-Klick um 'entfernen' Befehl zu schicken"
+    notInstalled:
+      displayName: "&e%moduleName%"
+      lore:
+        - ""
+        - "%moduleDescription%"
+        - ""
+        - "Von: %moduleAuthors%"
+        - ""
+        - "Rechts-Klick um 'installieren' Befehl zu schicken"
+    private:
+      displayName: "&2%moduleName%"
+      lore:
+        - ""
+        - "%moduleDescription%"
+        - ""
+        - "Von: %moduleAuthors%"
+        - ""
+        - "Shift-Klick um 'entfernen' Befehl zu schicken"
+        - ""
+        - "Dieses Modul ist nicht in der GameBox cloud"
+        - "   und kann nicht automatisch wieder installiert"
+        - "   werden wenn es entfernt wurde"
+  # special behaviour here for the %releaseNotes% placeholder: the line
+  #    in which the placeholder is used will be used for each release note!
+  moduleVersionButtons:
+    # will glow
+    installedVersion:
+      displayName: "&2%version%"
+      lore:
+        - ""
+        - "Das ist die installierte Version"
+        - ""
+        - "Veröffentlicht am: %versionReleaseDate%"
+        - ""
+        - "Release notes:"
+        - "  %releaseNotes%"
+        - ""
+        - "Shift-Klick um 'entfernen' Befehl zu schicken"
+    updateOfInstalledVersion:
+      displayName: "&2%version%"
+      lore:
+        - ""
+        - "Update der installierten Version :)"
+        - ""
+        - "Veröffentlicht am: %versionReleaseDate%"
+        - ""
+        - "Release notes:"
+        - "  %releaseNotes%"
+        - ""
+        - "Klick um 'update' Befehl zu schicken"
+    olderVersionThanInstalled:
+      displayName: "&4%version%"
+      lore:
+        - ""
+        - "Ältere Version"
+        - ""
+        - "Veröffentlicht am: %versionReleaseDate%"
+        - ""
+        - "Release notes:"
+        - "  %releaseNotes%"
+        - ""
+        - "Bevor du diese Version installieren kannst,"
+        - "  enferne die momentan installierte Version"
+    moduleNotInstalled:
+      displayName: "&e%version%"
+      lore:
+        - ""
+        - "Veröffentlicht am: %versionReleaseDate%"
+        - ""
+        - "Release notes:"
+        - "  %releaseNotes%"
+        - ""
+        - "Klick um 'installieren' Befehl zu schicken"
+
 
 topList:
   playerSkullName: "&1%player%"
@@ -130,6 +263,18 @@ shop:
   # use %page% for the page number
   pageShop: '             &9Seite Nr. &l%page%'
 
+modules:
+  autoUpdating:
+    info: " &2Es wird versucht %amount% Module zu aktualisieren"
+    updatingModule: " ↳ %name% - %installedVersion% -> %availableVersion%"
+    notInCloud: " ↳ %name% - Nicht in der cloud gefunden - wird übersprungen"
+    footer: " &2P.s.: Halte GameBox aktuell :)"
+    updateIsMajor:
+      - " &4 %name% Version %availableVersion% ist ein großes Update."
+      - " &4   Bitte informiere dich über Änderungen und update dann"
+      - " &4   manuell über Befehle oder das Administrator Menü."
+      - " &4   Es könnte nicht kompatible Änderungen geben."
+
 others:
   wonToken: " Du hast %tokens% Token in &3%game%&r gewonnen"
   playerInput:
@@ -147,6 +292,10 @@ others:
     otherInDisabledWorld: " &5%player%&c ist in einer verbotenen Welt."
   invitation:
     - " &3%player%&r hat dich zu &3%game% eingeladen"
+  invitationTitleMessage:
+    title: "&1Einladung zu &3%game%"
+    subTitle: "von &3%player%"
+  invitationActionbarMessage: "&3%player%&r hat dich zu einer Runde &3%game% eingeladen"
 
   # this message is sent in the JSON format and has to be customised differently
 

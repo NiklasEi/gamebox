@@ -240,6 +240,17 @@ moduleGui:
         - ""
         - "Click to run install command"
 
+
+topList:
+  playerSkullName: "&1%player%"
+  unknownSkullName: "&1Unknown Player"
+  # Will be added below the rank information for unknown players
+  unknownSkullLore:
+    - ""
+    - "This player has not joined"
+    - "   the server before."
+
+
 shop:
   freeItem: "&9Free"
   moneyItem: "&9Money: &4%money%"
@@ -309,14 +320,6 @@ others:
     afterText: ""
     afterColor: "blue"
 
-topList:
-  playerSkullName: "&1%player%"
-  unknownSkullName: "&1Unknown Player"
-  # Will be added below the rank information for unknown players
-  unknownSkullLore:
-    - ""
-    - "This player has not joined"
-    - "   the server before."
 
 # Names of high numbers used for visualization
 # Let the numbers be 'n' then the names are used for 10^(3*n)
