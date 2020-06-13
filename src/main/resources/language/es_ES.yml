@@ -2,8 +2,8 @@
 #   placeholders will be listed in front of the messages
 
 
-prefix: "[&3Caja de juegos&r]"
-name: "&3Caja de juegos&r"
+prefix: "[&3GameBox&r]"
+name: "&3GameBox&r"
 
 
 jsonPrefix:
@@ -12,7 +12,7 @@ jsonPrefix:
   #   green, aqua, red, light_purple, yellow, dark_gray, blue,
   preText: "["
   preColor: "white"
-  text: "CajaDeJuegos"
+  text: "GameBox"
   color: "dark_aqua"
   afterText: "]"
   afterColor: "white"
@@ -49,9 +49,37 @@ commandMessages:
     footer:
       - ' &6+ - + - + - + - + - + - + - + - + - + - + - +'
   tokenInfo: ' &2%player% tiene %token% tokens'
+  ownTokenInfo: ' &2Tienes %token% tokens.'
+  gaveToken: ' &2Se dieron %token% tokens a %player%.'
+  tookToken: ' &2Se quitaron %token% tokens a %player%.'
+  notEnoughToken: ' &4¡Fallido! %player% solo tiene %token% tokens.'
+  setToken: ' &2%player% ahora tiene %token% tokens.'
+  cannotConnectToModulesCloud: " &4¡No se puedo conectar a la nube de módulos!"
   reload:
     fail: " &4 No se pudieron recargar las configuraciones de todos los juegos!"
     success: " &a GameBox y todos sus juegos han sido recargados!"
+  settingsCommand:
+    gameDisableSuccess: " &aHas desactivado %gameID%."
+    gameDisableFail: " &4¡Este juego no está activado ahora mismo!"
+    gameEnableSuccess: " &aHas activado %gameID%."
+    gameEnableFail: " &4¡Este juego no está desactivado ahora mismo!"
+    gameInvalidSetting: " &4¡Configuración de juego inválida!"
+  modules:
+    invalidSemVersion: " &4¡La versión debe ser semántica! Consulta https://semver.org/lang/es/"
+    versionNotFound: " &4No se encontró el módulo '%id%' @ versión %version% :("
+    moduleInstalled: " &2%name% versión %version% fue instalado. Diviértete :)"
+    moduleRemoved: " &2%name% versión %version% ha sido eliminado."
+    moduleAlreadyInstalled: " &4¡%name% ya está instalado!&r Usa &2/gba module update %id% &rpara actualizarlo"
+    moduleNotInstalled: " &4¡No hay un módulo con id '%id%' instalado!"
+    noUpdateAvailable: " &4No se encontraron actualizaciones para %name% :("
+    dependencyNotFulfilled: " &4No se cumplen las siguientes dependencias para %name% versión %version%:"
+    installingLatestVersion: " &2Instalando última versión de %name% (%version%)"
+    notFoundInCloud: " &4No se encontró el módulo '%id%' en la nube de GameBox :("
+    list:
+      header: " &2Encontrados &1%amount% &2módulos en la nube&r"
+      header2: "   &2&n[idModulo] | Nombre | (última versión)&r"
+      entry: "   &2[%moduleId%] | &6%moduleName% | (%latestVersion%)"
+      footer: "&r&2 Instala cualquier módulo con &6/gba module install <idModulo>"
 
 
 mainButtons:
@@ -87,18 +115,126 @@ mainButtons:
     lore:
       - ""
       - "&1Clic para aceptar la invitación"
+  modulesGui:
+    displayName: "&eMódulos de GameBox"
+    lore:
+      - ""
+      - "&bClic para entrar en la interfaz de"
+      - "&badministración de módulos"
+      - "&b ↳ install/update/remove modules"
 
 
 inventoryTitles:
   # use %player% for the player name
-  mainGUI: ' Bienvenido a la &1Caja &rde &1Juegos&r %player%'
+  mainGUI: ' Bienvenido a &1Game&1Box&r %player%'
   # %game% will be replaced with the games prefix
   gameGUIs: '             %game%&r'
   noPermMessage: '          &4&lNo tienes permiso'
   notEnoughMoney: '        &4&lNo tienes suficiente dinero'
   notEnoughTokens: '        &4&lNo tienes suficientes tokens'
   otherPlayerNotEnoughMoney: '   &4El otro jugador no tiene suficiente dinero'
-  alreadyInAnotherGame: '     &4Ya está en otro juego'
+  otherPlayerInBlockedWorld: '&4El otro jugador está en un mundo bloqueado!'
+  alreadyInAnotherGame: '     &4Ya estás en otro juego'
+  modulesPage: '        &2Módulos, página %page%&r'
+  moduleDetailsPage: '&2%moduleName%&r - Página %page%'
+  moduleDetailsPageLoading: '&2%moduleName%&r - Cargando datos'
+  moduleGuiTitleMessages:
+    moduleNotInstalled: "&4Este módulo no está instalado"
+    moduleRemoved: "&2Ejecutando comando para eliminar módulo..."
+    moduleInstalled: "&2Ejecutando comando para instalar módulo..."
+    moduleUpdated: "&2Ejecutando comando para actualizar módulo..."
+
+
+
+  # this can happen for local/private modules which are not on the cloud
+  unknownModuleVersion: "Desconocida"
+  moduleButtons:
+    # will glow
+    installed:
+      displayName: "&2%moduleName%"
+      lore:
+        - ""
+        - "Versión instalada: %moduleInstalledVersion%"
+        - ""
+        - "%moduleDescription%"
+        - ""
+        - "Por: %moduleAuthors%"
+        - ""
+        - "Clic derecho para actualizar"
+        - "Shift-clic para eliminar"
+    notInstalled:
+      displayName: "&e%moduleName%"
+      lore:
+        - ""
+        - "%moduleDescription%"
+        - ""
+        - "Por: %moduleAuthors%"
+        - ""
+        - "Clic derecho para instalar"
+    private:
+      displayName: "&2%moduleName%"
+      lore:
+        - ""
+        - "%moduleDescription%"
+        - ""
+        - "Por: %moduleAuthors%"
+        - ""
+        - "Clic derecho para eliminar"
+        - ""
+        - "Este módulo no está en la nube de GameBox"
+        - "   y no se podrá instalar"
+        - "   automáticamente tras ser eliminado"
+  # special behaviour here for the %releaseNotes% placeholder: the line
+  #    in which the placeholder is used will be used for each release note!
+  moduleVersionButtons:
+    # will glow
+    installedVersion:
+      displayName: "&2%version%"
+      lore:
+        - ""
+        - "Esta es la versión instalada"
+        - ""
+        - "Lanzada: %versionReleaseDate%"
+        - ""
+        - "Notas de la versión:"
+        - "  %releaseNotes%"
+        - ""
+        - "Shift-clic para eliminar"
+    updateOfInstalledVersion:
+      displayName: "&2%version%"
+      lore:
+        - ""
+        - "Actualización de tu versión instalada :)"
+        - ""
+        - "Lanzada: %versionReleaseDate%"
+        - ""
+        - "Notas de la versión:"
+        - "  %releaseNotes%"
+        - ""
+        - "Clic para actualizar"
+    olderVersionThanInstalled:
+      displayName: "&4%version%"
+      lore:
+        - ""
+        - "Esta es una versión antigua"
+        - ""
+        - "Lanzada: %versionReleaseDate%"
+        - ""
+        - "Notas de la versión:"
+        - "  %releaseNotes%"
+        - ""
+        - "Antes de instalar esta versión, elimina"
+        - "  la versión instalada actualmente"
+    moduleNotInstalled:
+      displayName: "&e%version%"
+      lore:
+        - ""
+        - "Lanzada: %versionReleaseDate%"
+        - ""
+        - "Notas de la versión:"
+        - "  %releaseNotes%"
+        - ""
+        - "Clic para instalar"
 
 
 shop:
@@ -108,18 +244,24 @@ shop:
   notEnoughMoney: '        &4&lNo tienes suficiente dinero'
   notEnoughTokens: '        &4&lNo tienes suficientes tokens'
   inventoryIsFull: '        &4&lInventario lleno'
-  requirementNotFulfilled: '       &4&lNo tienes todos los requisitos'
+  requirementNotFulfilled: '       &4&lNo cumples todos los requisitos'
   boughtSuccessful: '        &9&lComprado correctamente'
   shopIsClosed: '        &4&lLa tienda está cerrada'
   # use %player% for the player name
   mainShop: '   &9Felices compras, &1%player%'
   # use %page% for the page number
-  pageShop: '             &9Página num. &l%page%'
+  pageShop: '             &9Página núm. &l%page%'
 
-
-topList:
-  playerSkullName: "&1%player%"
-
+modules:
+  autoUpdating:
+    info: " &2Intentando actualizar %amount% módulos"
+    updatingModule: " ↳ %name% - %installedVersion% -> %availableVersion%"
+    notInCloud: " ↳ %name% - No encontrado en la nube de GameBox - omitiendo"
+    footer: " &2P.D.: Asegúrate de que GameBox esté actualizado :)"
+    updateIsMajor:
+      - " &4 %name% versión %availableVersion% es una actualización mayor."
+      - " &4   Por favor infórmate y actualiza a via comando o la interfaz de módulos."
+      - " &4   Podría haver cambios no compatibles con versiones anteriores."
 
 others:
   wonToken: " Has ganado %tokens% Token (s) en &3%game%"
@@ -130,13 +272,18 @@ others:
       - " &2Puedes cancelar escribiendo &c'%'."
     timeRanOut: " &cSe acabó el tiempo para invitar."
     inputSuccessful: " &5%player%&2 fue invitado."
-    inputClosed: " &2invitación cancelada."
+    inputClosed: " &2Invitación cancelada."
     sameInvitation: " &4Ya existe esa invitación."
     notValidPlayerName: " &1%player%&4 no es un nombre de jugador válido."
-    notOnline: " &5%player%&c no está online."
+    notOnline: " &5%player%&c no está en línea."
     notInviteYourself: " &cNo te puedes invitar a ti mismo."
+    otherInDisabledWorld: " &5%player%&c está en un mundo desactivado."
   invitation:
-    - " &3%player%&r te invita a una ronda de &3%game%"
+    - " &3%player%&r te invita a &3%game%"
+  invitationTitleMessage:
+    title: "&1Invitación para &3%game%"
+    subTitle: "de &3%player%"
+  invitationActionbarMessage: "&3%player%&r te invitó &3%game%"
 
   # this message is sent in the JSON format and has to be customised differently
 
@@ -160,4 +307,61 @@ others:
     afterText: ""
     afterColor: "blue"
 
+topList:
+  playerSkullName: "&1%player%"
+  unknownSkullName: "&1Jugador desconocido"
+  # Will be added below the rank information for unknown players
+  unknownSkullLore:
+    - ""
+    - "Este jugador no se ha unido"
+    - "   al servidor aún."
+
+# Sería correcto usar millardo, billardo, etc en vez de millar de [] si es necesario que sea más corto
+highNumberNames:
+  0: ""
+  1: "Millón"
+  2: "Millar de millones"
+  3: "Billón"
+  4: "Millar de billones"
+  5: "Trillón"
+  6: "Millar de trillones"
+  7: "Cuatrillón"
+  8: "Millar de cuatrillones"
+  9: "Quintillón"
+  10: "Millar de quintillones" 
+  11: "Sextillón"
+  12: "Millar de sextillones"
+  13: "Septillón"
+  14: "Millar de septillones"
+  15: "Octillón"
+  16: "Millar de octillones"
+  17: "Nonillón"
+  18: "Millar de nonillones"
+  19: "Decillón"
+  20: "Millar de decillones"
+
+#No estoy seguro de estos, se queda con los default para inglés
+highNumberShortNames:
+  0: ""
+  1: "M"
+  2: "B"
+  3: "T"
+  4: "Quad"
+  5: "Quin"
+  6: "Sext"
+  7: "Sept"
+  8: "Oct"
+  9: "Non"
+  10: "Dec"
+  11: "Undec"
+  12: "Duodec"
+  13: "Tredec"
+  14: "Quattuordec"
+  15: "Quindec"
+  16: "Sexdec"
+  17: "Septendec"
+  18: "Octodec"
+  19: "Novemdec"
+  20: "Vigint"
+  
 # Language translated by altrisi
