@@ -129,19 +129,19 @@ public class PaginatedDetailsGui {
                 meta.setDisplayName(gameBox.lang.replaceContext(gameBox.lang.MODULE_VERSION_BUTTON_NAME, context));
                 meta.setLore(replaceLoreContext(gameBox.lang.MODULE_VERSION_BUTTON_LORE, context, version.getReleaseNotes()));
                 versionButton.setAction(ClickAction.DISPATCH_PLAYER_COMMAND);
-                versionButton.setArgs(String.format("/gba module i %s %s", data.getId(), version.getVersion().toString()));
+                versionButton.setArgs(String.format("/gba module install %s %s", data.getId(), version.getVersion().toString()));
             } else {
                 if (installedVersion.equals(version.getVersion())) {
                     meta.setDisplayName(gameBox.lang.replaceContext(gameBox.lang.MODULE_VERSION_INSTALLED_BUTTON_NAME, context));
                     meta.setLore(replaceLoreContext(gameBox.lang.MODULE_VERSION_INSTALLED_BUTTON_LORE, context, version.getReleaseNotes()));
-                    AButton.ButtonAction removeAction = new AButton.ButtonAction(ClickAction.DISPATCH_PLAYER_COMMAND, String.format("/gba module rm %s", data.getId()));
+                    AButton.ButtonAction removeAction = new AButton.ButtonAction(ClickAction.DISPATCH_PLAYER_COMMAND, String.format("/gba module remove %s", data.getId()));
                     versionButton.addConditionalAction(InventoryAction.MOVE_TO_OTHER_INVENTORY, removeAction);
                     versionButton.setAction(ClickAction.NOTHING);
                 } else if (version.getVersion().isUpdateFor(installedVersion)) {
                     meta.setDisplayName(gameBox.lang.replaceContext(gameBox.lang.MODULE_VERSION_UPDATE_BUTTON_NAME, context));
                     meta.setLore(replaceLoreContext(gameBox.lang.MODULE_VERSION_UPDATE_BUTTON_LORE, context, version.getReleaseNotes()));
                     versionButton.setAction(ClickAction.DISPATCH_PLAYER_COMMAND);
-                    versionButton.setArgs(String.format("/gba module u %s %s", data.getId(), version.getVersion().toString()));
+                    versionButton.setArgs(String.format("/gba module update %s %s", data.getId(), version.getVersion().toString()));
                 } else {
                     meta.setDisplayName(gameBox.lang.replaceContext(gameBox.lang.MODULE_VERSION_OLDER_BUTTON_NAME, context));
                     meta.setLore(replaceLoreContext(gameBox.lang.MODULE_VERSION_OLDER_BUTTON_LORE, context, version.getReleaseNotes()));

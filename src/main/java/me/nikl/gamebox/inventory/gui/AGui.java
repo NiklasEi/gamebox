@@ -289,18 +289,18 @@ public abstract class AGui implements GameBoxHolder {
                 gameBox.getInventoryTitleMessenger().sendInventoryTitle(whoClicked, gameBox.lang.TITLE_MODULE_NOT_INSTALLED, this.title, titleMessageSeconds);
                 return false;
               }
-              whoClicked.chat(String.format("/gba m rm %s", args[0]));
+              whoClicked.chat(String.format("/gba module remove %s", args[0]));
               gameBox.getInventoryTitleMessenger().sendInventoryTitle(whoClicked, gameBox.lang.TITLE_MODULE_REMOVED, this.title, titleMessageSeconds);
               return true;
             case PICKUP_HALF:
             case PLACE_ONE:
               module = gameBox.getModulesManager().getModuleInstance(args[0]);
               if (module == null) {
-                whoClicked.chat(String.format("/gba m i %s", args[0]));
+                whoClicked.chat(String.format("/gba module install %s", args[0]));
                 gameBox.getInventoryTitleMessenger().sendInventoryTitle(whoClicked, gameBox.lang.TITLE_MODULE_INSTALLED, this.title, titleMessageSeconds);
                 return true;
               }
-              whoClicked.chat(String.format("/gba m u %s", args[0]));
+              whoClicked.chat(String.format("/gba module update %s", args[0]));
               gameBox.getInventoryTitleMessenger().sendInventoryTitle(whoClicked, gameBox.lang.TITLE_MODULE_UPDATED, this.title, titleMessageSeconds);
               return true;
             default:

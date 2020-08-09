@@ -158,7 +158,7 @@ public class GameBox extends JavaPlugin {
     if (PluginManager.gamesRegistered == 0) {
       info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
       info(ChatColor.RED + " There are no registered games!");
-      info(ChatColor.RED + " Run '/gba module list' to see available games ;)");
+      info(ChatColor.RED + " Run '/gba module list' to see available modules ;)");
       info(ChatColor.RED + " Checkout 'https://modules.gamebox.nikl.me' for more info");
       info(ChatColor.RED + "+ - + - + - + - + - + - + - + - + - + - + - + - + - + - +");
     } else {
