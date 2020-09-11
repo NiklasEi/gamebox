@@ -1,5 +1,7 @@
 # Changelog
 
+## 3.1.1
+- support MC 1.16
 
 ## 3.1.0
 - Add `/gba removesaves` commands
