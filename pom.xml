@@ -8,7 +8,7 @@
     <artifactId>gamebox</artifactId>
     <name>GameBox</name>
     <packaging>jar</packaging>
-    <version>3.1.1</version>
+    <version>3.1.2</version>
     <description>Collection of inventory games</description>
     <url>https://gamebox.nikl.me</url>
 
@@ -244,7 +244,7 @@
         <dependency>
             <groupId>me.nikl.nmsutilities</groupId>
             <artifactId>nmsutilities</artifactId>
-            <version>1.4.1</version>
+            <version>1.4.2</version>
         </dependency>
         <!-- other stuff -->
         <dependency>

@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.1.2
+- support MC 1.16.4
+
 ## 3.1.1
 - support MC 1.16
 
