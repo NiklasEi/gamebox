@@ -55,6 +55,30 @@ public class GameRuleMultiRewards extends GameRule {
     return money;
   }
 
+  public double currentScoreMoneyKey(double score) {
+    double moneyKey = saveType.isHigherScore() ? 0 : Double.MAX_VALUE;
+    List<Double> sortedScoreKeys = new ArrayList<>(moneyToWin.keySet());
+    Collections.sort(sortedScoreKeys);
+    for (double key : sortedScoreKeys) {
+      if (scoreIsBetterThen(key, score)) continue;
+      if (scoreIsBetterThen(moneyKey, score)) continue;
+      moneyKey = key;
+    }
+    return moneyKey;
+  }
+
+  public double currentScoreTokenKey(double score) {
+    double tokenKey = saveType.isHigherScore() ? 0 : Double.MAX_VALUE;
+    List<Double> sortedScoreKeys = new ArrayList<>(tokenToWin.keySet());
+    Collections.sort(sortedScoreKeys);
+    for (double key : sortedScoreKeys) {
+      if (scoreIsBetterThen(key, score)) continue;
+      if (scoreIsBetterThen(tokenKey, score)) continue;
+      tokenKey = key;
+    }
+    return tokenKey;
+  }
+
   private boolean scoreIsBetterThen(double score, double compare) {
     return ((saveType.isHigherScore() && compare < score)
             || (!saveType.isHigherScore() && compare > score));

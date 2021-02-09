@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.2.0
+- extend GameRuleMultiRewards to support CookieClicker rewards
+
 ## 3.1.2
 - support MC 1.16.4
 

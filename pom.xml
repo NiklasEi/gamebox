@@ -8,7 +8,7 @@
     <artifactId>gamebox</artifactId>
     <name>GameBox</name>
     <packaging>jar</packaging>
-    <version>3.1.2</version>
+    <version>3.2.0</version>
     <description>Collection of inventory games</description>
     <url>https://gamebox.nikl.me</url>
 
