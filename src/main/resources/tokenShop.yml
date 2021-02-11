@@ -85,6 +85,9 @@ shop:
 
             # optional lore added to the default shop lore that already contains the price of the item/command
             additionalLore:
+              - ""
+              - "&6- - - - - - - - - - - - - - - - - - -"
+              - ""
               - "&bPersonal greeting by the server"
               - ""
               - "&bHave the permissions:"
@@ -131,6 +134,9 @@ shop:
           tokens: 1
           buttonItem:
             additionalLore:
+              - ""
+              - "&6- - - - - - - - - - - - - - - - - - -"
+              - ""
               - "&bYou need the following permission"
               - "&b  to buy this item:"
               - " "
@@ -154,6 +160,9 @@ shop:
             materialData: "nether_star"
             displayName: "&9&lExample Command"
             additionalLore:
+              - ""
+              - "&6- - - - - - - - - - - - - - - - - - -"
+              - ""
               - "&bIf you buy this, the server"
               - "&b  will thank you ;)"
               - " "
@@ -180,6 +189,9 @@ shop:
             materialData: "obsidian"
             displayName: "&9&lExample give Command"
             additionalLore:
+              - ""
+              - "&6- - - - - - - - - - - - - - - - - - -"
+              - ""
               - "&bGives you 59 obsidian per command"
               - "   &bIf you have the perm."
               - "   &6my.server.builder"
