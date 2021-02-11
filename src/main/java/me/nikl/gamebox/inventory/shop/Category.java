@@ -193,9 +193,6 @@ public class Category {
     }
     if (pageSection.isList(path + ".additionalLore")) {
       List<String> lore = new ArrayList<>();
-      lore.add(" ");
-      lore.add(ChatColor.GOLD + "- - - - - - - - - - - - - - - - - - -");
-      lore.add(" ");
       List<String> addLore = new ArrayList<>(pageSection.getStringList(path + ".additionalLore"));
       for (int i = 0; i < addLore.size(); i++) {
         addLore.set(i, StringUtility.color(addLore.get(i)));

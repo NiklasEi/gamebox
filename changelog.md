@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.3.0
+- Removed hardcoded parts in additional lore for shop items
+  - the default items were adapted to include the previously hardcoded lines
+
 ## 3.2.0
 - extend GameRuleMultiRewards to support CookieClicker rewards
 
