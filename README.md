@@ -1,4 +1,9 @@
 # GameBox
+[![Discord](https://img.shields.io/discord/205041952431931392.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/WgCrwXF)
+[![Version](https://img.shields.io/spiget/version/37273.svg?label=version)](https://www.spigotmc.org/resources/37273/)
+[![Downloads](https://img.shields.io/spiget/downloads/37273.svg)](https://www.spigotmc.org/resources/37273/)
+[![Rating](https://img.shields.io/spiget/rating/37273.svg)](https://www.spigotmc.org/resources/37273/)
+
 
 GameBox is a minecraft plugin written with the Bukkit API. It is published on [Spigot].
 
