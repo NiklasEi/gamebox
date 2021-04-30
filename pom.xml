@@ -8,7 +8,7 @@
     <artifactId>gamebox</artifactId>
     <name>GameBox</name>
     <packaging>jar</packaging>
-    <version>3.3.0</version>
+    <version>3.3.1</version>
     <description>Collection of inventory games</description>
     <url>https://gamebox.nikl.me</url>
 
@@ -53,7 +53,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>3.2.3</version>
                 <configuration>
                     <artifactSet>
                         <includes>
@@ -217,7 +217,7 @@
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>3.3.1</version>
+            <version>4.0.3</version>
             <scope>compile</scope>
         </dependency>
         <!-- SLF4J -->

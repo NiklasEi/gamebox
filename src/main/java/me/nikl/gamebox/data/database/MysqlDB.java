@@ -20,8 +20,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -64,7 +66,7 @@ public class MysqlDB extends DataBase {
   @Override
   public boolean load() {
     hikari = new HikariDataSource();
-    hikari.setDataSourceClassName("com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
+    hikari.setDataSourceClassName(this.getFirstClassName(Arrays.asList("com.mysql.cj.jdbc.MysqlDataSource", "com.mysql.jdbc.jdbc2.optional.MysqlDataSource", "org.mariadb.jdbc.MariaDbDataSource")).get());
     hikari.addDataSourceProperty("serverName", host);
     hikari.addDataSourceProperty("port", port);
     hikari.addDataSourceProperty("databaseName", database);
@@ -556,5 +558,18 @@ public class MysqlDB extends DataBase {
 
   public HikariDataSource getHikariDataSource() {
     return this.hikari;
+  }
+
+  private Optional<String> getFirstClassName(List<String> classNames) {
+    for (String name : classNames) {
+      try {
+        Class.forName(name);
+      } catch (ClassNotFoundException e) {
+        continue;
+      }
+
+      return Optional.of(name);
+    }
+    return Optional.empty();
   }
 }
