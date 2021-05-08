@@ -153,7 +153,7 @@ public class ModulesManager implements Listener {
             @Override
             public void run() {
                 try {
-                    cloudService.updateCloudContent();
+                    cloudService.cacheCloudContent();
                     hookAfterConnectingToCloud.runTask(gameBox);
                 } catch (GameBoxCloudException e) {
                     gameBox.getLogger().severe("Error while attempting to load cloud content");
@@ -209,7 +209,7 @@ public class ModulesManager implements Listener {
     public void collectUpdatesForInstalledModules() {
         hasUpdateAvailable.clear();
         for (String moduleId : localModules.keySet()) {
-            if (cloudService.hasUpdate(localModules.get(moduleId))) {
+            if (cloudService.hasCachedUpdate(localModules.get(moduleId))) {
                 hasUpdateAvailable.add(moduleId);
             }
         }
@@ -404,7 +404,7 @@ public class ModulesManager implements Listener {
             moduleContext.put("id", module.getIdentifier());
             moduleContext.put("installedVersion", module.getModuleData().getVersionData().getVersion().toString());
             try {
-                SemanticVersion latestVersion = cloudService.getModuleData(module.getIdentifier()).getLatestVersion();
+                SemanticVersion latestVersion = cloudService.getCachedModuleData(module.getIdentifier()).getLatestVersion();
                 moduleContext.put("availableVersion", latestVersion.toString());
                 if (!latestVersion.isCompatibleUpdateFor(module.getModuleData().getVersionData().getVersion())) {
                     skippCount ++;

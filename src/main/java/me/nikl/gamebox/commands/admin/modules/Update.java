@@ -18,7 +18,6 @@ import me.nikl.gamebox.module.data.VersionedCloudModule;
 import me.nikl.gamebox.utility.ModuleUtility;
 import me.nikl.gamebox.utility.Permission;
 import me.nikl.gamebox.utility.versioning.SemanticVersion;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -50,7 +49,7 @@ public class Update extends GameBoxBaseCommand {
                 SemanticVersion semVersion = null;
                 try {
                     ModulesManager modulesManager = gameBox.getModulesManager();
-                    CloudModuleData cloudModuleData = modulesManager.getCloudService().getModuleData(moduleID);
+                    CloudModuleData cloudModuleData = modulesManager.getCloudService().getCachedModuleData(moduleID);
                     if (version != null) {
                         try {
                             semVersion = new SemanticVersion(version);

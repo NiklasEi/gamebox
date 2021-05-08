@@ -443,7 +443,7 @@ public class GameBox extends JavaPlugin {
     getModulesManager().updateModulesAndPrintInfo();
 
     CloudService cloudService = getModulesManager().getCloudService();
-    java.util.List<CloudModuleData> cloudModuleData = cloudService.getCloudContent();
+    java.util.List<CloudModuleData> cloudModuleData = cloudService.getCachedCloudContent();
     HashMap<String, String> context = new HashMap<>();
     context.put("amount", String.valueOf(cloudModuleData.size()));
     Bukkit.getConsoleSender().sendMessage(lang.PREFIX + lang.replaceContext(lang.CMD_MODULES_LIST_HEADER, context));

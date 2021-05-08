@@ -54,7 +54,7 @@ public class ModulesGuiManager implements Listener {
     }
 
     public void loadGui() {
-        List<CloudModuleData> cloudModuleData = gameBox.getModulesManager().getCloudService().getCloudContent();
+        List<CloudModuleData> cloudModuleData = gameBox.getModulesManager().getCloudService().getCachedCloudContent();
         prepareCloudModules(cloudModuleData);
         preparePrivateModules(cloudModuleData);
         sortAndRenderGui();
@@ -95,7 +95,7 @@ public class ModulesGuiManager implements Listener {
 
     private void removeModule(VersionedModule module) {
         try {
-            CloudModuleData data = gameBox.getModulesManager().getCloudService().getModuleData(module.getId());
+            CloudModuleData data = gameBox.getModulesManager().getCloudService().getCachedModuleData(module.getId());
             Button updatedButton = buildModuleButton(data, null);
             if (this.modulesListGui.updateModule(module.getId(), updatedButton)) {
                 this.moduleDetails.updateGuiForModule(module.getId());
@@ -109,7 +109,7 @@ public class ModulesGuiManager implements Listener {
 
     private void installModule(VersionedModule module) {
         try {
-            CloudModuleData data = gameBox.getModulesManager().getCloudService().getModuleData(module.getId());
+            CloudModuleData data = gameBox.getModulesManager().getCloudService().getCachedModuleData(module.getId());
             Button updatedButton = buildModuleButton(data, module.getVersionData().getVersion());
             if(this.modulesListGui.updateModule(module.getId(), updatedButton)) {
                 this.moduleDetails.updateGuiForModule(module.getId());

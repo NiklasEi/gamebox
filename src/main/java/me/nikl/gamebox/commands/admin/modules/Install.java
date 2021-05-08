@@ -49,7 +49,7 @@ public class Install extends GameBoxBaseCommand {
                 SemanticVersion semVersion = null;
                 try {
                     ModulesManager modulesManager = gameBox.getModulesManager();
-                    CloudModuleData cloudModuleData = modulesManager.getCloudService().getModuleData(moduleID);
+                    CloudModuleData cloudModuleData = modulesManager.getCloudService().getCachedModuleData(moduleID);
                     if (version != null) {
                         try {
                             semVersion = new SemanticVersion(version);

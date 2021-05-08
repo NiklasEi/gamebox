@@ -57,7 +57,7 @@ public class GameBoxCommands extends BukkitCommandManager {
             gameBox.getModulesManager().getLoadedVersionedModules().stream().map(ModuleBasicData::getId).collect(Collectors.toList())
     );
     getCommandCompletions().registerCompletion("cloudModuleIds", c ->
-            gameBox.getModulesManager().getCloudService().getCloudContent().stream().map(CloudModuleData::getId).collect(Collectors.toList())
+            gameBox.getModulesManager().getCloudService().getCachedCloudContent().stream().map(CloudModuleData::getId).collect(Collectors.toList())
     );
     getCommandCompletions().registerCompletion("SaveTypes", c ->
             Arrays.asList(Arrays.stream(SaveType.values()).map(Object::toString).toArray(String[]::new))

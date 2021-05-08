@@ -36,7 +36,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,7 +56,12 @@ public class CloudService {
         this.facade = facade;
     }
 
-    public void updateCloudContent() throws GameBoxCloudException {
+    /**
+     * Cache the modules currently offered by the GameBox API
+     *
+     * Do not call this function on the main thread
+     */
+    public void cacheCloudContent() throws GameBoxCloudException {
         ApiResponse<CloudModuleData[]> response = this.facade.getCloudModuleData();
         if (response.getError() != null) {
             throw response.getError();
@@ -70,12 +74,17 @@ public class CloudService {
         }
     }
 
-    public CloudModuleData getModuleData(String moduleID) throws GameBoxCloudException {
+    public CloudModuleData getCachedModuleData(String moduleID) throws GameBoxCloudException {
         CloudModuleData cloudModuleData = cloudContent.get(moduleID);
         if (cloudModuleData == null) throw new CloudModuleNotFoundException("No moduledata found for ID '" + moduleID + "'");
         return cloudModuleData;
     }
 
+    /**
+     * Cache the modules currently offered by the GameBox API
+     *
+     * Do not call this function on the main thread
+     */
     public CloudModuleDataWithVersions getCloudModuleDataWithVersions(String moduleId) throws GameBoxCloudException {
         ApiResponse<CloudModuleDataWithVersions> response = this.facade.getCloudModuleDataWithVersions(moduleId);
         if (response.getError() != null) {
@@ -84,7 +93,7 @@ public class CloudService {
         return response.getData();
     }
 
-    public boolean hasUpdate(LocalModule localModule) {
+    public boolean hasCachedUpdate(LocalModule localModule) {
         CloudModuleData cloudModule = cloudContent.get(localModule.getId());
         if (cloudModule == null) {
             // might be local module
@@ -148,6 +157,11 @@ public class CloudService {
         downloadingModules.get(fileName).start();
     }
 
+    /**
+     * Get the versioned cloud module data from the GameBox API
+     *
+     * Do not call this function on the main thread
+      */
     public VersionedCloudModule getVersionedCloudModule(String moduleId, SemanticVersion version) throws GameBoxCloudException {
         ApiResponse<VersionedCloudModule> response = this.facade.getVersionedCloudModuleData(moduleId, version);
         if (response.getError() != null) {
@@ -156,11 +170,11 @@ public class CloudService {
         return response.getData();
     }
 
-    public List<CloudModuleData> getCloudContent() {
+    public List<CloudModuleData> getCachedCloudContent() {
         return new ArrayList<>(this.cloudContent.values());
     }
 
-    public long secondsSinceLastCloudContentUpdate() {
+    public long secondsSinceLastCloudContentCacheUpdate() {
         return Math.round((System.currentTimeMillis() - lastCloudContentUpdate)/1000.);
     }
 }

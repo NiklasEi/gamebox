@@ -1,7 +1,6 @@
 package me.nikl.gamebox.commands.admin.modules;
 
 import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandCompletion;
 import co.aikar.commands.annotation.PreCommand;
 import co.aikar.commands.annotation.Subcommand;
 import me.nikl.gamebox.GameBox;
@@ -12,7 +11,6 @@ import me.nikl.gamebox.utility.Permission;
 import org.bukkit.command.CommandSender;
 
 import java.util.HashMap;
-import java.util.Map;
 
 @CommandAlias("%adminCommand")
 public class List extends GameBoxBaseCommand {
@@ -34,7 +32,7 @@ public class List extends GameBoxBaseCommand {
     @Subcommand("module|modules|m list|l")
     public void onModuleList(CommandSender sender) {
         CloudService cloudService = gameBox.getModulesManager().getCloudService();
-        java.util.List<CloudModuleData> cloudModuleData = cloudService.getCloudContent();
+        java.util.List<CloudModuleData> cloudModuleData = cloudService.getCachedCloudContent();
         HashMap<String, String> context = new HashMap<>();
         context.put("amount", String.valueOf(cloudModuleData.size()));
         gameBox.lang.sendMessage(sender, gameBox.lang.CMD_MODULES_LIST_HEADER, context);
