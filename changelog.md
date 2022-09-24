@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.4.0
+- support MC 1.17
+
 ## 3.3.1
 - update Hikari and DataSource classes 
 
