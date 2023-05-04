@@ -15,7 +15,7 @@
     <distributionManagement>
         <repository>
             <id>nikl-repo</id>
-            <url>http://repo.nikl.me/artifactory/public</url>
+            <url>https://repo.repsy.io/mvn/nikl/minecraft</url>
         </repository>
     </distributionManagement>
 
@@ -168,7 +168,7 @@
         </repository>
         <repository>
             <id>nikl-repo</id>
-            <url>https://repo.nikl.me/artifactory/public</url>
+            <url>https://repo.repsy.io/mvn/nikl/minecraft</url>
         </repository>
         <repository>
             <id>aikar</id>

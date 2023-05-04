@@ -78,7 +78,7 @@ Currently implemented features:
 
 Just fork and clone this repository and run `mvn package`. The jar will be in the target folder in the root directory and is ready for distribution.
 
-The included games and my nmsutilities are hosted on [my Artifactory server][artifactory]. You can check there for up to date versions.
+GameBox and my nmsutilities are hosted on [my Artifactory server][artifactory]. You can check there for up-to-date versions.
 
 ## Commands and permissions
 
@@ -96,4 +96,4 @@ The permissions allow for different players having access to different games. By
 [GameBox-cmds]: https://www.nikl.me/projects/minecraft/gamebox/#commands
 [GameBox-perms]: https://www.nikl.me/projects/minecraft/gamebox/#permissions
 [example-project]: https://github.com/NiklasEi/template-module-for-gamebox
-[artifactory]: https://repo.nikl.me
+[artifactory]: https://repo.repsy.io/mvn/nikl/minecraft
