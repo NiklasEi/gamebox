@@ -244,7 +244,7 @@
         <dependency>
             <groupId>me.nikl.nmsutilities</groupId>
             <artifactId>nmsutilities</artifactId>
-            <version>1.5.0</version>
+            <version>1.6.0</version>
         </dependency>
         <!-- other stuff -->
         <dependency>
