@@ -78,3 +78,15 @@ permissions:
   gamebox.help:
     description: Allows the usage of the help command
     default: true
+
+commands:
+  gamebox:
+    description: Commands to open and play games
+    aliases:
+      - "games"
+      - "gb"
+  gameboxadmin:
+    description: Admin commands for gamebox
+    aliases:
+      - "gamesadmin"
+      - "gba"

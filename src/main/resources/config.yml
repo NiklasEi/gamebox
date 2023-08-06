@@ -205,8 +205,4 @@ listeners:
     commands:
     #- "tell %player% Come back!"
 
-# Change the commands used by gamebox
-# Use the pipe character "|" to separate aliases
-commands:
-  main: "gamebox|games|gb"
-  admin: "gameboxadmin|gamesadmin|gba"
+# Change the commands used by gamebox in the plugin.yaml file inside the plugin jar
